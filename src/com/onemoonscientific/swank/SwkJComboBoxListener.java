@@ -1,0 +1,267 @@
+/*
+ *
+ *
+ * Copyright (c) 2000-2004 One Moon Scientific, Inc., Westfield, N.J., USA
+ *
+ * See the file \"LICENSE\" for information on usage and redistribution
+ * of this file.
+ * IN NO EVENT SHALL THE AUTHORS OR DISTRIBUTORS BE LIABLE TO
+ * ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR
+ * CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OF THIS
+ * SOFTWARE, ITS DOCUMENTATION, OR ANY DERIVATIVES THEREOF,
+ * EVEN IF THE AUTHORS HAVE BEEN ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ *
+ * THE AUTHORS AND DISTRIBUTORS SPECIFICALLY DISCLAIM ANY
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+ * PURPOSE, AND NON-INFRINGEMENT.  THIS SOFTWARE
+ * IS PROVIDED ON AN "AS IS" BASIS, AND THE AUTHORS AND
+ * DISTRIBUTORS HAVE NO OBLIGATION TO PROVIDE MAINTENANCE,
+ * SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+ *
+ *
+ */
+package com.onemoonscientific.swank;
+
+import tcl.lang.*;
+
+import java.awt.*;
+import java.awt.event.*;
+
+import java.lang.*;
+
+import java.util.*;
+
+import javax.swing.*;
+import javax.swing.event.*;
+import javax.swing.text.*;
+
+
+public class SwkJComboBoxListener implements ActionListener, VarTrace,
+    SwkListener {
+    Interp interp;
+    String command = "";
+    String value = "";
+    String varName = "";
+    final JComboBox component;
+    boolean traceLock = false;
+    boolean actionDisabled = false;
+
+    SwkJComboBoxListener(final Interp interp, final Component component) {
+        this.interp = interp;
+        this.component = (JComboBox) component;
+    }
+
+    public void traceProc(Interp interp, String string1, String string2,
+        int flags) throws TclException {
+        if (EventQueue.isDispatchThread()) {
+            System.out.println(
+                "SwkJComboBoxListener: traceProc on event thread");
+        }
+
+        setFromVar(interp);
+    }
+
+    public void setFromVar(Interp interp) throws TclException {
+        if (EventQueue.isDispatchThread()) {
+            System.out.println(
+                "Warning: ComboBoxListener setFrom Var on EventThread");
+        }
+
+        if (!traceLock) {
+            try {
+                TclObject tobj = interp.getVar(varName, TCL.GLOBAL_ONLY)
+                                       .duplicate();
+
+                if (tobj != null) {
+                    final String item = tobj.toString().trim();
+
+                    if (item.length() > 0) {
+                        actionDisabled = true;
+
+                        try {
+                            SwingUtilities.invokeLater(new Runnable() {
+                                    public void run() {
+                                        component.setSelectedItem(item);
+                                    }
+                                });
+                        } catch (Exception e) {
+                            System.out.println("coudn't set item in combo " +
+                                item);
+                        }
+                    }
+                }
+            } catch (TclException tclE) {
+            } finally {
+                actionDisabled = false;
+            }
+        }
+
+        traceLock = false;
+    }
+
+    public void setVarName(Interp interp, String name)
+        throws TclException {
+        if (EventQueue.isDispatchThread()) {
+            System.out.println(
+                "Warning: ComboBoxListener setFrom Var on EventThread");
+        }
+
+        if ((varName != null) && (!varName.equals(""))) {
+            interp.untraceVar(varName, this, TCL.TRACE_WRITES |
+                TCL.GLOBAL_ONLY);
+        }
+
+        if ((name != null) && (name != "")) {
+            try {
+                TclObject tobj = interp.getVar(name, TCL.GLOBAL_ONLY)
+                                       .duplicate();
+
+                if (tobj != null) {
+                    final String item = tobj.toString().trim();
+
+                    if (item.length() > 0) {
+                        //actionDisabled = true;
+
+                        try {
+                            SwingUtilities.invokeLater(new Runnable() {
+                                    public void run() {
+                                        component.setSelectedItem(item);
+                                    }
+                                });
+                        } catch (Exception e) {
+                            System.out.println("coudn't set item in combo " +
+                                item);
+                        }
+                    }
+                }
+            } catch (TclException tclException) {
+                int count = (new GetItemCount()).exec();
+                String firstItem = "";
+                if (count > 0) {
+                   firstItem = (new GetItemAt()).exec(0);
+                }
+                TclObject tobj = TclString.newInstance(firstItem);
+                interp.setVar(name, tobj, TCL.GLOBAL_ONLY);
+            }
+
+            interp.traceVar(name, this, TCL.TRACE_WRITES | TCL.GLOBAL_ONLY);
+        }
+
+        varName = name;
+        interp.resetResult();
+    }
+
+    public String getVarName() {
+        return (varName);
+    }
+
+    public void setValue(String name) {
+        value = name;
+    }
+
+    public String getValue() {
+        return (value);
+    }
+
+    public void setCommand(String name) {
+        command = name;
+    }
+
+    public String getCommand() {
+        return (command);
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        if (!((SwkWidget) component).isCreated()) {
+            return;
+        }
+
+        BindEvent bEvent = new BindEvent(interp, (SwkListener) this,
+                (EventObject) e, 0);
+        interp.getNotifier().queueEvent(bEvent, TCL.QUEUE_TAIL);
+    }
+
+    public void setVarValue() {
+        TclObject tobj = null;
+
+        if (EventQueue.isDispatchThread()) {
+            System.out.println(
+                "Warning: ComboBoxListener setVarValue on EventThread");
+        }
+
+        if ((varName != null) && (varName.length() != 0)) {
+            Object obj = component.getSelectedItem();
+
+            if (obj != null) {
+                tobj = TclString.newInstance(obj.toString());
+
+                if (tobj != null) {
+                    try {
+                        traceLock = true;
+                        interp.setVar(varName, tobj, TCL.GLOBAL_ONLY);
+                    } catch (TclException tclException) {
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    public void processEvent(EventObject eventObject, int subtype) {
+        ActionEvent e = (ActionEvent) eventObject;
+
+        if (EventQueue.isDispatchThread()) {
+            System.out.println(
+                "Warning: ComboBoxListener processEvent is on EventThread");
+        }
+
+        // FIXME some of this should remain on Swing ET
+        // XXX Silly hack to keep from firing command when adding items to combobox
+        if (actionDisabled) {
+            actionDisabled = false;
+
+            return;
+        }
+
+        setVarValue();
+
+        if ((command != null) && (command.length() != 0)) {
+            try {
+                interp.eval(command);
+            } catch (TclException tclE) {
+                interp.addErrorInfo("\n    (\"binding\" script)");
+                interp.backgroundError();
+            }
+        }
+    }
+   class GetItemCount extends GetValueOnEventThread {
+        int intResult;
+
+        int exec() {
+            execOnThread();
+            return intResult;
+        }
+
+        public void run() {
+            intResult = component.getItemCount();
+        }
+    }
+
+    class GetItemAt extends GetValueOnEventThread {
+        String result;
+        int index = 0;
+
+        String exec(int index) {
+            this.index = index;
+            execOnThread();
+            return result;
+        }
+
+        public void run() {
+            result = component.getItemAt(index).toString();
+        }
+    }
+
+}

@@ -1,0 +1,209 @@
+/*
+ *
+ *
+ * Copyright (c) 2000-2004 One Moon Scientific, Inc., Westfield, N.J., USA
+ *
+ * See the file \"LICENSE\" for information on usage and redistribution
+ * of this file.
+ * IN NO EVENT SHALL THE AUTHORS OR DISTRIBUTORS BE LIABLE TO
+ * ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR
+ * CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OF THIS
+ * SOFTWARE, ITS DOCUMENTATION, OR ANY DERIVATIVES THEREOF,
+ * EVEN IF THE AUTHORS HAVE BEEN ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ *
+ * THE AUTHORS AND DISTRIBUTORS SPECIFICALLY DISCLAIM ANY
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+ * PURPOSE, AND NON-INFRINGEMENT.  THIS SOFTWARE
+ * IS PROVIDED ON AN "AS IS" BASIS, AND THE AUTHORS AND
+ * DISTRIBUTORS HAVE NO OBLIGATION TO PROVIDE MAINTENANCE,
+ * SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+ *
+ *
+ */
+/*
+ * SwkGPath.java
+ *
+ * Created on February 19, 2000, 3:14 PM
+ */
+
+/**
+ *
+ * @author  JOHNBRUC
+ * @version
+ */
+package com.onemoonscientific.swank.canvas;
+
+import com.onemoonscientific.swank.*;
+
+import tcl.lang.*;
+
+import java.awt.*;
+import java.awt.geom.*;
+
+import java.lang.*;
+
+import java.util.*;
+
+
+public class SwkSymbols extends SwkShape implements SymbolInterface {
+    static CanvasParameter[] parameters = {
+        new SymbolParameter(), new RadiusParameter(), new RotateParameter(),
+        new ShearParameter(), new TagsParameter(), new StateParameter(),
+        new TransformerParameter(),
+    };
+    static Map parameterMap = new TreeMap();
+
+    static {
+        initializeParameters(parameters, parameterMap);
+    }
+
+    float radius = 2.0f;
+    int symbolType = 3;
+    GeneralPath gPath = null;
+    boolean closePath = false;
+
+    public SwkSymbols(Shape shape, SwkImageCanvas canvas) {
+        super(shape, canvas);
+        gPath = (GeneralPath) shape;
+        fill = null;
+    }
+
+    public void setSymbolType(int newSymbolType) {
+        symbolType = newSymbolType;
+    }
+
+    public String getSymbolType() {
+        return SymbolParameter.getSymbolType(symbolType);
+    }
+
+    public void setRadius(double newRadius) {
+        radius = (float) newRadius;
+    }
+
+    public double getRadius() {
+        return radius;
+    }
+
+    public void coords(SwkImageCanvas canvas, double[] coords)
+        throws SwkException {
+        if (coords.length < 2) {
+            throw new SwkException(
+                "wrong # coordinates: expected at least 2, got " +
+                coords.length);
+        }
+
+        if ((coords.length % 2) != 0) {
+            throw new SwkException(
+                "wrong # coordinates: expected even number, got " +
+                coords.length);
+        }
+
+        gPath.reset();
+
+        if ((storeCoords == null) || (storeCoords.length != coords.length)) {
+            storeCoords = new double[coords.length];
+        }
+
+        System.arraycopy(coords, 0, storeCoords, 0, coords.length);
+        applyCoordinates();
+    }
+
+    void applyCoordinates() {
+        for (int i = 0; i < storeCoords.length; i += 2) {
+            addSymbol((float) storeCoords[i], (float) storeCoords[i + 1], radius);
+        }
+
+        AffineTransform aT = new AffineTransform();
+        aT.translate(storeCoords[0], storeCoords[1]);
+        aT.shear(xShear, yShear);
+        aT.translate(-storeCoords[0], -storeCoords[1]);
+        aT.rotate(rotate, ((storeCoords[0] + storeCoords[2]) / 2.0),
+            ((storeCoords[1] + storeCoords[3]) / 2.0));
+        shape = aT.createTransformedShape(gPath);
+    }
+
+    public void addSymbol(float x1, float y1, float radius) {
+        float x2;
+        float y2;
+
+        /*
+          gPath.moveTo(x1-radius,y1);
+          gPath.lineTo(x1+radius,y1);
+          gPath.moveTo(x1,y1-radius);
+          gPath.lineTo(x1,y1+radius);
+         */
+
+        //System.out.println(symbolType+" "+radius);
+        switch (symbolType) {
+        case 0: { //circle
+
+            Ellipse2D ellipse = new Ellipse2D.Float(x1 - radius, y1 - radius,
+                    2 * radius, 2 * radius);
+            gPath.append(ellipse, false);
+
+            break;
+        }
+
+        case 1: { //triangle up
+            gPath.moveTo(x1, y1 - radius);
+            gPath.lineTo(x1 - (radius * 0.67f), y1 + (radius * 0.66f));
+            gPath.lineTo(x1 + (radius * 0.67f), y1 + (radius * 0.66f));
+            gPath.closePath();
+
+            break;
+        }
+
+        case 2: { //triangle down
+            gPath.moveTo(x1, y1 + radius);
+            gPath.lineTo(x1 - (radius * 0.67f), y1 - (radius * 0.66f));
+            gPath.lineTo(x1 + (radius * 0.67f), y1 - (radius * 0.66f));
+            gPath.closePath();
+
+            break;
+        }
+
+        case 3: { //cross
+            gPath.moveTo(x1, y1 + radius);
+            gPath.lineTo(x1, y1 - radius);
+            gPath.moveTo(x1 - radius, y1);
+            gPath.lineTo(x1 + radius, y1);
+
+            break;
+        }
+
+        case 4: { //square
+            gPath.moveTo(x1 - radius, y1 - radius);
+            gPath.lineTo(x1 + radius, y1 - radius);
+            gPath.lineTo(x1 + radius, y1 + radius);
+            gPath.lineTo(x1 - radius, y1 + radius);
+            gPath.closePath();
+
+            break;
+        }
+
+        case 5: { //diamond
+            gPath.moveTo(x1, y1 - radius);
+            gPath.lineTo(x1 + radius, y1);
+            gPath.lineTo(x1, y1 + radius);
+            gPath.lineTo(x1 - radius, y1);
+            gPath.closePath();
+
+            break;
+        }
+        }
+    }
+
+    CanvasParameter[] getParameters() {
+        return parameters;
+    }
+
+    public Map getParameterMap() {
+        return parameterMap;
+    }
+
+    public String getType() {
+        return "symbols";
+    }
+}

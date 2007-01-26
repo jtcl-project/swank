@@ -1,0 +1,171 @@
+2004-09-21  Bruce Johnson  <swank@onemoonscientific.com>
+            Release version 2.1.4
+com/onemoonscientific/swank/SwkJMenu.java
+	add support for the index subcommand
+com/onemoonscientific/swank/SwkJMenuWidgetCmd.java
+	fix commands requiring menu indexes.
+com/onemoonscientific/swank/SwkJTextPane.java
+	Error was causing failure with processing button release.
+com/onemoonscientific/swank/canvas/SwkArc.java
+	Add checkCoordinates call.
+com/onemoonscientific/swank/canvas/SwkCanvBitmap.java
+	Formatting change.
+com/onemoonscientific/swank/canvas/SwkCanvText.java
+	Formatting change.
+com/onemoonscientific/swank/canvas/SwkCanvWindow.java
+	Formatting change.
+com/onemoonscientific/swank/canvas/SwkCanvas.java
+	Formatting change.
+com/onemoonscientific/swank/canvas/SwkCanvasWidgetCmd.java
+	Formatting change.
+com/onemoonscientific/swank/canvas/SwkEllipse.java
+	Add checkCoordinates call.
+	Formatting change.
+com/onemoonscientific/swank/canvas/SwkLine.java
+	Formatting change.
+com/onemoonscientific/swank/canvas/SwkPolygon.java
+	Formatting change.
+com/onemoonscientific/swank/canvas/SwkRectangle.java
+	Add checkCoordinates call.
+	Formatting change.
+com/onemoonscientific/swank/canvas/SwkShape.java
+	Add check on coordinate order
+com/onemoonscientific/swank/canvas/SwkSymbols.java
+	Add SymbolInterface 
+com/onemoonscientific/swank/canvas/SymbolParameter.java
+	Add code to parse symbol type (string to int);
+tcl/lang/Notifier.java
+	Formatting change.
+tcl/lang/UpdateCmd.java
+	Formatting change.
+
+
+2004-08-24  Bruce Johnson  <swank@onemoonscientific.com>
+            Release version 2.1.3
+demos/wiskcon
+    Increase memory in JAVA_FLAGS
+tcl/lang/Notifier.java
+    Add printStackTrace to catch
+demos/widget
+    Add proc to load Tcl script from Jar file when user clicks "Show Code" button
+canvas/SwkShape.java
+    Fixed itemGet method so it properly returns configuration values.
+All canvas items
+    Added getParameterMap method to override non-functional one in SwkShape.java
+canvas/SwkCanvas.java
+    getShapeBounds now calls special method for text items.
+    Fix canvasTransform (AffineTransform) so that setting the scale doesn't overwrite the translation
+
+    
+2004-08-20  Bruce Johnson  <swank@onemoonscientific.com>
+            Release version 2.1.2
+	    Formatted all Java source files with Jalopy
+2004-08-20  Bruce Johnson  <swank@onemoonscientific.com>
+            Release version 2.1.1
+    Changed CanvasParameter from interface to abstract class.
+    Moved getPar from ParameterSearch to CanvasParameter and
+    changed it to deal with truncated attribute names
+    Eliminated distinction between genericParameters and typeSpecific parameters.
+
+2004-08-19  Bruce Johnson  <swank@onemoonscientific.com>
+            Release version 2.1.0
+BindTagsCmd.java
+   New class to support the "bindtags" command.
+EventCmd.java
+   New class to support the "event" command.
+SwkLabelFrame.java SwkLabelFrameCmd.java SwkLabelFrameConfigure.java SwkLabelFrameWidgetCmd.java
+   New classes to add support for the "labelframe" command.
+AnchorParameter.java AngleStartParameter.java ArcStyleParameter.java BitmapParameter.java
+DashParameter.java DashPhaseParameter.java ExtentParameter.java FillParameter.java
+FontParameter.java  GradientParameter.java OutlineParameter.java RadiusParameter.java
+RotateParameter.java ShearParaemter.java SmoothParameter.java StateParameter.java
+SymbolParameter.java TagParameter.java TextureParameter.java TextWidthParameter.java
+WidthParameter.java
+   Added Java classes to handle the various canvas item attributes:
+BezierPath.java
+    New class for automatic calculation of Bezier control points for smoothing lines.
+BindCmd.java
+   Added support for virtual events.
+   Added binding for TabbedPane state change.
+ClipboardCmd.java
+   Added support for append, clear, and get (but still more work).
+FocusCmd.java
+   removed set and getFocusWindow methods (not working properly)
+OptionCmd.java
+  minor change, not working yet.
+SelectionCmd.java
+  Add support for selection get, but only working for text panes.
+SwankUtil.java
+  Changed getGradient paint to get p1 and p2 as points relative to the shapes dimensions (0 to 1).
+  Added flag for cyclic gradients.
+  Added support for Tk like dash string patterns.
+SwkBind.java
+  Added support for virtual bindings.
+SwkBinding.java
+  Added support for tabbedpane state change and for virtual events.
+SwkBorder.java
+  Added support for padding around widgets.
+SwkCheckMenuListener.java
+  fixed seting variable for menu checkbox items.
+SwkDefaultStyledDocument.java
+  Fix for getting document positions (index).
+SwkDocumentSearch.java
+  New class that implements document searching.
+SwkDocumentListener.java
+  Delete empty line
+SwkEventType.java
+  Add support for tabbedpane statechange event, and "bracketright" and "parenright" keys.
+  Get string representation of event.
+SwkJButton.java SwkJButtonCmd.java and all other widget commands
+  Add support for "bindtags", virtual events, internal padding"
+  Add flag to indicate that widget has been initially created.
+  If widget exists but hasn't been configured don't throw an error.  It might have
+  been created to be displayed as a menu item.
+SwkJMenuWidgetCmd.java
+  added support for "invoke" and "index" subcommands
+SwkJSlider.java
+   Fixed display of values (there was "ghosting" when slider moved).
+   Added display of label.
+SwkCanvas.java, SwkTextPane.java
+  Button release events were not always processed properly.  Now fixed.
+SwkTextPaneWidgetCmd.java
+  Added text "search" subcommand.
+SwkKeyCommandListener.java
+  Delete debugging statement.
+SwkKeyListener.java SwkMouseListener.java SwkMouseMotionListener.java 
+  Add support for "bindtags" command.
+SwkSliderChangeListener.java
+  Don't fire events until after isCreated flag set.
+SwkWidget.java
+  Add support for isCreated, border padding, changelisteners
+WidgetExt.java
+  Load new "labelframe", "bindtags", and "event" commands.
+WinfoCmd.java
+  Add support for "name" subcommand.
+SwkArc.java SwkCanvBitmap.java SwkCanvImage.java SwkCanvText.java SwkEllipse.java SwkGPath.java SwkLine.java SwkPolygon.java SwkRectangle.java SwkSegments.java SwkShape.java SwkShapeConfig.java SwkSymbols.java 
+  Restructure classes to use the new CanvasParameter classes for attributes.
+  Add support for affine translations (rotate and shear) to most canvas items
+SwkCanvText.java
+  Add word wrap to canvas text.
+SwkCanvas.java
+  Add global "zoom" capability to canvas
+  Support canvas item "states"
+  Fix shape selection for lines
+SwkCanvasWidgetItem
+  add support for "bbox", "type" and new "zoom" subcommands.
+dialog.tcl
+  Geometry was wrong.  Fixed by passing in text and options during widget creation
+  rather than during subsequent configuration.
+swank.tcl
+  Add "package provide" command and tk_version, tk_patchLevel and tk_strictMotif variables
+  Added some support for "tkwait"
+tcl.lang.Notifier.java
+  Changes for handling update "still not correct"
+tcl.lang.SwkShell
+  source startup scripts from within event thread
+
+
+2004-05-13  Bruce Johnson  <swank@onemoonscientific.com>
+            Release version 2.0.1, proper change recording begins now.
+
+

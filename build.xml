@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="dist" name="Swank">
+  <!-- set global properties for this build -->
+  <property name="dir.src" value="src"/>
+  <property name="dir.gensrc" value="gensrc"/>
+  <property name="dir.build" value="build"/>
+  <property name="dir.dist" value="dist"/>
+  <property name="dir.libs" value="libs"/>
+  <taskdef classname="de.hunsicker.jalopy.plugin.ant.AntPlugin" name="jalopy">
+  <classpath>
+    <fileset dir="/Users/brucejohnson/tools/jalopy/lib">
+      <include name="*.jar"/>
+    </fileset>
+  </classpath>
+</taskdef>
+
+  <target name="prepare">
+    <!-- Create the time stamp -->
+    <tstamp/>
+    <!-- Create the build directory structure used by compile -->
+    <mkdir dir="${dir.build}"/>
+    <mkdir dir="${dir.build}/com"/>
+    <mkdir dir="${dir.build}/com/onemoonscientific"/>
+    <mkdir dir="${dir.build}/com/onemoonscientific/swank"/>
+    <mkdir dir="${dir.build}/tcl"/>
+    <mkdir dir="${dir.gensrc}"/>
+    <mkdir dir="${dir.gensrc}/com"/>
+    <mkdir dir="${dir.gensrc}/com/onemoonscientific"/>
+    <mkdir dir="${dir.gensrc}/com/onemoonscientific/swank"/>
+    <mkdir dir="${dir.gensrc}/com/onemoonscientific/swank/canvas"/>
+  </target>
+
+  <path id="jacl.classpath">
+     <pathelement  path="${dir.libs}/jacl.jar:${dir.libs}/tcljava.jar"/>
+  </path>
+  <path id="swank.classpath">
+     <pathelement  path="${dir.build}:${dir.libs}/jacl.jar:${dir.libs}/tcljava.jar:${dir.libs}/itcl.jar:${dir.libs}/janino.jar:${dir.libs}/tjc.jar"/>
+  </path>
+
+  <target depends="prepare" description="compile the source " name="compile_swank">
+    <!-- Compile the java code from ${dir.src} into ${dir.build} -->
+    <javac debug="true" destdir="${dir.build}" srcdir="${dir.src}:${dir.gensrc}">
+         <classpath refid="jacl.classpath"/>
+    <exclude name="**/swank/canvas/SwankUtil.java"/>
+    <exclude name="**/swank/canvas3D/**"/>
+     </javac>
+  </target>
+
+  <target depends="compile_swank" name="compile">
+  </target>
+
+  <target depends="compile" description="generate the distribution" name="dist">
+    <!-- Create the distribution directory -->
+    <mkdir dir="${dir.dist}/lib"/>
+    <!-- Copy the library directory -->
+    <copy todir="${dir.build}/com/onemoonscientific/swank/library">
+    <fileset dir="${dir.src}/com/onemoonscientific/swank/library"/>
+    </copy>
+    <!-- Copy the license file-->
+    <copy todir="${dir.build}/swank">
+    <fileset file="LICENSE"/>
+    </copy>
+    <!-- Put everything in ${dir.build} into the MyProject-${DSTAMP}.jar file -->
+    <jar basedir="${dir.build}" jarfile="${dir.dist}/lib/swank.jar"/>
+  </target>
+
+  <target  depends="prepare" description="build the source " name="gensrc">
+    <java fork="yes" classname="tcl.lang.Shell">
+         <classpath refid="jacl.classpath"/>
+         <arg value="swankgen/build.tcl"/>
+    </java>
+  </target>
+
+  <target  depends="dist" description="build the source " name="wiskcon">
+    <java fork="yes" classname="tcl.lang.SwkShell">
+         <classpath refid="swank.classpath"/>
+         <arg value="resource:/com/onemoonscientific/swank/library/startconsole.tcl"/>
+    </java>
+  </target>
+
+  <target description="clean up" name="clean">
+    <!-- Delete the ${dir.build} and ${dir.dist} directory trees -->
+    <delete dir="${dir.build}"/>
+    <delete dir="${dir.dist}"/>
+    <delete dir="${dir.gensrc}"/>
+  </target>
+<target  name="format">
+
+    <!--
+
+      Invokes Jalopy as follows:
+
+      - All formatted files will have unix fileformat (\n)
+      - Load your code convention from the given url
+      - Override the convention to use the file history feature
+      - Override the convention to use alder32 checksums of files for history testing
+      - Override the convention to use loglevel "info"
+      - Override the convention to use 2 threads
+      - The import optimization feature will work (if enabled in the active
+        convention), because a classpath reference is specified
+
+        Don't forget to setup an include pattern as Jalopy truly expects
+        valid Java source files as input!
+            convention="http://www.foo.com/myConvention.xml"
+            classpathref="project.classpath">
+
+      -->
+    <jalopy fileformat="unix" history="file" historymethod="adler32" loglevel="info" threads="2">
+      <fileset dir="${dir.src}">
+        <include name="**/*.java"/>
+      </fileset>
+    </jalopy>
+  </target>
+</project>
