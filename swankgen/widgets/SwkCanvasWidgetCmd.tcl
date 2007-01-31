@@ -40,7 +40,7 @@ append specialInits {
         swkImageCanvas.setComponent((Component) this);
         addMouseListener(new MouseListener() {
                 public void mousePressed(MouseEvent mEvent) {
-                    transformMouse(mEvent);
+                    swkImageCanvas.transformMouse(mEvent);
                     currentTags = getTagFromEvent(mEvent);
 
                     if (currentTags == null) {
@@ -54,7 +54,7 @@ append specialInits {
                 }
 
                 public void mouseReleased(MouseEvent mEvent) {
-                    transformMouse(mEvent);
+                    swkImageCanvas.transformMouse(mEvent);
                     previousTags = currentTags;
 
                     /*
@@ -89,7 +89,7 @@ append specialInits {
                 }
 
                 public void mouseClicked(MouseEvent mEvent) {
-                    transformMouse(mEvent);
+                    swkImageCanvas.transformMouse(mEvent);
                     currentTags = getTagFromEvent(mEvent);
 
                     if (currentTags == null) {
@@ -103,22 +103,22 @@ append specialInits {
                 }
 
                 public void mouseEntered(MouseEvent mEvent) {
-                    transformMouse(mEvent);
+                    swkImageCanvas.transformMouse(mEvent);
                 }
 
                 public void mouseExited(MouseEvent mEvent) {
-                    transformMouse(mEvent);
+                    swkImageCanvas.transformMouse(mEvent);
                 }
             });
 
         addMouseMotionListener(new MouseMotionListener() {
                 public void mouseDragged(MouseEvent mEvent) {
-                    transformMouse(mEvent);
+                    swkImageCanvas.transformMouse(mEvent);
                     processMouseMotion(mEvent);
                 }
 
                 public void mouseMoved(MouseEvent mEvent) {
-                    transformMouse(mEvent);
+                    swkImageCanvas.transformMouse(mEvent);
                     processMouseMotion(mEvent);
                 }
             });
@@ -550,21 +550,6 @@ append specialMethods {
         SwankUtil.restoreDoubleBuffering(this, wasBuffered);
 
         return (offscreen);
-    }
-
-    public void transformMouse(MouseEvent mEvent) {
-        double x = mEvent.getX();
-        double y = mEvent.getY();
-        origMouse.setLocation(x, y);
-        transMouse.setLocation(x, y);
-
-        try {
-            transMouse = canvasTransform.inverseTransform(origMouse, transMouse);
-        } catch (java.awt.geom.NoninvertibleTransformException ntE) {
-        }
-
-        mEvent.translatePoint((int) (transMouse.getX() - x),
-            (int) (transMouse.getY() - y));
     }
 
 

@@ -427,19 +427,16 @@ proc swkMakeSpecial {widget widgetVar} {
     set vWidgets "Canvas"
     
     if {[lsearch $vWidgets $widget ] >= 0} {
-        append specialVars {
-            int scrollRegion[][]=new int[2][2];
-        }
         append specialMethods {
         public void setScrollRegion(int scrollRegion[][]) {
-             this.scrollRegion[0][0] = scrollRegion[0][0];
-             this.scrollRegion[0][1] = scrollRegion[0][1];
-             this.scrollRegion[1][0] = scrollRegion[1][0];
-             this.scrollRegion[1][1] = scrollRegion[1][1];
+             swkImageCanvas.scrollRegion[0][0] = scrollRegion[0][0];
+             swkImageCanvas.scrollRegion[0][1] = scrollRegion[0][1];
+             swkImageCanvas.scrollRegion[1][0] = scrollRegion[1][0];
+             swkImageCanvas.scrollRegion[1][1] = scrollRegion[1][1];
 
         }
         public int[][] getScrollRegion() {
-            return(scrollRegion);
+            return(swkImageCanvas.scrollRegion);
         }
         }
         set specialGets [concat  $specialGets {
@@ -1899,6 +1896,7 @@ proc swkMakeSpecial {widget widgetVar} {
         set specialGets [concat  $specialGets { {setSwkHeight tkSize Height -height} } ]
         append specialMethods {
             public Dimension getMinimumSize() {
+            int scrollRegion[][] = getScrollRegion();
 Dimension dSize = new Dimension(scrollRegion[1][0]-scrollRegion[0][0],scrollRegion[1][1]-scrollRegion[0][1]); 
                 if (dSize.width < swkwidth) {
                     dSize.width = swkwidth;
