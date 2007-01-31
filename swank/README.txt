@@ -5,9 +5,11 @@ Contents of directory
      and demo scripts
   jacl.jar and tcljava.jar: Java archive files containing the Jacl class files.
 	Note: the jacl.jar and tcljava.jar files contained here are basically the
-        same as the 1.3.1 versions.  They have one change, however, that 
-        is necessary for them to be able to load resources from jar files
-        on Mac OS X.
+        same as the 1.4.0 versions, with a fix to elminate a bug in log10.
+  tjc.jar and  janino.jar:  Java archive files containing code necessary for the 
+        Tcl to Java compiler.  See the normal Jacl 1.4 distribution for details.
+  itcl.jar:  Java archive files for ITcl an object oriented library for Tcl.
+        See the normal Jacl 1.4 distribution for details.
   wisk: A shell script that will start up the Jacl interpreter with one Swank
         toplevel window.  This is analagous to the "wish" application that 
         comes with Tcl/Tk.  After startup you can type in Jacl/Swank commands
@@ -39,6 +41,8 @@ java -classpath ./swank.jar:./tcljava.jar:./jacl.jar tcl.lang.SwkShell
 The above  assumes you are in the directory containing the three jar files
 and java is in your path.
 
+If you want to use TJC or ITcl, you must also include the appropriate jar files
+   in your classpath.
 
 Jacl supports most Tcl commands.  Documentation for Tcl commands can be found at:
 http://www.tcl.tk/man/tcl8.4/TclCmd/contents.htm
