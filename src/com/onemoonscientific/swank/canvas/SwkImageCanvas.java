@@ -14,6 +14,7 @@ import tcl.lang.*;
 import java.awt.*;
 import java.awt.font.*;
 import java.awt.geom.*;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 
 import java.io.File;
@@ -101,6 +102,7 @@ public class SwkImageCanvas implements SwkCanvasType {
     Insets emptyBorderInsets = new Insets(0, 0, 0, 0);
     Vector tagList = new Vector();
     Color insertBackground;
+    Color background = Color.WHITE;
     int insertWidth = 0;
     int insertBorderWidth = 0;
     int insertOffTime = 0;
@@ -737,6 +739,20 @@ public class SwkImageCanvas implements SwkCanvasType {
 
         return list;
     }
+    public void transformMouse(MouseEvent mEvent) {
+        double x = mEvent.getX();
+        double y = mEvent.getY();
+        origMouse.setLocation(x, y);
+        transMouse.setLocation(x, y);
+
+        try {
+            transMouse = canvasTransform.inverseTransform(origMouse, transMouse);
+        } catch (java.awt.geom.NoninvertibleTransformException ntE) {
+        }
+
+        mEvent.translatePoint((int) (transMouse.getX() - x),
+            (int) (transMouse.getY() - y));
+    }
 
     public TclObject[] scanCanvasForTags(double x1, double y1) {
         Hashtable shapeHash = new Hashtable();
@@ -856,7 +872,10 @@ public class SwkImageCanvas implements SwkCanvasType {
     }
 
     Color getBackground() {
-        return Color.WHITE;
+        return background;
+    }
+    void setBackground(Color background) {
+        this.background =  background;
     }
 
     public void repaint() {
