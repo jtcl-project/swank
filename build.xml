@@ -2,6 +2,7 @@
 <project basedir="." default="dist" name="Swank">
   <!-- set global properties for this build -->
   <property name="dir.src" value="src"/>
+  <property name="dir.src3d" value="src3d"/>
   <property name="dir.gensrc" value="gensrc"/>
   <property name="dir.build" value="build"/>
   <property name="dir.dist" value="dist"/>
@@ -42,7 +43,6 @@
     <javac debug="true" destdir="${dir.build}" srcdir="${dir.src}:${dir.gensrc}">
          <classpath refid="jacl.classpath"/>
     <exclude name="**/swank/canvas/SwankUtil.java"/>
-    <exclude name="**/swank/canvas3D/**"/>
      </javac>
   </target>
 
