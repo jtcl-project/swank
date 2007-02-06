@@ -759,8 +759,12 @@ public class SwankUtil {
                     return ((BufferedImage) imageObject);
                 } else {
                     if (imageObject instanceof ImageIcon) {
-                        BufferedImage bufferedImage = makeBufferedImage((ImageIcon) imageObject);
-
+                        imageIcon = (ImageIcon) imageObject;
+                        
+                        if ((imageIcon.getIconWidth() <= 0) || (imageIcon.getIconHeight() <= 0)) {
+                            throw new TclException(interp, "image \"" + argv[0].toString() + "\" has invalid size");
+                        }
+                        BufferedImage bufferedImage = makeBufferedImage(imageIcon);
                         return (bufferedImage);
                     } else {
                         throw new TclException(interp,
@@ -793,6 +797,9 @@ public class SwankUtil {
                 if (imageIcon == null) {
                     throw new TclException(interp,
                         "Couldn't load image " + imageFile);
+                }
+                if ((imageIcon.getIconWidth() <= 0) || (imageIcon.getIconHeight() <= 0)) {
+                    throw new TclException(interp, "image \"" + argv[0].toString() + "\" has invalid size");
                 }
 
                 BufferedImage bufferedImage = makeBufferedImage(imageIcon);
