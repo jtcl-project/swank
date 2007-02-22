@@ -12,6 +12,6 @@ JAVA=java
 # The arguments to the JAVA command
 JAVA_FLAGS=" -ms32m -mx64m"
 
-CLASSPATH=${SWANK_DIR}/swank.jar:${JACL_DIR}/jacl.jar:${JACL_DIR}/tcljava.jar
+CLASSPATH=${SWANK_DIR}/swank.jar:${JACL_DIR}/jacl.jar:${JACL_DIR}/tcljava.jar:${JACL_DIR}/tjc.jar:${JACL_DIR}/janino.jar:${JACL_DIR}/itcl.jar
 export CLASSPATH
 exec ${JAVA} ${JAVA_FLAGS} tcl.lang.SwkShell ${1+"$@"}
