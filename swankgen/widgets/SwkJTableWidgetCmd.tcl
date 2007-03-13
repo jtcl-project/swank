@@ -56,6 +56,10 @@ append specialMethods {
              this.selectionListener = selectionListener;
          }
 
+    public void setSwkModel(SwkTableModel model) {
+         swkTableModel = model;
+    }
+
 
     public void setRows(int rows) {
         int nRows = swkTableModel.getRowCount();
