@@ -847,6 +847,7 @@ class SwkJTableWidgetCmd implements Command {
         boolean resizable = false;
 
         boolean exec(final SwkJTable swkjtable, final int column) {
+            this.swkjtable = swkjtable;
             this.column = column;
             this.swkjtable = swkjtable;
             execOnThread();
