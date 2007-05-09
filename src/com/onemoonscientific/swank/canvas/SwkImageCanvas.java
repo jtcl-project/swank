@@ -102,7 +102,6 @@ public class SwkImageCanvas implements SwkCanvasType {
     Insets emptyBorderInsets = new Insets(0, 0, 0, 0);
     Vector tagList = new Vector();
     Color insertBackground;
-    Color background = Color.WHITE;
     int insertWidth = 0;
     int insertBorderWidth = 0;
     int insertOffTime = 0;
@@ -872,10 +871,10 @@ public class SwkImageCanvas implements SwkCanvasType {
     }
 
     Color getBackground() {
-        return background;
+        return component.getBackground();
     }
     void setBackground(Color background) {
-        this.background =  background;
+        component.setBackground(background);
     }
 
     public void repaint() {
