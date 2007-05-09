@@ -871,7 +871,6 @@ public class SwankUtil {
         TclObject list = TclList.newInstance();
         StringBuffer sBuf = new StringBuffer();
         String family = font.getFamily();
-        ;
 
         boolean hasSpaces = (family.indexOf(' ') != -1);
 
@@ -888,9 +887,15 @@ public class SwankUtil {
         sBuf.append(" ");
         sBuf.append(font.getSize());
 
-        if (font.getStyle() != Font.PLAIN) {
-            sBuf.append(" ");
-            sBuf.append(font.getStyle());
+        int style = font.getStyle();
+        if (style != Font.PLAIN) {
+            if (style == Font.ITALIC) {
+                sBuf.append(" italic");
+            } else if (style == Font.BOLD) {
+                sBuf.append(" bold");
+            } else if (style == (Font.BOLD+Font.ITALIC)) {
+                sBuf.append(" bold italic");
+            }
         }
 
         return (sBuf.toString());
