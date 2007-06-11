@@ -69,9 +69,6 @@ class PrintCmd implements Command {
         }
 
         Object obj = ReflectObject.get(interp, tObj);
-        PrinterJob pj = PrinterJob.getPrinterJob();
-
-        PageFormat pf = pj.defaultPage();
         Paper paper = new Paper();
         double cWidth = ((Component) obj).getWidth();
         double cHeight = ((Component) obj).getHeight();
@@ -108,10 +105,13 @@ class PrintCmd implements Command {
                 paper.getHeight() - (margin * 2));
         }
 
+/*
+        PageFormat pf = pj.defaultPage();
         pf.setPaper(paper);
         pf.setOrientation(orientation);
-        pj.setPrintable((Printable) obj, pf);
-
+*/
+        PrintUtilities.printComponent((Component) obj,paper,orientation);
+/*
         if (silent) {
             try {
                 pj.print();
@@ -127,5 +127,6 @@ class PrintCmd implements Command {
                 }
             }
         }
+*/
     }
 }
