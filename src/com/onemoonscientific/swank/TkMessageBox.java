@@ -66,7 +66,7 @@ public class TkMessageBox implements Command {
             } else if (option.equals("-parent")) {
                 parent = argv[i + 1].toString();
             } else if (option.equals("-choices")) {
-                choices = TclList.getElements(interp,argv[i + 1]);
+                choices = TclList.getElements(interp, argv[i + 1]);
             } else if (option.equals("-title")) {
                 title = argv[i + 1].toString();
             } else if (option.equals("-type")) {
@@ -91,6 +91,7 @@ public class TkMessageBox implements Command {
         } else {
             throw new TclException(interp, "invalid type for icon");
         }
+
         if ("abortretryignore".equals(type)) {
             options = optionsARI;
         } else if ("ok".equals(type)) {
@@ -105,14 +106,17 @@ public class TkMessageBox implements Command {
             options = optionsYNC;
         } else if ("input".equals(type)) {
             optionMode = false;
+
             if (choices != null) {
-                  options = new String[choices.length];
-                  for (int j=0;j<choices.length;j++) {
-                        options[j] = choices[j].toString();
-                  }
-                  if ((defaultValue == "") && options.length > 0) {
-                       defaultValue = options[0];
-                  }
+                options = new String[choices.length];
+
+                for (int j = 0; j < choices.length; j++) {
+                    options[j] = choices[j].toString();
+                }
+
+                if ((defaultValue == "") && (options.length > 0)) {
+                    defaultValue = options[0];
+                }
             } else {
                 options = null;
             }
@@ -120,7 +124,8 @@ public class TkMessageBox implements Command {
             throw new TclException(interp, "invalid value for type");
         }
 
-        (new Option()).exec(title, message, messageType, options, optionMode, defaultValue);
+        (new Option()).exec(title, message, messageType, options, optionMode,
+            defaultValue);
     }
 
     class Option extends GetValueOnEventThread {
@@ -143,6 +148,7 @@ public class TkMessageBox implements Command {
             this.defaultOption = defaultOption;
             this.optionMode = optionMode;
             execOnThread();
+
             if (optionMode) {
                 interp.setResult(options[result]);
             } else {
@@ -152,9 +158,12 @@ public class TkMessageBox implements Command {
 
         public void run() {
             if (optionMode) {
-                result = JOptionPane.showOptionDialog(null, message, title, 0, messageType, null, options, defaultOption);
+                result = JOptionPane.showOptionDialog(null, message, title, 0,
+                        messageType, null, options, defaultOption);
             } else {
-                strResult = (String) JOptionPane.showInputDialog(null, message,title,messageType,null,(Object[]) options,(Object) defaultOption);
+                strResult = (String) JOptionPane.showInputDialog(null, message,
+                        title, messageType, null, (Object[]) options,
+                        (Object) defaultOption);
             }
         }
     }
