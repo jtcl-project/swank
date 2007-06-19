@@ -25,6 +25,8 @@ append specialVars {
    SwkTableModel swkTableModel = null;
    int swkwidth = 100;
     int swkheight = 50;
+    static ColorRenderer colorRenderer  =  new ColorRenderer(true);
+    static ColorEditor colorEditor  =  new ColorEditor();
     
     SwkListSelectionListener selectionListener = null;
 }
@@ -45,8 +47,8 @@ append specialInits {
 
         //Set up tool tips for column headers.
         getTableHeader().setToolTipText("Click to specify sorting; Control-Click to specify secondary sorting");
-        setDefaultRenderer(Color.class, new ColorRenderer(true));
-        setDefaultEditor(Color.class, new ColorEditor());
+        setDefaultRenderer(Color.class, colorRenderer);
+        setDefaultEditor(Color.class, colorEditor);
 }
 append specialMethods {
          public SwkListSelectionListener getListSelectionListener() {
