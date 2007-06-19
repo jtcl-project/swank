@@ -12,6 +12,7 @@ public abstract class SetVarEvent extends TclEvent {
     Interp interp = null;
     String var1 = null;
     String var2 = null;
+    boolean onlyIfVarNonExistant = false;
     TclObject tObj = null;
     Object comp = null;
 
@@ -26,7 +27,22 @@ public abstract class SetVarEvent extends TclEvent {
                 ((TraceLock) comp).setTraceLock(true);
             }
 
-            SwkExceptionCmd.setVar(interp, var1, var2, tObj);
+            boolean setVar = true;
+
+            if (onlyIfVarNonExistant) {
+                setVar = false;
+
+                try {
+                    TclObject tObjTest = interp.getVar(var1, var2,
+                            TCL.GLOBAL_ONLY);
+                } catch (TclException tclException) {
+                    setVar = true;
+                }
+            }
+
+            if (setVar) {
+                SwkExceptionCmd.setVar(interp, var1, var2, tObj);
+            }
         }
 
         return 1;

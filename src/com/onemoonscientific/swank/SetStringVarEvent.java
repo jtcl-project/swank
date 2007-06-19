@@ -26,6 +26,16 @@ public class SetStringVarEvent extends SetVarEvent {
         this.var1 = var1;
         this.var2 = var2;
         this.value = value;
+        this.onlyIfVarNonExistant = onlyIfVarNonExistant;
+    }
+
+    public SetStringVarEvent(Interp interp, String var1, String var2,
+        String value, boolean onlyIfVarNonExistant) {
+        this.interp = interp;
+        this.var1 = var1;
+        this.var2 = var2;
+        this.value = value;
+        this.onlyIfVarNonExistant = onlyIfVarNonExistant;
     }
 
     void setObject() {
