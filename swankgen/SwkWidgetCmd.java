@@ -46,47 +46,36 @@ public class ${widgetType}Cmd implements Command {
                    ${widgetType}.getWidgetCmds(interp);
                }
         } else {
-            if (false && !EventQueue.isDispatchThread()) {
-	        CmdProc cmdProc = new CmdProc(interp,argv);
-	        try {
-	            SwingUtilities.invokeAndWait(cmdProc);
-                } catch (InterruptedException iE) {
-                    throw new TclException(interp,iE.toString());
-                } catch (Exception  e) {
-                    throw new TclException(interp,e.toString());
-                } 
-    
+            if (!EventQueue.isDispatchThread()) {
+		 cmdProcNotET(interp,argv);    
 	    } else {
-	        cmdProcET(interp,argv);
+	       System.out.println("creating widget on event queue");
 	    }
        }
     }
+
    class CmdProc implements Runnable {
 	Interp interp;
 	TclObject[] argv = null;
-        CmdProc(Interp interp, TclObject[] argv) {
+        String className = "";
+        String widgetName  = "";
+        ${widgetType} ${widgetVar} = null;
+
+        CmdProc(Interp interp, String className, String widgetName) {
 		this.interp = interp;
-		this.argv = new TclObject[argv.length];
-		for (int i=0;i<argv.length;i++) {
-			this.argv[i] = argv[i].duplicate();
-		}
+                this.className = className;
+                this.widgetName = widgetName;
         }
 
+        public ${widgetType} getwidget () {
+            return ${widgetVar};
+        }
+ 
         public void run() {
-		try {
-			cmdProcET(interp,argv);
-		}
-		catch (TclException tclE) {
-			interp.backgroundError();
-		}
-		finally  {
-		    for (int i=0;i<argv.length;i++) {
-			argv[i].release();
-		    }
-		}
-	}
-	}
-        public void cmdProcET(Interp interp, TclObject[] argv) throws TclException {
+                       ${widgetVar} = new ${widgetType}(interp, widgetName, className);
+ 	}
+   }
+        public void cmdProcNotET(Interp interp, TclObject[] argv) throws TclException {
         int i;
         if (argv.length < 2) {
             throw new TclNumArgsException(interp, 1, argv, "pathName ?options?");
@@ -97,10 +86,21 @@ public class ${widgetType}Cmd implements Command {
                 "bad window path name \"" + argv[1].toString() + "\"");
         }
 
-        ${widgetType} ${widgetVar} = null;
-        String className = argv[0].toString().substring(0, 1).toUpperCase() +
+       String cmdName = argv[0].toString();
+       String className = argv[0].toString().substring(0, 1).toUpperCase() +
             argv[0].toString().substring(1);
+       String  widgetName = argv[1].toString();
 
+        CmdProc cmdProc = new CmdProc(interp,className,widgetName);
+                try {
+	            SwingUtilities.invokeAndWait(cmdProc);
+                } catch (InterruptedException iE) {
+                    throw new TclException(interp,iE.toString());
+                } catch (Exception  e) {
+                    throw new TclException(interp,e.toString());
+                }
+      	 ${widgetType} ${widgetVar} = cmdProc.getwidget();
+ 
         if (Widgets.exists(argv[1].toString())) {
             ${widgetVar} = (${widgetType}) Widgets.get(interp, argv[1].toString());
 
@@ -119,12 +119,11 @@ public class ${widgetType}Cmd implements Command {
                     argv[1].toString().charAt(1) + "\"");
             }
 
-            ${widgetVar} = new ${widgetType}(interp, argv[1].toString(), className);
+ 
             ${widgetVar}.className = className.intern();
 
             LinkedList children = null;
             interp.createCommand(argv[1].toString(), new ${widgetType}WidgetCmd());
-
             TclObject tObj = ReflectObject.newInstance(interp, ${widgetType}.class, ${widgetVar});
             tObj.preserve();
             ${widgetVar}.configure(interp,  argv, 2);
@@ -135,4 +134,5 @@ public class ${widgetType}Cmd implements Command {
         BindCmd.addDefaultListeners(interp, ${widgetVar});
         interp.setResult(argv[1].toString());
     }
-}}
+}
+}
