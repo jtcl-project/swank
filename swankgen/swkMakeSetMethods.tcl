@@ -118,7 +118,7 @@ foreach method $setMethods {
 				} elseif {[info exists simpleTypes($argType) ]} {
                                                 set cmd [getSetter $widgetVar $argType]
                                                 if {$rootPart == "Command"} {
-						    append cmd "\n(new Setter((SwkWidget) this,opt,true)).exec(value);"
+						    append cmd "\n(new Setter((SwkWidget) this,opt,false)).exec(value);"
                                                 } else {
 						    append cmd "\n(new Setter((SwkWidget) this,opt)).exec(value);"
                                                 }
