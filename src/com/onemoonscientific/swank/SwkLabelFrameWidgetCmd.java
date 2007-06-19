@@ -33,9 +33,11 @@ class SwkLabelFrameWidgetCmd implements Command {
     static final private int OPT_OBJECT = 2;
     static final private int OPT_JADD = 3;
     static boolean gotDefaults = false;
+
     public static String[] getValidCmds() {
-         return validCmds;
+        return validCmds;
     }
+
     public void cmdProc(final Interp interp, final TclObject[] argv)
         throws TclException {
         int i;
