@@ -190,7 +190,9 @@ public class FontCmd implements Command {
                     "can't get component for font command");
             }
 
-            FontMetrics fontMetrics = comp.getFontMetrics(font);
+            // FontMetrics fontMetrics = comp.getFontMetrics(font);
+            FontMetrics fontMetrics = (new Add()).exec(comp, font);
+
             boolean getAscent = true;
             boolean getDescent = true;
             boolean getLinespace = true;
@@ -275,6 +277,24 @@ public class FontCmd implements Command {
 
             break;
         }
+        }
+    }
+
+    class Add extends GetValueOnEventThread {
+        Component comp = null;
+        Font font = null;
+        FontMetrics fontMetrics = null;
+
+        FontMetrics exec(final Component comp, final Font font) {
+            this.comp = comp;
+            this.font = font;
+            execOnThread();
+
+            return fontMetrics;
+        }
+
+        public void run() {
+            fontMetrics = comp.getFontMetrics(font);
         }
     }
 }
