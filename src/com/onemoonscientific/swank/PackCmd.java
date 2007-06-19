@@ -641,6 +641,8 @@ public class PackCmd implements Command {
 
                     //parent.add (strippedArgs.toString (), (Component) window);
                     parent.add((Component) window, strippedArgs, packPosition);
+
+                    //           ((JComponent) window).revalidate();
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
@@ -648,7 +650,8 @@ public class PackCmd implements Command {
                 }
             }
 
-            Widgets.relayoutContainer(parent);
+            ((JComponent) parent).revalidate();
+            LayoutHandler.addLayoutRequest(interp, parent);
         }
 
         public void run() {
