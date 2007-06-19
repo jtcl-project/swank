@@ -895,6 +895,7 @@ public class PackerLayout implements LayoutManager2 {
         Dimension cdim = target.getSize();
         Container target2 = target;
 
+        //   System.out.println("minimumLayoutSize "+target.toString());
         if (target instanceof JComponent) {
             JRootPane jroot = ((JComponent) target).getRootPane();
 
@@ -936,6 +937,8 @@ public class PackerLayout implements LayoutManager2 {
 
         dmax.height = 0;
 
+        Container c1 = Widgets.getContainer(target);
+
         int nmembers = target.getComponentCount();
         PackRecord pr;
 
@@ -943,14 +946,14 @@ public class PackerLayout implements LayoutManager2 {
             Component m = target.getComponent(i);
 
             //System.out.println(m.getName()+" "+m.getParent().getName());
-            if (m.getParent() != Widgets.getContainer(target)) {
+            if (m.getParent() != c1) {
                 continue;
             }
 
             d = m.getMinimumSize();
 
-            //System.out.println("minSize for comp is "+d.toString());
-            //System.out.println("cur Max for comp is "+dmax.toString());
+            // System.out.println("minSize for comp is "+d.toString());
+            // System.out.println("cur Max for comp is "+dmax.toString());
             pr = (PackRecord) component_table.get(m);
 
             if (pr == null) {
@@ -978,7 +981,7 @@ public class PackerLayout implements LayoutManager2 {
                 dim_width = d.width;
             }
 
-            //System.out.println("new Max for comp is "+dmax.toString());
+            //   System.out.println("new Max for comp is "+dmax.toString());
         }
 
         if (dim_width > dmax.width) {
@@ -992,12 +995,10 @@ public class PackerLayout implements LayoutManager2 {
         dmax.width += (insets.left + insets.right);
         dmax.height += (insets.top + insets.bottom);
 
-        /*System.out.println("Insets: " + insets.left + " " +
-        insets.right + " " +
-        insets.top + " " +
-        insets.bottom);
-         */
-
+        //  System.out.println("Insets: " + insets.left + " " +
+        //   insets.right + " " +
+        //   insets.top + " " +
+        //   insets.bottom);
         //System.out.println("Container minimum size: " + dmax.width + "x" + dmax.height);
         return dmax;
     }
@@ -1024,7 +1025,7 @@ public class PackerLayout implements LayoutManager2 {
         int x;
         int y;
 
-        //System.out.println("layout "+target.toString());
+        //      System.out.println("layoutContainer "+target.toString());
         PackRecord pr;
         int padx;
         int pady;
@@ -1053,10 +1054,11 @@ public class PackerLayout implements LayoutManager2 {
             filly = (pr.fill == FILL_OBJ_Y) || (pr.fill == FILL_OBJ_BOTH);
 
             current.doLayout();
+            prefsize = current.getPreferredSize();
 
             if ((pr.side == SIDE_OBJ_TOP) || (pr.side == SIDE_OBJ_BOTTOM)) {
                 frameWidth = cavityWidth;
-                frameHeight = current.getPreferredSize().height + pady +
+                frameHeight = prefsize.height + pady +
                     (pr.ipady[0] + pr.ipady[1]);
 
                 if (pr.expand == true) {
@@ -1080,7 +1082,7 @@ public class PackerLayout implements LayoutManager2 {
                 }
             } else {
                 frameHeight = cavityHeight;
-                frameWidth = current.getPreferredSize().width + padx +
+                frameWidth = prefsize.width + padx +
                     (pr.ipadx[0] + pr.ipadx[1]);
 
                 if (pr.expand == true) {
@@ -1105,8 +1107,6 @@ public class PackerLayout implements LayoutManager2 {
             }
 
             // Now that we have the frame size find out the actual component size
-            prefsize = current.getPreferredSize();
-
             width = prefsize.width + (pr.ipadx[0] + pr.ipadx[1]);
 
             if (fillx || (width > (frameWidth - padx))) {
