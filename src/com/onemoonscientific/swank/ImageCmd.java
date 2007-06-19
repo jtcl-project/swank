@@ -217,22 +217,29 @@ public class ImageCmd implements Command {
             }
 
             Object sourceObject = images.get(argv[2].toString());
+
             if (sourceObject == null) {
                 throw new TclException(interp,
                     "image " + argv[2].toString() + " doesn't exist");
             }
+
             if (!(sourceObject instanceof BufferedImage)) {
-                throw new TclException(interp, "image " + argv[2].toString() + " not BufferedImage");
+                throw new TclException(interp,
+                    "image " + argv[2].toString() + " not BufferedImage");
             }
+
             double scaleValue = TclDouble.get(interp, argv[3]);
             double offset = 0.0;
+
             if (argv.length == 5) {
                 offset = TclDouble.get(interp, argv[4]);
             }
-            BufferedImage sourceImage = (BufferedImage) sourceObject;
-            BufferedImage destImage = scale(interp, sourceImage, scaleValue, offset,sourceImage);
-            //images.put(argv[2].toString(),destImage);
 
+            BufferedImage sourceImage = (BufferedImage) sourceObject;
+            BufferedImage destImage = scale(interp, sourceImage, scaleValue,
+                    offset, sourceImage);
+
+            //images.put(argv[2].toString(),destImage);
             break;
         }
 
@@ -310,7 +317,8 @@ public class ImageCmd implements Command {
 
     public static BufferedImage scale(Interp interp, BufferedImage sourceImage,
         double scaleValue, double offsetValue, BufferedImage destImage) {
-        RescaleOp op = new RescaleOp((float) scaleValue, (float) offsetValue, null);
+        RescaleOp op = new RescaleOp((float) scaleValue, (float) offsetValue,
+                null);
 
         return (op.filter(sourceImage, destImage));
     }
