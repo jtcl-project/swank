@@ -4,7 +4,7 @@
  * See the file "LICENSE" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
-*/
+ */
 package com.onemoonscientific.swank.canvas;
 
 import com.onemoonscientific.swank.*;
@@ -12,9 +12,9 @@ import com.onemoonscientific.swank.*;
 import tcl.lang.*;
 
 import java.awt.*;
+import java.awt.event.*;
 import java.awt.font.*;
 import java.awt.geom.*;
-import java.awt.event.*;
 import java.awt.image.BufferedImage;
 
 import java.io.File;
@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.util.*;
 
 import javax.imageio.ImageIO;
+
+import javax.swing.SwingUtilities;
 
 
 /** Class for objects which represent a Swank swkcanvas widget. */
@@ -323,7 +325,7 @@ public class SwkImageCanvas implements SwkCanvasType {
 
             return (offscreen);
         }
-    */
+     */
     public void addShape(SwkShape shape) throws SwkException {
         shape.previous = lastShape;
 
@@ -738,6 +740,7 @@ public class SwkImageCanvas implements SwkCanvasType {
 
         return list;
     }
+
     public void transformMouse(MouseEvent mEvent) {
         double x = mEvent.getX();
         double y = mEvent.getY();
@@ -763,13 +766,17 @@ public class SwkImageCanvas implements SwkCanvasType {
         SwkShape swkShape = null;
         SwkShape nextShape = lastShape;
         int closeEnough = 2;
-        int closeEnough2 = closeEnough*closeEnough;
+        int closeEnough2 = closeEnough * closeEnough;
         double[] tcoords = new double[6];
-        double tx1=0.0,ty1=0.0,tx2=0.0,ty2=0.0;
+        double tx1 = 0.0;
+        double ty1 = 0.0;
+        double tx2 = 0.0;
+        double ty2 = 0.0;
 
         while (nextShape != null) {
             swkShape = nextShape;
             nextShape = swkShape.previous;
+
             if (swkShape.getState() != SwkShape.ACTIVE) {
                 continue;
             }
@@ -780,45 +787,56 @@ public class SwkImageCanvas implements SwkCanvasType {
                 }
             } else {
                 boolean hit = false;
+
                 if (swkShape.fill != null) {
                     Rectangle bounds = swkShape.shape.getBounds();
+
                     if (!bounds.contains(x1, y1)) {
                         continue;
-                    }  else {
-                       hit = true;
+                    } else {
+                        hit = true;
                     }
                 }
+
                 if (!hit) {
                     PathIterator pI = swkShape.shape.getPathIterator(null);
                     boolean intersects = false;
+
                     while (!pI.isDone()) {
                         int type = pI.currentSegment(tcoords);
+
                         if (type == PathIterator.SEG_LINETO) {
-                           tx2 = tcoords[0];
-                           ty2 = tcoords[0];
-                           double dis = Line2D.ptSegDistSq(tx1,ty1,tx2,ty2,x1,y1);
-                           tx1 = tx2;
-                           ty1 = ty2;
-                           if (dis <= closeEnough2) {
+                            tx2 = tcoords[0];
+                            ty2 = tcoords[0];
+
+                            double dis = Line2D.ptSegDistSq(tx1, ty1, tx2, ty2,
+                                    x1, y1);
+                            tx1 = tx2;
+                            ty1 = ty2;
+
+                            if (dis <= closeEnough2) {
                                 intersects = true;
+
                                 break;
-                           }
-                        
+                            }
                         } else if (type == PathIterator.SEG_MOVETO) {
-                           tx1 = tcoords[0];
-                           ty1 = tcoords[0];
+                            tx1 = tcoords[0];
+                            ty1 = tcoords[0];
                         }
+
                         pI.next();
                     }
+
                     if (!intersects) {
-                          continue;
+                        continue;
                     }
+
                     /*
                     if (!swkShape.shape.intersects(x1 - closeEnough,
                                 y1 - closeEnough, 2 * closeEnough, 2 * closeEnough)) {
                         continue;
                     }
-                   */
+                     */
                 }
             }
 
@@ -873,20 +891,34 @@ public class SwkImageCanvas implements SwkCanvasType {
     Color getBackground() {
         return component.getBackground();
     }
+
     void setBackground(Color background) {
         component.setBackground(background);
     }
 
     public void repaint() {
-        if (component != null) {
-            component.repaint();
-        }
+        final Component component2 = component;
+
+        SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    if (component2 != null) {
+                        component2.repaint();
+                    }
+                }
+            });
     }
 
     public void repaint(int delay) {
-        if (component != null) {
-            component.repaint(delay);
-        }
+        final Component component2 = component;
+        final int delay2 = delay;
+
+        SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    if (component2 != null) {
+                        component2.repaint(delay2);
+                    }
+                }
+            });
     }
 
     public void paint(int width, int height, String fileName) {
