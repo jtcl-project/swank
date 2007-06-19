@@ -12,9 +12,9 @@ import tcl.lang.*;
 import java.awt.*;
 
 import javax.swing.event.TableModelEvent;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
 
 
 class SwkJTableWidgetCmd implements Command {
@@ -22,7 +22,7 @@ class SwkJTableWidgetCmd implements Command {
         "cget", "configure", "object", "jadd", "sort", "column", "rowforindex",
         "indexforrow", "update", "set", "get", "mset", "mget", "setmodel",
         "selection", "showrow", "columnatpoint", "rowatpoint",
-        "convertcolumnindextomodel","columnwidth","columnresizable"
+        "convertcolumnindextomodel", "columnwidth", "columnresizable"
     };
     static final private int OPT_CGET = 0;
     static final private int OPT_CONFIGURE = 1;
@@ -48,9 +48,11 @@ class SwkJTableWidgetCmd implements Command {
     static boolean gotDefaults = false;
     int index;
     Interp interp = null;
+
     public static String[] getValidCmds() {
-         return validCmds;
+        return validCmds;
     }
+
     public void cmdProc(final Interp interp, final TclObject[] argv)
         throws TclException {
         int i;
@@ -198,12 +200,15 @@ class SwkJTableWidgetCmd implements Command {
             convertColumnIndexToModel(interp, swkjtable, argv);
 
             break;
+
         case OPT_COLUMNWIDTH:
             columnWidth(interp, swkjtable, argv);
+
             break;
 
         case OPT_COLUMNRESIZABLE:
             columnResizable(interp, swkjtable, argv);
+
             break;
 
         default:
@@ -419,44 +424,48 @@ class SwkJTableWidgetCmd implements Command {
         if (argv.length != 3) {
             throw new TclNumArgsException(interp, 2, argv, "column");
         }
+
         int column = TclInteger.get(interp, argv[2]);
         int value = (new ConvertColumn()).exec(swkjtable, column);
         interp.setResult(value);
-
     }
-    void columnWidth(final Interp interp,
-        final SwkJTable swkjtable, final TclObject[] argv)
-        throws TclException {
+
+    void columnWidth(final Interp interp, final SwkJTable swkjtable,
+        final TclObject[] argv) throws TclException {
         if ((argv.length != 3) && (argv.length != 4)) {
             throw new TclNumArgsException(interp, 2, argv, "column");
         }
+
         int column = TclInteger.get(interp, argv[2]);
         int width = 0;
+
         if (argv.length == 4) {
             width = TclInteger.get(interp, argv[3]);
-            (new SetColumnWidth()).exec(swkjtable, column,width);
-        }  else {
+            (new SetColumnWidth()).exec(swkjtable, column, width);
+        } else {
             width = (new GetColumnWidth()).exec(swkjtable, column);
         }
-        interp.setResult(width);
 
+        interp.setResult(width);
     }
-    void columnResizable(final Interp interp,
-        final SwkJTable swkjtable, final TclObject[] argv)
-        throws TclException {
+
+    void columnResizable(final Interp interp, final SwkJTable swkjtable,
+        final TclObject[] argv) throws TclException {
         if ((argv.length != 3) && (argv.length != 4)) {
             throw new TclNumArgsException(interp, 2, argv, "column");
         }
+
         int column = TclInteger.get(interp, argv[2]);
         boolean resizable = false;
+
         if (argv.length == 4) {
             resizable = TclBoolean.get(interp, argv[3]);
-            (new SetColumnResizable()).exec(swkjtable, column,resizable);
-        }  else {
+            (new SetColumnResizable()).exec(swkjtable, column, resizable);
+        } else {
             resizable = (new GetColumnResizable()).exec(swkjtable, column);
         }
-        interp.setResult(resizable);
 
+        interp.setResult(resizable);
     }
 
     class Sort extends UpdateOnEventThread {
@@ -740,7 +749,7 @@ class SwkJTableWidgetCmd implements Command {
         }
     }
 
-   class ConvertColumn extends GetValueOnEventThread {
+    class ConvertColumn extends GetValueOnEventThread {
         SwkJTable swkjtable = null;
         int column = 0;
         int result = 0;
@@ -749,40 +758,44 @@ class SwkJTableWidgetCmd implements Command {
             this.column = column;
             this.swkjtable = swkjtable;
             execOnThread();
+
             return result;
         }
 
         public void run() {
-                result = swkjtable.convertColumnIndexToModel(column);
+            result = swkjtable.convertColumnIndexToModel(column);
         }
-   }
+    }
 
-   class RowOrColumnAtPoint extends GetValueOnEventThread {
+    class RowOrColumnAtPoint extends GetValueOnEventThread {
         SwkJTable swkjtable = null;
         int x = 0;
         int y = 0;
         boolean rowMode = false;
         int result = 0;
 
-        int exec(final SwkJTable swkjtable, final int x, final int y, final boolean rowMode) {
+        int exec(final SwkJTable swkjtable, final int x, final int y,
+            final boolean rowMode) {
             this.x = x;
             this.y = y;
             this.rowMode = rowMode;
             this.swkjtable = swkjtable;
             execOnThread();
+
             return result;
         }
 
         public void run() {
             if (rowMode) {
-                result = swkjtable.rowAtPoint(new Point(x,y));
+                result = swkjtable.rowAtPoint(new Point(x, y));
             } else {
-                result = swkjtable.columnAtPoint(new Point(x,y));
+                result = swkjtable.columnAtPoint(new Point(x, y));
                 result = swkjtable.convertColumnIndexToModel(result);
             }
         }
     }
-   class SetColumnWidth extends UpdateOnEventThread {
+
+    class SetColumnWidth extends UpdateOnEventThread {
         SwkJTable swkjtable = null;
         int column = 0;
         int width = 0;
@@ -795,17 +808,20 @@ class SwkJTableWidgetCmd implements Command {
         }
 
         public void run() {
-             TableColumnModel cM = swkjtable.getColumnModel();
-             TableColumn tableColumn = cM.getColumn(column);
-             tableColumn.setPreferredWidth(width);
-             if (width == 0) {
-                 tableColumn.setMinWidth(width);
-                 tableColumn.setMaxWidth(width);
-             }
-             tableColumn.setWidth(width);
+            TableColumnModel cM = swkjtable.getColumnModel();
+            TableColumn tableColumn = cM.getColumn(column);
+            tableColumn.setPreferredWidth(width);
+
+            if (width == 0) {
+                tableColumn.setMinWidth(width);
+                tableColumn.setMaxWidth(width);
+            }
+
+            tableColumn.setWidth(width);
         }
-   }
-   class GetColumnWidth extends GetValueOnEventThread {
+    }
+
+    class GetColumnWidth extends GetValueOnEventThread {
         SwkJTable swkjtable = null;
         int column = 0;
         int width = 0;
@@ -814,21 +830,24 @@ class SwkJTableWidgetCmd implements Command {
             this.column = column;
             this.swkjtable = swkjtable;
             execOnThread();
+
             return width;
         }
 
         public void run() {
-             TableColumnModel cM = swkjtable.getColumnModel();
-             TableColumn tableColumn = cM.getColumn(column);
-             width = tableColumn.getWidth();
+            TableColumnModel cM = swkjtable.getColumnModel();
+            TableColumn tableColumn = cM.getColumn(column);
+            width = tableColumn.getWidth();
         }
-   }
-   class SetColumnResizable extends UpdateOnEventThread {
+    }
+
+    class SetColumnResizable extends UpdateOnEventThread {
         SwkJTable swkjtable = null;
         int column = 0;
         boolean resizable = false;
 
-        void exec(final SwkJTable swkjtable, final int column, final boolean resizable) {
+        void exec(final SwkJTable swkjtable, final int column,
+            final boolean resizable) {
             this.column = column;
             this.resizable = resizable;
             this.swkjtable = swkjtable;
@@ -836,12 +855,13 @@ class SwkJTableWidgetCmd implements Command {
         }
 
         public void run() {
-             TableColumnModel cM = swkjtable.getColumnModel();
-             TableColumn tableColumn = cM.getColumn(column);
-             tableColumn.setResizable(resizable);
+            TableColumnModel cM = swkjtable.getColumnModel();
+            TableColumn tableColumn = cM.getColumn(column);
+            tableColumn.setResizable(resizable);
         }
-   }
-   class GetColumnResizable extends UpdateOnEventThread {
+    }
+
+    class GetColumnResizable extends UpdateOnEventThread {
         SwkJTable swkjtable = null;
         int column = 0;
         boolean resizable = false;
@@ -851,14 +871,14 @@ class SwkJTableWidgetCmd implements Command {
             this.column = column;
             this.swkjtable = swkjtable;
             execOnThread();
+
             return resizable;
         }
 
         public void run() {
-             TableColumnModel cM = swkjtable.getColumnModel();
-             TableColumn tableColumn = cM.getColumn(column);
-             resizable = tableColumn.getResizable();
+            TableColumnModel cM = swkjtable.getColumnModel();
+            TableColumn tableColumn = cM.getColumn(column);
+            resizable = tableColumn.getResizable();
         }
-   }
-
+    }
 }

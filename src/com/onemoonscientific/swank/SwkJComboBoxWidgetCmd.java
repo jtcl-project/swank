@@ -39,9 +39,11 @@ class SwkJComboBoxWidgetCmd implements Command {
     int index;
     Interp interp = null;
     SwkJComboBox swkjcombobox = null;
+
     public static String[] getValidCmds() {
-         return validCmds;
+        return validCmds;
     }
+
     public void cmdProc(final Interp interp, final TclObject[] argv)
         throws TclException {
         this.interp = interp;
@@ -179,6 +181,7 @@ class SwkJComboBoxWidgetCmd implements Command {
             }
 
             index = TclInteger.get(interp, argv[3]);
+
             String result = (new GetItemAt()).exec(index);
             interp.setResult(result);
         } else if (argv[2].toString().equals("append")) {
@@ -260,6 +263,7 @@ class SwkJComboBoxWidgetCmd implements Command {
         String exec(int index) {
             this.index = index;
             execOnThread();
+
             return result;
         }
 
@@ -270,11 +274,12 @@ class SwkJComboBoxWidgetCmd implements Command {
 
     class AddItems extends GetValueOnEventThread {
         Object[] itemObjects = null;
+        String s1 = null;
 
         void exec(final String[] itemStrings) {
             getObjects(itemStrings);
             execOnThread();
-            swkjcombobox.commandListener.setVarValue();
+            swkjcombobox.commandListener.setVarValue(s1);
             swkjcombobox.setCreated(true);
         }
 
@@ -312,6 +317,11 @@ class SwkJComboBoxWidgetCmd implements Command {
                     swkjcombobox.addItem((String) itemObjects[i]);
                 }
             }
+
+            s1 = swkjcombobox.getSelectedItem().toString();
+
+            //   System.out.println("*****getselected Item :"+ s1);
+            //   swkjcombobox.setCreated(true);
         }
     }
 }

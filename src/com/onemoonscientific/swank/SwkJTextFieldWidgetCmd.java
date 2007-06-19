@@ -4,7 +4,7 @@
  * See the file "LICENSE" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
-*/
+ */
 package com.onemoonscientific.swank;
 
 import tcl.lang.*;
@@ -43,9 +43,11 @@ class SwkJTextFieldWidgetCmd implements Command {
     static boolean gotDefaults = false;
     int index;
     Interp interp = null;
+
     public static String[] getValidCmds() {
-         return validCmds;
+        return validCmds;
     }
+
     public void cmdProc(Interp interp, TclObject[] argv)
         throws TclException {
         int i;
@@ -65,7 +67,7 @@ class SwkJTextFieldWidgetCmd implements Command {
                 "bad window path name \"" + argv[0].toString() + "\"");
         }
 
-        SwkJTextField swkjtextfield = (SwkJTextField) ReflectObject.get(interp,
+        final SwkJTextField swkjtextfield = (SwkJTextField) ReflectObject.get(interp,
                 tObj);
 
         switch (opt) {
@@ -147,46 +149,50 @@ class SwkJTextFieldWidgetCmd implements Command {
 
         case OPT_XVIEW:
 
-            int maxSize = swkjtextfield.getText().length();
-            BoundedRangeModel brm = swkjtextfield.getHorizontalVisibility();
-
             if (argv.length == 2) {
-                double fx1 = (1.0 * brm.getValue()) / (brm.getMaximum() -
-                    brm.getMinimum());
-                double fx2 = (1.0 * (brm.getValue() + brm.getExtent())) / (brm.getMaximum() -
-                    brm.getMinimum());
-                TclObject list = TclList.newInstance();
-                TclList.append(interp, list, TclDouble.newInstance(fx1));
-                TclList.append(interp, list, TclDouble.newInstance(fx2));
-                interp.setResult(list);
+                (new ViewValues()).exec(swkjtextfield);
             } else if (argv.length == 3) {
                 index = getIndex2(interp, swkjtextfield, argv, -1);
 
-                double fx1 = (1.0 * index) / maxSize;
+                SwingUtilities.invokeLater(new Runnable() {
+                        public void run() {
+                            BoundedRangeModel brm = swkjtextfield.getHorizontalVisibility();
+                            int maxSize = swkjtextfield.getText().length();
+                            double fx1 = (1.0 * index) / maxSize;
 
-                if (fx1 < 0.0) {
-                    fx1 = 0.0;
-                }
+                            if (fx1 < 0.0) {
+                                fx1 = 0.0;
+                            }
 
-                int x = (int) ((fx1 * (brm.getMaximum() - brm.getMinimum())) +
-                    brm.getMinimum());
-                swkjtextfield.setScrollOffset(x);
+                            final int x = (int) ((fx1 * (brm.getMaximum() -
+                                brm.getMinimum())) + brm.getMinimum());
+                            swkjtextfield.setScrollOffset(x);
+                        }
+                    });
             } else if (argv[2].toString().equals("moveto")) {
                 if (argv.length != 4) {
                     throw new TclNumArgsException(interp, 2, argv,
                         "option ?arg arg ...?");
                 }
 
-                double fx1 = TclDouble.get(interp, argv[3]);
+                final double fx1 = TclDouble.get(interp, argv[3]);
 
-                if (fx1 < 0.0) {
-                    fx1 = 0.0;
-                }
+                SwingUtilities.invokeLater(new Runnable() {
+                        public void run() {
+                            BoundedRangeModel brm = swkjtextfield.getHorizontalVisibility();
+                            double fx = fx1;
 
-                int x = (int) ((fx1 * (brm.getMaximum() - brm.getMinimum())) +
-                    brm.getMinimum());
+                            if (fx1 < 0.0) {
+                                fx = 0.0;
+                            }
 
-                swkjtextfield.setScrollOffset(x);
+                            final int x = (int) ((fx * (brm.getMaximum() -
+                                brm.getMinimum())) + brm.getMinimum());
+
+                            //            System.out.println("Moveto is called for TextField " + x);
+                            swkjtextfield.setScrollOffset(x);
+                        }
+                    });
             } else if (argv[2].toString().equals("scroll")) {
                 if (argv.length != 5) {
                     throw new TclNumArgsException(interp, 2, argv,
@@ -194,15 +200,23 @@ class SwkJTextFieldWidgetCmd implements Command {
                 }
 
                 if (argv[4].toString().equals("units")) {
-                    int x = swkjtextfield.getScrollOffset();
-                    int units = TclInteger.get(interp, argv[3]);
-                    x += units;
-                    swkjtextfield.setScrollOffset(x);
+                    final int units = TclInteger.get(interp, argv[3]);
+
+                    SwingUtilities.invokeLater(new Runnable() {
+                            public void run() {
+                                int x = swkjtextfield.getScrollOffset();
+                                swkjtextfield.setScrollOffset(x + units);
+                            }
+                        });
                 } else if (argv[4].toString().equals("pages")) {
-                    int x = swkjtextfield.getScrollOffset();
-                    int units = TclInteger.get(interp, argv[3]);
-                    x += units;
-                    swkjtextfield.setScrollOffset(x);
+                    final int units = TclInteger.get(interp, argv[3]);
+
+                    SwingUtilities.invokeLater(new Runnable() {
+                            public void run() {
+                                int x = swkjtextfield.getScrollOffset();
+                                swkjtextfield.setScrollOffset(x + units);
+                            }
+                        });
                 }
             } else {
                 throw new TclException(interp,
@@ -310,6 +324,30 @@ class SwkJTextFieldWidgetCmd implements Command {
                     // FIXME need to do something like add background error
                 }
             }
+        }
+    }
+
+    class ViewValues extends GetValueOnEventThread {
+        SwkJTextField swkjtextfield = null;
+        double fx1 = 0.0;
+        double fx2 = 0.0;
+
+        void exec(final SwkJTextField swkjtextfield) throws TclException {
+            this.swkjtextfield = swkjtextfield;
+            execOnThread();
+
+            TclObject list = TclList.newInstance();
+            TclList.append(interp, list, TclDouble.newInstance(fx1));
+            TclList.append(interp, list, TclDouble.newInstance(fx2));
+            interp.setResult(list);
+        }
+
+        public void run() {
+            BoundedRangeModel brm = swkjtextfield.getHorizontalVisibility();
+            fx1 = (1.0 * brm.getValue()) / (brm.getMaximum() -
+                brm.getMinimum());
+            fx2 = (1.0 * (brm.getValue() + brm.getExtent())) / (brm.getMaximum() -
+                brm.getMinimum());
         }
     }
 }

@@ -41,9 +41,11 @@ class SwkJMenuWidgetCmd implements Command {
     static final private int OPT_INDEX = 9;
     static boolean gotDefaults = false;
     Interp interp;
+
     public static String[] getValidCmds() {
-         return validCmds;
+        return validCmds;
     }
+
     public void cmdProc(final Interp interp, final TclObject[] argv)
         throws TclException {
         int i;
@@ -119,8 +121,6 @@ class SwkJMenuWidgetCmd implements Command {
             break;
 
         case OPT_ADD:
-
-            // FIXME should happen on ET
             addmenu(interp, swkjmenu, argv);
 
             break;
@@ -246,6 +246,32 @@ class SwkJMenuWidgetCmd implements Command {
         (new Delete()).exec(swkjmenu, firstArg, lastArg);
     }
 
+    /*      public SwkWidget Addrun(SwkJMenu swkjmenu,String itemType) {
+          //JComponent jcomp = null;
+         if (itemType.equals("command")) {
+              SwkJMenuItem jmenuItem = new SwkJMenuItem(interp, "", "SwkJMenuItem");
+              return (SwkWidget)jmenuItem;
+
+          } else if (itemType.startsWith("check")) {
+              SwkJCheckBoxMenuItem jmenuItem = new SwkJCheckBoxMenuItem(interp,
+                      "", "SwkJMenuItem");
+
+          } else if (itemType.startsWith("radio")) {
+              SwkJRadioButtonMenuItem jmenuItem = new SwkJRadioButtonMenuItem(interp,
+                      "", "SwkJMenuItem");
+
+          } else if (itemType.startsWith("sepa")) {
+              SwkJMenuItem jmenuItem = null;
+
+          } else if (itemType.equals("cascade")) {
+              String menuName = null;
+              int j = 0;
+          }
+
+            return jmenuItem;
+          }
+
+     */
     public void addmenu(Interp interp, SwkJMenu swkjmenu, TclObject[] argv)
         throws TclException {
         int i;
@@ -255,23 +281,9 @@ class SwkJMenuWidgetCmd implements Command {
                 "option ?arg arg ...?");
         }
 
-        if (argv[2].toString().equals("command")) {
-            SwkJMenuItem jmenuItem = new SwkJMenuItem(interp, "", "SwkJMenuItem");
-            jmenuItem.configure(interp, argv, 3);
-            (new Add()).exec(swkjmenu, (JComponent) jmenuItem);
-        } else if (argv[2].toString().startsWith("check")) {
-            SwkJCheckBoxMenuItem jmenuItem = new SwkJCheckBoxMenuItem(interp,
-                    "", "SwkJMenuItem");
-            jmenuItem.configure(interp, argv, 3);
-            (new Add()).exec(swkjmenu, (JComponent) jmenuItem);
-        } else if (argv[2].toString().startsWith("radio")) {
-            SwkJRadioButtonMenuItem jmenuItem = new SwkJRadioButtonMenuItem(interp,
-                    "", "SwkJMenuItem");
-            jmenuItem.configure(interp, argv, 3);
-            (new Add()).exec(swkjmenu, (JComponent) jmenuItem);
-        } else if (argv[2].toString().startsWith("sepa")) {
-            (new Add()).exec(swkjmenu, null);
-        } else if (argv[2].toString().equals("cascade")) {
+        String itemType = argv[2].toString();
+
+        if (itemType.equals("cascade")) {
             String menuName = null;
             int j = 0;
 
@@ -292,11 +304,10 @@ class SwkJMenuWidgetCmd implements Command {
                 }
             }
 
-            SwkJMenu cascade = null;
             TclObject tObj = (TclObject) Widgets.theWidgets.get(menuName);
 
             if (tObj == null) {
-                cascade = new SwkJMenu(interp, menuName, "Menu");
+                SwkJMenu cascade = (new Add()).exec(swkjmenu, menuName, itemType);
                 interp.createCommand(menuName, new SwkJMenuWidgetCmd());
                 tObj = ReflectObject.newInstance(interp, SwkJMenu.class, cascade);
                 tObj.preserve();
@@ -306,15 +317,19 @@ class SwkJMenuWidgetCmd implements Command {
                 Widgets.addNewWidget(interp, menuName, tObj);
                 cascade.setCreated(false);
             } else {
-                cascade = (SwkJMenu) ReflectObject.get(interp, tObj);
+                SwkJMenu cascade = (SwkJMenu) ReflectObject.get(interp, tObj);
+                (new Add()).exec(swkjmenu, menuName, cascade);
                 cascade.configure(interp, argNew, 0);
             }
+        } else {
+            SwkWidget swkWidget = (new Add()).exec(swkjmenu, itemType);
 
-            (new Add()).exec(swkjmenu, (JComponent) cascade);
+            if (swkWidget != null) {
+                swkWidget.configure(interp, argv, 3);
+            }
         }
 
         swkjmenu.revalidate();
-        swkjmenu.repaint();
 
         return;
     }
@@ -483,21 +498,70 @@ class SwkJMenuWidgetCmd implements Command {
         }
     }
 
-    class Add extends UpdateOnEventThread {
+    class Add extends GetValueOnEventThread {
         SwkJMenu swkjmenu = null;
         JComponent jcomp = null;
+        String itemType = "";
+        String menuName = "";
+        SwkWidget swkWidget = null;
+        SwkJMenu cascade = null;
 
-        void exec(final SwkJMenu swkjmenu, final JComponent jcomp) {
-            this.jcomp = jcomp;
+        SwkWidget exec(final SwkJMenu swkjmenu, final String itemType) {
             this.swkjmenu = swkjmenu;
+            this.itemType = itemType;
             execOnThread();
+
+            return swkWidget;
+        }
+
+        SwkJMenu exec(final SwkJMenu swkjmenu, final String menuName,
+            final String itemType) {
+            this.swkjmenu = swkjmenu;
+            this.itemType = itemType;
+            this.menuName = menuName;
+            execOnThread();
+
+            return cascade;
+        }
+
+        SwkJMenu exec(final SwkJMenu swkjmenu, final String menuName,
+            SwkJMenu cascade) {
+            this.swkjmenu = swkjmenu;
+            this.cascade = cascade;
+            this.itemType = "cascade";
+            this.menuName = menuName;
+            execOnThread();
+
+            return cascade;
         }
 
         public void run() {
-            if (jcomp == null) {
+            //JComponent jcomp = null;
+            if (itemType.equals("command")) {
+                SwkJMenuItem jmenuItem = new SwkJMenuItem(interp, "",
+                        "SwkJMenuItem");
+                swkjmenu.add(jmenuItem);
+                swkWidget = (SwkWidget) jmenuItem;
+            } else if (itemType.startsWith("check")) {
+                SwkJCheckBoxMenuItem jmenuItem = new SwkJCheckBoxMenuItem(interp,
+                        "", "SwkJMenuItem");
+                swkjmenu.add(jmenuItem);
+                swkWidget = (SwkWidget) jmenuItem;
+            } else if (itemType.startsWith("radio")) {
+                SwkJRadioButtonMenuItem jmenuItem = new SwkJRadioButtonMenuItem(interp,
+                        "", "SwkJMenuItem");
+                swkjmenu.add(jmenuItem);
+                swkWidget = (SwkWidget) jmenuItem;
+            } else if (itemType.startsWith("sepa")) {
+                SwkJMenuItem jmenuItem = null;
                 swkjmenu.addSeparator();
-            } else {
-                swkjmenu.add(jcomp);
+                ;
+            } else if (itemType.equals("cascade")) {
+                if (cascade == null) {
+                    cascade = new SwkJMenu(interp, menuName, "Menu");
+                }
+
+                swkjmenu.add(cascade);
             }
         }
     }
