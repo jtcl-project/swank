@@ -782,6 +782,12 @@ proc swkMakeSpecial {widget widgetVar} {
         "
     if {[lsearch "SMenuButton JButton SMenuButton JRadioButton JRadioButtonMenuItem JCheckBox JCheckBoxMenuItem" $widget ] >= 0} {
             append specialMethods {
+
+	        public void setMargin(Insets i) {
+        		super.setMargin(i);
+		        minimumSize = null;
+       		 }
+
                 public void setBorderWidth(double borderWidth) {
                    this.borderWidth = borderWidth;
                    if (!(getBorder() instanceof SwkBorder)) {
@@ -957,8 +963,8 @@ proc swkMakeSpecial {widget widgetVar} {
             {setHighlightThickness tkSize HighlightThickness}
         }]
     }
-    
-    # -image
+   
+ 
     
     if {[lsearch "JLabel JMenu SMenuButton JButton JCheckBox JRadioButton JCheckBoxMenuItem JRadioButtonMenuItem" $widget] >= 0} {
         set specialGets [concat  $specialGets {
@@ -1050,6 +1056,7 @@ proc swkMakeSpecial {widget widgetVar} {
             this.padx = (int) padx;
 	    emptyBorderInsets.left = this.padx;
 	    emptyBorderInsets.right = this.padx;
+	    minimumSize = null;	
         \}
         public int getPadx() \{
             return(padx);
@@ -1071,6 +1078,7 @@ proc swkMakeSpecial {widget widgetVar} {
             this.pady =(int)  pady;
 	    emptyBorderInsets.top = this.pady;
 	    emptyBorderInsets.bottom = this.pady;
+            minimumSize = null;
         \}
         public int getPady() \{
             return(pady);
@@ -1334,6 +1342,7 @@ proc swkMakeSpecial {widget widgetVar} {
         append specialMethods "
         public void setWraplength(int wraplength) \{
             this.wraplength = wraplength;
+	    minimumSize = null;
         \}
         public int getWraplength() \{
             return(wraplength);
@@ -1424,13 +1433,13 @@ proc swkMakeSpecial {widget widgetVar} {
         set specialGets [concat  $specialGets { {setTextVariable textvariable TextVariable -textvariable}}]
         set specialGets [concat  $specialGets { {setSwkText java.lang.String Text -text}}]
         append specialMethods {
-     public void setTextVariable(Interp interp, String name) throws TclException {
-           String text =  SwankUtil.setupTrace(interp,this, textVariable, name);
-           textVariable = name;
-           if (text != null) {
-               setText(text);
+           public void setTextVariable(Interp interp, String name) throws TclException {
+                 String text =  SwankUtil.setupTrace(interp,this, textVariable, name);
+                 textVariable = name;
+                 if (text != null) {
+                    (new Setter((SwkWidget) this,OPT_TEXT)).exec(text);
+                 }
            }
-     }
 
             public void setSwkText(String value)  {
                 if ((value != null) && (textVariable != null) && !textVariable.equals ("")) {
@@ -2037,7 +2046,8 @@ Dimension dSize = new Dimension(scrollRegion[1][0]-scrollRegion[0][0],scrollRegi
             append specialMethods {
     public Dimension getMinimumSize() {
         LayoutManager layout = getLayout();
-        LayoutManager layoutC = getContentPane().getLayout();
+	Container c1 = getContentPane();
+        LayoutManager layoutC = c1.getLayout();
         Dimension dSize = null;
         boolean packed = layoutC instanceof com.onemoonscientific.swank.PackerLayout;
         boolean gridded = layoutC instanceof SwkGridBagLayout;
@@ -2051,14 +2061,14 @@ Dimension dSize = new Dimension(scrollRegion[1][0]-scrollRegion[0][0],scrollRegi
         }
     
         if (gridded) {
-            dSize = layoutC.minimumLayoutSize(getContentPane());
+            dSize = layoutC.minimumLayoutSize(c1);
             propagate = ((SwkGridBagLayout) layoutC).propagate;
             dSize.width += insets.left + insets.right;
             dSize.height += insets.top + insets.bottom;
             //dSize = layout.minimumLayoutSize(this);
         } else if (packed) {
             propagate = ((com.onemoonscientific.swank.PackerLayout) layoutC).propagate;
-            dSize = layoutC.minimumLayoutSize(getContentPane());
+            dSize = layoutC.minimumLayoutSize(c1);
     
             dSize.width += insets.left + insets.right;
             dSize.height += insets.top + insets.bottom;
@@ -2175,27 +2185,51 @@ Dimension dSize = new Dimension(scrollRegion[1][0]-scrollRegion[0][0],scrollRegi
         set specialGets [concat  $specialGets { {setSwkHeight int Height -height} } ]
         
         append specialMethods {
+           
+
+       public void setFont(Font font) {
+            super.setFont(font);
+           minimumSize = null;
+        }
+        public void setText(String s) {
+            super.setText(s);
+            minimumSize = null;
+        }
+        public void setIcon(Icon i) {
+            super.setIcon(i);
+           minimumSize = null;
+        }
+        
+        public void setBorder(SwkBorder sb) {
+            super.setBorder(sb);
+            minimumSize = null;
+        }
+
             public Dimension getPreferredSize() {
                 Dimension size = getMinimumSize();
                 return size;
             }
+            
             public Dimension getMinimumSize() {
-                FontMetrics fontMetrics =  this.getFontMetrics(this.getFont());
-                Dimension size = new Dimension(0,0);
+             if(minimumSize == null) {  
+		 FontMetrics fontMetrics =  this.getFontMetrics(this.getFont());
+		int charW = fontMetrics.charWidth('O');
+                String s1 = getText();
+		Dimension size = new Dimension(0,0);
                 ImageIcon icon = (ImageIcon) getIcon();
-                if ( (getText().length() > 0) || (icon == null)) {
+                if ( (s1.length() > 0) || (icon == null)) {
                     size.height = (int) (swkheight*fontMetrics.getHeight()*1.2);
-                    if ((getText().length() > swkwidth)) {
-                        size.width = fontMetrics.stringWidth(getText())+fontMetrics.charWidth('O');
-                        if (wraplength > (swkwidth*fontMetrics.charWidth('O'))) {
-                            size.width = wraplength+fontMetrics.charWidth('O');
-                            size.height = (int) (((fontMetrics.stringWidth(getText())/wraplength)+1)*fontMetrics.getHeight()*1.1);
-                            if (!getText().startsWith("<html>")) {
-                                setText("<html>"+getText()+"</html>");
+                    if ((s1.length() > swkwidth)) {
+                        size.width = fontMetrics.stringWidth(s1)+charW;
+                        if (wraplength > (swkwidth*charW)) {
+                            size.width = wraplength+charW;
+                            size.height = (int) (((fontMetrics.stringWidth(s1)/wraplength)+1)*fontMetrics.getHeight()*1.1);
+                            if (!s1.startsWith("<html>")) {
+                                setText("<html>"+s1+"</html>");
                             }
                         }
                         } else {
-                        size.width = (swkwidth)*fontMetrics.charWidth('O');
+                        size.width = (swkwidth)*charW;
                     }
                 }
                 if (icon != null) {
@@ -2216,7 +2250,9 @@ Dimension dSize = new Dimension(scrollRegion[1][0]-scrollRegion[0][0],scrollRegi
                 size.height += insets.top+insets.bottom;
                 size.width += insets.left+insets.right;
                 size.width += symbolSize;
-                return(size);
+		minimumSize =size;
+	   }	
+                return new Dimension(minimumSize);
                 
             }
             public void setSwkHeight(int height) {
@@ -2248,6 +2284,7 @@ Dimension dSize = new Dimension(scrollRegion[1][0]-scrollRegion[0][0],scrollRegi
                 return size;
             }
             public Dimension getMinimumSize() {
+		if(minimumSize == null) {
                 FontMetrics fontMetrics =  this.getFontMetrics(this.getFont());
                 Dimension size = new Dimension();
                 size.height = fontMetrics.getHeight();
@@ -2255,7 +2292,9 @@ Dimension dSize = new Dimension(scrollRegion[1][0]-scrollRegion[0][0],scrollRegi
                 insets = getInsets(insets);
                 size.height += insets.top+insets.bottom;
                 size.width += insets.left+insets.right;
-                return(size);
+		minimumSize = size;
+		}
+                return new Dimension(minimumSize);
             }
             
             public void setSwkWidth(int width) {
