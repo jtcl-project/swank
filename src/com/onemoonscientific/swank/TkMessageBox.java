@@ -73,7 +73,8 @@ public class TkMessageBox implements Command {
                 type = argv[i + 1].toString();
             } else {
                 throw new TclException(interp,
-                    "bad option \"$option\": must be -choices, -default, -icon, -message, -parent, -title, -type");
+                    "bad option \"" + option +
+                    "\": must be -choices, -default, -icon, -message, -parent, -title, -type");
             }
         }
 
