@@ -298,4 +298,26 @@ public class Widgets {
             component = ((Component) component).getParent();
         }
     }
+
+    public static Component getFrameOrWindow(Container c) {
+        Component component = (Component) c;
+
+        while (true) {
+            if (component == null) {
+                break;
+            }
+
+            if (component instanceof Window) {
+                return component;
+            }
+
+            if (component instanceof JFrame) {
+                return component;
+            }
+
+            component = ((Component) component).getParent();
+        }
+
+        return component;
+    }
 }
