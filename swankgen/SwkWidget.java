@@ -40,9 +40,17 @@ public class ${widgetType} extends ${widget} implements SwkWidget, Printable$spe
     final Interp interp;
     Insets emptyBorderInsets = new Insets(0, 0, 0, 0);
     Vector tagList = new Vector();
+    Dimension minimumSize = null;
     $specialVars
     $configOptions
     $configOPTs
+    static TreeMap validCmdsTM = new TreeMap();
+    static {
+         for (int i=0;i< validCmds.length;i++) {
+               validCmdsTM.put(validCmds[i],new Integer(i));
+         }
+    }
+
 
     public ${widgetType}(final Interp interp, String name, String className) {
         this.name = name.intern();
@@ -281,6 +289,7 @@ public class ${widgetType} extends ${widget} implements SwkWidget, Printable$spe
                  $configCASEs
 
         }
+        this.repaint();
     }
     String jget(final int opt) {
             $getCASEs
@@ -291,7 +300,7 @@ public class ${widgetType} extends ${widget} implements SwkWidget, Printable$spe
        int opt = 0;
        // XXX TclIndex doesn't throw correct error for hear 
        try {
-           opt = TclIndex.get(interp, arg, validCmds, "option", 0);
+           opt = TclIndex.get(interp, arg, validCmdsTM, "option", 0);
        } catch (TclException tclE) {
            throw new TclException(interp, "unknown option \"" + arg + "\"");
        }
