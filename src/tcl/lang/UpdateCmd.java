@@ -14,6 +14,10 @@
  */
 package tcl.lang;
 
+import com.onemoonscientific.swank.Widgets;
+
+import java.awt.Container;
+
 import java.util.*;
 
 import javax.swing.*;
@@ -46,8 +50,6 @@ public class UpdateCmd implements Command {
      *
      *----------------------------------------------------------------------
      */
-    private static HashSet repaintComponents = new HashSet();
-
     public void cmdProc(Interp interp, // Current interpreter.
         TclObject[] argv) // Argument list.
         throws TclException // A standard Tcl exception.
@@ -75,12 +77,11 @@ public class UpdateCmd implements Command {
         try {
             SwingUtilities.invokeAndWait(new Runnable() {
                     public void run() {
+                        LayoutHandler.doRepaintsNow();
                     }
                 });
         } catch (Exception e) {
         }
-
-        doRepaints();
 
         java.awt.Toolkit.getDefaultToolkit().sync();
 
@@ -90,21 +91,7 @@ public class UpdateCmd implements Command {
          */
         interp.resetResult();
     }
-
-    synchronized public static void addRepaintRequest(JComponent jcomp) {
-        repaintComponents.add(jcomp);
-    }
-
-    synchronized void doRepaints() {
-        Iterator iter = repaintComponents.iterator();
-
-        while (iter.hasNext()) {
-            ((JComponent) iter.next()).repaint();
-        }
-
-        repaintComponents.clear();
-    }
 }
 
 
-// end UpdateCmd
+// end UpdateCmds
