@@ -760,11 +760,16 @@ public class SwankUtil {
                 } else {
                     if (imageObject instanceof ImageIcon) {
                         imageIcon = (ImageIcon) imageObject;
-                        
-                        if ((imageIcon.getIconWidth() <= 0) || (imageIcon.getIconHeight() <= 0)) {
-                            throw new TclException(interp, "image \"" + argv[0].toString() + "\" has invalid size");
+
+                        if ((imageIcon.getIconWidth() <= 0) ||
+                                (imageIcon.getIconHeight() <= 0)) {
+                            throw new TclException(interp,
+                                "image \"" + argv[0].toString() +
+                                "\" has invalid size");
                         }
+
                         BufferedImage bufferedImage = makeBufferedImage(imageIcon);
+
                         return (bufferedImage);
                     } else {
                         throw new TclException(interp,
@@ -798,8 +803,12 @@ public class SwankUtil {
                     throw new TclException(interp,
                         "Couldn't load image " + imageFile);
                 }
-                if ((imageIcon.getIconWidth() <= 0) || (imageIcon.getIconHeight() <= 0)) {
-                    throw new TclException(interp, "image \"" + argv[0].toString() + "\" has invalid size");
+
+                if ((imageIcon.getIconWidth() <= 0) ||
+                        (imageIcon.getIconHeight() <= 0)) {
+                    throw new TclException(interp,
+                        "image \"" + argv[0].toString() +
+                        "\" has invalid size");
                 }
 
                 BufferedImage bufferedImage = makeBufferedImage(imageIcon);
@@ -888,12 +897,13 @@ public class SwankUtil {
         sBuf.append(font.getSize());
 
         int style = font.getStyle();
+
         if (style != Font.PLAIN) {
             if (style == Font.ITALIC) {
                 sBuf.append(" italic");
             } else if (style == Font.BOLD) {
                 sBuf.append(" bold");
-            } else if (style == (Font.BOLD+Font.ITALIC)) {
+            } else if (style == (Font.BOLD + Font.ITALIC)) {
                 sBuf.append(" bold italic");
             }
         }
@@ -1302,7 +1312,9 @@ public class SwankUtil {
         TclObject tObj = (TclObject) Widgets.theWidgets.get(menuName);
         SwkJMenu swkjmenu = null;
 
+        //System.out.println("getMenu:" + menuName);
         if (tObj == null) {
+            //  System.out.println("Menu Object is null");
             swkjmenu = new SwkJMenu(interp, menuName, "Menu");
             interp.createCommand(menuName, new SwkJMenuWidgetCmd());
             tObj = ReflectObject.newInstance(interp, SwkJMenu.class, swkjmenu);
