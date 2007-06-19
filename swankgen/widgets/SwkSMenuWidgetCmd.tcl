@@ -45,28 +45,20 @@ append specialMethods {
 			    }
                         }
 	
-public int getIndex(Interp interp,TclObject arg,int endVal) throws TclException
+public int getIndex(String sIndex,int endVal) throws TclException
     {
      int index=0;
-                try {
-                index = TclInteger.get(interp,arg);
-        } catch (TclException tE)
-        {
-        int nComp = getComponentCount();
-        interp.setResult("");
-        String sIndex = arg.toString();
-                	boolean validIndex = false;
-                if (sIndex.equals("end")) {
+     int nComp = getComponentCount();
+     boolean validIndex = false;
+
+     if (sIndex.equals("end")) {
                         index = nComp+endVal;
                         validIndex = true;
-	            }
-                if (!validIndex) {
-					throw new TclException(interp,"bad listbox index \""+sIndex+"\": must be active, anchor, end, @x,y, or a number");
-				}
-				
-				
-        }
-		
+     }
+     if (!validIndex) {
+                throw new TclException(interp,"bad listbox index \""+sIndex+"\": must be active, anchor, end, @x,y, or a number");
+     }
+
         return(index);
     }
 

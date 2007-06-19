@@ -45,15 +45,9 @@ append specialMethods {
             interp.getNotifier().queueEvent(bEvent,TCL.QUEUE_TAIL);
         }
    }
-    public int getIndex(Interp interp, TclObject arg, int endVal)
-        throws TclException {
+        public int getIndex( String sIndex, int endVal) {
         int index = -1;
         int nComp = getMenuComponentCount();
-        try {
-            index = TclInteger.get(interp, arg);
-        } catch (TclException tE) {
-            interp.resetResult();
-            String sIndex = arg.toString();
 
             if ((sIndex.equals("end")) || (sIndex.equals("last"))) {
                 index = nComp + endVal;
@@ -72,9 +66,8 @@ append specialMethods {
                                 }
                         }
                }
-               }
         }
-
         return (index);
     }
+
 }
