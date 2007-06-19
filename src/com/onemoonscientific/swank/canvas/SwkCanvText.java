@@ -248,6 +248,7 @@ public class SwkCanvText extends SwkShape {
         if (this.fill == null) {
             this.fill = Color.BLACK;
         }
+
         g2.setPaint(this.fill);
 
         String text = this.getText();
@@ -289,28 +290,26 @@ public class SwkCanvText extends SwkShape {
 
             aT.rotate(this.rotate, this.getX(), y);
 
-            Rectangle2D.Float rf2 = new Rectangle2D.Float((float) (this.getX() -
-                    width2), (float) (y + height2), 0.0f, 0.0f);
-            rf2 = (Rectangle2D.Float) aT.createTransformedShape(rf2)
-                                        .getBounds2D();
+            Rectangle2D.Double rf2 = new Rectangle2D.Double((this.getX() -
+                    width2), (y + height2), 0.0, 0.0);
+            Rectangle2D rf2D = aT.createTransformedShape(rf2).getBounds2D();
 
-            Rectangle2D.Float rf1 = new Rectangle2D.Float((float) (this.getX() -
+            Rectangle2D.Double rf1 = new Rectangle2D.Double((float) (this.getX() -
                     width2), (float) (y - height1 + height2), width1, height1);
 
-            rf1 = (Rectangle2D.Float) aT.createTransformedShape(rf1)
-                                        .getBounds2D();
-            this.shape = rf1;
+            Rectangle2D rf1d = aT.createTransformedShape(rf1).getBounds2D();
+            this.shape = rf1d;
 
             if (this.rotate != 0.0) {
-                g2.rotate(this.rotate, rf2.x, rf2.y);
+                g2.rotate(this.rotate, rf2D.getX(), rf2D.getY());
             }
 
             if (textLine != null) {
-                g2.drawString(textLine, (int) (rf2.x), (int) (rf2.y));
+                g2.drawString(textLine, (int) (rf2D.getX()), (int) (rf2D.getY()));
             }
 
             if (this.rotate != 0.0) {
-                g2.rotate(-this.rotate, rf2.x, rf2.y);
+                g2.rotate(-this.rotate, rf2D.getX(), rf2D.getY());
             }
 
             y += height1;
