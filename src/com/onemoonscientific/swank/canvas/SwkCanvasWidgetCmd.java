@@ -69,7 +69,7 @@ public class SwkCanvasWidgetCmd implements Command {
     Interp interp = null;
 
     public static String[] getValidCmds() {
-         return validCmds;
+        return validCmds;
     }
 
     public void cmdProc(final Interp interp, final TclObject[] argv)
@@ -1375,18 +1375,24 @@ public class SwkCanvasWidgetCmd implements Command {
 
         void getClosest() throws SwkException {
             bestShape = null;
+
             SwkShape startShape = null;
             Rectangle2D bounds = null;
             double max = Double.MAX_VALUE;
             Line2D line = new Line2D.Double();
             SwkShape swkShape = swkcanvas.lastShape;
-        double[] tcoords = new double[6];
-        double tx1=0.0,ty1=0.0,tx2=0.0,ty2=0.0;
+            double[] tcoords = new double[6];
+            double tx1 = 0.0;
+            double ty1 = 0.0;
+            double tx2 = 0.0;
+            double ty2 = 0.0;
 
             SwkShape previousShape = swkcanvas.lastShape;
             boolean below = false;
+
             if (refTag != null) {
-                 Vector shapes = swkcanvas.getShapesWithTags(refTag);
+                Vector shapes = swkcanvas.getShapesWithTags(refTag);
+
                 if (shapes != null) {
                     SwkShape refShape = (SwkShape) shapes.elementAt(0);
 
@@ -1394,23 +1400,25 @@ public class SwkCanvasWidgetCmd implements Command {
                         startShape = refShape.previous;
                     }
                 }
-           }
+            }
 
             while (previousShape != null) {
                 swkShape = previousShape;
                 previousShape = swkShape.previous;
                 bounds = null;
+
                 if (swkShape.shape == null) {
-                     if (swkShape.hitShape(pt.getX(),pt.getY())) {
-                          bestShape = swkShape;
-                          max = 0;
-                          if (startShape == null) {
-                              break;
-                          } else if (below) {
-                              break;
-                          }
-                     }
-                } else  {
+                    if (swkShape.hitShape(pt.getX(), pt.getY())) {
+                        bestShape = swkShape;
+                        max = 0;
+
+                        if (startShape == null) {
+                            break;
+                        } else if (below) {
+                            break;
+                        }
+                    }
+                } else {
                     if (swkShape.fill != null) {
                         bounds = swkShape.shape.getBounds2D();
 
@@ -1419,49 +1427,56 @@ public class SwkCanvasWidgetCmd implements Command {
                                 bounds.getY() - halo, bounds.getWidth() + halo,
                                 bounds.getHeight() + halo);
                         }
+
                         if (bounds.contains(pt)) {
                             max = 0;
                             bestShape = swkShape;
-    
+
                             if (startShape == null) {
                                 break;
                             } else if (below) {
                                 break;
                             }
-                       }
-                     } else {
+                        }
+                    } else {
                         PathIterator pI = swkShape.shape.getPathIterator(null);
                         boolean intersects = false;
                         double dis2 = Double.MAX_VALUE;
+
                         while (!pI.isDone()) {
                             int type = pI.currentSegment(tcoords);
+
                             if (type == PathIterator.SEG_LINETO) {
-                               tx2 = tcoords[0];
-                               ty2 = tcoords[0];
-                               dis2 = Line2D.ptSegDistSq(tx1,ty1,tx2,ty2,pt.getX(),pt.getY());
-                               tx1 = tx2;
-                               ty1 = ty2;
-                               if (dis2 <= halo) {
+                                tx2 = tcoords[0];
+                                ty2 = tcoords[0];
+                                dis2 = Line2D.ptSegDistSq(tx1, ty1, tx2, ty2,
+                                        pt.getX(), pt.getY());
+                                tx1 = tx2;
+                                ty1 = ty2;
+
+                                if (dis2 <= halo) {
                                     intersects = true;
+
                                     break;
-                               }
-    
+                                }
                             } else if (type == PathIterator.SEG_MOVETO) {
-                               tx1 = tcoords[0];
-                               ty1 = tcoords[0];
+                                tx1 = tcoords[0];
+                                ty1 = tcoords[0];
                             }
+
                             pI.next();
                         }
+
                         if (!intersects) {
-                              continue;
+                            continue;
                         }
+
                         double dis = Math.sqrt(dis2);
-                        
+
                         if (dis < max) {
                             max = dis;
                             bestShape = swkShape;
                         }
-
                     }
 
                     if (swkShape == startShape) {
@@ -1470,7 +1485,7 @@ public class SwkCanvasWidgetCmd implements Command {
                 }
             }
         }
-   
+
         void getRectShapes() {
             Rectangle2D bounds = null;
             Enumeration e = swkcanvas.swkShapes.elements();
