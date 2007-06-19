@@ -90,6 +90,12 @@ class SwkJComboBoxWidgetCmd implements Command {
             } else if (argv.length == 3) {
                 String result = swkjcombobox.jget(interp, argv[2]);
                 ResourceObject ro = (ResourceObject) SwkJComboBox.resourceDB.get(argv[2].toString());
+
+                if (ro == null) {
+                    throw new TclException(interp,
+                        "unknown option \"" + argv[2].toString() + "\"");
+                }
+
                 TclObject list = TclList.newInstance();
                 TclList.append(interp, list,
                     TclString.newInstance(argv[2].toString()));

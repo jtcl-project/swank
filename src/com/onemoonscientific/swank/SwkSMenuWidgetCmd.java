@@ -84,6 +84,12 @@ class SwkSMenuWidgetCmd implements Command {
             } else if (argv.length == 3) {
                 String result = swksmenu.jget(interp, argv[2]);
                 ResourceObject ro = (ResourceObject) SwkSMenu.resourceDB.get(argv[2].toString());
+
+                if (ro == null) {
+                    throw new TclException(interp,
+                        "unknown option \"" + argv[2].toString() + "\"");
+                }
+
                 TclObject list = TclList.newInstance();
                 TclList.append(interp, list,
                     TclString.newInstance(argv[2].toString()));
@@ -151,33 +157,50 @@ class SwkSMenuWidgetCmd implements Command {
         SwkSMenu swksmenu = null;
         TclObject firstArg = null;
         TclObject lastArg = null;
+        String sIndex = null;
+        String sIndexLast = null;
+        int first = 0;
+        int last = 0;
 
         void exec(final SwkSMenu swksmenu, final TclObject firstArg,
             final TclObject lastArg) {
             this.firstArg = firstArg;
             this.lastArg = lastArg;
             this.swksmenu = swksmenu;
+
+            try {
+                first = TclInteger.get(interp, firstArg);
+            } catch (TclException tclE) {
+                sIndex = firstArg.toString();
+            }
+
+            if (lastArg != null) {
+                try {
+                    last = TclInteger.get(interp, lastArg);
+                } catch (TclException tclE) {
+                    sIndexLast = lastArg.toString();
+                }
+            }
+
             execOnThread();
         }
 
         public void run() {
-            int first = 0;
-
-            try {
-                first = swksmenu.getIndex(interp, firstArg, -1);
-            } catch (TclException tclE) {
-                //FIXME
-                return;
+            if (sIndex != null) {
+                try {
+                    first = swksmenu.getIndex(sIndex, -1);
+                } catch (TclException Tce) {
+                }
             }
 
-            int last = first;
-
-            if (lastArg != null) {
-                try {
-                    last = swksmenu.getIndex(interp, lastArg, -1);
-                } catch (TclException tclE) {
-                    //FIXME
-                    return;
+            if (lastArg == null) {
+                last = first;
+            } else {
+                if (sIndexLast != null) {
+                    try {
+                        last = swksmenu.getIndex(sIndexLast, -1);
+                    } catch (TclException Tce) {
+                    }
                 }
             }
 

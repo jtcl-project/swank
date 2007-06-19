@@ -79,6 +79,12 @@ class SwkJScrollBarWidgetCmd implements Command {
             } else if (argv.length == 3) {
                 String result = swkjscrollbar.jget(interp, argv[2]);
                 ResourceObject ro = (ResourceObject) SwkJScrollBar.resourceDB.get(argv[2].toString());
+
+                if (ro == null) {
+                    throw new TclException(interp,
+                        "unknown option \"" + argv[2].toString() + "\"");
+                }
+
                 TclObject list = TclList.newInstance();
                 TclList.append(interp, list,
                     TclString.newInstance(argv[2].toString()));

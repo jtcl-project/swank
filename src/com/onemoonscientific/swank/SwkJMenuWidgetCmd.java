@@ -90,6 +90,12 @@ class SwkJMenuWidgetCmd implements Command {
             } else if (argv.length == 3) {
                 String result = swkjmenu.jget(interp, argv[2]);
                 ResourceObject ro = (ResourceObject) SwkJMenu.resourceDB.get(argv[2].toString());
+
+                if (ro == null) {
+                    throw new TclException(interp,
+                        "unknown option \"" + argv[2].toString() + "\"");
+                }
+
                 TclObject list = TclList.newInstance();
                 TclList.append(interp, list,
                     TclString.newInstance(argv[2].toString()));
@@ -214,7 +220,12 @@ class SwkJMenuWidgetCmd implements Command {
         }
 
         int index = (new Index()).exec(swkjmenu, argv[2]);
-        interp.setResult(index);
+
+        if (index < 0) {
+            interp.setResult("none");
+        } else {
+            interp.setResult(index);
+        }
     }
 
     void invoke(final Interp interp, final SwkJMenu swkjmenu,
@@ -380,28 +391,26 @@ class SwkJMenuWidgetCmd implements Command {
         SwkJMenu swkjmenu = null;
         TclObject item = null;
         int index = 0;
+        String sItem = null;
 
         int exec(final SwkJMenu swkjmenu, final TclObject item) {
             this.item = item;
             this.swkjmenu = swkjmenu;
+
+            try {
+                index = TclInteger.get(interp, item);
+            } catch (TclException tclE) {
+                sItem = item.toString();
+            }
+
             execOnThread();
 
             return index;
         }
 
         public void run() {
-            int compIndex = 0;
-
-            try {
-                index = swkjmenu.getIndex(interp, item, -1);
-
-                if (index < 0) {
-                    interp.setResult("none");
-                } else {
-                    interp.setResult(compIndex);
-                }
-            } catch (TclException tclE) {
-                interp.backgroundError();
+            if (sItem != null) {
+                index = swkjmenu.getIndex(sItem, -1);
             }
         }
     }
@@ -410,22 +419,27 @@ class SwkJMenuWidgetCmd implements Command {
         SwkJMenu swkjmenu = null;
         TclObject item = null;
         String command = null;
+        String sItem = null;
+        int compIndex = 0;
 
         String exec(final SwkJMenu swkjmenu, final TclObject item) {
             this.item = item;
             this.swkjmenu = swkjmenu;
+
+            try {
+                compIndex = TclInteger.get(interp, item);
+            } catch (TclException tclE) {
+                sItem = item.toString();
+            }
+
             execOnThread();
 
             return command;
         }
 
         public void run() {
-            int compIndex = 0;
-
-            try {
-                compIndex = swkjmenu.getIndex(interp, item, -1);
-            } catch (TclException tclE) {
-                interp.backgroundError();
+            if (sItem != null) {
+                compIndex = swkjmenu.getIndex(sItem, -1);
             }
 
             if (compIndex < 0) {
@@ -445,41 +459,44 @@ class SwkJMenuWidgetCmd implements Command {
         SwkJMenu swkjmenu = null;
         TclObject firstArg = null;
         TclObject lastArg = null;
+        String sIndex = null;
+        String sIndexLast = null;
+        int first = 0;
+        int last = 0;
 
         void exec(final SwkJMenu swkjmenu, final TclObject firstArg,
             final TclObject lastArg) {
             this.firstArg = firstArg;
             this.lastArg = lastArg;
             this.swkjmenu = swkjmenu;
+
+            try {
+                first = TclInteger.get(interp, firstArg);
+            } catch (TclException tclE) {
+                sIndex = firstArg.toString();
+            }
+
+            if (lastArg != null) {
+                try {
+                    last = TclInteger.get(interp, lastArg);
+                } catch (TclException tclE) {
+                    sIndexLast = lastArg.toString();
+                }
+            }
+
             execOnThread();
         }
 
         public void run() {
-            int first = 0;
-
-            try {
-                first = swkjmenu.getIndex(interp, firstArg, -1);
-            } catch (TclException tclE) {
-                System.out.println("exception in jmenu index " +
-                    tclE.getMessage());
-                interp.backgroundError();
-
-                //FIXME
-                return;
+            if (sIndex != null) {
+                first = swkjmenu.getIndex(sIndex, -1);
             }
 
-            int last = first;
-
-            if (lastArg != null) {
-                try {
-                    last = swkjmenu.getIndex(interp, lastArg, -1);
-                } catch (TclException tclE) {
-                    System.out.println("exception in jmenu last index " +
-                        tclE.getMessage());
-                    interp.backgroundError();
-
-                    //FIXME
-                    return;
+            if (lastArg == null) {
+                last = first;
+            } else {
+                if (sIndexLast != null) {
+                    last = swkjmenu.getIndex(sIndexLast, -1);
                 }
             }
 

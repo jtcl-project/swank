@@ -85,6 +85,12 @@ class SwkJPopupMenuWidgetCmd implements Command {
             } else if (argv.length == 3) {
                 String result = swkjpopupmenu.jget(interp, argv[2]);
                 ResourceObject ro = (ResourceObject) SwkJPopupMenu.resourceDB.get(argv[2].toString());
+
+                if (ro == null) {
+                    throw new TclException(interp,
+                        "unknown option \"" + argv[2].toString() + "\"");
+                }
+
                 TclObject list = TclList.newInstance();
                 TclList.append(interp, list,
                     TclString.newInstance(argv[2].toString()));
@@ -140,33 +146,50 @@ class SwkJPopupMenuWidgetCmd implements Command {
         SwkJPopupMenu swkjpopupmenu = null;
         TclObject firstArg = null;
         TclObject lastArg = null;
+        String sIndex = null;
+        String sIndexLast = null;
+        int first = 0;
+        int last = 0;
 
         void exec(final SwkJPopupMenu swkjpopupmenu, final TclObject firstArg,
             final TclObject lastArg) {
             this.firstArg = firstArg;
             this.lastArg = lastArg;
             this.swkjpopupmenu = swkjpopupmenu;
+
+            try {
+                first = TclInteger.get(interp, firstArg);
+            } catch (TclException tclE) {
+                sIndex = firstArg.toString();
+            }
+
+            if (lastArg != null) {
+                try {
+                    last = TclInteger.get(interp, lastArg);
+                } catch (TclException tclE) {
+                    sIndexLast = lastArg.toString();
+                }
+            }
+
             execOnThread();
         }
 
         public void run() {
-            int first = 0;
-
-            try {
-                first = swkjpopupmenu.getIndex(interp, firstArg, -1);
-            } catch (TclException tclE) {
-                //FIXME
-                return;
+            if (sIndex != null) {
+                try {
+                    first = swkjpopupmenu.getIndex(sIndex, -1);
+                } catch (TclException Tce) {
+                }
             }
 
-            int last = first;
-
-            if (lastArg != null) {
-                try {
-                    last = swkjpopupmenu.getIndex(interp, lastArg, -1);
-                } catch (TclException tclE) {
-                    //FIXME
-                    return;
+            if (lastArg == null) {
+                last = first;
+            } else {
+                if (sIndexLast != null) {
+                    try {
+                        last = swkjpopupmenu.getIndex(sIndexLast, -1);
+                    } catch (TclException Tce) {
+                    }
                 }
             }
 
