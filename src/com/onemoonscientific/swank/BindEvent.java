@@ -15,6 +15,7 @@ public class BindEvent extends TclEvent {
     String var2 = null;
     String value = null;
     SwkListener swkListener = null;
+    Object obj = null;
     EventObject event = null;
     int subtype = 0;
 
@@ -38,10 +39,19 @@ public class BindEvent extends TclEvent {
         this.subtype = subtype;
     }
 
+    public BindEvent(Interp interp, SwkListener swkListener, EventObject event,
+        Object obj, int subtype) {
+        this.interp = interp;
+        this.swkListener = swkListener;
+        this.event = event;
+        this.obj = obj;
+        this.subtype = subtype;
+    }
+
     public int processEvent(int flags) {
         if ((interp != null) && (swkListener != null)) {
             try {
-                swkListener.processEvent(event, subtype);
+                swkListener.processEvent(event, obj, subtype);
             } catch (Exception e) {
                 interp.addErrorInfo(e.getMessage());
                 interp.backgroundError();
