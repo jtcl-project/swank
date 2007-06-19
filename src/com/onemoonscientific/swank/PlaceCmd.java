@@ -529,7 +529,7 @@ public class PlaceCmd implements Command {
                 }
             }
 
-            Widgets.relayoutContainer(parent);
+            LayoutHandler.addLayoutRequest(interp, parent);
         }
 
         public void run() {
