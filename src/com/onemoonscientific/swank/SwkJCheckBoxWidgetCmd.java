@@ -38,9 +38,11 @@ class SwkJCheckBoxWidgetCmd implements Command {
     static final private int OPT_TOGGLE = 8;
     static boolean gotDefaults = false;
     int index;
+
     public static String[] getValidCmds() {
-         return validCmds;
+        return validCmds;
     }
+
     public void cmdProc(Interp interp, TclObject[] argv)
         throws TclException {
         if (argv.length < 2) {

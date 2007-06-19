@@ -34,9 +34,11 @@ class SwkJButtonWidgetCmd implements Command {
     static final private int OPT_INVOKE = 5;
     static boolean gotDefaults = false;
     int index;
+
     public static String[] getValidCmds() {
-         return validCmds;
+        return validCmds;
     }
+
     public void cmdProc(final Interp interp, final TclObject[] argv)
         throws TclException {
         if (argv.length < 2) {
@@ -78,6 +80,12 @@ class SwkJButtonWidgetCmd implements Command {
             } else if (argv.length == 3) {
                 String result = swkjbutton.jget(interp, argv[2]);
                 ResourceObject ro = (ResourceObject) SwkJButton.resourceDB.get(argv[2].toString());
+
+                if (ro == null) {
+                    throw new TclException(interp,
+                        "unknown option \"" + argv[2].toString() + "\"");
+                }
+
                 TclObject list = TclList.newInstance();
                 TclList.append(interp, list,
                     TclString.newInstance(argv[2].toString()));

@@ -39,9 +39,11 @@ class SwkJRadioButtonMenuItemWidgetCmd implements Command {
     static final private int OPT_SELECT = 7;
     static boolean gotDefaults = false;
     int index;
+
     public static String[] getValidCmds() {
-         return validCmds;
+        return validCmds;
     }
+
     public void cmdProc(final Interp interp, final TclObject[] argv)
         throws TclException {
         int i;

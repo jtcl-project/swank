@@ -25,9 +25,11 @@ class SwkJTreeWidgetCmd implements Command {
     static final private int OPT_NODE = 5;
     static final private int OPT_UPDATE = 6;
     static boolean gotDefaults = false;
+
     public static String[] getValidCmds() {
-         return validCmds;
+        return validCmds;
     }
+
     public void cmdProc(final Interp interp, final TclObject[] argv)
         throws TclException {
         int i;

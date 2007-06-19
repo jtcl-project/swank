@@ -50,9 +50,11 @@ class SwkJTextPaneWidgetCmd implements Command {
     static final private int OPT_DEBUG = 17;
     static boolean gotDefaults = false;
     Interp interp = null;
+
     public static String[] getValidCmds() {
-         return validCmds;
+        return validCmds;
     }
+
     public void cmdProc(final Interp interp, final TclObject[] argv)
         throws TclException {
         int i = 0;

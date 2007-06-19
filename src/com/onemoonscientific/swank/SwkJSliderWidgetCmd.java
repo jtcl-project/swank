@@ -28,9 +28,11 @@ class SwkJSliderWidgetCmd implements Command {
     static final private int OPT_IDENTIFY = 6;
     static final private int OPT_SET = 7;
     static boolean gotDefaults = false;
+
     public static String[] getValidCmds() {
-         return validCmds;
+        return validCmds;
     }
+
     public void cmdProc(final Interp interp, final TclObject[] argv)
         throws TclException {
         int i;

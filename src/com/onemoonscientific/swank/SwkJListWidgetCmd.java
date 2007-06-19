@@ -43,9 +43,11 @@ class SwkJListWidgetCmd implements Command {
     static boolean gotDefaults = false;
     int index;
     Interp interp = null;
+
     public static String[] getValidCmds() {
-         return validCmds;
+        return validCmds;
     }
+
     public void cmdProc(final Interp interp, final TclObject[] argv)
         throws TclException {
         if (argv.length < 2) {
@@ -1244,7 +1246,7 @@ class SwkJListWidgetCmd implements Command {
 
                 if (result.hasError()) {
                     errMessage = result.getErrorMsg();
-                errMessage = result.getErrorMsg();
+                    errMessage = result.getErrorMsg();
 
                     return;
                 }
@@ -1259,6 +1261,7 @@ class SwkJListWidgetCmd implements Command {
             if (index2 >= swkjlist.model.getSize()) {
                 index2 = swkjlist.model.getSize() - 1;
             }
+
             swkjlist.selectionModel.removeSelectionInterval(index, index2);
         }
 

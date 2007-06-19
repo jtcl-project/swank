@@ -36,9 +36,11 @@ class SwkJOptionPaneWidgetCmd implements Command {
     static boolean gotDefaults = false;
     Interp interp = null;
     SwkJOptionPane swkjoptionpane = null;
+
     public static String[] getValidCmds() {
-         return validCmds;
+        return validCmds;
     }
+
     public void cmdProc(final Interp interp, final TclObject[] argv)
         throws TclException {
         int i;
