@@ -103,4 +103,7 @@ public interface SwkWidget {
     public void setVirtualBindings(Vector bindings);
 
     public void setValues(Setter setter, int iOpt);
+
+    public void configure(Interp interp, TclObject[] argv, int start)
+        throws TclException;
 }
