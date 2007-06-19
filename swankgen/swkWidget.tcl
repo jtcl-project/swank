@@ -122,6 +122,7 @@ TclObject tclObject=null;
 static Hashtable resourceDB = null;
 Interp interp;
 Insets emptyBorderInsets = new Insets(0,0,0,0);
+Dimension minimumSize = null;
 Vector tagList = new Vector();
 $specialVars
 ${widgetType}(Interp interp, String name, String className) \{
