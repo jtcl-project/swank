@@ -122,7 +122,7 @@ public class SwkComponentListener implements ComponentListener, SwkListener {
         interp.getNotifier().queueEvent(bEvent, TCL.QUEUE_TAIL);
     }
 
-    public void processEvent(EventObject eventObject, int subtype) {
+    public void processEvent(EventObject eventObject, Object obj, int subtype) {
         ComponentEvent e = (ComponentEvent) eventObject;
 
         SwkBinding binding;

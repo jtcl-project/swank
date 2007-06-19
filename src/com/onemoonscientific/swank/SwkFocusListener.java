@@ -88,7 +88,7 @@ public class SwkFocusListener implements FocusListener, SwkListener {
         interp.getNotifier().queueEvent(bEvent, TCL.QUEUE_TAIL);
     }
 
-    public void processEvent(EventObject eventObject, int subtype) {
+    public void processEvent(EventObject eventObject, Object obj, int subtype) {
         FocusEvent e = (FocusEvent) eventObject;
 
         SwkBinding binding;

@@ -55,7 +55,7 @@ public class SwkKeyCommandListener implements ActionListener, SwkListener {
         interp.getNotifier().queueEvent(bEvent, TCL.QUEUE_TAIL);
     }
 
-    public void processEvent(EventObject eventObject, int subtype) {
+    public void processEvent(EventObject eventObject, Object obj, int subtype) {
         ActionEvent e = (ActionEvent) eventObject;
 
         if ((binding.command != null) && (binding.command.length() != 0)) {

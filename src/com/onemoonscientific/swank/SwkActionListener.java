@@ -67,7 +67,7 @@ public class SwkActionListener implements ActionListener, SwkListener {
         bEvent.invokeLater();
     }
 
-    public void processEvent(EventObject eventObject, int subtype) {
+    public void processEvent(EventObject eventObject, Object obj, int subtype) {
         if (EventQueue.isDispatchThread()) {
             System.out.println(
                 "SwkActionListener: processEvent on event thread");

@@ -135,7 +135,7 @@ public class SwkValueCommandListener implements ActionListener, VarTrace,
         interp.getNotifier().queueEvent(bEvent, TCL.QUEUE_TAIL);
     }
 
-    public void processEvent(EventObject eventObject, int subtype) {
+    public void processEvent(EventObject eventObject, Object obj, int subtype) {
         ActionEvent e = (ActionEvent) eventObject;
 
         TclObject tobj = null;

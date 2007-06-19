@@ -92,7 +92,7 @@ public class SwkListSelectionListener implements ListSelectionListener,
         interp.getNotifier().queueEvent(bEvent, TCL.QUEUE_TAIL);
     }
 
-    public void processEvent(EventObject eventObject, int subtype) {
+    public void processEvent(EventObject eventObject, Object obj, int subtype) {
         ListSelectionEvent e = (ListSelectionEvent) eventObject;
 
         SwkBinding binding;

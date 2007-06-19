@@ -61,23 +61,27 @@ public class SwkScrollAdjustmentListener implements AdjustmentListener,
         SwkJScrollBar swkjscrollbar = (SwkJScrollBar) component;
 
         if (!swkjscrollbar.lastSetFromSet) {
+            final int value = e.getValue();
+            double fx1 = (1.0 * value) / (((SwkJScrollBar) component).getMaximum() -
+                ((SwkJScrollBar) component).getMinimum());
+            Double fxd = new Double(fx1);
             BindEvent bEvent = new BindEvent(interp, (SwkListener) this,
-                    (EventObject) e, 0);
+                    (EventObject) e, fxd, 0);
             interp.getNotifier().queueEvent(bEvent, TCL.QUEUE_TAIL);
         } else {
             swkjscrollbar.lastSetFromSet = false;
         }
     }
 
-    public void processEvent(EventObject eventObject, int subtype) {
+    public void processEvent(EventObject eventObject, Object obj, int subtype) {
         AdjustmentEvent e = (AdjustmentEvent) eventObject;
 
         // FIXME first part below should be on Swing ET
-        if ((command != null) && (command.length() != 0)) {
-            int value = e.getValue();
-            double fx1 = (1.0 * value) / (((SwkJScrollBar) component).getMaximum() -
-                ((SwkJScrollBar) component).getMinimum());
+        Double fxd = (Double) (obj);
+        double fx1 = fxd.doubleValue();
 
+        //  System.out.println("Moved to "+fx1);
+        if ((command != null) && (command.length() != 0)) {
             try {
                 interp.eval(command + " moveto " + fx1);
             } catch (TclException tclE) {

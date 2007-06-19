@@ -94,11 +94,10 @@ public class SwkRadioMenuListener implements ActionListener, VarTrace,
 
     public void setVarName(Interp interp, String name)
         throws TclException {
-        ButtonGroup bgroup;
-
+        // ButtonGroup bgroup;
         // FIXME  some of this should be on event thread
         if ((varName != null) && (!varName.equals(""))) {
-            bgroup = (ButtonGroup) SwkJRadioButton.bgroupTable.get(varName);
+            ButtonGroup bgroup = (ButtonGroup) SwkJRadioButton.bgroupTable.get(varName);
             interp.untraceVar(varName, this, TCL.TRACE_WRITES |
                 TCL.GLOBAL_ONLY);
 
@@ -118,15 +117,20 @@ public class SwkRadioMenuListener implements ActionListener, VarTrace,
                 interp.setVar(name, tObj, TCL.GLOBAL_ONLY);
             }
 
-            bgroup = (ButtonGroup) SwkJRadioButton.bgroupTable.get(name);
+            ButtonGroup bgroup = (ButtonGroup) SwkJRadioButton.bgroupTable.get(name);
 
             if (bgroup == null) {
                 bgroup = new ButtonGroup();
                 SwkJRadioButton.bgroupTable.put(name, bgroup);
             }
 
+            final ButtonGroup bgroup2 = bgroup;
             interp.traceVar(name, this, TCL.TRACE_WRITES | TCL.GLOBAL_ONLY);
-            bgroup.add(component);
+            SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        bgroup2.add(component);
+                    }
+                });
         }
 
         varName = name.intern();
@@ -179,7 +183,7 @@ public class SwkRadioMenuListener implements ActionListener, VarTrace,
         interp.getNotifier().queueEvent(bEvent, TCL.QUEUE_TAIL);
     }
 
-    public void processEvent(EventObject eventObject, int subtype) {
+    public void processEvent(EventObject eventObject, Object obj, int subtype) {
         ActionEvent e = (ActionEvent) eventObject;
 
         if (EventQueue.isDispatchThread()) {

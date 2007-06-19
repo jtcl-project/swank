@@ -43,10 +43,20 @@ public class SwkDocumentListener implements DocumentListener, VarTrace,
     String varName = null;
     JTextComponent jtext;
     boolean traceLock = false;
+    boolean eventLock = false;
+    boolean updateLock = false;
 
     SwkDocumentListener(Interp interp, JTextComponent jtext) {
         this.interp = interp;
         this.jtext = jtext;
+    }
+
+    public void setEventLock(boolean newValue) {
+        eventLock = newValue;
+    }
+
+    public void setUpdateLock(boolean newValue) {
+        updateLock = newValue;
     }
 
     public void setTraceLock(boolean newValue) {
@@ -77,7 +87,14 @@ public class SwkDocumentListener implements DocumentListener, VarTrace,
         if (varName != null) {
             try {
                 TclObject tobj = interp.getVar(varName, TCL.GLOBAL_ONLY);
-                jtext.setText(tobj.toString());
+                final String s1 = tobj.toString();
+                SwingUtilities.invokeLater(new Runnable() {
+                        public void run() {
+                            setEventLock(true);
+                            setUpdateLock(true);
+                            jtext.setText(s1);
+                        }
+                    });
             } catch (TclException tclE) {
             }
         }
@@ -89,6 +106,7 @@ public class SwkDocumentListener implements DocumentListener, VarTrace,
                 "SwkDocumentListener: setVarName on event thread");
         }
 
+        //      System.out.println("setVarName is called" + name);
         if ((varName != null) && (!varName.equals(""))) {
             interp.untraceVar(varName, this, TCL.TRACE_WRITES |
                 TCL.GLOBAL_ONLY);
@@ -97,7 +115,14 @@ public class SwkDocumentListener implements DocumentListener, VarTrace,
         if ((name != null) && (name != "")) {
             try {
                 TclObject tobj = interp.getVar(name, TCL.GLOBAL_ONLY);
-                jtext.setText(tobj.toString());
+                final String s1 = tobj.toString();
+                SwingUtilities.invokeLater(new Runnable() {
+                        public void run() {
+                            setEventLock(true);
+                            setUpdateLock(true);
+                            jtext.setText(s1);
+                        }
+                    });
             } catch (TclException tclException) {
                 interp.resetResult();
 
@@ -135,15 +160,30 @@ public class SwkDocumentListener implements DocumentListener, VarTrace,
 
         SetStringVarEvent dvEvent = new SetStringVarEvent(interp, this,
                 varName, null, string);
+
+        //       System.out.println("updateVar is called"+varName + " "+string + " " + this.toString());
         interp.getNotifier().queueEvent(dvEvent, TCL.QUEUE_TAIL);
     }
 
     public void insertUpdate(DocumentEvent docEvent) {
-        updateVar(docEvent);
+        //      System.out.println("InsertUpdate :");
+        if (!eventLock) {
+            updateVar(docEvent);
+
+            //setEventLock(true);
+        } else {
+            setEventLock(false);
+        }
     }
 
     public void removeUpdate(DocumentEvent docEvent) {
-        updateVar(docEvent);
+        if (!updateLock) {
+            updateVar(docEvent);
+
+            //setEventLock(true);
+        } else {
+            setUpdateLock(false);
+        }
     }
 
     public void changedUpdate(DocumentEvent docEvent) {

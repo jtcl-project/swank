@@ -94,11 +94,10 @@ public class SwkRadioButtonListener implements ActionListener, VarTrace,
 
     public void setVarName(Interp interp, String name)
         throws TclException {
-        ButtonGroup bgroup;
-
+        //  ButtonGroup bgroup;
         // FIXME  some of this should be on event thread
         if ((varName != null) && (!varName.equals(""))) {
-            bgroup = (ButtonGroup) SwkJRadioButton.bgroupTable.get(varName);
+            ButtonGroup bgroup = (ButtonGroup) SwkJRadioButton.bgroupTable.get(varName);
             interp.untraceVar(varName, this, TCL.TRACE_WRITES |
                 TCL.GLOBAL_ONLY);
 
@@ -111,7 +110,8 @@ public class SwkRadioButtonListener implements ActionListener, VarTrace,
 
         if ((name != null) && !name.equals("")) {
             try {
-              tObj = interp.getVar(name, TCL.GLOBAL_ONLY);
+                tObj = interp.getVar(name, TCL.GLOBAL_ONLY);
+
                 if (tObj.toString().equals(value)) {
                     final boolean state = true;
                     SwingUtilities.invokeLater(new Runnable() {
@@ -126,15 +126,20 @@ public class SwkRadioButtonListener implements ActionListener, VarTrace,
                 interp.setVar(name, tObj, TCL.GLOBAL_ONLY);
             }
 
-            bgroup = (ButtonGroup) SwkJRadioButton.bgroupTable.get(name);
+            ButtonGroup bgroup = (ButtonGroup) SwkJRadioButton.bgroupTable.get(name);
 
             if (bgroup == null) {
                 bgroup = new ButtonGroup();
                 SwkJRadioButton.bgroupTable.put(name, bgroup);
             }
 
+            final ButtonGroup bgroup2 = bgroup;
             interp.traceVar(name, this, TCL.TRACE_WRITES | TCL.GLOBAL_ONLY);
-            bgroup.add(component);
+            SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        bgroup2.add(component);
+                    }
+                });
         }
 
         varName = name.intern();
@@ -144,28 +149,41 @@ public class SwkRadioButtonListener implements ActionListener, VarTrace,
         return (varName);
     }
 
-    public void setValue(String name) throws TclException {
-        value = name;
-        TclObject tObj = null;
+    public void setValue(String newValue) {
+        value = newValue;
+
         if ((varName != null) && (!varName.equals(""))) {
-            try {
-              tObj = interp.getVar(varName, TCL.GLOBAL_ONLY);
-                if (tObj.toString().equals(value)) {
-                    final boolean state = true;
-                    SwingUtilities.invokeLater(new Runnable() {
-                            public void run() {
-                                component.setSelected(state);
-                            }
-                        });
-                }
-            } catch (TclException tclException) {
-                interp.resetResult();
-                tObj = TclString.newInstance(value);
-                interp.setVar(varName, tObj, TCL.GLOBAL_ONLY);
-            }
-       }
+            SetStringVarEvent strEvent = new SetStringVarEvent(interp, varName,
+                    null, newValue, true);
+            interp.getNotifier().queueEvent(strEvent, TCL.QUEUE_TAIL);
+        }
+
+        //component.setSelected(true);
     }
 
+    /*
+        public void setValue(String name) throws TclException {
+            value = name;
+            TclObject tObj = null;
+            if ((varName != null) && (!varName.equals(""))) {
+                try {
+                  tObj = interp.getVar(varName, TCL.GLOBAL_ONLY);
+                    if (tObj.toString().equals(value)) {
+                        final boolean state = true;
+                        SwingUtilities.invokeLater(new Runnable() {
+                                public void run() {
+                                    component.setSelected(state);
+                                }
+                            });
+                    }
+                } catch (TclException tclException) {
+                    interp.resetResult();
+                    tObj = TclString.newInstance(value);
+                    interp.setVar(varName, tObj, TCL.GLOBAL_ONLY);
+                }
+           }
+        }
+    */
     public String getValue() {
         return (value);
     }
@@ -205,7 +223,7 @@ public class SwkRadioButtonListener implements ActionListener, VarTrace,
         interp.getNotifier().queueEvent(bEvent, TCL.QUEUE_TAIL);
     }
 
-    public void processEvent(EventObject eventObject, int subtype) {
+    public void processEvent(EventObject eventObject, Object obj, int subtype) {
         ActionEvent e = (ActionEvent) eventObject;
 
         if (EventQueue.isDispatchThread()) {

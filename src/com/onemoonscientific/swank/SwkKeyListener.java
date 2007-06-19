@@ -117,7 +117,7 @@ public class SwkKeyListener implements KeyListener, SwkListener {
         //processEvent(e,subtype);
     }
 
-    public void processEvent(EventObject eventObject, int subtype) {
+    public void processEvent(EventObject eventObject, Object obj, int subtype) {
         KeyEvent e = (KeyEvent) eventObject;
 
         //System.out.println("key event "+e.toString()); 

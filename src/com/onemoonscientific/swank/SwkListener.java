@@ -39,5 +39,5 @@ import javax.swing.text.*;
 
 
 public interface SwkListener {
-    public void processEvent(EventObject eventObject, int subtype);
+    public void processEvent(EventObject eventObject, Object obj, int subtype);
 }

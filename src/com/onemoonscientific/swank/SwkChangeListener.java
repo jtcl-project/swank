@@ -92,7 +92,7 @@ public class SwkChangeListener implements ChangeListener, SwkListener {
         interp.getNotifier().queueEvent(bEvent, TCL.QUEUE_TAIL);
     }
 
-    public void processEvent(EventObject eventObject, int subtype) {
+    public void processEvent(EventObject eventObject, Object obj, int subtype) {
         if (EventQueue.isDispatchThread()) {
             System.out.println(
                 "SwkChangeListener: processEvent on event thread");

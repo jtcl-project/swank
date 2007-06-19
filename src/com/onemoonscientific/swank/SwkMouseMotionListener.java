@@ -102,7 +102,7 @@ public class SwkMouseMotionListener implements MouseMotionListener, SwkListener 
         }
     }
 
-    public void processEvent(EventObject eventObject, int subtype) {
+    public void processEvent(EventObject eventObject, Object obj, int subtype) {
         try {
             MouseEvent e = (MouseEvent) eventObject;
 

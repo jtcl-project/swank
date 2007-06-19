@@ -62,7 +62,7 @@ public class SwkCommandListener implements ActionListener, SwkListener {
         bEvent.invokeLater();
     }
 
-    public void processEvent(EventObject eventObject, int subtype) {
+    public void processEvent(EventObject eventObject, Object obj, int subtype) {
         ActionEvent e = (ActionEvent) eventObject;
 
         if ((command != null) && (command.length() != 0)) {

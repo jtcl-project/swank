@@ -83,7 +83,7 @@ public class SwkPopupListener extends MouseAdapter implements SwkListener {
         interp.getNotifier().queueEvent(bEvent, TCL.QUEUE_TAIL);
     }
 
-    public void processEvent(EventObject eventObject, int show) {
+    public void processEvent(EventObject eventObject, Object obj, int show) {
         MouseEvent e = (MouseEvent) eventObject;
 
         if (e.isPopupTrigger() || true) {

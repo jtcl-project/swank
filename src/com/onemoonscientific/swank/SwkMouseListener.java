@@ -106,7 +106,7 @@ public class SwkMouseListener implements MouseListener, SwkListener {
         interp.getNotifier().queueEvent(bEvent, TCL.QUEUE_TAIL);
     }
 
-    public void processEvent(EventObject eventObject, int subtype) {
+    public void processEvent(EventObject eventObject, Object obj, int subtype) {
         MouseEvent e = (MouseEvent) eventObject;
 
         if (e.isConsumed()) {

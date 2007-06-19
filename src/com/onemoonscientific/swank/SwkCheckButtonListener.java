@@ -225,7 +225,7 @@ public class SwkCheckButtonListener implements ActionListener, VarTrace,
         }
     }
 
-    public void processEvent(EventObject eventObject, int subtype) {
+    public void processEvent(EventObject eventObject, Object obj, int subtype) {
         if (EventQueue.isDispatchThread()) {
             System.out.println(
                 "SwkCheckButtonListener: processEvent on event thread");
