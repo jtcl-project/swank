@@ -338,11 +338,12 @@ public class GridCmd implements Command {
     void doit(String masterName, Object masterObject,
         GridBagConstraints gconstr, String[] windows, int modOptions) {
         Container master = getMasterContainer(masterObject);
-        SwkGridBagLayout gbag = getLayout(master);
 
-        Component component = (Component) master;
+        //    SwkGridBagLayout gbag = getLayout(master);
+        SwkGridBagLayout gbag = null;
+
+        //   Component component = (Component) master;
         LayoutManager layout = master.getLayout();
-        gbag = null;
 
         if (layout == null) {
             gbag = new SwkGridBagLayout();
@@ -411,28 +412,7 @@ public class GridCmd implements Command {
             gconstr.gridx++;
         }
 
-        component = (Component) master;
-
-        while (true) {
-            if (component == null) {
-                break;
-            }
-
-            if (component instanceof JFrame) {
-                ((JFrame) component).pack();
-                ((JFrame) component).validate();
-
-                break;
-            } else if (component instanceof Window) {
-                ((Window) component).pack();
-                ((Window) component).validate();
-
-                break;
-            }
-
-            component = ((Component) component).getParent();
-        }
-
+        LayoutHandler.addLayoutRequest(interp, master);
         gbag.lastRow = gconstr.gridy + 1;
     }
 
