@@ -52,11 +52,10 @@ import javax.swing.*;
 
 public class SwkCanvWindow extends SwkShape {
     static CanvasParameter[] parameters = {
-        new WindowParameter(), new TextParameter(), new AnchorParameter(), 
-        new WidthParameter(),  new HeightParameter(),
-        new TagsParameter(), new TransformerParameter() ,
+        new WindowParameter(), new TextParameter(), new AnchorParameter(),
+        new WidthParameter(), new HeightParameter(), new TagsParameter(),
+        new TransformerParameter(),
     };
-
     static Map parameterMap = new TreeMap();
 
     static {
@@ -69,6 +68,7 @@ public class SwkCanvWindow extends SwkShape {
     int height = 0;
     PlacerLayout placer = null;
     SwkWidget window = null;
+
     SwkCanvWindow(Shape shape, SwkImageCanvas canvas) {
         super(shape, canvas);
         storeCoords = new double[2];
@@ -92,26 +92,33 @@ public class SwkCanvWindow extends SwkShape {
     public Map getParameterMap() {
         return parameterMap;
     }
+
     public void configShape(Interp interp, SwkImageCanvas swkCanvas,
         TclObject[] argv, int start) throws TclException {
-        for (int i =start;i<argv.length;i += 2) {
-              if (((i+1) < argv.length) && "-window".startsWith(argv[i].toString())) {
-                   windowName = argv[i+1].toString();
-                   setupLayout(interp);
-                   break;
-              }
+        for (int i = start; i < argv.length; i += 2) {
+            if (((i + 1) < argv.length) &&
+                    "-window".startsWith(argv[i].toString())) {
+                windowName = argv[i + 1].toString();
+                setupLayout(interp);
+
+                break;
+            }
         }
-        super.configShape(interp,swkCanvas,argv,start);
+
+        super.configShape(interp, swkCanvas, argv, start);
     }
+
     public void applyCoordinates() {
         addWindow();
     }
 
-   void setupLayout(Interp interp) throws TclException { 
+    void setupLayout(Interp interp) throws TclException {
         if ((windowName == null) || windowName.equals("")) {
             return;
         }
+
         window = (SwkWidget) Widgets.get(interp, windowName);
+
         LayoutManager layoutManager;
 
         if (!(canvas.getComponent() instanceof Container)) {
@@ -121,6 +128,7 @@ public class SwkCanvWindow extends SwkShape {
 
         Container parent = (Container) canvas.getComponent();
         layoutManager = parent.getLayout();
+
         if (!(layoutManager instanceof PlacerLayout)) {
             parent.removeAll();
             placer = new PlacerLayout(interp);
@@ -146,8 +154,9 @@ public class SwkCanvWindow extends SwkShape {
             sbuf.append(" -height ");
             sbuf.append(height);
         }
+
         Container parent = (Container) canvas.getComponent();
-        placeWindow(parent,placer,window,sbuf.toString());
+        placeWindow(parent, placer, window, sbuf.toString());
     }
 
     void placeWindow(Container parent, PlacerLayout placer, SwkWidget window,
