@@ -40,7 +40,6 @@ proc loadImage {w x y} {
     set file [file join $dirName [$w.f.list get @$x,$y]]
     image2a configure -file $file
     $w.image config -image image2a
-    [$w.image object] repaint
 }
 
 set w .image2
