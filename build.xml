@@ -6,7 +6,7 @@
   <property name="dir.gensrc" value="gensrc"/>
   <property name="dir.build" value="build"/>
   <property name="dir.dist" value="dist"/>
-  <property name="dir.libs" value="libs"/>
+  <property name="dir.libs" value="../../libs"/>
   <taskdef classname="de.hunsicker.jalopy.plugin.ant.AntPlugin" name="jalopy">
   <classpath>
     <fileset dir="/Users/brucejohnson/tools/jalopy/lib">
