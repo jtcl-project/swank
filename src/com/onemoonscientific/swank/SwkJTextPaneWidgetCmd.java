@@ -58,6 +58,13 @@ class SwkJTextPaneWidgetCmd implements Command {
     public void cmdProc(final Interp interp, final TclObject[] argv)
         throws TclException {
         int i = 0;
+        this.interp = interp;
+
+        if (argv.length < 2) {
+            throw new TclNumArgsException(interp, 1, argv,
+                "option ?arg arg ...?");
+        }
+
         int opt = TclIndex.get(interp, argv[1], validCmds, "option", 0);
         TclObject tObj = (TclObject) Widgets.theWidgets.get(argv[0].toString());
 
@@ -65,8 +72,6 @@ class SwkJTextPaneWidgetCmd implements Command {
             throw new TclException(interp,
                 "bad window path name \"" + argv[0].toString() + "\"");
         }
-
-        this.interp = interp;
 
         SwkJTextPane swkjtextpane = (SwkJTextPane) ReflectObject.get(interp,
                 tObj);
