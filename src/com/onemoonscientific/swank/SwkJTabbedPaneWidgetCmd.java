@@ -312,27 +312,28 @@ class SwkJTabbedPaneWidgetCmd implements Command {
         TclObject item = null;
         int index = -1;
         String errMessage = null;
+        String sItem = null;
+        String result = null;
 
         void exec(final SwkJTabbedPane swkjtabbedpane, final TclObject item,
             final int index) throws TclException {
             this.swkjtabbedpane = swkjtabbedpane;
             this.item = item;
             this.index = index;
+            this.sItem = item.toString();
+
             execOnThread();
 
             if (errMessage != null) {
                 throw new TclException(interp, errMessage);
             }
+
+            interp.setResult(result);
         }
 
         public void run() {
-            try {
-                swkjtabbedpane.tabCGet(interp, item, index);
-            } catch (TclException tclE) {
-                errMessage = tclE.getMessage();
-
-                return;
-            }
+            //swkjtabbedpane.tabCGet(interp, item, index);
+            result = swkjtabbedpane.tabCGet(sItem, index);
         }
     }
 

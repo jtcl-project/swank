@@ -38,20 +38,22 @@ append specialMethods {
             }
         }
     }
-    public void tabCGet(Interp interp, TclObject argv, int index)
-        throws TclException {
-        if (argv.toString().equals("-foreground")) {
-            interp.setResult(SwankUtil.parseColor(getForegroundAt(index)));
-        } else if (argv.toString().equals("-background")) {
-            interp.setResult(SwankUtil.parseColor(getBackgroundAt(index)));
-        } else if (argv.toString().equals("-title")) {
-            interp.setResult(getTitleAt(index));
-        } else if (argv.toString().equals("-tooltiptext")) {
-            interp.setResult(getToolTipTextAt(index));
-        } else if (argv.toString().equals("-widget")) {
-            interp.setResult(getComponentAt(index).getName());
+    public String tabCGet(String argv, int index) {
+        String result=null;
+
+        if (argv.equals("-foreground")) {
+            result = SwankUtil.parseColor(getForegroundAt(index));
+        } else if (argv.equals("-background")) {
+            result = SwankUtil.parseColor(getBackgroundAt(index));
+        } else if (argv.equals("-title")) {
+            result = getTitleAt(index);
+        } else if (argv.equals("-tooltiptext")) {
+            result = getToolTipTextAt(index);
+        } else if (argv.equals("-widget")) {
+            result = getComponentAt(index).getName();
         }
 
-        return;
+        return result;
     }
+
 }
