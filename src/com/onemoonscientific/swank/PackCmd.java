@@ -254,7 +254,8 @@ public class PackCmd implements Command {
         int lastArg = args.length - 1;
 
         for (int i = firstArg; i <= lastArg; i += 2) {
-            if (args[i].equals("-after") || args[i].equals("-before") || args[i].equals("-in")) {
+            if (args[i].equals("-after") || args[i].equals("-before") ||
+                    args[i].equals("-in")) {
                 if (!Widgets.exists(args[i + 1])) {
                     throw new TclException(interp,
                         "bad window path name \"" + args[i + 1] + "\"");
@@ -267,7 +268,7 @@ public class PackCmd implements Command {
                     strippedArgs.append(" ");
                 }
 
-                strippedArgs.append(" {"+args[i] + "} {" + args[i + 1] + "}");
+                strippedArgs.append(" {" + args[i] + "} {" + args[i + 1] + "}");
             }
         }
     }
@@ -313,9 +314,9 @@ public class PackCmd implements Command {
     }
 
     String getParent(Interp interp, String widgetName)
-        throws TclException   {
+        throws TclException {
         if (!Widgets.exists(widgetName)) {
-            throw new TclException  (interp,
+            throw new TclException(interp,
                 "bad window path name \"" + widgetName + "\"");
         }
 
@@ -504,7 +505,8 @@ public class PackCmd implements Command {
         String errMsg = null;
 
         void exec(final Vector window1Special, final String[] args,
-            String strippedArgs, int firstWindow, int lastWindow) throws TclException {
+            String strippedArgs, int firstWindow, int lastWindow)
+            throws TclException {
             this.args = args;
             this.window1Special = window1Special;
             this.strippedArgs = strippedArgs;
@@ -512,8 +514,9 @@ public class PackCmd implements Command {
             this.lastWindow = lastWindow;
             doSpecial();
             execOnThread();
+
             if (errMsg != null) {
-                 throw new TclException(interp,errMsg);
+                throw new TclException(interp, errMsg);
             }
         }
 
@@ -522,7 +525,8 @@ public class PackCmd implements Command {
                 for (int j = 0; j < window1Special.size(); j += 2) {
                     option = (String) window1Special.elementAt(j);
 
-                    specialWindowName = (String) window1Special.elementAt(j + 1);
+                    specialWindowName = (String) window1Special.elementAt(j +
+                            1);
 
                     if (option.equals("-after")) {
                         parentName = getParent(interp, specialWindowName);
@@ -549,54 +553,63 @@ public class PackCmd implements Command {
                 }
             } else {
             }
-            swkWidgets = new SwkWidget[lastWindow-firstWindow+1];
+
+            swkWidgets = new SwkWidget[lastWindow - firstWindow + 1];
+
             int j = 0;
+
             for (int i = firstWindow; i <= lastWindow; i++) {
                 String windowName = args[i];
+
                 if (window1Special.size() == 0) {
                     parentName = getParent(interp, windowName);
                     parent = Widgets.getContainer(interp, parentName);
                 }
+
                 int packPosition = -1;
 
                 if (windowName.equals(parentName)) {
                     throw new TclException(interp,
                         "can't pack \"" + windowName + "\" inside itself");
                 }
+
                 SwkWidget window = (SwkWidget) Widgets.get(interp, windowName);
+
                 if ((window instanceof JWindow) || (window instanceof JFrame)) {
                     throw new TclException(interp,
                         "can't pack \"" + windowName +
                         "\": it's a top-level window");
                 }
+
                 swkWidgets[j++] = window;
             }
+        }
 
-       }
         void doSpecial1() {
-                int j = 0;
-                for (int i = firstWindow; i <= lastWindow; i++) {
-                    String windowName = args[i];
+            int j = 0;
 
-                    if (!windowName.equals(specialWindowName)) {
-                        SwkWidget window = swkWidgets[j];
-                        int nMembers = parent.getComponentCount();
+            for (int i = firstWindow; i <= lastWindow; i++) {
+                String windowName = args[i];
 
-                        for (int iWin = 0; iWin < nMembers; iWin++) {
-                            Component comp = parent.getComponent(iWin);
+                if (!windowName.equals(specialWindowName)) {
+                    SwkWidget window = swkWidgets[j];
+                    int nMembers = parent.getComponentCount();
 
-                            if (comp == (Component) window) {
-                                parent.remove((Component) window);
+                    for (int iWin = 0; iWin < nMembers; iWin++) {
+                        Component comp = parent.getComponent(iWin);
 
-                                break;
-                            }
+                        if (comp == (Component) window) {
+                            parent.remove((Component) window);
+
+                            break;
                         }
                     }
                 }
             }
+        }
 
         void addWindows() throws IllegalArgumentException {
-            for (int i  = 0; i < swkWidgets.length; i++) {
+            for (int i = 0; i < swkWidgets.length; i++) {
                 int packPosition = -1;
                 String windowName = args[i];
 
@@ -626,15 +639,13 @@ public class PackCmd implements Command {
                         }
 
                         if (!isPacked) {
-                            throw new IllegalArgumentException(
-                                "window \"" + specialWindowName +
-                                "\" isn't packed");
+                            throw new IllegalArgumentException("window \"" +
+                                specialWindowName + "\" isn't packed");
                         }
                     }
                 }
 
                 SwkWidget window = swkWidgets[i];
-
 
                 LayoutManager layoutManager = parent.getLayout();
                 PackerLayout packer = null;

@@ -335,8 +335,10 @@ public class GridCmd implements Command {
             modOptions);
     }
 
-    String  doit(String masterName, Object masterObject,
-        GridBagConstraints gconstr, String[] windowNames, JComponent[] jcomponents,  int modOptions) throws IllegalArgumentException {
+    String doit(String masterName, Object masterObject,
+        GridBagConstraints gconstr, String[] windowNames,
+        JComponent[] jcomponents, int modOptions)
+        throws IllegalArgumentException {
         Container master = getMasterContainer(masterObject);
 
         //    SwkGridBagLayout gbag = getLayout(master);
@@ -395,7 +397,7 @@ public class GridCmd implements Command {
 
             try {
                 slave = gridSlave(interp, master, masterName, gbag, gconstr,
-                        modOptions, jcomponents[i],windowNames[i]);
+                        modOptions, jcomponents[i], windowNames[i]);
             } catch (IllegalArgumentException iaE) {
                 return iaE.getMessage();
             }
@@ -405,6 +407,7 @@ public class GridCmd implements Command {
 
         LayoutHandler.addLayoutRequest(interp, master);
         gbag.lastRow = gconstr.gridy + 1;
+
         return null;
     }
 
@@ -872,8 +875,8 @@ public class GridCmd implements Command {
         return;
     }
 
-    void extendRow(Container master, SwkGridBagLayout gbag,
-        int x, int y) throws IllegalArgumentException  {
+    void extendRow(Container master, SwkGridBagLayout gbag, int x, int y)
+        throws IllegalArgumentException {
         Component[] comps = master.getComponents();
         boolean foundComp = false;
 
@@ -902,7 +905,8 @@ public class GridCmd implements Command {
         }
 
         if (!foundComp) {
-            throw new IllegalArgumentException ("can't find slave to extend with \"^\".");
+            throw new IllegalArgumentException(
+                "can't find slave to extend with \"^\".");
         }
     }
 
@@ -1150,9 +1154,7 @@ public class GridCmd implements Command {
 
     JComponent gridSlave(Interp interp, Container master, String masterName,
         SwkGridBagLayout gbag, GridBagConstraints gconstr, int modOptions,
-        JComponent slave, String windowName) throws IllegalArgumentException  {
-
-
+        JComponent slave, String windowName) throws IllegalArgumentException {
         GridBagConstraints currentConstraints = gbag.getConstraints(slave);
         GridBagConstraints applyConstraints = null;
 
@@ -1183,9 +1185,8 @@ public class GridCmd implements Command {
             try {
                 master.add(slave);
             } catch (java.lang.IllegalArgumentException iaE) {
-                throw new IllegalArgumentException (
-                    "can't put \"" + windowName + "\" inside \"" + masterName +
-                    "\"");
+                throw new IllegalArgumentException("can't put \"" + windowName +
+                    "\" inside \"" + masterName + "\"");
             }
         }
 
@@ -1260,6 +1261,7 @@ public class GridCmd implements Command {
         JComponent[] jcomponents = null;
         int modOptions = 0;
         String errMsg = null;
+
         void exec(final String masterName, final Object masterObject,
             final GridBagConstraints gconstr, final String[] windowNames,
             final int modOptions) throws TclException {
@@ -1269,32 +1271,43 @@ public class GridCmd implements Command {
             this.windowNames = windowNames;
             this.modOptions = modOptions;
             jcomponents = new JComponent[windowNames.length];
+
             for (int i = 0; i < windowNames.length; i++) {
                 String thisArg = windowNames[i];
-                if (thisArg.equals("^") || thisArg.equals("-") || thisArg.equals("x")) {
-                     continue;
+
+                if (thisArg.equals("^") || thisArg.equals("-") ||
+                        thisArg.equals("x")) {
+                    continue;
                 }
+
                 TclObject tObj2 = (TclObject) Widgets.theWidgets.get(thisArg);
+
                 if (tObj2 == null) {
                     throw new TclException(interp,
                         "bad window path name \"" + thisArg + "\"");
                 }
+
                 Object compObject = ReflectObject.get(interp, tObj2);
+
                 if (compObject instanceof JComponent) {
                     jcomponents[i] = (JComponent) compObject;
                 } else {
                     throw new TclException(interp,
-                        "can't manage \"" + thisArg + "\": it's a top-level window");
+                        "can't manage \"" + thisArg +
+                        "\": it's a top-level window");
                 }
             }
+
             execOnThread();
+
             if (errMsg != null) {
-                throw new TclException(interp,errMsg);
+                throw new TclException(interp, errMsg);
             }
         }
 
         public void run() {
-            errMsg = doit(masterName, masterObject, gconstr, windowNames, jcomponents, modOptions);
+            errMsg = doit(masterName, masterObject, gconstr, windowNames,
+                    jcomponents, modOptions);
         }
     }
 
