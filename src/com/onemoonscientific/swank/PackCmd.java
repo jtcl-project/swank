@@ -254,13 +254,7 @@ public class PackCmd implements Command {
         int lastArg = args.length - 1;
 
         for (int i = firstArg; i <= lastArg; i += 2) {
-            /*
-            if (argv[i + 1].toString ().startsWith ("-") && !Character.isDigit(argv[i+1].toString().charAt(1))) {
-                throw new TclException (interp, "argument without value");
-            }
-             */
-            if (args[i].equals("-after") || args[i].equals("-before") ||
-                    args[i].equals("-in")) {
+            if (args[i].equals("-after") || args[i].equals("-before") || args[i].equals("-in")) {
                 if (!Widgets.exists(args[i + 1])) {
                     throw new TclException(interp,
                         "bad window path name \"" + args[i + 1] + "\"");
@@ -273,7 +267,7 @@ public class PackCmd implements Command {
                     strippedArgs.append(" ");
                 }
 
-                strippedArgs.append(args[i] + " {" + args[i + 1] + "}");
+                strippedArgs.append(" {"+args[i] + "} {" + args[i + 1] + "}");
             }
         }
     }
@@ -319,9 +313,9 @@ public class PackCmd implements Command {
     }
 
     String getParent(Interp interp, String widgetName)
-        throws TclException {
+        throws TclException   {
         if (!Widgets.exists(widgetName)) {
-            throw new TclException(interp,
+            throw new TclException  (interp,
                 "bad window path name \"" + widgetName + "\"");
         }
 
@@ -397,8 +391,8 @@ public class PackCmd implements Command {
             try {
                 parent = Widgets.getContainer(interp, item);
             } catch (TclException tclE) {
+                System.out.println("error prop " + tclE.getMessage());
                 interp.backgroundError();
-                System.out.println("error " + tclE.getMessage());
 
                 //FIXME
             }
@@ -441,6 +435,7 @@ public class PackCmd implements Command {
                 parent = Widgets.getContainer(interp, item);
             } catch (TclException tclE) {
                 //FIXME
+                System.out.println("error slaves " + tclE.getMessage());
                 interp.backgroundError();
 
                 return;
@@ -495,7 +490,7 @@ public class PackCmd implements Command {
         }
     }
 
-    class Configure extends UpdateOnEventThread {
+    class Configure extends GetValueOnEventThread {
         String specialWindowName = null;
         String parentName = null;
         Container parent = null;
@@ -504,16 +499,22 @@ public class PackCmd implements Command {
         Vector window1Special = null;
         int firstWindow = 0;
         int lastWindow = 0;
+        SwkWidget[] swkWidgets = null;
         String[] args = null;
+        String errMsg = null;
 
         void exec(final Vector window1Special, final String[] args,
-            String strippedArgs, int firstWindow, int lastWindow) {
+            String strippedArgs, int firstWindow, int lastWindow) throws TclException {
             this.args = args;
             this.window1Special = window1Special;
             this.strippedArgs = strippedArgs;
             this.firstWindow = firstWindow;
             this.lastWindow = lastWindow;
+            doSpecial();
             execOnThread();
+            if (errMsg != null) {
+                 throw new TclException(interp,errMsg);
+            }
         }
 
         void doSpecial() throws TclException {
@@ -521,8 +522,7 @@ public class PackCmd implements Command {
                 for (int j = 0; j < window1Special.size(); j += 2) {
                     option = (String) window1Special.elementAt(j);
 
-                    specialWindowName = (String) window1Special.elementAt(j +
-                            1);
+                    specialWindowName = (String) window1Special.elementAt(j + 1);
 
                     if (option.equals("-after")) {
                         parentName = getParent(interp, specialWindowName);
@@ -547,14 +547,39 @@ public class PackCmd implements Command {
                         parent = Widgets.getContainer(interp, parentName);
                     }
                 }
+            } else {
+            }
+            swkWidgets = new SwkWidget[lastWindow-firstWindow+1];
+            int j = 0;
+            for (int i = firstWindow; i <= lastWindow; i++) {
+                String windowName = args[i];
+                if (window1Special.size() == 0) {
+                    parentName = getParent(interp, windowName);
+                    parent = Widgets.getContainer(interp, parentName);
+                }
+                int packPosition = -1;
 
+                if (windowName.equals(parentName)) {
+                    throw new TclException(interp,
+                        "can't pack \"" + windowName + "\" inside itself");
+                }
+                SwkWidget window = (SwkWidget) Widgets.get(interp, windowName);
+                if ((window instanceof JWindow) || (window instanceof JFrame)) {
+                    throw new TclException(interp,
+                        "can't pack \"" + windowName +
+                        "\": it's a top-level window");
+                }
+                swkWidgets[j++] = window;
+            }
+
+       }
+        void doSpecial1() {
+                int j = 0;
                 for (int i = firstWindow; i <= lastWindow; i++) {
                     String windowName = args[i];
 
                     if (!windowName.equals(specialWindowName)) {
-                        SwkWidget window = (SwkWidget) Widgets.get(interp,
-                                windowName);
-
+                        SwkWidget window = swkWidgets[j];
                         int nMembers = parent.getComponentCount();
 
                         for (int iWin = 0; iWin < nMembers; iWin++) {
@@ -569,17 +594,11 @@ public class PackCmd implements Command {
                     }
                 }
             }
-        }
 
-        void addWindows() throws TclException {
-            for (int i = firstWindow; i <= lastWindow; i++) {
+        void addWindows() throws IllegalArgumentException {
+            for (int i  = 0; i < swkWidgets.length; i++) {
                 int packPosition = -1;
                 String windowName = args[i];
-
-                if (windowName.equals(parentName)) {
-                    throw new TclException(interp,
-                        "can't pack \"" + windowName + "\" inside itself");
-                }
 
                 if (window1Special.size() > 0) {
                     if (!option.equals("-in")) {
@@ -607,23 +626,15 @@ public class PackCmd implements Command {
                         }
 
                         if (!isPacked) {
-                            throw new TclException(interp,
+                            throw new IllegalArgumentException(
                                 "window \"" + specialWindowName +
                                 "\" isn't packed");
                         }
                     }
-                } else {
-                    parentName = getParent(interp, windowName);
-                    parent = Widgets.getContainer(interp, parentName);
                 }
 
-                SwkWidget window = (SwkWidget) Widgets.get(interp, windowName);
+                SwkWidget window = swkWidgets[i];
 
-                if ((window instanceof JWindow) || (window instanceof JFrame)) {
-                    throw new TclException(interp,
-                        "can't pack \"" + windowName +
-                        "\": it's a top-level window");
-                }
 
                 LayoutManager layoutManager = parent.getLayout();
                 PackerLayout packer = null;
@@ -656,11 +667,11 @@ public class PackCmd implements Command {
 
         public void run() {
             try {
-                doSpecial();
+                doSpecial1();
                 addWindows();
                 parent.repaint();
-            } catch (TclException tclE) {
-                interp.backgroundError();
+            } catch (IllegalArgumentException iaE) {
+                errMsg = iaE.getMessage();
             }
         }
     }
