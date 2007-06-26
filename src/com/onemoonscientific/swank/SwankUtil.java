@@ -1307,6 +1307,31 @@ public class SwankUtil {
         return (0);
     }
 
+    public static Object getMenuBar(Interp interp, String menuName)
+        throws TclException {
+        TclObject tObj = (TclObject) Widgets.theWidgets.get(menuName);
+        SwkJMenuBar swkjmenubar = null;
+
+        //System.out.println("getMenu:" + menuName);
+        if (tObj == null) {
+            //  System.out.println("Menu Object is null");
+            swkjmenubar = new SwkJMenuBar(interp, menuName, "Menu");
+            interp.createCommand(menuName, new SwkJMenuBarWidgetCmd());
+            tObj = ReflectObject.newInstance(interp, SwkJMenuBar.class, swkjmenubar);
+            tObj.preserve();
+            Widgets.theWidgets.put(menuName, tObj);
+        }
+
+        Object object = ReflectObject.get(interp, tObj);
+
+        if (!(object instanceof SwkJMenuBar) && !(object instanceof SwkJMenu)) {
+            throw new TclException(interp, "Invalid menu object");
+        }
+
+        return object;
+    }
+
+
     public static Object getMenu(Interp interp, String menuName)
         throws TclException {
         TclObject tObj = (TclObject) Widgets.theWidgets.get(menuName);
