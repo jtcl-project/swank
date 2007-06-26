@@ -174,13 +174,14 @@ public class SwkJComboBoxListener implements ActionListener, VarTrace,
     }
 
     public void actionPerformed(ActionEvent e) {
-        //      System.out.println("Action Performed" + this.component.getName()+ " " +this.command );
-        if (!((SwkWidget) component).isCreated()) {
-            //         System.out.println("Component is not created..");
+        //System.out.println("Action Event Object : " + e.toString());
+        if (e.getModifiers() == 0) {
             return;
         }
+        //if (!((SwkWidget) component).isCreated()) {
+         //   return;
+        //}
 
-        //System.out.println("Action Event Object : " + e.toString());
         String s1 = component.getSelectedItem().toString();
 
         if ((varName != null) && (!varName.equals(""))) {
@@ -248,7 +249,6 @@ public class SwkJComboBoxListener implements ActionListener, VarTrace,
 
     public void processEvent(EventObject eventObject, Object obj, int subtype) {
         ActionEvent e = (ActionEvent) eventObject;
-
         //   System.out.println("Process Event" + this);
         if (EventQueue.isDispatchThread()) {
             System.out.println(
