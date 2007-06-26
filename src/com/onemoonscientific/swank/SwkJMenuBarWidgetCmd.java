@@ -26,20 +26,22 @@ import javax.swing.tree.*;
 
 class SwkJMenuBarWidgetCmd implements Command {
     static final private String[] validCmds = {
-        "cget", "configure", "object", "jadd"
+        "cget", "configure", "object", "jadd","add"
     };
     static final private int OPT_CGET = 0;
     static final private int OPT_CONFIGURE = 1;
     static final private int OPT_OBJECT = 2;
     static final private int OPT_JADD = 3;
+    static final private int OPT_ADD = 4;
     static boolean gotDefaults = false;
-
+    Interp interp = null;
     public static String[] getValidCmds() {
         return validCmds;
     }
 
     public void cmdProc(final Interp interp, final TclObject[] argv)
         throws TclException {
+        this.interp = interp;
         int i;
 
         if (argv.length < 2) {
@@ -115,9 +117,108 @@ class SwkJMenuBarWidgetCmd implements Command {
             swkjmenubar.jadd(interp, argv[2]);
 
             break;
+        case OPT_ADD:
+            if (argv.length < 3) {
+                throw new TclNumArgsException(interp, 2, argv, "option");
+            }
+            addmenu(interp,swkjmenubar,argv);
+            break;
 
         default:
             throw new TclRuntimeError("TclIndex.get() error");
+        }
+    }
+
+
+    public void addmenu(Interp interp, SwkJMenuBar swkjmenubar, TclObject[] argv)
+        throws TclException {
+        int i;
+
+        if (argv.length < 3) {
+            throw new TclNumArgsException(interp, 1, argv,
+                "option ?arg arg ...?");
+        }
+
+        String itemType = argv[2].toString();
+
+        if (itemType.equals("cascade")) {
+            String menuName = null;
+            int j = 0;
+
+            if (((argv.length - 3) % 2) != 0) {
+                throw new TclNumArgsException(interp, 1, argv,
+                    "arguments not multiple of 2");
+            }
+
+            TclObject[] argNew = new TclObject[argv.length - 5];
+
+            for (i = 3; i < argv.length; i += 2) {
+                if (argv[i].toString().equals("-menu")) {
+                    menuName = argv[i + 1].toString();
+                } else {
+                    argNew[j] = TclString.newInstance(argv[i].toString());
+                    argNew[j + 1] = TclString.newInstance(argv[i + 1].toString());
+                    j += 2;
+                }
+            }
+
+            TclObject tObj = (TclObject) Widgets.theWidgets.get(menuName);
+
+            if (tObj == null) {
+                SwkJMenu cascade = (new Add()).exec(swkjmenubar, menuName);
+                interp.createCommand(menuName, new SwkJMenuWidgetCmd());
+                tObj = ReflectObject.newInstance(interp, SwkJMenu.class, cascade);
+                tObj.preserve();
+                cascade.children = null;
+                cascade = (SwkJMenu) ReflectObject.get(interp, tObj);
+                cascade.configure(interp, argNew, 0);
+                Widgets.addNewWidget(interp, menuName, tObj);
+                cascade.setCreated(false);
+            } else {
+                SwkJMenu cascade = (SwkJMenu) ReflectObject.get(interp, tObj);
+                (new Add()).exec(swkjmenubar, menuName, cascade);
+                cascade.configure(interp, argNew, 0);
+            }
+        } else {
+            throw new TclException(interp,"invalid menu option \""+itemType+"\"");
+        }
+
+        swkjmenubar.revalidate();
+
+        return;
+    }
+
+
+    class Add extends GetValueOnEventThread {
+        SwkJMenuBar swkjmenubar = null;
+        JComponent jcomp = null;
+        String menuName = "";
+        SwkWidget swkWidget = null;
+        SwkJMenu cascade = null;
+
+        SwkJMenu exec(final SwkJMenuBar swkjmenubar, final String menuName) {
+            this.swkjmenubar = swkjmenubar;
+            this.menuName = menuName;
+            execOnThread();
+
+            return cascade;
+        }
+
+        SwkJMenu exec(final SwkJMenuBar swkjmenubar, final String menuName, SwkJMenu cascade) {
+            this.swkjmenubar = swkjmenubar;
+            this.cascade = cascade;
+            this.menuName = menuName;
+            execOnThread();
+
+            return cascade;
+        }
+
+        public void run() {
+            if (cascade == null) {
+                cascade = new SwkJMenu(interp, menuName, "Menu");
+            }
+
+            swkjmenubar.add(cascade);
         }
     }
 }
