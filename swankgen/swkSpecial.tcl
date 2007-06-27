@@ -1118,6 +1118,26 @@ proc swkMakeSpecial {widget widgetVar} {
         \}
         "
     }
+   # -relief
+    set vWidgets "JFrame"
+   
+    if {[lsearch $vWidgets $widget ] >= 0} {
+        append specialVars "
+        String relief=[defpar relief $widget null];
+        "
+        append specialMethods {
+            public void setRelief(String relief) {
+                if (!(getRootPane().getBorder() instanceof SwkBorder)) {
+                    getRootPane().setBorder(new SwkBorder());
+                }
+                this.relief = relief.intern();
+            }
+        }
+        set specialGets [concat  $specialGets {
+            {setRelief tkRelief Relief}
+        }]
+    }
+
     # -repeatdelay
     if {[lsearch "JSlider" $widget ] >= 0} {
         append specialVars {
@@ -1946,16 +1966,8 @@ Dimension dSize = new Dimension(scrollRegion[1][0]-scrollRegion[0][0],scrollRegi
             public void setMenu(Object menuObject)  {
                 if (menuObject instanceof SwkJMenuBar) {
                     setJMenuBar((SwkJMenuBar) menuObject);
-                } else if (menuObject instanceof SwkJMenu) {
-                    SwkJMenu swkjmenu = (SwkJMenu) menuObject;
-                    setJMenuBar(new JMenuBar());
-                    Component comps[] = swkjmenu.getMenuComponents();
-                    
-                    for (int i=0;i<comps.length;i++) {
-                        getJMenuBar().add(comps[i]);
-                    }
                 }
-            }
+            } 
             public String getMenu() {
                 return(menu);
             }
