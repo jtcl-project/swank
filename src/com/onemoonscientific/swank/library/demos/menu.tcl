@@ -36,7 +36,7 @@ button $w.buttons.dismiss -text Dismiss -command "destroy $w"
 button $w.buttons.code -text "See Code" -command "showCode $w"
 pack $w.buttons.dismiss $w.buttons.code -side left -expand 1
 
-menu $w.menu -tearoff 0
+jmenubar $w.menu 
 
 set m $w.menu.file
 menu $m -tearoff 0
