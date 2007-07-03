@@ -63,7 +63,7 @@ public interface SwkWidget {
 
     public void setCreated(boolean state);
 
-    public double getBorderWidth();
+    public int getBorderWidth();
 
     public Insets getEmptyBorderInsets();
 
