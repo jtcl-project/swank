@@ -778,7 +778,7 @@ proc swkMakeSpecial {widget widgetVar} {
     # -borderWidth  
     if {1} {
         append specialVars "
-            double borderWidth = [defpar borderWidth $widget 0];
+            int borderWidth = [defpar borderWidth $widget 0];
         "
     if {[lsearch "SMenuButton JButton SMenuButton JRadioButton JRadioButtonMenuItem JCheckBox JCheckBoxMenuItem" $widget ] >= 0} {
             append specialMethods {
@@ -789,7 +789,7 @@ proc swkMakeSpecial {widget widgetVar} {
        		 }
 
                 public void setBorderWidth(double borderWidth) {
-                   this.borderWidth = borderWidth;
+                   this.borderWidth = (int) borderWidth;
                    if (!(getBorder() instanceof SwkBorder)) {
                        int iBorder = (int) borderWidth;
                        setMargin(new Insets(iBorder,iBorder,iBorder,iBorder)); 
@@ -799,7 +799,7 @@ proc swkMakeSpecial {widget widgetVar} {
         } elseif {[lsearch "JWindow JDialog JFrame" $widget] < 0} {
             append specialMethods {
                 public void setBorderWidth(double borderWidth) {
-                   this.borderWidth = borderWidth;
+                   this.borderWidth = (int) borderWidth;
                    if (!(getBorder() instanceof SwkBorder)) {
                       setBorder(new SwkBorder());
                    }
@@ -808,25 +808,25 @@ proc swkMakeSpecial {widget widgetVar} {
         } else {
             append specialMethods {
                 public void setBorderWidth(double borderWidth) {
-                   this.borderWidth = borderWidth;
+                   this.borderWidth = (int) borderWidth;
                }
             }
         }
             append specialMethods {
-            public double getBorderWidth() {
+            public int getBorderWidth() {
                 return(borderWidth);
             }
         }
         set specialGets [concat  $specialGets {
-            {setBorderWidth tkSizeD BorderWidth -borderwidth}
+            {setBorderWidth tkSizeDI BorderWidth -borderwidth}
         }]
         set specialGets [concat  $specialGets {
-            {setBorderWidth tkSizeD BorderWidth -border}
+            {setBorderWidth tkSizeDI BorderWidth -border}
         }]
     }
     # -bd
         set specialGets [concat  $specialGets {
-            {setBorderWidth tkSizeD BorderWidth -bd}
+            {setBorderWidth tkSizeDI BorderWidth -bd}
         }]
     
     
