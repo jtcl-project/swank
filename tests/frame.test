@@ -105,7 +105,7 @@ foreach test {
     {-highlightcolor #123456 #123456 non-existent
 	    {unknown color name "non-existent"}}
     {-highlightthickness 6 6 badValue {bad screen distance "badValue"}}
-    {-relief ridge ridge badValue {bad relief type "badValue": must be flat, groove, raised, ridge, solid, or sunken}}
+    {-relief ridge ridge badValue {bad relief "badValue": must be flat, groove, raised, ridge, solid, or sunken}}
     {-takefocus "any string" "any string" {} {}}
     {-width 32 32 badValue {bad screen distance "badValue"}}
 } {
@@ -195,7 +195,7 @@ foreach test {
     {-highlightcolor #123456 #123456 non-existent
 	    {unknown color name "non-existent"}}
     {-highlightthickness 3 3 badValue {bad screen distance "badValue"}}
-    {-relief ridge ridge badValue {bad relief type "badValue": must be flat, groove, raised, ridge, solid, or sunken}}
+    {-relief ridge ridge badValue {bad relief "badValue": must be flat, groove, raised, ridge, solid, or sunken}}
     {-width 32 32 badValue {bad screen distance "badValue"}}
 } {
     set name [lindex $test 0]
@@ -251,14 +251,14 @@ test frame-3.5 {TkCreateFrame procedure} broken {
     option clear
     lindex [.f configure -background] 4
 } {#123456}
-test frame-3.6 {TkCreateFrame procedure} {
+test frame-3.6 {TkCreateFrame procedure} broken {
     catch {destroy .f}
     option add *NewFrame.background #123456
     frame .f -class NewFrame
     option clear
     lindex [.f configure -background] 4
 } {#123456}
-test frame-3.7 {TkCreateFrame procedure} {
+test frame-3.7 {TkCreateFrame procedure} broken {
     catch {destroy .f}
     option add *NewFrame.background #332211
     option add *f.class NewFrame
@@ -266,7 +266,7 @@ test frame-3.7 {TkCreateFrame procedure} {
     option clear
     list [lindex [.f configure -class] 4] [lindex [.f configure -background] 4]
 } {NewFrame #332211}
-test frame-3.8 {TkCreateFrame procedure} {
+test frame-3.8 {TkCreateFrame procedure} broken {
     catch {destroy .f}
     option add *Silly.background #122334
     option add *f.Class Silly
@@ -285,7 +285,7 @@ test frame-3.9 {TkCreateFrame procedure, -use option} unixOnly {
     destroy .t
     set result
 } {0 0 140 300}
-test frame-3.10 {TkCreateFrame procedure, -use option} unixOnly {
+test frame-3.10 {TkCreateFrame procedure, -use option} broken {
     catch {destroy .t}
     catch {destroy .x}
     toplevel .t -container 1 -width 300 -height 120
