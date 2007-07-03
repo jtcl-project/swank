@@ -101,6 +101,8 @@ foreach method $getMethods  {
 						set cmd "return($widgetVarLocal.${getMethod}());"
 					} elseif {$argType == "tkSize"} {
 						set cmd "return(SwankUtil.parseTkSize($widgetVarLocal.${getMethod}()));"
+					} elseif {$argType == "tkSizeDI"} {
+						set cmd "return(SwankUtil.parseTkSize($widgetVarLocal.${getMethod}()));"
 					} elseif {$argType == "tkSizeD"} {
 						set cmd "return(SwankUtil.parseTkSizeD($widgetVarLocal.${getMethod}()));"
 					} elseif {$argType == "anchor"} {
