@@ -36,6 +36,9 @@ proc getSetter {widgetVar mode} {
         "tkSizeD" {
            set result "double value = SwankUtil.getTkSizeD(interp,(Component) this,argv\[i+1\]);"
         }
+        "tkSizeDI" {
+           set result "double value = SwankUtil.getTkSizeD(interp,(Component) this,argv\[i+1\]);"
+        }
         "tkSelectMode" {
            set result {int value = SwankUtil.getTkSelectMode(interp,argv[i+1]);}
         }
