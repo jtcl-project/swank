@@ -46,13 +46,15 @@ public class SwkBorder extends AbstractBorder {
         int i2 = 0;
         int i3 = 0;
         int i4 = 0;
+        if (c instanceof JRootPane) {
+            c = c.getParent();
+        }
         String relief = ((SwkWidget) c).getRelief();
         width = (int) ((SwkWidget) c).getBorderWidth();
 
         if (width == 0) {
             return;
         }
-
         if ((relief == null) || (relief.equals(""))) {
             return;
         } else if (relief.startsWith("f")) {
@@ -114,6 +116,9 @@ public class SwkBorder extends AbstractBorder {
     }
 
     public Insets getBorderInsets(Component c) {
+        if (c instanceof JRootPane) {
+            c = c.getParent();
+        }
         int width = (int) ((SwkWidget) c).getBorderWidth();
         Insets eBI = ((SwkWidget) c).getEmptyBorderInsets();
 
