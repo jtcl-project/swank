@@ -1105,13 +1105,16 @@ proc swkMakeSpecial {widget widgetVar} {
                 this.relief = relief.intern();
             }
             public String getRelief() {
+                if (relief == null) {
+                    relief = "";
+                }
                 return(relief);
             }
         }
         set specialGets [concat  $specialGets {
             {setRelief tkRelief Relief}
         }]
-        } else {
+        } elseif {$widget != "JFrame"} {
         append specialMethods "
         public String getRelief() \{
             return(\"\");
@@ -1131,6 +1134,12 @@ proc swkMakeSpecial {widget widgetVar} {
                     getRootPane().setBorder(new SwkBorder());
                 }
                 this.relief = relief.intern();
+            }
+            public String getRelief() {
+                if (relief == null) {
+                    relief = "";
+                }
+                return(relief);
             }
         }
         set specialGets [concat  $specialGets {
