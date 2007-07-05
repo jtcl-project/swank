@@ -2248,4 +2248,14 @@ public class SwankUtil {
 
         return list;
     }
+    public static void doWait() {
+        try {
+            SwingUtilities.invokeAndWait(new Runnable() {
+                    public void run() {
+                    }
+                });
+        } catch (Exception e) {
+        }
+    }
+
 }
