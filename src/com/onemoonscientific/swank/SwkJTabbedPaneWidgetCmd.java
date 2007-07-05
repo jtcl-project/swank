@@ -16,19 +16,17 @@ import javax.swing.*;
 
 class SwkJTabbedPaneWidgetCmd implements Command {
     static final private String[] validCmds = {
-        "cget", "configure", "object", "jadd", "add", "select", "tabconfigure",
+        "cget", "configure", "add", "select", "tabconfigure",
         "tabcget", "tabcount", "index"
     };
     static final private int OPT_CGET = 0;
     static final private int OPT_CONFIGURE = 1;
-    static final private int OPT_OBJECT = 2;
-    static final private int OPT_JADD = 3;
-    static final private int OPT_ADD = 4;
-    static final private int OPT_SELECT = 5;
-    static final private int OPT_TABCONFIGURE = 6;
-    static final private int OPT_TABCGET = 7;
-    static final private int OPT_TABCOUNT = 8;
-    static final private int OPT_INDEX = 9;
+    static final private int OPT_ADD = 2;
+    static final private int OPT_SELECT = 3;
+    static final private int OPT_TABCONFIGURE = 4;
+    static final private int OPT_TABCGET = 5;
+    static final private int OPT_TABCOUNT = 6;
+    static final private int OPT_INDEX = 7;
     static boolean gotDefaults = false;
     Interp interp = null;
 
@@ -99,21 +97,6 @@ class SwkJTabbedPaneWidgetCmd implements Command {
             } else {
                 swkjtabbedpane.configure(interp, argv, 2);
             }
-
-            break;
-
-        case OPT_OBJECT:
-            interp.setResult(tObj);
-
-            break;
-
-        case OPT_JADD:
-
-            if (argv.length != 3) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-
-            swkjtabbedpane.jadd(interp, argv[2]);
 
             break;
 

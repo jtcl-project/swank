@@ -40,13 +40,11 @@ import javax.swing.text.*;
 
 class SwkJColorChooserWidgetCmd implements Command {
     static final private String[] validCmds = {
-        "object", "configure", "jadd", "cget", "choose"
+        "configure", "cget", "choose"
     };
-    static final private int OPT_OBJECT = 0;
-    static final private int OPT_CONFIGURE = 1;
-    static final private int OPT_JADD = 2;
-    static final private int OPT_CGET = 3;
-    static final private int OPT_CHOOSE = 4;
+    static final private int OPT_CONFIGURE = 0;
+    static final private int OPT_CGET = 1;
+    static final private int OPT_CHOOSE = 2;
     static boolean gotDefaults = false;
 
     public static String[] getValidCmds() {
@@ -74,20 +72,6 @@ class SwkJColorChooserWidgetCmd implements Command {
                 tObj);
 
         switch (opt) {
-        case OPT_OBJECT:
-            interp.setResult(tObj);
-
-            break;
-
-        case OPT_JADD:
-
-            if (argv.length != 3) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-
-            swkjcolorchooser.jadd(interp, argv[2]);
-
-            break;
 
         case OPT_CGET:
 

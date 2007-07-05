@@ -325,7 +325,7 @@ test scale-6.6 {ComputeFormat procedure} {nonPortable} {
     .s set 4930000
     .s get
 } {5000000}
-test scale-6.7 {ComputeFormat procedure} {
+test scale-6.7 {ComputeFormat procedure} broken {
     .s configure -from 1000000000 -to 10000000000 -resolution 1000000000
     .s set 4930000000
     expr {[.s get] == 5.0e+09}
@@ -597,7 +597,7 @@ test scale-10.2 {ValueToPixel procedure} {fonts} {
     list [.s coords -10] [.s coords 40] [.s coords 1000]
 } {{62 114} {62 74} {62 14}}
 
-test scale-11.1 {ScaleEventProc procedure} {
+test scale-11.1 {ScaleEventProc procedure} broken {
     proc killScale value {
 	global x
 	if {$value > 30} {

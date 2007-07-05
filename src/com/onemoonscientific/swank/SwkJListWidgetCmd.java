@@ -18,28 +18,26 @@ import javax.swing.*;
 
 class SwkJListWidgetCmd implements Command {
     static final private String[] validCmds = {
-        "cget", "configure", "object", "jadd", "activate", "bbox",
+        "cget", "configure", "activate", "bbox",
         "curselection", "delete", "get", "size", "see", "index", "nearest",
         "insert", "scan", "selection", "xview", "yview"
     };
     static final private int OPT_CGET = 0;
     static final private int OPT_CONFIGURE = 1;
-    static final private int OPT_OBJECT = 2;
-    static final private int OPT_JADD = 3;
-    static final private int OPT_ACTIVATE = 4;
-    static final private int OPT_BBOX = 5;
-    static final private int OPT_CURSELECTION = 6;
-    static final private int OPT_DELETE = 7;
-    static final private int OPT_GET = 8;
-    static final private int OPT_SIZE = 9;
-    static final private int OPT_SEE = 10;
-    static final private int OPT_INDEX = 11;
-    static final private int OPT_NEAREST = 12;
-    static final private int OPT_INSERT = 13;
-    static final private int OPT_SCAN = 14;
-    static final private int OPT_SELECTION = 15;
-    static final private int OPT_XVIEW = 16;
-    static final private int OPT_YVIEW = 17;
+    static final private int OPT_ACTIVATE = 2;
+    static final private int OPT_BBOX = 3;
+    static final private int OPT_CURSELECTION = 4;
+    static final private int OPT_DELETE = 5;
+    static final private int OPT_GET = 6;
+    static final private int OPT_SIZE = 7;
+    static final private int OPT_SEE = 8;
+    static final private int OPT_INDEX = 9;
+    static final private int OPT_NEAREST = 10;
+    static final private int OPT_INSERT = 11;
+    static final private int OPT_SCAN = 12;
+    static final private int OPT_SELECTION = 13;
+    static final private int OPT_XVIEW = 14;
+    static final private int OPT_YVIEW = 15;
     static boolean gotDefaults = false;
     int index;
     Interp interp = null;
@@ -109,21 +107,6 @@ class SwkJListWidgetCmd implements Command {
             } else {
                 swkjlist.configure(interp, argv, 2);
             }
-
-            break;
-
-        case OPT_OBJECT:
-            interp.setResult(tObj);
-
-            break;
-
-        case OPT_JADD:
-
-            if (argv.length != 3) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-
-            swkjlist.jadd(interp, argv[2]);
 
             break;
 

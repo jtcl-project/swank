@@ -17,19 +17,17 @@ import javax.swing.plaf.basic.BasicScrollBarUI;
 
 class SwkJScrollBarWidgetCmd implements Command {
     static final private String[] validCmds = {
-        "cget", "configure", "object", "jadd", "activate", "delta", "fraction",
+        "cget", "configure", "activate", "delta", "fraction",
         "get", "identify", "set"
     };
     static final private int OPT_CGET = 0;
     static final private int OPT_CONFIGURE = 1;
-    static final private int OPT_OBJECT = 2;
-    static final private int OPT_JADD = 3;
-    static final private int OPT_ACTIVATE = 4;
-    static final private int OPT_DELTA = 5;
-    static final private int OPT_FRACTION = 6;
-    static final private int OPT_GET = 7;
-    static final private int OPT_IDENTIFY = 8;
-    static final private int OPT_SET = 9;
+    static final private int OPT_ACTIVATE = 2;
+    static final private int OPT_DELTA = 3;
+    static final private int OPT_FRACTION = 4;
+    static final private int OPT_GET = 5;
+    static final private int OPT_IDENTIFY = 6;
+    static final private int OPT_SET = 7;
     static boolean gotDefaults = false;
 
     public static String[] getValidCmds() {
@@ -97,21 +95,6 @@ class SwkJScrollBarWidgetCmd implements Command {
             } else {
                 swkjscrollbar.configure(interp, argv, 2);
             }
-
-            break;
-
-        case OPT_OBJECT:
-            interp.setResult(tObj);
-
-            break;
-
-        case OPT_JADD:
-
-            if (argv.length != 3) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-
-            swkjscrollbar.jadd(interp, argv[2]);
 
             break;
 

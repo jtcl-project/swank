@@ -140,43 +140,6 @@ public class ${widgetType} extends ${widget} implements SwkWidget, Printable$spe
     $specialMethods
 
 
-    /** Adds objects to the ${widgetType} widget.
-     * @param interp The interpreter containing the widgets command.
-     * @param tclObject The object to add to widget.
-     * @throws TclException Exception thrown if an error occurs while adding object
-     */
-    public void jadd(Interp interp, TclObject tclObject) throws TclException {
-        int i;
-        final String tobjString = tclObject.toString();
-        TclObject tObj = (TclObject) Widgets.theWidgets.get(tobjString);
-        if (tObj != null) {
-            final Object object = ReflectObject.get(interp, tObj);
-            JAdd jadd = new JAdd(this,object,tobjString);
-	    try {
-                SwingUtilities.invokeAndWait(jadd);
-	    } catch (InterruptedException iE) {
-		throw new TclException(interp,iE.toString());
-	    } catch (Exception  e) {
-		throw new TclException(interp,e.toString());
-	    }
-        } else  {
-              throw new TclException(interp, "Object not found");
-        }
-    }
-   class JAdd implements Runnable {
-        ${widgetType} ${widgetVar};
-        Object object = null;
-        String tobjString = null;
-        JAdd(${widgetType} ${widgetVar}, Object object, String tobjString) {
-                this.${widgetVar} = ${widgetVar};
-                this.object = object;
-                this.tobjString = tobjString;
-        }
-        public void run() {
-                $addBody
-        }
-    }
-
     void jgetAll(Interp interp) throws TclException {
         if (EventQueue.isDispatchThread()) {
               System.out.println("never  run on event thread");
@@ -289,6 +252,7 @@ public class ${widgetType} extends ${widget} implements SwkWidget, Printable$spe
                  $configCASEs
 
         }
+        SwankUtil.doWait();
         this.repaint();
     }
     String jget(final int opt) {

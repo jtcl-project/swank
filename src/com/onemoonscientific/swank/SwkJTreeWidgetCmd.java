@@ -15,15 +15,13 @@ import javax.swing.tree.*;
 
 class SwkJTreeWidgetCmd implements Command {
     static final private String[] validCmds = {
-        "cget", "configure", "object", "jadd", "path", "node", "update"
+        "cget", "configure", "path", "node", "update"
     };
     static final private int OPT_CGET = 0;
     static final private int OPT_CONFIGURE = 1;
-    static final private int OPT_OBJECT = 2;
-    static final private int OPT_JADD = 3;
-    static final private int OPT_PATH = 4;
-    static final private int OPT_NODE = 5;
-    static final private int OPT_UPDATE = 6;
+    static final private int OPT_PATH = 2;
+    static final private int OPT_NODE = 3;
+    static final private int OPT_UPDATE = 4;
     static boolean gotDefaults = false;
 
     public static String[] getValidCmds() {
@@ -90,21 +88,6 @@ class SwkJTreeWidgetCmd implements Command {
             } else {
                 swkjtree.configure(interp, argv, 2);
             }
-
-            break;
-
-        case OPT_OBJECT:
-            interp.setResult(tObj);
-
-            break;
-
-        case OPT_JADD:
-
-            if (argv.length != 3) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-
-            swkjtree.jadd(interp, argv[2]);
 
             break;
 

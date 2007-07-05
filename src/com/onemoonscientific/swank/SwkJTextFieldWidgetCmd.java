@@ -26,20 +26,18 @@ import javax.swing.tree.*;
 
 class SwkJTextFieldWidgetCmd implements Command {
     static final private String[] validCmds = {
-        "cget", "configure", "object", "jadd", "delete", "get", "index",
+        "cget", "configure", "delete", "get", "index",
         "insert", "scan", "selection", "xview"
     };
     static final private int OPT_CGET = 0;
     static final private int OPT_CONFIGURE = 1;
-    static final private int OPT_OBJECT = 2;
-    static final private int OPT_JADD = 3;
-    static final private int OPT_DELETE = 4;
-    static final private int OPT_GET = 5;
-    static final private int OPT_INDEX = 6;
-    static final private int OPT_INSERT = 7;
-    static final private int OPT_SCAN = 8;
-    static final private int OPT_SELECTION = 9;
-    static final private int OPT_XVIEW = 10;
+    static final private int OPT_DELETE = 2;
+    static final private int OPT_GET = 3;
+    static final private int OPT_INDEX = 4;
+    static final private int OPT_INSERT = 5;
+    static final private int OPT_SCAN = 6;
+    static final private int OPT_SELECTION = 7;
+    static final private int OPT_XVIEW = 8;
     static boolean gotDefaults = false;
     int index;
     Interp interp = null;
@@ -111,21 +109,6 @@ class SwkJTextFieldWidgetCmd implements Command {
             } else {
                 swkjtextfield.configure(interp, argv, 2);
             }
-
-            break;
-
-        case OPT_OBJECT:
-            interp.setResult(tObj);
-
-            break;
-
-        case OPT_JADD:
-
-            if (argv.length != 3) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-
-            swkjtextfield.jadd(interp, argv[2]);
 
             break;
 

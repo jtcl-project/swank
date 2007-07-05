@@ -26,14 +26,12 @@ import javax.swing.tree.*;
 
 class SwkSMenuWidgetCmd implements Command {
     static final private String[] validCmds = {
-        "cget", "configure", "object", "jadd", "add", "delete"
+        "cget", "configure", "add", "delete"
     };
     static final private int OPT_CGET = 0;
     static final private int OPT_CONFIGURE = 1;
-    static final private int OPT_OBJECT = 2;
-    static final private int OPT_JADD = 3;
-    static final private int OPT_ADD = 4;
-    static final private int OPT_DELETE = 5;
+    static final private int OPT_ADD = 2;
+    static final private int OPT_DELETE = 3;
     static boolean gotDefaults = false;
     Interp interp = null;
 
@@ -102,21 +100,6 @@ class SwkSMenuWidgetCmd implements Command {
             } else {
                 swksmenu.configure(interp, argv, 2);
             }
-
-            break;
-
-        case OPT_OBJECT:
-            interp.setResult(tObj);
-
-            break;
-
-        case OPT_JADD:
-
-            if (argv.length != 3) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-
-            swksmenu.jadd(interp, argv[2]);
 
             break;
 

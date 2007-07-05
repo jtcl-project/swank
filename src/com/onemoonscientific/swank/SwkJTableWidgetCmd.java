@@ -19,32 +19,30 @@ import javax.swing.table.TableModel;
 
 class SwkJTableWidgetCmd implements Command {
     static final private String[] validCmds = {
-        "cget", "configure", "object", "jadd", "sort", "column", "rowforindex",
+        "cget", "configure", "sort", "column", "rowforindex",
         "indexforrow", "update", "set", "get", "mset", "mget", "setmodel",
         "selection", "showrow", "columnatpoint", "rowatpoint",
         "convertcolumnindextomodel", "columnwidth", "columnresizable"
     };
     static final private int OPT_CGET = 0;
     static final private int OPT_CONFIGURE = 1;
-    static final private int OPT_OBJECT = 2;
-    static final private int OPT_JADD = 3;
-    static final private int OPT_SORT = 4;
-    static final private int OPT_COLUMN = 5;
-    static final private int OPT_ROWFORINDEX = 6;
-    static final private int OPT_INDEXFORROW = 7;
-    static final private int OPT_UPDATE = 8;
-    static final private int OPT_SET = 9;
-    static final private int OPT_GET = 10;
-    static final private int OPT_MSET = 11;
-    static final private int OPT_MGET = 12;
-    static final private int OPT_SETMODEL = 13;
-    static final private int OPT_SELECTION = 14;
-    static final private int OPT_SHOWROW = 15;
-    static final private int OPT_COLUMNATPOINT = 16;
-    static final private int OPT_ROWATPOINT = 17;
-    static final private int OPT_CONVERTCOLUMNINDEXTOMODEL = 18;
-    static final private int OPT_COLUMNWIDTH = 19;
-    static final private int OPT_COLUMNRESIZABLE = 20;
+    static final private int OPT_SORT = 2;
+    static final private int OPT_COLUMN = 3;
+    static final private int OPT_ROWFORINDEX = 4;
+    static final private int OPT_INDEXFORROW = 5;
+    static final private int OPT_UPDATE = 6;
+    static final private int OPT_SET = 7;
+    static final private int OPT_GET = 8;
+    static final private int OPT_MSET = 9;
+    static final private int OPT_MGET = 10;
+    static final private int OPT_SETMODEL = 11;
+    static final private int OPT_SELECTION = 12;
+    static final private int OPT_SHOWROW = 13;
+    static final private int OPT_COLUMNATPOINT = 14;
+    static final private int OPT_ROWATPOINT = 15;
+    static final private int OPT_CONVERTCOLUMNINDEXTOMODEL = 16;
+    static final private int OPT_COLUMNWIDTH = 17;
+    static final private int OPT_COLUMNRESIZABLE = 18;
     static boolean gotDefaults = false;
     int index;
     Interp interp = null;
@@ -114,21 +112,6 @@ class SwkJTableWidgetCmd implements Command {
             } else {
                 swkjtable.configure(interp, argv, 2);
             }
-
-            break;
-
-        case OPT_OBJECT:
-            interp.setResult(tObj);
-
-            break;
-
-        case OPT_JADD:
-
-            if (argv.length != 3) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-
-            swkjtable.jadd(interp, argv[2]);
 
             break;
 

@@ -26,15 +26,13 @@ import javax.swing.tree.*;
 
 class SwkJComboBoxWidgetCmd implements Command {
     static final private String[] validCmds = {
-        "cget", "configure", "object", "jadd", "remove", "item", "index"
+        "cget", "configure", "remove", "item", "index"
     };
     static final private int OPT_CGET = 0;
     static final private int OPT_CONFIGURE = 1;
-    static final private int OPT_OBJECT = 2;
-    static final private int OPT_JADD = 3;
-    static final private int OPT_REMOVE = 4;
-    static final private int OPT_ITEM = 5;
-    static final private int OPT_INDEX = 6;
+    static final private int OPT_REMOVE = 2;
+    static final private int OPT_ITEM = 3;
+    static final private int OPT_INDEX = 4;
     static boolean gotDefaults = false;
     int index;
     Interp interp = null;
@@ -108,21 +106,6 @@ class SwkJComboBoxWidgetCmd implements Command {
             } else {
                 swkjcombobox.configure(interp, argv, 2);
             }
-
-            break;
-
-        case OPT_OBJECT:
-            interp.setResult(tObj);
-
-            break;
-
-        case OPT_JADD:
-
-            if (argv.length != 3) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-
-            swkjcombobox.jadd(interp, argv[2]);
 
             break;
 

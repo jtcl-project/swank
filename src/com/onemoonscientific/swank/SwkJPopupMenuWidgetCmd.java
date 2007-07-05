@@ -26,12 +26,10 @@ import javax.swing.tree.*;
 
 class SwkJPopupMenuWidgetCmd implements Command {
     static final private String[] validCmds = {
-        "cget", "configure", "object", "jadd", "delete"
+        "cget", "configure", "delete"
     };
     static final private int OPT_CGET = 0;
     static final private int OPT_CONFIGURE = 1;
-    static final private int OPT_OBJECT = 2;
-    static final private int OPT_JADD = 3;
     static final private int OPT_DELETE = 4;
     static boolean gotDefaults = false;
     Interp interp = null;
@@ -103,16 +101,6 @@ class SwkJPopupMenuWidgetCmd implements Command {
             } else {
                 swkjpopupmenu.configure(interp, argv, 2);
             }
-
-            break;
-
-        case OPT_JADD:
-
-            if (argv.length != 3) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-
-            swkjpopupmenu.jadd(interp, argv[2]);
 
             break;
 

@@ -16,17 +16,15 @@ import javax.swing.*;
 
 class SwkJSliderWidgetCmd implements Command {
     static final private String[] validCmds = {
-        "cget", "configure", "object", "jadd", "coords", "get", "identify",
+        "cget", "configure", "coords", "get", "identify",
         "set"
     };
     static final private int OPT_CGET = 0;
     static final private int OPT_CONFIGURE = 1;
-    static final private int OPT_OBJECT = 2;
-    static final private int OPT_JADD = 3;
-    static final private int OPT_COORDS = 4;
-    static final private int OPT_GET = 5;
-    static final private int OPT_IDENTIFY = 6;
-    static final private int OPT_SET = 7;
+    static final private int OPT_COORDS = 2;
+    static final private int OPT_GET = 3;
+    static final private int OPT_IDENTIFY = 4;
+    static final private int OPT_SET = 5;
     static boolean gotDefaults = false;
 
     public static String[] getValidCmds() {
@@ -94,21 +92,6 @@ class SwkJSliderWidgetCmd implements Command {
             } else {
                 swkjslider.configure(interp, argv, 2);
             }
-
-            break;
-
-        case OPT_OBJECT:
-            interp.setResult(tObj);
-
-            break;
-
-        case OPT_JADD:
-
-            if (argv.length != 3) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-
-            swkjslider.jadd(interp, argv[2]);
 
             break;
 

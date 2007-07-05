@@ -26,13 +26,11 @@ import javax.swing.tree.*;
 
 class SwkJOptionPaneWidgetCmd implements Command {
     static final private String[] validCmds = {
-        "cget", "configure", "object", "jadd", "dialog"
+        "cget", "configure", "dialog"
     };
     static final private int OPT_CGET = 0;
     static final private int OPT_CONFIGURE = 1;
-    static final private int OPT_OBJECT = 2;
-    static final private int OPT_JADD = 3;
-    static final private int OPT_DIALOG = 4;
+    static final private int OPT_DIALOG = 2;
     static boolean gotDefaults = false;
     Interp interp = null;
     SwkJOptionPane swkjoptionpane = null;
@@ -102,21 +100,6 @@ class SwkJOptionPaneWidgetCmd implements Command {
             } else {
                 swkjoptionpane.configure(interp, argv, 2);
             }
-
-            break;
-
-        case OPT_OBJECT:
-            interp.setResult(tObj);
-
-            break;
-
-        case OPT_JADD:
-
-            if (argv.length != 3) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-
-            swkjoptionpane.jadd(interp, argv[2]);
 
             break;
 

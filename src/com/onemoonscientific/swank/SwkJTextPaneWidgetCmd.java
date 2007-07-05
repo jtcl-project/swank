@@ -26,28 +26,26 @@ import javax.swing.tree.*;
 
 class SwkJTextPaneWidgetCmd implements Command {
     static final private String[] validCmds = {
-        "cget", "configure", "object", "jadd", "elem", "insert", "tag", "celem",
+        "cget", "configure", "elem", "insert", "tag", "celem",
         "index", "delete", "mark", "compare", "get", "see", "window", "bbox",
         "search", "debug"
     };
     static final private int OPT_CGET = 0;
     static final private int OPT_CONFIGURE = 1;
-    static final private int OPT_OBJECT = 2;
-    static final private int OPT_JADD = 3;
-    static final private int OPT_ELEM = 4;
-    static final private int OPT_INSERT = 5;
-    static final private int OPT_TAG = 6;
-    static final private int OPT_CELEM = 7;
-    static final private int OPT_INDEX = 8;
-    static final private int OPT_DELETE = 9;
-    static final private int OPT_MARK = 10;
-    static final private int OPT_COMPARE = 11;
-    static final private int OPT_GET = 12;
-    static final private int OPT_SEE = 13;
-    static final private int OPT_WINDOW = 14;
-    static final private int OPT_BBOX = 15;
-    static final private int OPT_SEARCH = 16;
-    static final private int OPT_DEBUG = 17;
+    static final private int OPT_ELEM = 2;
+    static final private int OPT_INSERT = 3;
+    static final private int OPT_TAG = 4;
+    static final private int OPT_CELEM = 5;
+    static final private int OPT_INDEX = 6;
+    static final private int OPT_DELETE = 7;
+    static final private int OPT_MARK = 8;
+    static final private int OPT_COMPARE = 9;
+    static final private int OPT_GET = 10;
+    static final private int OPT_SEE = 11;
+    static final private int OPT_WINDOW = 12;
+    static final private int OPT_BBOX = 13;
+    static final private int OPT_SEARCH = 14;
+    static final private int OPT_DEBUG = 15;
     static boolean gotDefaults = false;
     Interp interp = null;
 
@@ -117,21 +115,6 @@ class SwkJTextPaneWidgetCmd implements Command {
             } else {
                 swkjtextpane.configure(interp, argv, 2);
             }
-
-            break;
-
-        case OPT_OBJECT:
-            interp.setResult(tObj);
-
-            break;
-
-        case OPT_JADD:
-
-            if (argv.length != 3) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-
-            swkjtextpane.jadd(interp, argv[2]);
 
             break;
 
