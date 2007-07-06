@@ -2,14 +2,15 @@
 <project basedir="." default="dist" name="Swank">
   <!-- set global properties for this build -->
   <property name="dir.src" value="src"/>
+  <property name="dir.hsrc" value="hsrc"/>
   <property name="dir.src3d" value="src3d"/>
   <property name="dir.gensrc" value="gensrc"/>
   <property name="dir.build" value="build"/>
   <property name="dir.dist" value="dist"/>
-  <property name="dir.libs" value="../../libs"/>
+  <property name="dir.libs" value="libs"/>
   <taskdef classname="de.hunsicker.jalopy.plugin.ant.AntPlugin" name="jalopy">
   <classpath>
-    <fileset dir="/Users/brucejohnson/tools/jalopy/lib">
+    <fileset dir="/usr/local/jalopy/lib">
       <include name="*.jar"/>
     </fileset>
   </classpath>
@@ -23,11 +24,13 @@
     <mkdir dir="${dir.build}/com"/>
     <mkdir dir="${dir.build}/com/onemoonscientific"/>
     <mkdir dir="${dir.build}/com/onemoonscientific/swank"/>
+    <mkdir dir="${dir.build}/com/onemoonscientific/swank/jhelp"/>    
     <mkdir dir="${dir.build}/tcl"/>
     <mkdir dir="${dir.gensrc}"/>
     <mkdir dir="${dir.gensrc}/com"/>
     <mkdir dir="${dir.gensrc}/com/onemoonscientific"/>
     <mkdir dir="${dir.gensrc}/com/onemoonscientific/swank"/>
+    <mkdir dir="${dir.gensrc}/com/onemoonscientific/swank/jhelp"/>
     <mkdir dir="${dir.gensrc}/com/onemoonscientific/swank/canvas"/>
   </target>
 
@@ -35,7 +38,10 @@
      <pathelement  path="${dir.libs}/jacl.jar:${dir.libs}/tcljava.jar"/>
   </path>
   <path id="swank.classpath">
-     <pathelement  path="${dir.build}:${dir.libs}/jacl.jar:${dir.libs}/tcljava.jar:${dir.libs}/itcl.jar:${dir.libs}/janino.jar:${dir.libs}/tjc.jar"/>
+     <pathelement  path="${dir.build}:${dir.libs}/jacl.jar:${dir.libs}/tcljava.jar:${dir.libs}/itcl.jar:${dir.libs}/janino.jar:${dir.libs}/tjc.jar:${dir.libs}/jh.jar"/>
+  </path>
+  <path id="help.classpath">
+     <pathelement  path="${dir.build}:${dir.libs}/jacl.jar:${dir.libs}/tcljava.jar:${dir.libs}/itcl.jar:${dir.libs}/janino.jar:${dir.libs}/tjc.jar:${dir.libs}/jh.jar:${dir.dist}/lib/swank.jar"/>
   </path>
 
   <target depends="prepare" description="compile the source " name="compile_swank">
@@ -44,6 +50,14 @@
          <classpath refid="jacl.classpath"/>
     <exclude name="**/swank/canvas/SwankUtil.java"/>
      </javac>
+
+  </target>
+  
+  <target description="compile the source help " name="compile_help">
+    <!-- Compile the java code from ${dir.hsrc} into ${dir.build} -->
+    <javac debug="true" destdir="${dir.build}" srcdir="${dir.hsrc}">
+         <classpath refid="help.classpath"/>
+    </javac>
   </target>
 
   <target depends="compile_swank" name="compile">
