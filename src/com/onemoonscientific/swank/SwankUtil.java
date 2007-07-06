@@ -33,6 +33,7 @@ import java.awt.geom.*;
 import java.awt.image.*;
 
 import java.io.File;
+import java.lang.reflect.Method;
 
 import java.net.*;
 
@@ -46,7 +47,10 @@ public class SwankUtil {
     static Hashtable colorTable = null;
     static Hashtable iColorTable = null;
     static Pattern intPattern = Pattern.compile("^[+-]?[0-9]+$");
-
+    static Boolean hasJHelp = null;
+    static Object helpobject = null;
+    static Method helpmethod = null;
+    
     public static Color getColor(Interp interp, TclObject tclObject)
         throws TclException {
         if (colorTable == null) {
@@ -2257,5 +2261,28 @@ public class SwankUtil {
         } catch (Exception e) {
         }
     }
+  public static void setJHelpTarget(Component comp, String target) {
+       if (hasJHelp == null) {
+           try {
+               Class helpClass = Class.forName("com.onemoonscientific.swank.jhelp.SwkJHelpCmd");
+                helpobject = helpClass.newInstance();
+                helpmethod = helpClass.getMethod("setTarget",new Class[] {Component.class, String.class});
+                 
+                hasJHelp = new Boolean(true);
+                System.out.println("class does exist");
+            } catch (Exception e) {
+               hasJHelp = new Boolean(false);
+               System.out.println("class doesn't exist");
+           }
+       }
+       if (hasJHelp) {
+            try {
+                helpmethod.invoke(helpobject,comp,target);
+            } catch(Exception e)    {
+            }
+        }
+                
+    }
+       
+  }
 
-}
