@@ -207,7 +207,24 @@ proc swkMakeSpecial {widget widgetVar} {
         }]
     }
     
-    
+    # -jhelptarget
+    if {1} {
+        append specialVars {
+            String jhelptarget="";
+        }
+        append specialMethods {
+            public void setJHelpTarget(String jhelptarget) {
+                this.jhelptarget = jhelptarget;
+                SwankUtil.setJHelpTarget(this,jhelptarget);
+            }
+            public String getJHelpTarget() {
+                return(jhelptarget);
+            }
+        }
+        set specialGets [concat  $specialGets {
+            {setJHelpTarget java.lang.String JHelpTarget -jhelptarget}
+        }]
+    } 
     
     # -hidemargin
     if {[lsearch "SMenuButton JButton SMenuButton JMenu JMenuItem" $widget ] >= 0} {
