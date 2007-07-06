@@ -74,7 +74,7 @@ public class BindTagsCmd implements Command {
             throw new TclNumArgsException(interp, 1, argv, "widget ?tagList?");
         }
 
-        TclObject tObj = (TclObject) Widgets.theWidgets.get(argv[1].toString());
+        TclObject tObj = (TclObject) Widgets.getWidget(interp,argv[1].toString());
 
         if (tObj == null) {
             throw new TclException(interp,

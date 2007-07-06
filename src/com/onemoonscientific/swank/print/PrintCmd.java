@@ -31,7 +31,7 @@ class PrintCmd implements Command {
                 "?-landscape|-portrait -margin marginValue? windowName");
         }
 
-        TclObject tObj = (TclObject) Widgets.theWidgets.get(argv[argv.length -
+        TclObject tObj = (TclObject) Widgets.getWidget(interp,argv[argv.length -
                 1].toString());
 
         if (tObj == null) {

@@ -150,7 +150,7 @@ public class PlaceCmd implements Command {
             throw new TclNumArgsException(interp, 2, argv, "window");
         }
 
-        if (!Widgets.exists(argv[2].toString())) {
+        if (!Widgets.exists(interp,argv[2].toString())) {
             throw new TclException(interp,
                 "bad window path name \"" + argv[2].toString() + "\"");
         }
@@ -190,7 +190,7 @@ public class PlaceCmd implements Command {
                 "slave ?slave ...? ?options?");
         }
 
-        if (!Widgets.exists(args[firstWindow])) {
+        if (!Widgets.exists(interp,args[firstWindow])) {
             if (firstWindow == 1) {
                 throw new TclException(interp,
                     "bad window path name \"" + args[firstWindow] + "\"");
@@ -236,7 +236,7 @@ public class PlaceCmd implements Command {
             }
              */
             if (args[i].equals("-in")) {
-                if (!Widgets.exists(args[i + 1].toString())) {
+                if (!Widgets.exists(interp,args[i + 1].toString())) {
                     throw new TclException(interp,
                         "bad window path name \"" + args[i + 1] + "\"");
                 }
@@ -283,7 +283,7 @@ public class PlaceCmd implements Command {
 
     String getParent(Interp interp, String widgetName)
         throws TclException {
-        if (!Widgets.exists(widgetName)) {
+        if (!Widgets.exists(interp,widgetName)) {
             throw new TclException(interp,
                 "bad window path name \"" + widgetName + "\"");
         }
@@ -393,7 +393,7 @@ public class PlaceCmd implements Command {
         public void run() {
             try {
                 for (int i = 0; i < names.length; i++) {
-                    if (!Widgets.exists(names[i])) {
+                    if (!Widgets.exists(interp,names[i])) {
                         continue;
                     }
 

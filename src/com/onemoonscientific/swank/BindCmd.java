@@ -132,7 +132,7 @@ public class BindCmd implements Command {
                 currentTable.put(tag, bindingVector);
             }
         } else {
-            TclObject tObj = (TclObject) Widgets.theWidgets.get(tag);
+            TclObject tObj = (TclObject) Widgets.getWidget(interp,tag);
 
             if (tObj == null) {
                 throw new TclException(interp,

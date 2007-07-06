@@ -149,7 +149,7 @@ public class PackCmd implements Command {
             throw new TclNumArgsException(interp, 2, argv, "window ?boolean?");
         }
 
-        if (!Widgets.exists(argv[2].toString())) {
+        if (!Widgets.exists(interp,argv[2].toString())) {
             throw new TclException(interp,
                 "bad window path name \"" + argv[2].toString() + "\"");
         }
@@ -174,7 +174,7 @@ public class PackCmd implements Command {
             throw new TclNumArgsException(interp, 2, argv, "window");
         }
 
-        if (!Widgets.exists(argv[2].toString())) {
+        if (!Widgets.exists(interp,argv[2].toString())) {
             throw new TclException(interp,
                 "bad window path name \"" + argv[2].toString() + "\"");
         }
@@ -214,7 +214,7 @@ public class PackCmd implements Command {
                 "slave ?slave ...? ?options?");
         }
 
-        if (!Widgets.exists(args[firstWindow])) {
+        if (!Widgets.exists(interp,args[firstWindow])) {
             if (firstWindow == 1) {
                 throw new TclException(interp,
                     "bad window path name \"" + args[firstWindow] + "\"");
@@ -256,7 +256,7 @@ public class PackCmd implements Command {
         for (int i = firstArg; i <= lastArg; i += 2) {
             if (args[i].equals("-after") || args[i].equals("-before") ||
                     args[i].equals("-in")) {
-                if (!Widgets.exists(args[i + 1])) {
+                if (!Widgets.exists(interp,args[i + 1])) {
                     throw new TclException(interp,
                         "bad window path name \"" + args[i + 1] + "\"");
                 }
@@ -315,7 +315,7 @@ public class PackCmd implements Command {
 
     String getParent(Interp interp, String widgetName)
         throws TclException {
-        if (!Widgets.exists(widgetName)) {
+        if (!Widgets.exists(interp,widgetName)) {
             throw new TclException(interp,
                 "bad window path name \"" + widgetName + "\"");
         }
@@ -463,7 +463,7 @@ public class PackCmd implements Command {
         public void run() {
             try {
                 for (int i = 0; i < names.length; i++) {
-                    if (!Widgets.exists(names[i])) {
+                    if (!Widgets.exists(interp,names[i])) {
                         continue;
                     }
 

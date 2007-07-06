@@ -56,7 +56,7 @@ class SwkJMenuWidgetCmd implements Command {
         this.interp = interp;
 
         int opt = TclIndex.get(interp, argv[1], validCmds, "option", 0);
-        TclObject tObj = (TclObject) Widgets.theWidgets.get(argv[0].toString());
+        TclObject tObj = (TclObject) Widgets.getWidget(interp,argv[0].toString());
 
         if (tObj == null) {
             throw new TclException(interp,
@@ -159,7 +159,7 @@ class SwkJMenuWidgetCmd implements Command {
                 throw new TclNumArgsException(interp, 3, argv, "widget x y");
             }
 
-            TclObject tObj2 = (TclObject) Widgets.theWidgets.get(argv[3].toString());
+            TclObject tObj2 = (TclObject) Widgets.getWidget(interp,argv[3].toString());
 
             if (tObj2 == null) {
                 throw new TclException(interp,
@@ -180,7 +180,7 @@ class SwkJMenuWidgetCmd implements Command {
         }
 
         String parent = Widgets.pathParent(interp, argv[0].toString());
-        TclObject tObj2 = (TclObject) Widgets.theWidgets.get(parent);
+        TclObject tObj2 = (TclObject) Widgets.getWidget(interp,parent);
 
         if (tObj2 == null) {
             throw new TclException(interp,
@@ -298,7 +298,7 @@ class SwkJMenuWidgetCmd implements Command {
                 }
             }
 
-            TclObject tObj = (TclObject) Widgets.theWidgets.get(menuName);
+            TclObject tObj = (TclObject) Widgets.getWidget(interp,menuName);
 
             if (tObj == null) {
                 SwkJMenu cascade = (new Add()).exec(swkjmenu, menuName, itemType);

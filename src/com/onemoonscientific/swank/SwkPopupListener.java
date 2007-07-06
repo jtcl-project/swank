@@ -89,7 +89,7 @@ public class SwkPopupListener extends MouseAdapter implements SwkListener {
         if (e.isPopupTrigger() || true) {
             System.out.println("popuptrigger");
 
-            TclObject tObj = (TclObject) Widgets.theWidgets.get(popupName);
+            TclObject tObj = (TclObject) Widgets.getWidget(interp,popupName);
             System.out.println(popupName);
 
             if (tObj == null) {

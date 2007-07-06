@@ -101,7 +101,7 @@ public class ${widgetType}Cmd implements Command {
                 }
       	 ${widgetType} ${widgetVar} = cmdProc.getwidget();
  
-        if (Widgets.exists(argv[1].toString())) {
+        if (Widgets.exists(interp,argv[1].toString())) {
             ${widgetVar} = (${widgetType}) Widgets.get(interp, argv[1].toString());
 
             if (${widgetVar}.isCreated()) {

@@ -66,13 +66,13 @@ public class SwkCell implements TableCellRenderer {
             try {
                 doCommand(interp, table, hasFocus, isSelected, row, column,
                     strValue, evalString);
-                tObj = (TclObject) Widgets.theWidgets.get(interp.getResult()
+                tObj = (TclObject) Widgets.getWidget(interp,interp.getResult()
                                                                 .toString());
             } catch (TclException tclE) {
                 System.out.println(tclE.toString());
             }
         } else {
-            tObj = (TclObject) Widgets.theWidgets.get(strValue.toString());
+            tObj = (TclObject) Widgets.getWidget(interp,strValue.toString());
         }
 
         if (tObj == null) {

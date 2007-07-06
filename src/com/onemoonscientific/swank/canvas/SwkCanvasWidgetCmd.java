@@ -84,7 +84,7 @@ public class SwkCanvasWidgetCmd implements Command {
         this.interp = interp;
 
         final int opt = TclIndex.get(interp, argv[1], validCmds, "option", 0);
-        final TclObject tObj = (TclObject) Widgets.theWidgets.get(argv[0].toString());
+        final TclObject tObj = (TclObject) Widgets.getWidget(interp,argv[0].toString());
 
         if (tObj == null) {
             throw new TclException(interp,
@@ -310,7 +310,7 @@ public class SwkCanvasWidgetCmd implements Command {
     public static void jadd(Interp interp, SwkCanvas swkcanvas,
         TclObject tclObject) throws TclException {
         int i;
-        TclObject tObj = (TclObject) Widgets.theWidgets.get(tclObject.toString());
+        TclObject tObj = (TclObject) Widgets.getWidget(interp,tclObject.toString());
 
         if (tObj != null) {
             Object object = ReflectObject.get(interp, tObj);

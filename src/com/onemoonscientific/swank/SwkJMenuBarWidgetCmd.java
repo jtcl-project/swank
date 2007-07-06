@@ -48,7 +48,7 @@ class SwkJMenuBarWidgetCmd implements Command {
         }
 
         int opt = TclIndex.get(interp, argv[1], validCmds, "option", 0);
-        TclObject tObj = (TclObject) Widgets.theWidgets.get(argv[0].toString());
+        TclObject tObj = (TclObject) Widgets.getWidget(interp,argv[0].toString());
 
         if (tObj == null) {
             throw new TclException(interp,
@@ -146,7 +146,7 @@ class SwkJMenuBarWidgetCmd implements Command {
                 }
             }
 
-            TclObject tObj = (TclObject) Widgets.theWidgets.get(menuName);
+            TclObject tObj = (TclObject) Widgets.getWidget(interp,menuName);
 
             if (tObj == null) {
                 SwkJMenu cascade = (new Add()).exec(swkjmenubar, menuName);

@@ -76,7 +76,7 @@ public class SwkActionListener implements ActionListener, SwkListener {
         ActionEvent e = (ActionEvent) eventObject;
 
         if ((menu != null) && (menu.length() != 0)) {
-            TclObject tObj = (TclObject) Widgets.theWidgets.get(menu);
+            TclObject tObj = (TclObject) Widgets.getWidget(interp,menu);
 
             if (tObj != null) {
                 try {

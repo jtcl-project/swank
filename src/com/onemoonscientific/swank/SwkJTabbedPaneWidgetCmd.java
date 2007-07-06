@@ -46,7 +46,7 @@ class SwkJTabbedPaneWidgetCmd implements Command {
         this.interp = interp;
 
         final int opt = TclIndex.get(interp, argv[1], validCmds, "option", 0);
-        final TclObject tObj = (TclObject) Widgets.theWidgets.get(argv[0].toString());
+        final TclObject tObj = (TclObject) Widgets.getWidget(interp,argv[0].toString());
 
         if (tObj == null) {
             throw new TclException(interp,
@@ -141,7 +141,7 @@ class SwkJTabbedPaneWidgetCmd implements Command {
             throw new TclNumArgsException(interp, 2, argv, "window title");
         }
 
-        final TclObject tObj2 = (TclObject) Widgets.theWidgets.get(argv[2].toString());
+        final TclObject tObj2 = (TclObject) Widgets.getWidget(interp,argv[2].toString());
 
         if (tObj2 == null) {
             throw new TclException(interp,

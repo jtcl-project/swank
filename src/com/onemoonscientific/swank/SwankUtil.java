@@ -1309,7 +1309,7 @@ public class SwankUtil {
 
     public static Object getMenuBar(Interp interp, String menuName)
         throws TclException {
-        TclObject tObj = (TclObject) Widgets.theWidgets.get(menuName);
+        TclObject tObj = (TclObject) Widgets.getWidget(interp,menuName);
         SwkJMenuBar swkjmenubar = null;
 
         //System.out.println("getMenu:" + menuName);
@@ -1319,7 +1319,7 @@ public class SwankUtil {
             interp.createCommand(menuName, new SwkJMenuBarWidgetCmd());
             tObj = ReflectObject.newInstance(interp, SwkJMenuBar.class, swkjmenubar);
             tObj.preserve();
-            Widgets.theWidgets.put(menuName, tObj);
+            Widgets.addNewWidget(interp,menuName, tObj);
         }
 
         Object object = ReflectObject.get(interp, tObj);
@@ -1334,7 +1334,7 @@ public class SwankUtil {
 
     public static Object getMenu(Interp interp, String menuName)
         throws TclException {
-        TclObject tObj = (TclObject) Widgets.theWidgets.get(menuName);
+        TclObject tObj = (TclObject) Widgets.getWidget(interp,menuName);
         SwkJMenu swkjmenu = null;
 
         //System.out.println("getMenu:" + menuName);
@@ -1344,7 +1344,7 @@ public class SwankUtil {
             interp.createCommand(menuName, new SwkJMenuWidgetCmd());
             tObj = ReflectObject.newInstance(interp, SwkJMenu.class, swkjmenu);
             tObj.preserve();
-            Widgets.theWidgets.put(menuName, tObj);
+            Widgets.addNewWidget(interp,menuName, tObj);
         }
 
         Object object = ReflectObject.get(interp, tObj);
@@ -1422,7 +1422,7 @@ public class SwankUtil {
             }
 
             SwkJMenu swkjmenu = null;
-            TclObject tObj = (TclObject) Widgets.theWidgets.get(menuName);
+            TclObject tObj = (TclObject) Widgets.getWidget(interp,menuName);
 
             if (tObj == null) {
                 swkjmenu = new SwkJMenu(interp, menuName, "Menu");

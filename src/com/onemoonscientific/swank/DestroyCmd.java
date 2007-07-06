@@ -76,7 +76,7 @@ public class DestroyCmd implements Command {
 
     public static void destroyWidget(final Interp interp, final String name)
         throws TclException {
-        TclObject tObj = (TclObject) Widgets.theWidgets.get(name);
+        TclObject tObj = (TclObject) Widgets.getWidget(interp,name);
 
         if (tObj == null) {
             return;
@@ -89,7 +89,7 @@ public class DestroyCmd implements Command {
         }
 
         Widgets.removeChild(interp, name);
-        Widgets.theWidgets.remove(name);
+        Widgets.removeWidget(interp,name);
         interp.deleteCommand(name);
 
         Object object = ReflectObject.get(interp, tObj);

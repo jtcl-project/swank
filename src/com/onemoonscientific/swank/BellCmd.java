@@ -49,7 +49,7 @@ public class BellCmd implements Command {
 
         if (argv.length == 3) {
             if (argv[1].toString().equals("-displayof")) {
-                tObj = (TclObject) Widgets.theWidgets.get(argv[2].toString());
+                tObj = (TclObject) Widgets.getWidget(interp,argv[2].toString());
 
                 if (tObj == null) {
                     throw new TclException(interp,

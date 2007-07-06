@@ -36,12 +36,21 @@ import javax.swing.*;
 
 
 public class Widgets {
-    // There is a problem with multiple interps here, this
-    // needs to be hung off the interp structure
-    public static Hashtable theWidgets = new Hashtable();
+    
 
-    public static boolean exists(String widgetName) {
-        if (theWidgets.get(widgetName) == null) {
+    static Hashtable getWidgetMap(Interp interp) {
+    
+         WidgetsMap widgetsMap = (WidgetsMap) interp.getAssocData("Widgets");
+         if (widgetsMap == null) {
+               widgetsMap = new WidgetsMap();
+               interp.setAssocData("Widgets",widgetsMap);
+         }
+         return widgetsMap.getWidgets();
+               
+    }
+    public static boolean exists(Interp interp, String widgetName) {
+        
+        if (getWidgetMap(interp).get(widgetName) == null) {
             return false;
         } else {
             return true;
@@ -50,7 +59,7 @@ public class Widgets {
 
     public static void addNewWidget(Interp interp, String widgetName,
         TclObject widgetObject) throws TclException {
-        if (exists(widgetName)) {
+        if (exists(interp, widgetName)) {
             throw new TclException(interp,
                 "widget \"" + widgetName + "\" already exists");
         }
@@ -58,7 +67,7 @@ public class Widgets {
         if (!widgetName.equals(".")) {
             String parentName = pathParent(interp, widgetName);
 
-            if (!exists(parentName)) {
+            if (!exists(interp, parentName)) {
                 throw new TclException(interp,
                     "bad window path name \"" + parentName + "\"");
             }
@@ -75,12 +84,12 @@ public class Widgets {
             children.add(widgetObject);
         }
 
-        theWidgets.put(widgetName, widgetObject);
+        getWidgetMap(interp).put(widgetName, widgetObject);
     }
 
     public static void removeChild(Interp interp, String widgetName)
         throws TclException {
-        TclObject tObj = (TclObject) theWidgets.get(widgetName);
+        TclObject tObj = (TclObject) getWidgetMap(interp).get(widgetName);
 
         if (tObj == null) {
             return;
@@ -88,7 +97,7 @@ public class Widgets {
 
         String parentName = pathParent(interp, widgetName);
 
-        if (!exists(parentName)) {
+        if (!exists(interp, parentName)) {
             return;
         }
 
@@ -124,10 +133,13 @@ public class Widgets {
 
         return childrenNames;
     }
-
+    public static void removeWidget(Interp interp, String widgetName) {
+          getWidgetMap(interp).remove(widgetName);
+    }
+    
     public static void remove(Interp interp, String widgetName)
         throws TclException {
-        TclObject tObj = (TclObject) theWidgets.get(widgetName);
+        TclObject tObj = (TclObject) getWidgetMap(interp).get(widgetName);
 
         if (tObj == null) {
             return;
@@ -220,24 +232,27 @@ public class Widgets {
         return (SwkWidget) container;
     }
 
+    public static Object getWidget(Interp interp, String widgetName) {
+         return getWidgetMap(interp).get(widgetName);
+    }
     // Map a widget name to the Swing widget it represents
     public static Object get(Interp interp, String widgetName)
         throws TclException {
         TclObject tObj = null;
 
         if (widgetName.equals("any")) {
-            Enumeration e = Widgets.theWidgets.elements();
+            Enumeration e = Widgets.getWidgetMap(interp).elements();
 
             if (e.hasMoreElements()) {
                 tObj = (TclObject) e.nextElement();
             }
         } else {
-            if (!Widgets.exists(widgetName)) {
+            if (!Widgets.exists(interp,widgetName)) {
                 throw new TclException(interp,
                     "bad window path name \"" + widgetName + "\"");
             }
 
-            tObj = (TclObject) Widgets.theWidgets.get(widgetName);
+            tObj = (TclObject) Widgets.getWidget(interp,widgetName);
         }
 
         if (tObj == null) {

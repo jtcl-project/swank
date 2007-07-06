@@ -179,7 +179,7 @@ public class GridCmd implements Command {
         Object widgetObj = null;
         Component component1 = null;
 
-        TclObject tObj = (TclObject) Widgets.theWidgets.get(windowName);
+        TclObject tObj = (TclObject) Widgets.getWidget(interp,windowName);
 
         if (tObj == null) {
             return null;
@@ -323,7 +323,7 @@ public class GridCmd implements Command {
             modOptions |= parseGridOptions(interp, argv, i, gconstr, null);
         }
 
-        TclObject tObj = (TclObject) Widgets.theWidgets.get(masterName);
+        TclObject tObj = (TclObject) Widgets.getWidget(interp,masterName);
 
         if (tObj == null) {
             throw new TclException(interp,
@@ -422,7 +422,7 @@ public class GridCmd implements Command {
 
         String masterName = argv[2].toString();
 
-        if (!Widgets.exists(argv[2].toString())) {
+        if (!Widgets.exists(interp,argv[2].toString())) {
             throw new TclException(interp,
                 "bad window path name \"" + masterName + "\"");
         }
@@ -556,7 +556,7 @@ public class GridCmd implements Command {
                 "master ?column row ?column row??");
         }
 
-        if (!Widgets.exists(argv[2].toString())) {
+        if (!Widgets.exists(interp,argv[2].toString())) {
             throw new TclException(interp,
                 "bad window path name \"" + argv[2].toString() + "\"");
         }
@@ -576,7 +576,7 @@ public class GridCmd implements Command {
             TclList.append(interp, list, TclInteger.newInstance(rect.width));
             TclList.append(interp, list, TclInteger.newInstance(rect.height));
         } else {
-            if (!Widgets.exists(argv[2].toString())) {
+            if (!Widgets.exists(interp,argv[2].toString())) {
                 throw new TclException(interp,
                     "bad window path name \"" + argv[2].toString() + "\"");
             }
@@ -641,7 +641,7 @@ public class GridCmd implements Command {
             throw new TclNumArgsException(interp, 2, argv, "master x y");
         }
 
-        if (!Widgets.exists(argv[2].toString())) {
+        if (!Widgets.exists(interp,argv[2].toString())) {
             throw new TclException(interp,
                 "bad window path name \"" + argv[2].toString() + "\"");
         }
@@ -680,7 +680,7 @@ public class GridCmd implements Command {
                 "window ?-option value...?");
         }
 
-        if (!Widgets.exists(argv[2].toString())) {
+        if (!Widgets.exists(interp,argv[2].toString())) {
             throw new TclException(interp,
                 "bad window path name \"" + argv[2].toString() + "\"");
         }
@@ -729,14 +729,14 @@ public class GridCmd implements Command {
             throw new TclNumArgsException(interp, 2, argv, "window");
         }
 
-        if (!Widgets.exists(argv[2].toString())) {
+        if (!Widgets.exists(interp,argv[2].toString())) {
             throw new TclException(interp,
                 "bad window path name \"" + argv[2].toString() + "\"");
         }
 
         interp.resetResult();
 
-        TclObject tObj = (TclObject) Widgets.theWidgets.get(argv[2].toString());
+        TclObject tObj = (TclObject) Widgets.getWidget(interp,argv[2].toString());
 
         if (tObj == null) {
             throw new TclException(interp,
@@ -833,7 +833,7 @@ public class GridCmd implements Command {
             throw new TclNumArgsException(interp, 2, argv, "window");
         }
 
-        if (!Widgets.exists(argv[2].toString())) {
+        if (!Widgets.exists(interp,argv[2].toString())) {
             throw new TclException(interp,
                 "bad window path name \"" + argv[2].toString() + "\"");
         }
@@ -855,7 +855,7 @@ public class GridCmd implements Command {
             throw new TclNumArgsException(interp, 2, argv, "window ?boolean?");
         }
 
-        if (!Widgets.exists(argv[2].toString())) {
+        if (!Widgets.exists(interp,argv[2].toString())) {
             throw new TclException(interp,
                 "bad window path name \"" + argv[2].toString() + "\"");
         }
@@ -1280,7 +1280,7 @@ public class GridCmd implements Command {
                     continue;
                 }
 
-                TclObject tObj2 = (TclObject) Widgets.theWidgets.get(thisArg);
+                TclObject tObj2 = (TclObject) Widgets.getWidget(interp,thisArg);
 
                 if (tObj2 == null) {
                     throw new TclException(interp,
@@ -1509,7 +1509,7 @@ public class GridCmd implements Command {
         public void run() {
             try {
                 for (int i = 0; i < names.length; i++) {
-                    if (!Widgets.exists(names[i])) {
+                    if (!Widgets.exists(interp,names[i])) {
                         continue;
                     }
 

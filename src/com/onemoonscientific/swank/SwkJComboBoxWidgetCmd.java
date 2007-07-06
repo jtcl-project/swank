@@ -54,7 +54,7 @@ class SwkJComboBoxWidgetCmd implements Command {
         }
 
         int opt = TclIndex.get(interp, argv[1], validCmds, "option", 0);
-        TclObject tObj = (TclObject) Widgets.theWidgets.get(argv[0].toString());
+        TclObject tObj = (TclObject) Widgets.getWidget(interp,argv[0].toString());
 
         if (tObj == null) {
             throw new TclException(interp,
@@ -277,7 +277,7 @@ class SwkJComboBoxWidgetCmd implements Command {
 
             for (int i = 0; i < itemStrings.length; i++) {
                 if (itemStrings[i].startsWith(".")) {
-                    TclObject tObj2 = (TclObject) Widgets.theWidgets.get(itemStrings[i]);
+                    TclObject tObj2 = (TclObject) Widgets.getWidget(interp,itemStrings[i]);
 
                     if (tObj2 != null) {
                         try {

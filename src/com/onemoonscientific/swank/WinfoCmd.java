@@ -86,7 +86,7 @@ public class WinfoCmd implements Command {
         }
 
         int opt = TclIndex.get(interp, argv[1], validCmds, "option", 0);
-        TclObject tObj = (TclObject) Widgets.theWidgets.get(argv[2].toString());
+        TclObject tObj = (TclObject) Widgets.getWidget(interp,argv[2].toString());
 
         if (opt == OPT_EXISTS) {
             if (tObj == null) {
@@ -117,7 +117,7 @@ public class WinfoCmd implements Command {
         case OPT_PARENT:
             widgetName = argv[2].toString();
 
-            if (!Widgets.exists(widgetName)) {
+            if (!Widgets.exists(interp,widgetName)) {
                 throw new TclException(interp,
                     "bad window path name \"" + widgetName + "\"");
             }
@@ -135,7 +135,7 @@ public class WinfoCmd implements Command {
         case OPT_GEOMETRY:
             widgetName = argv[2].toString();
 
-            if (!Widgets.exists(widgetName)) {
+            if (!Widgets.exists(interp,widgetName)) {
                 throw new TclException(interp,
                     "bad window path name \"" + widgetName + "\"");
             }
@@ -169,7 +169,7 @@ public class WinfoCmd implements Command {
                 checkTL = widgetName.substring(0, index);
             }
 
-            TclObject tObj2 = (TclObject) Widgets.theWidgets.get(checkTL);
+            TclObject tObj2 = (TclObject) Widgets.getWidget(interp,checkTL);
 
             if (tObj2 == null) {
                 throw new TclException(interp,
@@ -321,7 +321,7 @@ public class WinfoCmd implements Command {
                     "option ?arg arg ...?");
             }
 
-            if (!Widgets.exists(argv[2].toString())) {
+            if (!Widgets.exists(interp,argv[2].toString())) {
                 throw new TclException(interp,
                     "bad window path name \"" + argv[2].toString() + "\"");
             }
@@ -420,7 +420,7 @@ public class WinfoCmd implements Command {
             } else if (object instanceof Component) {
                 Component comp = (Component) object;
                 String parent = Widgets.pathParent(interp, widgetName);
-                TclObject pObj = (TclObject) Widgets.theWidgets.get(parent);
+                TclObject pObj = (TclObject) Widgets.getWidget(interp,parent);
                 Object pObject = (Object) ReflectObject.get(interp, pObj);
 
                 if (pObject instanceof Window) {

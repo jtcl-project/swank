@@ -69,7 +69,7 @@ public class SwkRadioMenuListener implements ActionListener, VarTrace,
         }
 
         if (!traceLock) {
-            TclObject wObj = (TclObject) Widgets.theWidgets.get(component.getName());
+            TclObject wObj = (TclObject) Widgets.getWidget(interp,component.getName());
 
             if (wObj == null) {
                 return;

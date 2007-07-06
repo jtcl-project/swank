@@ -47,7 +47,7 @@ class SwkJInternalFrameWidgetCmd implements Command {
         }
 
         int opt = TclIndex.get(interp, argv[1], validCmds, "option", 0);
-        TclObject tObj = (TclObject) Widgets.theWidgets.get(argv[0].toString());
+        TclObject tObj = (TclObject) Widgets.getWidget(interp,argv[0].toString());
 
         if (tObj == null) {
             throw new TclException(interp,
@@ -117,7 +117,7 @@ class SwkJInternalFrameWidgetCmd implements Command {
             throw new TclNumArgsException(interp, 2, argv, "option");
         }
 
-        TclObject tObj2 = (TclObject) Widgets.theWidgets.get(argv[2].toString());
+        TclObject tObj2 = (TclObject) Widgets.getWidget(interp,argv[2].toString());
 
         if (tObj2 == null) {
             throw new TclException(interp,

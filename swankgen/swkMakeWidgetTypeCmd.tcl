@@ -80,7 +80,7 @@ public class ${widgetType}Cmd implements Command
      \}
      ${widgetType} ${widgetVar} = null;
      String className = argv\[0\].toString().substring(0,1).toUpperCase()+argv\[0\].toString().substring(1);
-     if (Widgets.exists(argv\[1\].toString())) \{
+     if (Widgets.exists(interp, argv\[1\].toString())) \{
         ${widgetVar} = (${widgetType}) Widgets.get(interp, argv\[1\].toString());
         if (${widgetVar}.isCreated()) \{
               throw new TclException (interp, \"window name \\\"\"+argv\[1\].toString()+\"\\\" already exists in parent\");

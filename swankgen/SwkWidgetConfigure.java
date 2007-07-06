@@ -87,7 +87,7 @@ class ${widgetType}Configure {
     public static void jadd(Interp interp, ${widgetType} ${widgetVar},
         TclObject tclObject) throws TclException {
         int i;
-        TclObject tObj = (TclObject) Widgets.theWidgets.get(tclObject.toString());
+        TclObject tObj = (TclObject) Widgets.getWidget(interp, tclObject.toString());
 
         if (tObj != null) {
             Object object = ReflectObject.get(interp, tObj);
