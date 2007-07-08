@@ -33,43 +33,44 @@ import java.io.*;
 import java.util.*;
 
 import javax.swing.*;
-
+import java.lang.reflect.*;
 
 public class WmCmd implements Command {
-    static final private String[] validCmds = {
+    static final private String[] validCmds = {"alwaysontop",
         "aspect", "client", "colormapwindows", "command", "deiconify",
         "focusmodel", "frame", "geometry", "grid", "group", "iconbitmap",
         "iconify", "iconmask", "iconname", "iconposition", "iconwindow",
         "maxsize", "minsize", "overrideredirect", "positionfrom", "protocol",
         "resizable", "sizefrom", "state", "title", "transient", "withdraw"
     };
-    static final private int OPT_ASPECT = 0;
-    static final private int OPT_CLIENT = 1;
-    static final private int OPT_COLORMAPWINDOWS = 2;
-    static final private int OPT_COMMAND = 3;
-    static final private int OPT_DEICONIFY = 4;
-    static final private int OPT_FOCUSMODEL = 5;
-    static final private int OPT_FRAME = 6;
-    static final private int OPT_GEOMETRY = 7;
-    static final private int OPT_GRID = 8;
-    static final private int OPT_GROUP = 9;
-    static final private int OPT_ICONBITMAP = 10;
-    static final private int OPT_ICONIFY = 11;
-    static final private int OPT_ICONMASK = 12;
-    static final private int OPT_ICONNAME = 13;
-    static final private int OPT_ICONCOMPOSITION = 14;
-    static final private int OPT_ICONWINDOW = 15;
-    static final private int OPT_MAXSIZE = 16;
-    static final private int OPT_MINSIZE = 17;
-    static final private int OPT_OVERRIDEREDIRECT = 18;
-    static final private int OPT_POSITIONFROM = 19;
-    static final private int OPT_PROTOCOL = 20;
-    static final private int OPT_RESIZABLE = 21;
-    static final private int OPT_SIZEFROM = 22;
-    static final private int OPT_STATE = 23;
-    static final private int OPT_TITLE = 24;
-    static final private int OPT_TRANSIENT = 25;
-    static final private int OPT_WITHDRAW = 26;
+    static final private int OPT_ALWAYSONTOP = 0;
+    static final private int OPT_ASPECT = 1;
+    static final private int OPT_CLIENT = 2;
+    static final private int OPT_COLORMAPWINDOWS = 3;
+    static final private int OPT_COMMAND = 4;
+    static final private int OPT_DEICONIFY = 5;
+    static final private int OPT_FOCUSMODEL = 6;
+    static final private int OPT_FRAME = 7;
+    static final private int OPT_GEOMETRY = 8;
+    static final private int OPT_GRID = 9;
+    static final private int OPT_GROUP = 10;
+    static final private int OPT_ICONBITMAP = 11;
+    static final private int OPT_ICONIFY = 12;
+    static final private int OPT_ICONMASK = 13;
+    static final private int OPT_ICONNAME = 14;
+    static final private int OPT_ICONCOMPOSITION = 15;
+    static final private int OPT_ICONWINDOW = 16;
+    static final private int OPT_MAXSIZE = 17;
+    static final private int OPT_MINSIZE = 18;
+    static final private int OPT_OVERRIDEREDIRECT = 19;
+    static final private int OPT_POSITIONFROM = 20;
+    static final private int OPT_PROTOCOL = 21;
+    static final private int OPT_RESIZABLE = 22;
+    static final private int OPT_SIZEFROM = 23;
+    static final private int OPT_STATE = 24;
+    static final private int OPT_TITLE = 25;
+    static final private int OPT_TRANSIENT = 26;
+    static final private int OPT_WITHDRAW = 27;
 
     public void cmdProc(final Interp interp, final TclObject[] argv)
         throws TclException {
@@ -95,6 +96,9 @@ public class WmCmd implements Command {
         }
 
         switch (opt) {
+        case OPT_ALWAYSONTOP:
+            setAlwaysOnTop(interp, object, argv);
+            break;
         case OPT_ASPECT:
             break;
 
@@ -475,4 +479,42 @@ public class WmCmd implements Command {
             }
         }
     }
+    class AlwaysOnTop extends UpdateOnEventThread {
+        Object object = null;
+        boolean value = false;
+
+        void exec(final Object object, final boolean value) {
+            this.object = object;
+            this.value = value;
+            execOnThread();
+        }
+
+        public void run() {
+            if (object instanceof JFrame) {
+                JFrame jframe = (JFrame) object;
+                Class jfClass = jframe.getClass();
+                try {
+                    Method m = jfClass.getMethod("setAlwaysOnTop",new Class[] {boolean.class});
+                    m.invoke(jframe,value);
+                } catch (Exception e) {
+                      System.out.println("always on top failed "+e.getMessage());
+                }
+            }
+        }
+    }
+
+    void setAlwaysOnTop(final Interp interp, final Object object,
+        final TclObject[] argv) throws TclException {
+        if (argv.length != 4) {
+            throw new TclNumArgsException(interp, 2, argv, "window 0|1");
+        }
+
+        if (!(object instanceof JFrame) && !(object instanceof JWindow)) {
+            throw new TclException(interp,
+                "invalid object type \"" + argv[2].toString() + "\"");
+        }
+        boolean value = TclBoolean.get(interp,argv[3]);
+        (new AlwaysOnTop()).exec(object, value);
+    }
+
 }
