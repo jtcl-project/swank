@@ -35,8 +35,7 @@ public class SwkJHelpCmd implements Command {
     HelpSet mainHS = null;
     HelpBroker mainHB;
     
-    static final String helpsetName = "javahelpjhelpset";
-    static final String helpsetLabel = "Demo NVJ - Help";
+    static final String helpsetLabel = "NVJ - Help";
     
     static boolean gotDefaults = false;
     int index;
@@ -62,8 +61,7 @@ public class SwkJHelpCmd implements Command {
             if (argv.length != 3) {
                 throw new TclNumArgsException(interp, 2, argv, "option");
             }
-            
-            //          interp.setResult(swkjlist.jget(interp, argv[2]));
+            String helpsetName = argv[2].toString(); 
             
             try {
                 ClassLoader cl = SwkJHelpCmd.class.getClassLoader();
@@ -81,6 +79,9 @@ public class SwkJHelpCmd implements Command {
             break;
             
         case OPT_SHOW:
+            if (argv.length != 3) {
+                throw new TclNumArgsException(interp, 2, argv, "target");
+            }
             String targetName = argv[2].toString();
             (new Show()).exec(targetName);
             break;
