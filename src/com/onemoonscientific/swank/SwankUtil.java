@@ -1316,9 +1316,7 @@ public class SwankUtil {
         TclObject tObj = (TclObject) Widgets.getWidget(interp,menuName);
         SwkJMenuBar swkjmenubar = null;
 
-        //System.out.println("getMenu:" + menuName);
         if (tObj == null) {
-            //  System.out.println("Menu Object is null");
             swkjmenubar = new SwkJMenuBar(interp, menuName, "Menu");
             interp.createCommand(menuName, new SwkJMenuBarWidgetCmd());
             tObj = ReflectObject.newInstance(interp, SwkJMenuBar.class, swkjmenubar);
@@ -1328,7 +1326,7 @@ public class SwankUtil {
 
         Object object = ReflectObject.get(interp, tObj);
 
-        if (!(object instanceof SwkJMenuBar) && !(object instanceof SwkJMenu)) {
+        if (!(object instanceof SwkJMenuBar)) {
             throw new TclException(interp, "Invalid menu object");
         }
 
@@ -1341,9 +1339,8 @@ public class SwankUtil {
         TclObject tObj = (TclObject) Widgets.getWidget(interp,menuName);
         SwkJMenu swkjmenu = null;
 
-        //System.out.println("getMenu:" + menuName);
+        System.out.println("getMenu:" + menuName);
         if (tObj == null) {
-            //  System.out.println("Menu Object is null");
             swkjmenu = new SwkJMenu(interp, menuName, "Menu");
             interp.createCommand(menuName, new SwkJMenuWidgetCmd());
             tObj = ReflectObject.newInstance(interp, SwkJMenu.class, swkjmenu);
