@@ -1339,7 +1339,6 @@ public class SwankUtil {
         TclObject tObj = (TclObject) Widgets.getWidget(interp,menuName);
         SwkJMenu swkjmenu = null;
 
-        System.out.println("getMenu:" + menuName);
         if (tObj == null) {
             swkjmenu = new SwkJMenu(interp, menuName, "Menu");
             interp.createCommand(menuName, new SwkJMenuWidgetCmd());
