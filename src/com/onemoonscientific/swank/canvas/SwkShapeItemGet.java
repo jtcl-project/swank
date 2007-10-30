@@ -56,6 +56,10 @@ public class SwkShapeItemGet implements Runnable {
             return getParValue(par, configStyle);
         } else {
             CanvasParameter[] pars = swkShape.getParameters();
+            if (pars == null) {
+               throw new TclException(interp,
+                "Canvas Parameter doesn't exist for Swank Item \"" +tag +"\"");
+            }
             TclObject result = TclList.newInstance();
 
             for (int i = 0; i < pars.length; i++) {
