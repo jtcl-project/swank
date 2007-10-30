@@ -10,6 +10,7 @@ package com.onemoonscientific.swank;
 import tcl.lang.*;
 
 import java.awt.*;
+import javax.swing.SwingUtilities;
 
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableColumn;
@@ -321,22 +322,30 @@ class SwkJTableWidgetCmd implements Command {
             throw new TclNumArgsException(interp, 2, argv, "model");
         }
 
-        SwkTableModel tableModel = (SwkTableModel) ReflectObject.get(interp,
+        final SwkTableModel tableModel = (SwkTableModel) ReflectObject.get(interp,
                 argv[2]);
 
         if (tableModel == null) {
             throw new TclException(interp, "in setmodel: tableModel null");
         }
 
-        TableModel currentModel = swkjtable.getModel();
+        try {
+        SwingUtilities.invokeAndWait(new Runnable() {
+         public void run()  {
+            TableModel currentModel = swkjtable.getModel();
 
-        if (currentModel instanceof TableSorter) {
-            ((TableSorter) currentModel).setTableModel(tableModel);
-        } else {
-            swkjtable.setModel(tableModel);
+            if (currentModel instanceof TableSorter) {
+                ((TableSorter) currentModel).setTableModel(tableModel);
+            } else {
+                swkjtable.setModel(tableModel);
+            }
+            swkjtable.swkTableModel = tableModel;
+         } 
+        });
+        } catch (Exception e) {
+            throw new TclException(interp, e.getMessage());
         }
 
-        swkjtable.swkTableModel = tableModel;
     }
 
     void selection(final Interp interp, final SwkJTable swkjtable,
