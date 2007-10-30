@@ -40,7 +40,7 @@ public class SwkShapeRunnable implements Runnable {
 
     public void exec() {
         try {
-            SwingUtilities.invokeLater(this);
+            SwingUtilities.invokeAndWait(this);
         } catch (Exception iE) {
         }
     }
