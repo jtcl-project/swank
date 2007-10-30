@@ -70,18 +70,26 @@ public class TableSorter extends AbstractTableModel {
     public static final int DESCENDING = -1;
     public static final int NOT_SORTED = 0;
     public static final int ASCENDING = 1;
+    private int lastCompareType = 0;
     private static Directive EMPTY_DIRECTIVE = new Directive(-1, NOT_SORTED);
     public static final Comparator COMPARABLE_COMPARATOR = new Comparator() {
             public int compare(Object o1, Object o2) {
                 return ((Comparable) o1).compareTo(o2);
             }
         };
-
-    public static final Comparator LEXICAL_COMPARATOR = new Comparator() {
+/*
+    public static final Comparator DICTIONARY_COMPARATOR = new Comparator() {
             public int compare(Object o1, Object o2) {
                 return doDictionary(o1.toString(), o2.toString());
             }
         };
+*/
+   public static final Comparator LEXICAL_COMPARATOR = new Comparator() {
+        public int compare(Object o1, Object o2) {
+            return o1.toString().compareTo(o2.toString());
+        }
+    };
+
 
     protected TableModel tableModel;
     private SimpleDateFormat dateFormat = null;
@@ -237,10 +245,11 @@ public class TableSorter extends AbstractTableModel {
         }
 
         return LEXICAL_COMPARATOR;
+        //return DICTIONARY_COMPARATOR;
     }
 
     private Row[] getViewToModel() {
-        if (viewToModel == null) {
+        if (viewToModel == null || viewToModel.length != tableModel.getRowCount()) {
             int tableModelRowCount = tableModel.getRowCount();
             viewToModel = new Row[tableModelRowCount];
 
@@ -257,6 +266,7 @@ public class TableSorter extends AbstractTableModel {
     }
 
     public int modelIndex(int viewIndex) {
+        
         return getViewToModel()[viewIndex].modelIndex;
     }
 
@@ -299,6 +309,10 @@ public class TableSorter extends AbstractTableModel {
     }
 
     public Object getValueAt(int row, int column) {
+  //      System.out.print("row: " + row + "column: " + column);
+  //      System.out.print(" tableModel: row "+tableModel.getRowCount()+"Column :"+ tableModel.getColumnCount());
+    //int k = modelIndex(row);
+  //  System.out.println(" modelIndex(row)" +k);
         return tableModel.getValueAt(modelIndex(row), column);
     }
 
@@ -316,17 +330,27 @@ public class TableSorter extends AbstractTableModel {
      * @param str2 second item.
      * @return 0 if they are equal, 1 if obj1 > obj2, -1 otherwise.
      */
-    private static final int doDictionary(String str1, String str2) {
+    private final int doDictionary(String str1, String str2) {
         int diff = 0;
         int zeros;
         int secondaryDiff = 0;
-
+        str1 = str1.toUpperCase();
+        str2 = str2.toUpperCase();
         boolean cont = true;
         int i1 = 0;
         int i2 = 0;
         int len1 = str1.length();
         int len2 = str2.length();
-
+        if ((len1 == 0) && (len2 == 0)) {
+            lastCompareType = 121;
+             return 0;
+        } else if (len1 ==0) {
+            lastCompareType = 122;
+             return -1;
+        } else if (len2 ==0) {
+            lastCompareType = 123;
+             return 1;
+        }
         while (cont) {
             if ((i1 >= len1) || (i2 >= len2)) {
                 break;
@@ -383,15 +407,18 @@ public class TableSorter extends AbstractTableModel {
 
                     if (!Character.isDigit(str2.charAt(i2))) {
                         if (Character.isDigit(str1.charAt(i1))) {
+            lastCompareType = 124;
                             return 1;
                         } else {
                             if (diff != 0) {
+            lastCompareType = 125;
                                 return diff;
                             }
 
                             break;
                         }
                     } else if (!Character.isDigit(str1.charAt(i1))) {
+            lastCompareType = 126;
                         return -1;
                     }
                 }
@@ -408,6 +435,7 @@ public class TableSorter extends AbstractTableModel {
                         str2.charAt(i2);
 
                     if (diff != 0) {
+            lastCompareType = 127;
                         return diff;
                     } else if (secondaryDiff == 0) {
                         secondaryDiff = -1;
@@ -418,11 +446,13 @@ public class TableSorter extends AbstractTableModel {
                         Character.toLowerCase(str2.charAt(i2));
 
                     if (diff != 0) {
+            lastCompareType = 128;
                         return diff;
                     } else if (secondaryDiff == 0) {
                         secondaryDiff = 1;
                     }
                 } else {
+            lastCompareType = 129;
                     return diff;
                 }
             }
@@ -433,14 +463,18 @@ public class TableSorter extends AbstractTableModel {
 
         if ((i1 >= len1) && (i2 < len2)) {
             if (!Character.isDigit(str2.charAt(i2))) {
+            lastCompareType = 130;
                 return 1;
             } else {
+            lastCompareType = 131;
                 return -1;
             }
         } else if ((i2 >= len2) && (i1 < len1)) {
             if (!Character.isDigit(str1.charAt(i1))) {
+            lastCompareType = 132;
                 return -1;
             } else {
+            lastCompareType = 133;
                 return 1;
             }
         }
@@ -449,12 +483,12 @@ public class TableSorter extends AbstractTableModel {
             diff = secondaryDiff;
         }
 
+            lastCompareType = 134;
         return diff;
     }
 
     public int compareColumnObjects(int column, Object o1, Object o2) {
         if (getColumnName(column).equalsIgnoreCase("date")) {
-            System.out.println("is date");
 
             if (dateFormat == null) {
                 dateFormat = new SimpleDateFormat("d MMM yyyy");
@@ -464,6 +498,7 @@ public class TableSorter extends AbstractTableModel {
                 Date date1 = dateFormat.parse(o1.toString());
                 Date date2 = dateFormat.parse(o2.toString());
 
+                lastCompareType = 1;
                 return (date1.compareTo(date2));
             } catch (ParseException parseE) {
                 System.out.println(parseE.getMessage());
@@ -475,11 +510,14 @@ public class TableSorter extends AbstractTableModel {
         // Check for nulls.
         // If both values are null, return 0.
         if ((o1 == null) && (o2 == null)) {
+            lastCompareType = 2;
             return 0;
         } else if (o1 == null) { // Define null less than everything.
+            lastCompareType = 3;
 
             return -1;
         } else if (o2 == null) {
+            lastCompareType = 4;
             return 1;
         }
 
@@ -510,7 +548,7 @@ public class TableSorter extends AbstractTableModel {
                     d1 = Double.parseDouble(s1);
                 } catch (NumberFormatException nfE) {
                     isS1 = true;
-                    d1 = Double.MIN_VALUE;
+                    d1 = Double.NEGATIVE_INFINITY;
                 }
             } else {
                 Number n1 = (Number) v1;
@@ -524,7 +562,7 @@ public class TableSorter extends AbstractTableModel {
                     d2 = Double.parseDouble(s2);
                 } catch (NumberFormatException nfE) {
                     isS2 = true;
-                    d2 = Double.MIN_VALUE;
+                    d2 = Double.NEGATIVE_INFINITY;
                 }
             } else {
                 Number n2 = (Number) v2;
@@ -532,14 +570,18 @@ public class TableSorter extends AbstractTableModel {
             }
 
             if (isS1 && isS2) {
+                lastCompareType = 5;
                 return (doDictionary(s1, s2));
             }
 
             if (d1 < d2) {
+                lastCompareType = 6;
                 return -1;
             } else if (d1 > d2) {
+                lastCompareType = 7;
                 return 1;
             } else {
+                lastCompareType = 8;
                 return 0;
             }
         } else if (type == java.util.Date.class) {
@@ -548,6 +590,7 @@ public class TableSorter extends AbstractTableModel {
                 String s1 = v1.toString();
                 String s2 = v2.toString();
 
+                lastCompareType = 9;
                 return (doDictionary(s1, s2));
             }
 
@@ -556,6 +599,7 @@ public class TableSorter extends AbstractTableModel {
             Date d2 = (Date) v2;
             long n2 = d2.getTime();
 
+                lastCompareType = 10;
             if (n1 < n2) {
                 return -1;
             } else if (n1 > n2) {
@@ -569,12 +613,14 @@ public class TableSorter extends AbstractTableModel {
                 String s1 = v1.toString();
                 String s2 = v2.toString();
 
+                lastCompareType = 11;
                 return (doDictionary(s1, s2));
             } else {
                 String s1 = (String) v1;
                 String s2 = (String) v2;
 
-                return (doDictionary(s1, s2));
+                //return (doDictionary(s1, s2));
+                return (doDictionary(v1.toString(), v2.toString()));
             }
         } else if (type == Boolean.class) {
             boolean b1;
@@ -589,6 +635,7 @@ public class TableSorter extends AbstractTableModel {
                 Boolean bool2 = getBoolean(s1);
 
                 if ((bool1 == null) || (bool2 == null)) {
+                lastCompareType = 13;
                     return (doDictionary(s1, s2));
                 }
 
@@ -602,6 +649,7 @@ public class TableSorter extends AbstractTableModel {
                 b2 = bool2.booleanValue();
             }
 
+                lastCompareType = 14;
             if (b1 == b2) {
                 return 0;
             } else if (b1) { // Define false < true
@@ -613,6 +661,9 @@ public class TableSorter extends AbstractTableModel {
         } else {
             String s1 = v1.toString();
             String s2 = v2.toString();
+                lastCompareType = 15;
+            return doDictionary(s1,s2);
+/*
             int result = s1.compareTo(s2);
 
             if (result < 0) {
@@ -622,6 +673,7 @@ public class TableSorter extends AbstractTableModel {
             } else {
                 return 0;
             }
+*/
         }
     }
 
@@ -689,6 +741,7 @@ public class TableSorter extends AbstractTableModel {
                 Object o2 = tableModel.getValueAt(row2, column);
 
                 int comparison = 0;
+                int comparison1 = 0;
 
                 // Define null less than everything, except null.
                 if ((o1 == null) && (o2 == null)) {
@@ -699,8 +752,12 @@ public class TableSorter extends AbstractTableModel {
                     comparison = 1;
                 } else {
                     comparison = compareColumnObjects(column, o1, o2);
-
+                    //int lastCompareType1 = lastCompareType;
                     //comparison = getComparator(column).compare(o1, o2);
+                    //comparison1 = doDictionary(o1.toString(),o2.toString());
+                    //if ((comparison*comparison1) < 0) {
+                            //System.out.println(column+" "+lastCompareType+" "+lastCompareType1+" "+comparison+" "+comparison1+" o1>"+o1.toString()+"<o2>"+o2.toString()+"<");
+                    //}
                 }
 
                 if (comparison != 0) {
