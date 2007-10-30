@@ -53,46 +53,35 @@ proc tkConsoleInit {{nm ""}} {
     }
     jmenubar $tl.menubar
 
-    jmenu $tl.menubar.file -tearoff 0 -label File
-    $tl.menubar.file add command -label "Source..." -underline 0 \
-	    -command tkConsoleSource
-     if {$nm == ""} {
-    $tl.menubar.file add command -label "Hide Console" -underline 0 \
-	    -command {wm withdraw .console}
-}
-    $tl.menubar.file add command -label "Save Console" -underline 0 \
-	    -command {tkConsoleSave}
+    menu $tl.menubar.file
+    $tl.menubar.file add command -label "Source..." -underline 0 -command tkConsoleSource
+    if {$nm == ""} {
+        $tl.menubar.file add command -label "Hide Console" -underline 0 -command {wm withdraw .console}
+    }
+    $tl.menubar.file add command -label "Save Console" -underline 0 -command {tkConsoleSave}
     if {[string compare $tcl_platform(platform) "macintosh"]} {
 	$tl.menubar.file add command -label "Exit" -underline 1 -command exit
     } else {
 	$tl.menubar.file add command -label "Quit" -command exit 
     }
 
-    jmenu $tl.menubar.edit -tearoff 0 -label Edit
-    $tl.menubar.edit add command -label "Cut" -underline 2 \
-	    -command { event generate $console <<Cut>> } 
-    $tl.menubar.edit add command -label "Copy" -underline 0 \
-	    -command { event generate $console <<Copy>> } 
-    $tl.menubar.edit add command -label "Paste" -underline 1 \
-	    -command { event generate $console <<Paste>> } 
+    menu $tl.menubar.edit
+    $tl.menubar.edit add command -label "Cut" -underline 2 -command { event generate $console <<Cut>> } 
+    $tl.menubar.edit add command -label "Copy" -underline 0 -command { event generate $console <<Copy>> } 
+    $tl.menubar.edit add command -label "Paste" -underline 1 -command { event generate $console <<Paste>> } 
 
     if {[string compare $tcl_platform(platform) "windows"]} {
-	$tl.menubar.edit add command -label "Clear" -underline 2 \
-		-command {$console delete 1.0 end}
+	$tl.menubar.edit add command -label "Clear" -underline 2 -command {$console delete 1.0 end}
     } else {
-	$tl.menubar.edit add command -label "Clear" -underline 0 \
-		-command {$console delete 1.0 end} 
-
+	$tl.menubar.edit add command -label "Clear" -underline 0 -command {$console delete 1.0 end} 
 	$tl.menubar add cascade -label Help -menu $tl.menubar.help -underline 0
-	jmenu $tl.menubar.help -tearoff 0
-	$tl.menubar.help add command -label "About..." -underline 0 \
-		-command tkConsoleAbout
+	menu $tl.menubar.help -tearoff 0
+	$tl.menubar.help add command -label "About..." -underline 0 -command tkConsoleAbout
     }
-    $tl.menubar jadd $tl.menubar.file 
-    $tl.menubar jadd $tl.menubar.edit
+    $tl.menubar add cascade -label File -menu $tl.menubar.file 
+    $tl.menubar add cascade -label Edit -menu $tl.menubar.edit
 
-#    $tl configure -menu $tl.menubar
-    pack $tl.menubar -side top -fill x
+    $tl configure -menu $tl.menubar
 
     jscrollpane $tl.s
     pack $tl.s -fill both -expand y -side top
