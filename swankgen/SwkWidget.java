@@ -89,7 +89,26 @@ public class ${widgetType} extends ${widget} implements SwkWidget, Printable$spe
         int result = NO_SUCH_PAGE;
         if (pageIndex == 0) {
             Graphics2D g2 = (Graphics2D) g;
-            g2.translate(pageFormat.getImageableX(), pageFormat.getImageableY());
+            double pX = pageFormat.getImageableX();
+            double pY = pageFormat.getImageableY();
+            double pW = pageFormat.getImageableWidth();
+            double pH = pageFormat.getImageableHeight();
+
+            Dimension dimSize = getSize();
+            double sx = 1.0;
+            double sy = 1.0;
+
+            if (dimSize.width > pW) {
+                sx = pW / dimSize.width;
+                sy = pW / dimSize.width;
+            }
+            if ((dimSize.height*sx) > pH) {
+                sy = sx*pH / (dimSize.height*sx);
+                sx = sx*pH / (dimSize.height*sx);
+            }
+
+            g2.translate(pX,pY);
+            g2.scale(sx, sy);
             boolean wasBuffered = SwankUtil.disableDoubleBuffering(this);
             paint(g2);
             SwankUtil.restoreDoubleBuffering(this, wasBuffered);
@@ -262,9 +281,9 @@ public class ${widgetType} extends ${widget} implements SwkWidget, Printable$spe
 
     String jget(final Interp interp, final TclObject arg) throws TclException {
        int opt = 0;
-       // XXX TclIndex doesn't throw correct error for hear 
+       // XXX SwkIndex doesn't throw correct error for hear 
        try {
-           opt = TclIndex.get(interp, arg, validCmdsTM, "option", 0);
+           opt = SwkIndex.get(interp, arg, validCmdsTM, "option", 0);
        } catch (TclException tclE) {
            throw new TclException(interp, "unknown option \"" + arg + "\"");
        }
