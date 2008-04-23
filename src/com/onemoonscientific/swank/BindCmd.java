@@ -260,7 +260,7 @@ public class BindCmd implements Command {
         SwkWidget swkWidget, Vector bindingVector) {
         if (binding.type == SwkBinding.FOCUS) {
             if (swkWidget == null) {
-                bindingVector.addElement(binding);
+                setClassBinding(bindingVector,binding);
             } else {
                 if (swkWidget.getFocusListener() == null) {
                     SwkFocusListener focusListener = new SwkFocusListener(interp,
@@ -273,7 +273,7 @@ public class BindCmd implements Command {
             }
         } else if (binding.type == SwkBinding.COMPONENT) {
             if (swkWidget == null) {
-                bindingVector.addElement(binding);
+                setClassBinding(bindingVector,binding);
             } else {
                 if (swkWidget.getComponentListener() == null) {
                     SwkComponentListener componentListener = new SwkComponentListener(interp,
@@ -286,7 +286,7 @@ public class BindCmd implements Command {
             }
         } else if (binding.type == SwkBinding.STATECHANGED) {
             if (swkWidget == null) {
-                bindingVector.addElement(binding);
+                setClassBinding(bindingVector,binding);
             } else {
                 if (swkWidget instanceof JTabbedPane) {
                     if (swkWidget.getChangeListener() == null) {
@@ -301,7 +301,7 @@ public class BindCmd implements Command {
             }
         } else if (binding.type == SwkBinding.SELECTIONCHANGED) {
             if (swkWidget == null) {
-                bindingVector.addElement(binding);
+                setClassBinding(bindingVector,binding);
             } else {
                 if (swkWidget instanceof SwkJTable) {
                     SwkJTable swkjtable = (SwkJTable) swkWidget;
@@ -319,7 +319,7 @@ public class BindCmd implements Command {
             }
         } else if (binding.type == SwkBinding.MOUSE) {
             if (swkWidget == null) {
-                bindingVector.addElement(binding);
+                setClassBinding(bindingVector,binding);
             } else {
                 if (swkWidget.getMouseListener() == null) {
                     SwkMouseListener mouseListener = new SwkMouseListener(interp,
@@ -339,7 +339,7 @@ public class BindCmd implements Command {
             }
         } else if (binding.type == SwkBinding.MOUSEMOTION) {
             if (swkWidget == null) {
-                bindingVector.addElement(binding);
+                setClassBinding(bindingVector,binding);
             } else {
                 if (swkWidget.getMouseMotionListener() == null) {
                     SwkMouseMotionListener mouseMotionListener = new SwkMouseMotionListener(interp,
@@ -352,7 +352,7 @@ public class BindCmd implements Command {
             }
         } else if (binding.type == SwkBinding.KEY) {
             if (swkWidget == null) {
-                bindingVector.addElement(binding);
+                setClassBinding(bindingVector,binding);
             } else {
                 if (swkWidget instanceof JFrame) {
                     //SwkKeyCommandListener keyCommandListener = new SwkKeyCommandListener(interp, binding, (Component) swkWidget);
@@ -637,6 +637,27 @@ public class BindCmd implements Command {
         //interp.getNotifier().queueEvent(bEvent,TCL.QUEUE_TAIL);
         //interp.eval(sbuf.toString());
         SwkExceptionCmd.doExceptionCmd(interp, sbuf.toString());
+    }
+
+    public static void setClassBinding(Vector bindings, SwkBinding newBinding) {
+        SwkBinding binding = null;
+
+        if (!newBinding.add) {
+            for (int i = 0; i < bindings.size(); i++) {
+                binding = (SwkBinding) bindings.elementAt(i);
+
+                if (binding.equals(newBinding)) {
+                    if (newBinding.remove) {
+                        bindings.removeElementAt(i);
+                    } else {
+                        bindings.setElementAt(newBinding, i);
+                    }
+                    return;
+                }
+            }
+        }
+
+        bindings.addElement(newBinding);
     }
 
     public static void setVirtualBinding(SwkWidget swkWidget,
