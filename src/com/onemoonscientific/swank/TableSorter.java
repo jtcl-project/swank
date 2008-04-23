@@ -491,7 +491,11 @@ public class TableSorter extends AbstractTableModel {
         if (getColumnName(column).equalsIgnoreCase("date")) {
 
             if (dateFormat == null) {
-                dateFormat = new SimpleDateFormat("d MMM yyyy");
+                if (o1.toString().indexOf(':') != -1) {
+                    dateFormat = new SimpleDateFormat("d MMM yyyy HH:mm:ss");
+                } else {
+                    dateFormat = new SimpleDateFormat("d MMM yyyy");
+                }
             }
 
             try {
