@@ -3,11 +3,14 @@
   <!-- set global properties for this build -->
   <property name="dir.src" value="src"/>
   <property name="dir.hsrc" value="hsrc"/>
+  <property name="dir.chartsrc" value="chartsrc"/>
   <property name="dir.src3d" value="src3d"/>
   <property name="dir.gensrc" value="gensrc"/>
   <property name="dir.build" value="build"/>
+  <property name="dir.hbuild" value="hbuild"/>
+  <property name="dir.chartbuild" value="chartbuild"/>
   <property name="dir.dist" value="dist"/>
-  <property name="dir.libs" value="libs"/>
+  <property name="dir.libs" value="../../libs"/>
   <taskdef classname="de.hunsicker.jalopy.plugin.ant.AntPlugin" name="jalopy">
   <classpath>
     <fileset dir="/usr/local/jalopy/lib">
@@ -32,6 +35,8 @@
     <mkdir dir="${dir.gensrc}/com/onemoonscientific/swank"/>
     <mkdir dir="${dir.gensrc}/com/onemoonscientific/swank/jhelp"/>
     <mkdir dir="${dir.gensrc}/com/onemoonscientific/swank/canvas"/>
+    <mkdir dir="${dir.hbuild}"/>
+    <mkdir dir="${dir.chartbuild}"/>
   </target>
 
   <path id="jacl.classpath">
@@ -42,6 +47,9 @@
   </path>
   <path id="help.classpath">
      <pathelement  path="${dir.build}:${dir.libs}/jacl.jar:${dir.libs}/tcljava.jar:${dir.libs}/itcl.jar:${dir.libs}/janino.jar:${dir.libs}/tjc.jar:${dir.libs}/jh.jar:${dir.dist}/lib/swank.jar"/>
+  </path>
+  <path id="chart.classpath">
+     <pathelement  path="${dir.build}:${dir.libs}/jacl.jar:${dir.libs}/tcljava.jar:${dir.libs}/itcl.jar:${dir.libs}/janino.jar:${dir.libs}/tjc.jar:${dir.libs}/jcommon.jar:${dir.libs}/jfreechart.jar:${dir.dist}/lib/swank.jar"/>
   </path>
 
   <target depends="prepare" description="compile the source " name="compile_swank">
@@ -55,8 +63,15 @@
   
   <target description="compile the source help " name="compile_help">
     <!-- Compile the java code from ${dir.hsrc} into ${dir.build} -->
-    <javac debug="true" destdir="${dir.build}" srcdir="${dir.hsrc}">
+    <javac debug="true" destdir="${dir.hbuild}" srcdir="${dir.hsrc}">
          <classpath refid="help.classpath"/>
+    </javac>
+  </target>
+
+  <target depends="prepare" description="compile the chart files" name="compile_chart">
+    <!-- Compile the java code from ${dir.chartsrc} into ${dir.chartbuild} -->
+    <javac debug="true" destdir="${dir.chartbuild}" srcdir="${dir.chartsrc}">
+         <classpath refid="chart.classpath"/>
     </javac>
   </target>
 
@@ -77,11 +92,34 @@
     <!-- Put everything in ${dir.build} into the MyProject-${DSTAMP}.jar file -->
     <jar basedir="${dir.build}" jarfile="${dir.dist}/lib/swank.jar"/>
   </target>
+  <target depends="compile_help" description="generate the distribution" name="hdist">
+    <!-- Create the distribution directory -->
+    <mkdir dir="${dir.dist}/lib"/>
+
+    <!-- Put everything in ${dir.hbuild} into the MyProject-${DSTAMP}.jar file -->
+    <jar basedir="${dir.hbuild}" jarfile="${dir.dist}/lib/swankjh.jar"/>
+  </target>
+  <target depends="compile_chart" description="generate the distribution" name="cdist">
+    <!-- Create the distribution directory -->
+    <mkdir dir="${dir.dist}/lib"/>
+    <copy todir="${dir.chartbuild}/com/onemoonscientific/swank/chart/library">
+    <fileset dir="${dir.chartsrc}/com/onemoonscientific/swank/chart/library"/>
+    </copy>
+
+    <!-- Put everything in ${dir.chartbuild} into the MyProject-${DSTAMP}.jar file -->
+    <jar basedir="${dir.chartbuild}" jarfile="${dir.dist}/lib/swankchart.jar"/>
+  </target>
 
   <target  depends="prepare" description="build the source " name="gensrc">
     <java fork="yes" classname="tcl.lang.Shell">
          <classpath refid="jacl.classpath"/>
          <arg value="swankgen/build.tcl"/>
+    </java>
+  </target>
+
+  <target  depends="dist" description="build the source " name="wisk">
+    <java fork="yes" classname="tcl.lang.SwkShell">
+         <classpath refid="swank.classpath"/>
     </java>
   </target>
 
