@@ -67,6 +67,7 @@ public class SwkBinding {
     public int count = 1;
     public int detail = 0;
     public boolean add = false;
+    public boolean remove = false;
     public KeyStroke keyStroke = null;
     public String name = null;
     public String command = null;
