@@ -173,8 +173,19 @@ public class SwkJComboBoxListener implements ActionListener, VarTrace,
         return (command);
     }
 
+    public void keyReleased(JTextComponent editor, KeyEvent e) {
+        String s1 = editor.getText();
+
+        if ((varName != null) && (!varName.equals(""))) {
+            SetStringVarEvent strEvent = new SetStringVarEvent(interp, varName,
+                    null, s1);
+            traceLock = true;
+            interp.getNotifier().queueEvent(strEvent, TCL.QUEUE_TAIL);
+        }
+
+    }
+
     public void actionPerformed(ActionEvent e) {
-        //System.out.println("Action Event Object : " + e.toString());
         if (e.getModifiers() == 0) {
             return;
         }
@@ -183,7 +194,7 @@ public class SwkJComboBoxListener implements ActionListener, VarTrace,
         //}
 
         String s1 = component.getSelectedItem().toString();
-
+        
         if ((varName != null) && (!varName.equals(""))) {
             SetStringVarEvent strEvent = new SetStringVarEvent(interp, varName,
                     null, s1);
