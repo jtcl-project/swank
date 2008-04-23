@@ -147,21 +147,29 @@ public class CursorCmd implements Command {
             throw new TclException(interp, "No filename specified");
         }
 
-        Toolkit toolkit = Toolkit.getDefaultToolkit();
-        Image image = null;
+        ImageIcon imageIcon = null;
+        URL url = null;
 
-        try {
-            image = toolkit.getImage(fileName);
-        } catch (Exception e) {
-            throw new TclException(interp,
-                "Couldn't open cursor image file " + fileName);
+        if (fileName.startsWith("resource:")) {
+            url = Thread.currentThread().getContextClassLoader().getResource(fileName.substring(10));
+        } else {
+            url = Thread.currentThread().getContextClassLoader().getResource(fileName);
         }
 
-        if (image == null) {
+        if (url != null) {
+            imageIcon = new ImageIcon(url, cursorName);
+        } else {
+            imageIcon = new ImageIcon(fileName, cursorName);
+        }
+
+
+        if (imageIcon == null) {
             throw new TclException(interp,
                 "Couldn't create image from file " + fileName);
         }
 
+        Image image = imageIcon.getImage();
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
         Cursor cursor = toolkit.createCustomCursor(image, new Point(x, y),
                 cursorName);
 
