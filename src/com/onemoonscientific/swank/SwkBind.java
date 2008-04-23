@@ -298,6 +298,7 @@ public class SwkBind {
             // should return binding
         } else if (argv[firstArg + 1].toString().length() == 0) {
             // should remove binding
+            swkBinding.remove = true;
         } else if (argv[firstArg + 1].toString().charAt(0) == '+') {
             swkBinding.add = true;
             swkBinding.command = argv[firstArg + 1].toString().substring(1);
