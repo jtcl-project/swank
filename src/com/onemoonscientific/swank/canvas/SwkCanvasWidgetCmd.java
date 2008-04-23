@@ -1161,7 +1161,7 @@ public class SwkCanvasWidgetCmd implements Command {
         public static final int WITHTAG = 5;
         public static final int CLOSEST = 6;
         SwkImageCanvas swkcanvas = null;
-        int iSearch = 0;
+        String tagName = null;
         SwkShape swkShape = null;
         SwkShape bestShape = null;
         ArrayList shapeList = null;
@@ -1191,8 +1191,7 @@ public class SwkCanvasWidgetCmd implements Command {
                 if (argv.length != (start + 2)) {
                     throw new TclNumArgsException(interp, 1, argv, "option");
                 }
-
-                iSearch = TclInteger.get(interp, argv[start + 1]);
+                tagName = argv[start+1].toString();
                 interp.resetResult();
                 mode = NEXT;
                 execOnThread();
@@ -1217,7 +1216,7 @@ public class SwkCanvasWidgetCmd implements Command {
                     throw new TclNumArgsException(interp, 1, argv, "option");
                 }
 
-                iSearch = TclInteger.get(interp, argv[start + 1]);
+                tagName = argv[start+1].toString();
                 interp.resetResult();
                 mode = PREVIOUS;
                 execOnThread();
@@ -1338,8 +1337,7 @@ public class SwkCanvasWidgetCmd implements Command {
         }
 
         void getOne() throws SwkException {
-            swkShape = (SwkShape) swkcanvas.swkShapes.get(new Integer(iSearch));
-
+            SwkShape swkShape = (SwkShape) swkcanvas.getShape(tagName);
             if (swkShape != null) {
                 if (mode == NEXT) {
                     swkShape = swkShape.next;
