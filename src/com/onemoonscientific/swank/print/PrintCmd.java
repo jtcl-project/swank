@@ -45,19 +45,25 @@ class PrintCmd implements Command {
         boolean silent = false;
         boolean sizeToFit = false;
         boolean autoSelect = false;
+        boolean createPaper = false; 
 
         for (i = 1; i < (argv.length - 1); i++) {
             if ("-landscape".startsWith(argv[i].toString())) {
                 orientation = PageFormat.LANDSCAPE;
+                createPaper = true; 
             } else if ("-portrait".startsWith(argv[i].toString())) {
                 orientation = PageFormat.PORTRAIT;
+                createPaper = true; 
             } else if ("-silent".startsWith(argv[i].toString())) {
                 silent = true;
             } else if ("-sizetofit".startsWith(argv[i].toString())) {
                 sizeToFit = true;
+                createPaper = true; 
             } else if ("-autoselect".startsWith(argv[i].toString())) {
                 autoSelect = true;
+                createPaper = true; 
             } else if ("-margin".startsWith(argv[i].toString())) {
+                createPaper = true; 
                 i++;
 
                 if (i >= (argv.length - 1)) {
@@ -70,46 +76,49 @@ class PrintCmd implements Command {
 
         Object obj = ReflectObject.get(interp, tObj);
         PrinterJob pj = PrinterJob.getPrinterJob();
-
         PageFormat pf = pj.defaultPage();
-        Paper paper = new Paper();
-        double cWidth = ((Component) obj).getWidth();
-        double cHeight = ((Component) obj).getHeight();
-
-        if (autoSelect) {
-            if (cWidth > cHeight) {
-                orientation = PageFormat.LANDSCAPE;
-            } else {
-                orientation = PageFormat.PORTRAIT;
-            }
-        }
-
-        if (sizeToFit) {
-            if (orientation == PageFormat.LANDSCAPE) {
-                if (cHeight > cWidth) {
-                    paper.setSize(cHeight, cHeight);
-                    paper.setImageableArea(0, 0, cHeight, cHeight);
-                } else {
-                    paper.setSize(cHeight, cWidth);
-                    paper.setImageableArea(0, 0, cHeight, cWidth);
-                }
-            } else {
-                if (cWidth > cHeight) {
-                    paper.setSize(cWidth, cWidth);
-                    paper.setImageableArea(0, 0, cWidth, cWidth);
-                } else {
-                    paper.setSize(cWidth, cHeight);
-                    paper.setImageableArea(0, 0, cWidth, cHeight);
-                }
-            }
+        if (!createPaper && !silent) {
+            pf = pj.pageDialog(pf);
         } else {
-            paper.setImageableArea(margin, margin,
-                paper.getWidth() - (margin * 2),
-                paper.getHeight() - (margin * 2));
-        }
+            Paper paper = new Paper();
+            double cWidth = ((Component) obj).getWidth();
+            double cHeight = ((Component) obj).getHeight();
 
-        pf.setPaper(paper);
-        pf.setOrientation(orientation);
+            if (autoSelect) {
+                if (cWidth > cHeight) {
+                    orientation = PageFormat.LANDSCAPE;
+                } else {
+                    orientation = PageFormat.PORTRAIT;
+                }
+            }
+
+            if (sizeToFit) {
+                if (orientation == PageFormat.LANDSCAPE) {
+                    if (cHeight > cWidth) {
+                        paper.setSize(cHeight+2*margin, cHeight+2*margin);
+                        paper.setImageableArea(margin,margin, cHeight+margin, cHeight+margin);
+                    } else {
+                        paper.setSize(cHeight+2*margin, cWidth+2*margin);
+                        paper.setImageableArea(margin,margin, cHeight+margin, cWidth+margin);
+                    }
+                } else {
+                    if (cWidth > cHeight) {
+                        paper.setSize(cWidth+2*margin, cWidth+2*margin);
+                        paper.setImageableArea(margin, margin, cWidth+margin, cWidth+margin);
+                    } else {
+                        paper.setSize(cWidth+2*margin, cHeight+2*margin);
+                        paper.setImageableArea(margin, margin, cWidth+margin, cHeight+margin);
+                    }
+                }
+            } else {
+                paper.setImageableArea(margin, margin,
+                    paper.getWidth() - (margin * 2),
+                    paper.getHeight() - (margin * 2));
+            }
+    
+            pf.setPaper(paper);
+            pf.setOrientation(orientation);
+        }
         pj.setPrintable((Printable) obj, pf);
 
         if (silent) {
@@ -121,11 +130,22 @@ class PrintCmd implements Command {
         } else {
             if (pj.printDialog()) {
                 try {
+                    disableDoubleBuffering((Component) obj);                     
                     pj.print();
                 } catch (PrinterException e) {
                     System.out.println(e);
+                } finally {
+                    enableDoubleBuffering((Component) obj);                     
                 }
             }
         }
+    }
+    public static void disableDoubleBuffering(Component c) {
+         RepaintManager currentManager = RepaintManager.currentManager(c);
+         currentManager.setDoubleBufferingEnabled(false);
+    }
+    public static void enableDoubleBuffering(Component c) {
+         RepaintManager currentManager = RepaintManager.currentManager(c);
+         currentManager.setDoubleBufferingEnabled(true);
     }
 }
