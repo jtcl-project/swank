@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes" ?>
+
+<!-- 
+    A sample installation file.
+    Use it as a base for your own installers :-)
+    
+    To compile it :
+    - go in the bin directory where you installed IzPack
+    - call "compile ../sample/install.xml -b ../sample"
+-->
+
+<installation version="1.0">
+
+    <!-- 
+        The info section.
+        The meaning of the tags should be natural ...
+    -->
+    <info>
+        <appname>Wisk</appname>
+
+            <appversion>2_4_2</appversion>
+        
+        <authors>
+            <author name="One Moon Scientific, Inc." email="bruce@onemoonscientific.com"/>
+        </authors>
+        <url>http://www.onemoonscientific.com</url>
+        <javaversion>1.5</javaversion>
+    </info>
+    <variables>
+    <variable name="VERSION" value="x45"/>
+    </variables>
+    <!-- 
+        The gui preferences indication.
+        Sets the installer window to 640x480. It will not be able to change the size.
+    -->
+    <guiprefs width="640" height="480" resizable="no"/>
+    
+    <!-- 
+        The locale section.
+        Asks here to include the English and French langpacks.
+    -->
+    <locale>
+        <langpack iso3="eng"/>
+    </locale>
+    
+    <!-- 
+        The resources section.
+        The ids must be these ones if you want to use the LicencePanel and/or the InfoPanel.
+    -->
+    <resources>
+        <res id="LicencePanel.licence" src="./LICENSE"/>
+        <res id="LicencePanel.licence_fra" src="./LICENSE.fra"/>
+        <res id="InfoPanel.info" src="Readme.txt" parse="yes"/>
+        <res src="./shortcutSpec.xml" id="shortcutSpec.xml"/>
+        <res src="./Unix_shortcutSpec.xml" id="Unix_shortcutSpec.xml"/>
+    </resources>
+    
+    <!-- 
+        The panels section.
+        We indicate here which panels we want to use. The order will be respected.
+    -->
+    <panels>
+        <panel classname="HelloPanel"/>
+        <panel classname="InfoPanel"/>
+        <panel classname="LicencePanel"/>
+        <panel classname="TargetPanel"/> 
+        <panel classname="PacksPanel"/>
+        <panel classname="InstallPanel"/>
+        <panel classname="ShortcutPanel"/>
+        <panel classname="SimpleFinishPanel"/>
+    </panels>
+    
+    <!-- 
+        The packs section.
+        We specify here our packs.
+    -->
+    <packs>
+        <pack name="Base" required="yes">
+            <description>The base files</description>
+            <file src="./LICENSE" targetdir="$INSTALL_PATH"/>
+                <file src="/Users/brucejohnson/DevApps/NMRViewJ/java/swank.jar" targetdir="$INSTALL_PATH/java"/>
+                <file src="/Users/brucejohnson/DevApps/NMRViewJ/java/swankjh.jar" targetdir="$INSTALL_PATH/java"/>
+                <file src="/Users/brucejohnson/DevApps/NMRViewJ/java/tcljava.jar" targetdir="$INSTALL_PATH/java"/>
+                <file src="/Users/brucejohnson/DevApps/NMRViewJ/java/jacl.jar" targetdir="$INSTALL_PATH/java"/>
+                <file src="/Users/brucejohnson/DevApps/NMRViewJ/java/itcl.jar" targetdir="$INSTALL_PATH/java"/>
+                <file src="/Users/brucejohnson/DevApps/NMRViewJ/java/janino.jar" targetdir="$INSTALL_PATH/java"/>
+                <file src="/Users/brucejohnson/DevApps/NMRViewJ/java/tjc.jar" targetdir="$INSTALL_PATH/java"/>
+
+            <file src="../batchfiles/swank.bat" targetdir="$INSTALL_PATH" os="windows"/>
+            <file src="../batchfiles/swank" targetdir="$INSTALL_PATH" os="unix"/>
+            <file src="/Users/brucejohnson/DevApps/NMRViewJ/NMRViewJ.app" targetdir="$INSTALL_PATH" os="mac os x"/>
+
+            <parsable  targetfile="$INSTALL_PATH/swank.bat" os="windows"/>
+            <parsable  targetfile="$INSTALL_PATH/swank" os="unix" type="shell"/>
+
+            <executable targetfile="$INSTALL_PATH/NMRViewJ.app/Contents/MacOS/JavaApplicationStub" stage="never" os="mac os x"/>
+            <executable targetfile="$INSTALL_PATH/swank.bat" stage="never" os="windows"/>
+            <executable targetfile="$INSTALL_PATH/swank" stage="never" os="unix"/>
+        </pack>
+    </packs>
+<native type="izpack" name="ShellLink.dll"/>
+</installation>
