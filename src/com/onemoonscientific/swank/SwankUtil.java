@@ -135,6 +135,9 @@ public class SwankUtil {
     }
 
     public static Color getColor(String name) {
+        if (colorTable == null) {
+            initColorTable();
+        }
         return (Color) colorTable.get(name.toLowerCase());
     }
 
