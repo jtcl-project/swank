@@ -112,6 +112,14 @@ public class SwkCheckButtonListener implements ActionListener, VarTrace,
                             }
                         });
                 }
+                if (tObj.toString().equals(offValue)) { //Added for the configure case where checkbutton should become disabled
+                    final boolean state = false;
+                    SwingUtilities.invokeLater(new Runnable() {
+                            public void run() {
+                                component.setSelected(state);
+                            }
+                        });
+                }
             } catch (TclException tclException) {
                 interp.resetResult();
 
