@@ -1,3 +1,10 @@
 (^|/)\_darcs($|/)
 (^|/)\.hg($|/)
 (^|/)\.hgtags($|/)
+gensrc
+build
+hbuild
+chartbuild
+sandbox
+dist
+nbproject
