@@ -112,14 +112,12 @@ public class SwkRadioButtonListener implements ActionListener, VarTrace,
             try {
                 tObj = interp.getVar(name, TCL.GLOBAL_ONLY);
 
-                if (tObj.toString().equals(value)) {
-                    final boolean state = true;
-                    SwingUtilities.invokeLater(new Runnable() {
+                final boolean state = tObj.toString().equals(value); //If the value doesn't match the state then deselect
+                SwingUtilities.invokeLater(new Runnable() {
                             public void run() {
                                 component.setSelected(state);
                             }
-                        });
-                }
+                });
             } catch (TclException tclException) {
                 interp.resetResult();
                 tObj = TclString.newInstance("");
