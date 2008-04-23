@@ -1748,10 +1748,17 @@ proc swkMakeSpecial {widget widgetVar} {
         append specialVars "
         SwkJComboBoxListener commandListener=null;
         "
-        append specialInits "
-        commandListener = new SwkJComboBoxListener(interp,this);
-        addActionListener (commandListener);
-        "
+        append specialInits {
+            commandListener = new SwkJComboBoxListener(interp,this);
+            addActionListener (commandListener);
+            final JTextComponent editor = (JTextComponent) getEditor().getEditorComponent();
+            editor.addKeyListener(new KeyAdapter () {
+                public void keyReleased(KeyEvent kEvent) {
+                    commandListener.keyReleased(editor,kEvent);
+                } 
+            }
+            );
+        }
         
         append specialMethods "
      public void setVarName(Interp interp, String name) throws TclException {
