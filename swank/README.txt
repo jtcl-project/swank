@@ -15,7 +15,7 @@ Contents of directory
         comes with Tcl/Tk.  After startup you can type in Jacl/Swank commands
         or source in script files.
 	This script assumes that an appropriate version of Java (Swank was
-        compiled with Java 1.4.2) is in your path and you are running the 
+        compiled with Java 1.5) is in your path and you are running the 
         script from the directory containing the swank.jar, jacl.jar and
         tcljava.jar files.
 	Alternatively, you can change the following variables in the script to
