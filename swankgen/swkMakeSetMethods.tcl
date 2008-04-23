@@ -146,7 +146,7 @@ global configOptions configOPTs configCASEs setterCASEs
 set configOptions "static String validCmds\[\] = \{"
 set configOPTs ""
 set configCASEs  "
-        int opt = TclIndex.get(interp, argv\[i\], validCmdsTM, \"option\", 0);
+        int opt = SwkIndex.get(interp, argv\[i\], validCmdsTM, \"option\", 0);
         switch (opt) \{
 "
 set setterCASEs  "
