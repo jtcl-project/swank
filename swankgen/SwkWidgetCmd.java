@@ -49,7 +49,7 @@ public class ${widgetType}Cmd implements Command {
             if (!EventQueue.isDispatchThread()) {
 		 cmdProcNotET(interp,argv);    
 	    } else {
-	       System.out.println("creating widget on event queue");
+               throw new TclException(interp,"Can't create widgets on event queue");
 	    }
        }
     }
