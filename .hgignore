@@ -1,6 +1,7 @@
 (^|/)\_darcs($|/)
 (^|/)\.hg($|/)
 (^|/)\.hgtags($|/)
+(.*)\.tar\.gz
 gensrc
 build
 hbuild
@@ -8,3 +9,4 @@ chartbuild
 sandbox
 dist
 nbproject
+mysync2
