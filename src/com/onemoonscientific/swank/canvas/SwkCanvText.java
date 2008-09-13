@@ -93,7 +93,7 @@ public class SwkCanvText extends SwkShape {
         setY(coords[1]);
     }
 
-    CanvasParameter[] getParameters() {
+    public CanvasParameter[] getParameters() {
         return parameters;
     }
 

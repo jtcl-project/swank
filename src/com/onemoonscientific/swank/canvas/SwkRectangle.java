@@ -101,7 +101,7 @@ public class SwkRectangle extends SwkShape {
         shape = aT.createTransformedShape(rect2D);
     }
 
-    CanvasParameter[] getParameters() {
+    public CanvasParameter[] getParameters() {
         return parameters;
     }
 

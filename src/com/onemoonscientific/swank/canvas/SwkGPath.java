@@ -104,7 +104,7 @@ public class SwkGPath extends SwkShape {
         shape = aT.createTransformedShape(gPath);
     }
 
-    CanvasParameter[] getParameters() {
+    public CanvasParameter[] getParameters() {
         return parameters;
     }
 

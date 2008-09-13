@@ -85,7 +85,7 @@ public class SwkCanvWindow extends SwkShape {
         storeCoords[1] = coords[1];
     }
 
-    CanvasParameter[] getParameters() {
+    public CanvasParameter[] getParameters() {
         return parameters;
     }
 

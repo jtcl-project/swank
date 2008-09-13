@@ -86,7 +86,7 @@ public class SwkEllipse extends SwkShape {
         return "oval";
     }
 
-    CanvasParameter[] getParameters() {
+    public CanvasParameter[] getParameters() {
         return parameters;
     }
 

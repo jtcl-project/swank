@@ -86,7 +86,7 @@ public class SwkCanvImage extends SwkShape {
         System.arraycopy(coords, 0, storeCoords, 0, 2);
     }
 
-    CanvasParameter[] getParameters() {
+    public CanvasParameter[] getParameters() {
         return parameters;
     }
 

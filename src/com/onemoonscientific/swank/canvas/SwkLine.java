@@ -136,7 +136,7 @@ public class SwkLine extends SwkShape {
         }
     }
 
-    CanvasParameter[] getParameters() {
+    public CanvasParameter[] getParameters() {
         return parameters;
     }
 

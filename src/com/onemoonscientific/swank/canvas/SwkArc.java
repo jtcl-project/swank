@@ -87,7 +87,7 @@ public class SwkArc extends SwkShape {
         return "arc";
     }
 
-    CanvasParameter[] getParameters() {
+    public CanvasParameter[] getParameters() {
         return parameters;
     }
 

@@ -195,7 +195,7 @@ public class SwkSymbols extends SwkShape implements SymbolInterface {
         }
     }
 
-    CanvasParameter[] getParameters() {
+    public CanvasParameter[] getParameters() {
         return parameters;
     }
 
