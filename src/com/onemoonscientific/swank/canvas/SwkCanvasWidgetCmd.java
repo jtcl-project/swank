@@ -153,7 +153,6 @@ public class SwkCanvasWidgetCmd implements Command {
             break;
 
         case OPT_ITEMCONFIG:
-
             if (argv.length < 3) {
                 throw new TclNumArgsException(interp, 2, argv, "option");
             }
