@@ -32,9 +32,7 @@ public abstract class DoubleParameter extends CanvasParameter {
         }
     }
 
-    double getValue(SwkShape swkShape) {
-        return 0.0;
-    }
+    public abstract double getValue(SwkShape swkShape);
 
     public TclObject getValue(Interp interp, SwkShape swkShape)
         throws TclException {
