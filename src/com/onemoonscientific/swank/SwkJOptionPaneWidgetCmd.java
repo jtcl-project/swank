@@ -130,7 +130,11 @@ class SwkJOptionPaneWidgetCmd implements Command {
         void exec(String title) {
             this.title = title;
             execOnThread();
-            interp.setResult(result.toString());
+            if (result == null) {
+                 interp.resetResult();
+            } else {
+                interp.setResult(result.toString());
+            }
         }
 
         public void run() {
