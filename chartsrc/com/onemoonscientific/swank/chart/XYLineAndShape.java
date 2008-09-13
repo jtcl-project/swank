@@ -53,7 +53,7 @@ import java.text.DecimalFormat;
 
 public class XYLineAndShape extends XYPlotShape {
     static CanvasParameter[] parameters = {
-        new TagsParameter(), new FontParameter(), new RangeaxisParameter(), new DomainaxisParameter(), new DatasetParameter(), new ShapesvisibleParameter(),
+        new TagsParameter(), new RangeaxisParameter(), new DomainaxisParameter(), new DatasetParameter(), new ShapesvisibleParameter(),
          new PaintParameter(), new LinesvisibleParameter() };
     static Map parameterMap = new TreeMap();
 
@@ -67,7 +67,7 @@ public class XYLineAndShape extends XYPlotShape {
         setRenderer();
         setShape(null);
     }
-    CanvasParameter[] getParameters() {
+    public CanvasParameter[] getParameters() {
         return parameters;
     }
  
@@ -92,7 +92,7 @@ public class XYLineAndShape extends XYPlotShape {
             return name;
         }
 
-        String getValue(SwkShape swkShape) {
+        public String getValue(SwkShape swkShape) {
             XYItemRenderer renderer = ((XYPlotShape) swkShape).renderer;
             if (renderer instanceof XYLineAndShapeRenderer) {
                 XYPlot plot = ((XYPlotShape) swkShape).plot;
@@ -146,7 +146,7 @@ public class XYLineAndShape extends XYPlotShape {
             return name;
         }
 
-        String getValue(SwkShape swkShape) {
+        public String getValue(SwkShape swkShape) {
             XYItemRenderer renderer = ((XYPlotShape) swkShape).renderer;
             if (renderer instanceof XYLineAndShapeRenderer) {
                 XYPlot plot = ((XYPlotShape) swkShape).plot;
@@ -199,7 +199,7 @@ public class XYLineAndShape extends XYPlotShape {
             return name;
         }
 
-        String getValue(SwkShape swkShape) {
+        public String getValue(SwkShape swkShape) {
             XYItemRenderer renderer = ((XYPlotShape) swkShape).renderer;
             if (renderer instanceof XYLineAndShapeRenderer) {
                 XYPlot plot = ((XYPlotShape) swkShape).plot;
