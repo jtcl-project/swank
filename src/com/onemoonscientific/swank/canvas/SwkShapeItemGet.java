@@ -49,7 +49,6 @@ public class SwkShapeItemGet implements Runnable {
             throw new TclException(interp,
                 "Swank item  \"" + tag + "\" doesn't exist");
         }
-
         if (parString != null) {
             CanvasParameter par = swkShape.getPar(parString);
 
