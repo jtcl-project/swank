@@ -32,11 +32,11 @@ proc tk {args } {
 
 
 proc tk_getOpenFile {args} {
-    
+    global env 
     if { [expr [llength $args] % 2] != 0} {
         error "args not multiple of two"
     }
-    
+    set currentDir [::swank::getLastDir]
     destroy .sk_filebox
     jfilechooser .sk_filebox
     foreach "argType argVal" $args {
@@ -47,7 +47,7 @@ proc tk_getOpenFile {args} {
             }
             
             -initialdir {
-                .sk_filebox configure -currentdirectory $argVal
+                 set currentDir $argVal
             }
             -title {
                 .sk_filebox configure -dialogtitle $argVal
@@ -58,14 +58,19 @@ proc tk_getOpenFile {args} {
         }
     }
     
+    .sk_filebox configure -currentdirectory $currentDir
     .sk_filebox configure -visible true
     set result [.sk_filebox open]
     destroy .sk_filebox
+    if {$result != ""} {
+        ::swank::setLastDir [file dirname $result]
+    }
     return $result
 }
 
 proc tk_getSaveFile {args} {
     destroy .sk_filebox
+    set currentDir [::swank::getLastDir]
     jfilechooser .sk_filebox
      foreach "argType argVal" $args {
         switch -- $argType {
@@ -79,36 +84,45 @@ proc tk_getSaveFile {args} {
             }
             
             -initialdir {
-                .sk_filebox configure -currentdirectory $argVal
+                 set currentDir $argVal
             }
             -title {
                 .sk_filebox configure -dialogtitle $argVal
             }
         }
     }
+    .sk_filebox configure -currentdirectory $currentDir
     .sk_filebox configure -visible true
     set result [.sk_filebox save]
     destroy .sk_filebox
+    if {$result != ""} {
+        ::swank::setLastDir [file dirname $result]
+    }
     return $result
 }
 
 proc tk_chooseDirectory {args} {
     destroy .sk_filebox
-    jfilechooser .sk_filebox -currentdirectory [pwd]
+    set currentDir [::swank::getLastDir]
+    jfilechooser .sk_filebox -currentdirectory $currentDir
      foreach "argType argVal" $args {
         switch -- $argType {
              -initialdir {
-                .sk_filebox configure -currentdirectory $argVal
+                 set currentDir $argVal
             }
             -title {
                 .sk_filebox configure -dialogtitle $argVal
             }
         }
     }
+    .sk_filebox configure -currentdirectory $currentDir
     .sk_filebox configure -fileselectionmode [java::field javax.swing.JFileChooser DIRECTORIES_ONLY]
     .sk_filebox configure -visible true
     set result [.sk_filebox open]
     destroy .sk_filebox
+    if {$result != ""} {
+        ::swank::setLastDir $result
+    }
     return $result
 }
 
@@ -186,6 +200,21 @@ proc console {mode args} {
 }
 
 namespace eval ::swank {
+    global env 
+    variable lastDir $env(HOME)
+    proc setLastDir {dir} {
+         set ::swank::lastDir $dir
+    }
+    proc getLastDir {} {
+        set currentDir ""
+        if {[info exists ::swank::lastDir]} {
+             set currentDir $::swank::lastDir
+        }
+        if {$currentDir == ""} {
+            set currentDir $env(HOME)
+        }
+        return $currentDir
+    }
     proc help {args} {
         if {[llength $args] == 0} {
         } else {
