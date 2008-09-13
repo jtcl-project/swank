@@ -2,6 +2,7 @@
 (^|/)\.hg($|/)
 (^|/)\.hgtags($|/)
 (.*)\.tar\.gz
+wisk
 gensrc
 build
 hbuild
