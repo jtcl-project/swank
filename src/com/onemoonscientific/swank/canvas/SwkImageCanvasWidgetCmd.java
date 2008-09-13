@@ -72,12 +72,6 @@ public class SwkImageCanvasWidgetCmd implements Command {
 
         this.interp = interp;
 
-        /*
-        for (i=0;i<argv.length;i++) {
-            System.out.print(argv[i]+" ");
-        }
-        System.out.println("");
-         */
         final int opt = TclIndex.get(interp, argv[1], validCmds, "option", 0);
 
         /*
@@ -107,7 +101,6 @@ public class SwkImageCanvasWidgetCmd implements Command {
             if (argv.length < 3) {
                 throw new TclNumArgsException(interp, 2, argv, "option");
             }
-
             if (argv.length == 3) {
                 interp.setResult((new SwkShapeItemGet(interp, swkImageCanvas,
                         argv[2].toString(), null)).exec(true));
