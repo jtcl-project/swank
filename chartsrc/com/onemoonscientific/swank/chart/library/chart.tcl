@@ -98,6 +98,30 @@ proc ::swank::chart::addData {chart xy yNames {shapesVisible {}}  {linesVisible 
     refreshChart $chart 
 }
 
+proc ::swank::chart::addXYYData {chart xValues yValueLists yNames {shapesVisible {}}  {linesVisible {}} {colors {}}} {
+    variable chartData
+    set c $chartData($chart,canvas)
+    set xData [java::new java.util.ArrayList]
+    
+    foreach x $xValues {
+       $xData add [java::new java.lang.Double $x]
+    }
+    foreach yValueList $yValueLists {
+        set yData [java::new java.util.ArrayList]
+        foreach y $yValueList {
+           $yData add [java::new java.lang.Double $y]
+        }
+        lappend ySets $yData
+    }
+    set chartData($chart,xData) $xData
+    set chartData($chart,ySets) $ySets
+    set chartData($chart,yNames) $yNames
+    set chartData($chart,shapesVisible) $shapesVisible
+    set chartData($chart,linesVisible) $linesVisible
+    set chartData($chart,colors) $colors
+    refreshChart $chart
+}
+
 
 proc ::swank::chart::toolTip {c mode item x y} {
     if {$mode == "enter"} {
@@ -191,6 +215,22 @@ proc ::swank::chart::demoXY {chart} {
    ::swank::chart::addData $chart $values Test 1 1 blue
 }
 
+proc ::swank::chart::demoXYY {chart} {
+   set n 200
+   set xValues [list]
+   set yValues0 [list]
+   set yValues1 [list]
+   set yValueLists [list]
+   for {set i 0} {$i < $n} {incr i} {
+        lappend xValues $i
+        lappend yValues0 [expr {sin($i/10.0)}]
+        lappend yValues1 [expr {cos($i/10.0)}]
+   }
+   lappend yValueLists $yValues0
+   lappend yValueLists $yValues1
+   ::swank::chart::addXYYData $chart $xValues $yValueLists "Sin Cos"  "1 1" "1 1"  "blue red"
+}
+
 proc ::swank::chart::demoBar {chart} {
    set values "a 1 3.0 a 2 5.1 a 3 2.2 b 1 3.4 b 2 5.5 b 3 2.6" 
    ::swank::chart::addBarChart $chart $values
@@ -199,7 +239,7 @@ proc ::swank::chart::demoBar {chart} {
 proc ::swank::chart::demo {} {
     ::swank::chart::makeAll .xychart xychart X Y xy
     wm geometry .xychart 500x300+50+50
-    ::swank::chart::demoXY xychart
+    ::swank::chart::demoXYY xychart
 
     ::swank::chart::makeAll .barchart barchart X Y bar
     wm geometry .barchart 500x300+50+400
