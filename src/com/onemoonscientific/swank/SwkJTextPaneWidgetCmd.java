@@ -555,7 +555,7 @@ class SwkJTextPaneWidgetCmd implements Command {
 
         if ((countVar != null) && (result.i >= 0)) {
             TclObject tObj = TclInteger.newInstance(result.i);
-            interp.setVar(countVar, tObj, TCL.GLOBAL_ONLY);
+            interp.setVar(countVar, tObj, 0);
         }
 
         interp.setResult(result.s);
