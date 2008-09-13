@@ -79,7 +79,6 @@ public abstract class SwkShape implements SwkShapeConfig {
     SwkImageCanvas canvas = null;
     boolean xorMode = false;
     Composite composite = null;
-
     public SwkShape() {
     }
 
@@ -243,9 +242,7 @@ public abstract class SwkShape implements SwkShapeConfig {
     public void paintShape(Graphics2D g2) {
     }
 
-    CanvasParameter[] getParameters() {
-        return null;
-    }
+    public abstract CanvasParameter[] getParameters();
 
     public void configOld(Interp interp, TclObject[] argv, int start)
         throws TclException {
@@ -316,6 +313,7 @@ public abstract class SwkShape implements SwkShapeConfig {
             CanvasParameter cPar = null;
 
             cPar = CanvasParameter.getStdPar(argv[i].toString());
+           //  Mostly not used as custom pars are added automatically to stdPars
 
             if (cPar == null) {
                 String parName = "com.onemoonscientific.swank.canvas." +
@@ -575,6 +573,10 @@ public abstract class SwkShape implements SwkShapeConfig {
     public static void initializeParameters(CanvasParameter[] params, Map map) {
         for (int i = 0; i < params.length; i++) {
             map.put(((CanvasParameter) params[i]).getName(), params[i]);
+            CanvasParameter cPar = CanvasParameter.getStdPar(params[i].getName());
+            if (cPar == null) {
+                CanvasParameter.addParameter(params[i]);
+            }
         }
     }
 
