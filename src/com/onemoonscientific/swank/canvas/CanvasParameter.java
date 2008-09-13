@@ -50,7 +50,6 @@ public abstract class CanvasParameter implements CanvasParameterConfigure,
 
     /*
     public int compare(Object o1, Object o2) {
-            System.out.println("compare now");
         if (o1 == null) {
             throw new NullPointerException();
         }
@@ -106,10 +105,8 @@ public abstract class CanvasParameter implements CanvasParameterConfigure,
         throws TclException {
     }
 
-    public TclObject getValue(Interp interp, SwkShape swkShape)
-        throws TclException {
-        return null;
-    }
+    public abstract TclObject getValue(Interp interp, SwkShape swkShape)
+        throws TclException;
 
     public static void addParameter(CanvasParameter par) {
         if (stdMap == null) {
