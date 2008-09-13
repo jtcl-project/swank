@@ -176,7 +176,7 @@ public class NumberAxisShape extends SwkShape {
         //shape = aT.createTransformedShape(gPath);
     }
 
-    CanvasParameter[] getParameters() {
+    public CanvasParameter[] getParameters() {
         return parameters;
     }
 
@@ -208,7 +208,7 @@ public class NumberAxisShape extends SwkShape {
             return name;
         }
 
-        String getValue(SwkShape swkShape) {
+        public String getValue(SwkShape swkShape) {
             return ((NumberAxisShape) swkShape).axis.getLabel();
         }
 
@@ -228,7 +228,7 @@ public class NumberAxisShape extends SwkShape {
             return name;
         }
 
-        String getValue(SwkShape swkShape) {
+        public String getValue(SwkShape swkShape) {
             return ((NumberAxisShape) swkShape).edgeString;
         }
 
@@ -262,7 +262,7 @@ public class NumberAxisShape extends SwkShape {
             return name;
         }
 
-        double getValue(SwkShape swkShape) {
+        public double getValue(SwkShape swkShape) {
             return ((NumberAxisShape) swkShape).cursor;
         }
 
@@ -281,7 +281,7 @@ public class NumberAxisShape extends SwkShape {
             return name;
         }
 
-        double getValue(SwkShape swkShape) {
+        public double getValue(SwkShape swkShape) {
             return ((NumberAxis) ((NumberAxisShape) swkShape).axis).getLowerBound();
         }
 
@@ -300,7 +300,7 @@ public class NumberAxisShape extends SwkShape {
             return name;
         }
 
-        double getValue(SwkShape swkShape) {
+        public double getValue(SwkShape swkShape) {
             return ((NumberAxis) ((NumberAxisShape) swkShape).axis).getUpperBound();
         }
 

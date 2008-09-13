@@ -152,7 +152,7 @@ public class CategoryPlotShape extends SwkShape {
         //shape = aT.createTransformedShape(gPath);
     }
 
-    CanvasParameter[] getParameters() {
+    public CanvasParameter[] getParameters() {
         return parameters;
     }
 
@@ -185,7 +185,7 @@ public class CategoryPlotShape extends SwkShape {
             return name;
         }
 
-        String getValue(SwkShape swkShape) {
+        public String getValue(SwkShape swkShape) {
              DefaultCategoryData categoryData = (DefaultCategoryData) ((CategoryPlotShape) swkShape).plot.getDataset();
              return categoryData.getName();
         }
@@ -207,7 +207,7 @@ public class CategoryPlotShape extends SwkShape {
             return name;
         }
 
-        String getValue(SwkShape swkShape) {
+        public String getValue(SwkShape swkShape) {
             return ((CategoryPlotShape) swkShape).domainAxisTag;
         }
 
@@ -239,7 +239,7 @@ public class CategoryPlotShape extends SwkShape {
             return name;
         }
 
-        String getValue(SwkShape swkShape) {
+        public String getValue(SwkShape swkShape) {
             return ((CategoryPlotShape) swkShape).rangeAxisTag;
         }
 

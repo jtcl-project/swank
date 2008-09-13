@@ -154,7 +154,7 @@ public class BoxPlotShape extends SwkShape {
         //shape = aT.createTransformedShape(gPath);
     }
 
-    CanvasParameter[] getParameters() {
+    public CanvasParameter[] getParameters() {
         return parameters;
     }
 
@@ -187,7 +187,7 @@ public class BoxPlotShape extends SwkShape {
             return name;
         }
 
-        String getValue(SwkShape swkShape) {
+        public String getValue(SwkShape swkShape) {
              BoxAndWhiskerTableData categoryData = (BoxAndWhiskerTableData) ((BoxPlotShape) swkShape).plot.getDataset();
              return categoryData.getName();
         }
@@ -209,7 +209,7 @@ public class BoxPlotShape extends SwkShape {
             return name;
         }
 
-        String getValue(SwkShape swkShape) {
+        public String getValue(SwkShape swkShape) {
             return ((BoxPlotShape) swkShape).domainAxisTag;
         }
 
@@ -241,7 +241,7 @@ public class BoxPlotShape extends SwkShape {
             return name;
         }
 
-        String getValue(SwkShape swkShape) {
+       public  String getValue(SwkShape swkShape) {
             return ((BoxPlotShape) swkShape).rangeAxisTag;
         }
 

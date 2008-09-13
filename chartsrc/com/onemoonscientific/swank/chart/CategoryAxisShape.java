@@ -175,10 +175,10 @@ public class CategoryAxisShape extends SwkShape {
 
         //shape = aT.createTransformedShape(gPath);
     }
-
-    CanvasParameter[] getParameters() {
+    public CanvasParameter[] getParameters() {
         return parameters;
     }
+
 
     public Map getParameterMap() {
         return parameterMap;
@@ -208,7 +208,7 @@ public class CategoryAxisShape extends SwkShape {
             return name;
         }
 
-        String getValue(SwkShape swkShape) {
+        public String getValue(SwkShape swkShape) {
             return ((CategoryAxisShape) swkShape).axis.getLabel();
         }
 
@@ -228,7 +228,7 @@ public class CategoryAxisShape extends SwkShape {
             return name;
         }
 
-        String getValue(SwkShape swkShape) {
+        public String getValue(SwkShape swkShape) {
             return ((CategoryAxisShape) swkShape).edgeString;
         }
 
@@ -262,7 +262,7 @@ public class CategoryAxisShape extends SwkShape {
             return name;
         }
 
-        double getValue(SwkShape swkShape) {
+        public double getValue(SwkShape swkShape) {
             return ((CategoryAxisShape) swkShape).cursor;
         }
 
@@ -281,7 +281,7 @@ public class CategoryAxisShape extends SwkShape {
             return name;
         }
 
-        double getValue(SwkShape swkShape) {
+        public double getValue(SwkShape swkShape) {
             return ((CategoryAxis) ((CategoryAxisShape) swkShape).axis).getLowerMargin();
         }
 
@@ -300,7 +300,7 @@ public class CategoryAxisShape extends SwkShape {
             return name;
         }
 
-        double getValue(SwkShape swkShape) {
+        public double getValue(SwkShape swkShape) {
             return ((CategoryAxis) ((CategoryAxisShape) swkShape).axis).getUpperMargin();
         }
 

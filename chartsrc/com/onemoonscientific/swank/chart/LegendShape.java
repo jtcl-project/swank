@@ -131,7 +131,7 @@ public class LegendShape extends SwkShape {
         
     }
     
-    CanvasParameter[] getParameters() {
+    public CanvasParameter[] getParameters() {
         return parameters;
     }
     
@@ -226,7 +226,7 @@ public class LegendShape extends SwkShape {
             return name;
         }
         
-        String getValue(SwkShape swkShape) {
+        public String getValue(SwkShape swkShape) {
             return ((LegendShape) swkShape).edgeString;
         }
         
@@ -259,7 +259,7 @@ public class LegendShape extends SwkShape {
             return name;
         }
         
-        String getValue(SwkShape swkShape) {
+        public String getValue(SwkShape swkShape) {
             return ((LegendShape) swkShape).plotTag;
         }
         
