@@ -151,7 +151,11 @@ class SwkJTreeWidgetCmd implements Command {
         } else if (argv[2].toString().equals("count")) {
             TreePath treePath = (new Path()).exec(swkjtree);
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) treePath.getLastPathComponent();
-            interp.setResult(node.getChildCount());
+            if (node == null) {
+                 interp.resetResult();
+            } else {
+                interp.setResult(node.getChildCount());
+            }
         }
     }
 
