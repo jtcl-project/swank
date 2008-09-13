@@ -174,5 +174,7 @@ public class WidgetExt extends Extension {
             "com.onemoonscientific.swank.TkMessageBox");
         Extension.loadOnDemand(interp, "embed",
             "com.onemoonscientific.swank.EmbedCmd");
+        Extension.loadOnDemand(interp, "password",
+            "com.onemoonscientific.swank.PasswordCmd");
     }
 }
