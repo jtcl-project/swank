@@ -28,8 +28,6 @@ import tcl.lang.*;
 
 import java.awt.*;
 
-import java.lang.*;
-
 import java.util.*;
 
 import javax.swing.*;
