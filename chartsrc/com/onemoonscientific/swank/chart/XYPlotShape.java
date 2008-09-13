@@ -182,7 +182,7 @@ public class XYPlotShape extends SwkShape {
         //shape = aT.createTransformedShape(gPath);
     }
 
-    CanvasParameter[] getParameters() {
+    public CanvasParameter[] getParameters() {
         return parameters;
     }
 
@@ -198,6 +198,28 @@ public class XYPlotShape extends SwkShape {
         Point2D anchor = new Point2D.Double();
         applyCoordinates();
         plot.draw(g2, plotArea, anchor, null, state);
+        ValueAxis dAxis = plot.getDomainAxis();
+        double lowerBoundX = dAxis.getLowerBound();
+        double upperBoundX = dAxis.getUpperBound();
+        ValueAxis rAxis = plot.getRangeAxis();
+        double lowerBoundY = rAxis.getLowerBound();
+        double upperBoundY= rAxis.getUpperBound();
+        double plotX = plot.getAxisOffset().getLeft();
+         Rectangle2D dataArea = state.getDataArea();
+        double x1 = dataArea.getMinX();
+        double x2 = dataArea.getMaxX();
+        double y1 = dataArea.getMinY();
+        double y2 = dataArea.getMaxY();
+        double scaleX = (x2-x1) /(upperBoundX-lowerBoundX);
+        double scaleY = (y2-y1) /(lowerBoundY-upperBoundY);
+        SwkImageCanvas canvas = getCanvas();
+        Transformer plotTransformer =canvas.setTransformer("xyplot", this);
+        AffineTransform aT = plotTransformer.getTransform();
+        aT.setToIdentity();
+        aT.translate(x1,y1);
+        aT.scale(scaleX, scaleY);
+        aT.translate(-lowerBoundX,-upperBoundY);
+  
     }
 
     public void addSymbol(float x1, float y1, float radius) {
@@ -215,7 +237,7 @@ public class XYPlotShape extends SwkShape {
             return name;
         }
 
-        String getValue(SwkShape swkShape) {
+        public String getValue(SwkShape swkShape) {
              XYData xyData = (XYData) ((XYPlotShape) swkShape).plot.getDataset();
              return xyData.getName();
         }
@@ -237,7 +259,7 @@ public class XYPlotShape extends SwkShape {
             return name;
         }
 
-        String getValue(SwkShape swkShape) {
+        public String getValue(SwkShape swkShape) {
             return ((XYPlotShape) swkShape).domainAxisTag;
         }
 
@@ -269,7 +291,7 @@ public class XYPlotShape extends SwkShape {
             return name;
         }
 
-        String getValue(SwkShape swkShape) {
+        public String getValue(SwkShape swkShape) {
             return ((XYPlotShape) swkShape).rangeAxisTag;
         }
 
