@@ -8,6 +8,7 @@
   <property name="dir.gensrc" value="gensrc"/>
   <property name="dir.build" value="build"/>
   <property name="dir.hbuild" value="hbuild"/>
+  <property name="dir.3dbuild" value="3dbuild"/>
   <property name="dir.chartbuild" value="chartbuild"/>
   <property name="dir.dist" value="dist"/>
   <property name="dir.libs" value="../../libs"/>
@@ -37,6 +38,7 @@
     <mkdir dir="${dir.gensrc}/com/onemoonscientific/swank/canvas"/>
     <mkdir dir="${dir.hbuild}"/>
     <mkdir dir="${dir.chartbuild}"/>
+    <mkdir dir="${dir.3dbuild}"/>
   </target>
 
   <path id="jacl.classpath">
@@ -50,6 +52,9 @@
   </path>
   <path id="chart.classpath">
      <pathelement  path="${dir.build}:${dir.libs}/jacl.jar:${dir.libs}/tcljava.jar:${dir.libs}/itcl.jar:${dir.libs}/janino.jar:${dir.libs}/tjc.jar:${dir.libs}/jcommon.jar:${dir.libs}/jfreechart.jar:${dir.dist}/lib/swank.jar"/>
+  </path>
+  <path id="canvas3d.classpath">
+     <pathelement  path="${dir.build}:${dir.libs}/jacl.jar:${dir.libs}/tcljava.jar:${dir.libs}/itcl.jar:${dir.libs}/janino.jar:${dir.libs}/tjc.jar:${dir.dist}/lib/swank.jar"/>
   </path>
 
   <target depends="prepare" description="compile the source " name="compile_swank">
@@ -72,6 +77,13 @@
     <!-- Compile the java code from ${dir.chartsrc} into ${dir.chartbuild} -->
     <javac debug="true" destdir="${dir.chartbuild}" srcdir="${dir.chartsrc}">
          <classpath refid="chart.classpath"/>
+    </javac>
+  </target>
+
+  <target depends="prepare" description="compile the 3d files" name="compile_3d">
+    <!-- Compile the java code from ${dir.src3d} into ${dir.3dbuild} -->
+    <javac debug="true" destdir="${dir.3dbuild}" srcdir="${dir.src3d}">
+         <classpath refid="canvas3d.classpath"/>
     </javac>
   </target>
 
