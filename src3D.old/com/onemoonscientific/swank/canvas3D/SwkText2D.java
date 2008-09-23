@@ -14,11 +14,11 @@ import javax.media.j3d.*;
 import javax.vecmath.*;
 
 
-public class SwkText2D extends SwkShape {
+public class SwkText2D extends SwkShape3D {
     String text = "duck";
     Point3d a = new Point3d();
 
-    SwkText2D(SwkCanvas canvas) {
+    SwkText2D(SwkCanvas3D canvas) {
         super(canvas);
     }
 
@@ -38,7 +38,7 @@ public class SwkText2D extends SwkShape {
         interp.setResult(list);
     }
 
-    public void coords(Interp interp, SwkCanvas canvas, TclObject[] argv,
+    public void coords(Interp interp, SwkCanvas3D canvas, TclObject[] argv,
         int start) throws TclException {
         a.x = TclDouble.get(interp, argv[start]);
         a.y = TclDouble.get(interp, argv[start + 1]);
@@ -75,7 +75,7 @@ public class SwkText2D extends SwkShape {
                 text = new String(argv[i + 1].toString());
                 doGen = true;
             } else if (argv[i].toString().startsWith("-tag")) {
-             // fixme   canvas.setTags(interp, argv[i + 1], (SwkShape) this);
+                canvas.setTags(interp, argv[i + 1], (SwkShape3D) this);
             }
 
             doGen = true;

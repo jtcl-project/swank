@@ -4,7 +4,6 @@ import com.onemoonscientific.swank.*;
 
 import tcl.lang.*;
 
-import java.awt.*;
 
 import java.util.*;
 
@@ -40,7 +39,7 @@ class SwkCanvas3DWidgetCmd implements Command {
         }
 
         int opt = TclIndex.get(interp, argv[1], validCmds, "option", 0);
-        TclObject tObj = (TclObject) Widgets.theWidgets.get(argv[0].toString());
+        TclObject tObj = (TclObject) Widgets.getWidget(interp,argv[0].toString());
 
         if (tObj == null) {
             throw new TclException(interp,

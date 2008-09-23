@@ -9,8 +9,6 @@ package com.onemoonscientific.swank.canvas3D;
 
 import com.onemoonscientific.swank.*;
 
-import com.sun.j3d.utils.geometry.*;
-
 import tcl.lang.*;
 
 import java.awt.*;
@@ -26,21 +24,17 @@ import java.net.*;
 
 import java.util.*;
 
-import javax.media.j3d.*;
-
 import javax.swing.*;
 import javax.swing.text.*;
 import javax.swing.tree.*;
 
-import javax.vecmath.*;
+public class SwkCanvasWidgetCmd implements Command {
 
-
-class SwkCanvasWidgetCmd implements Command {
     static final private String[] validCmds = {
         "cget", "configure", "object", "jadd", "create", "itemconfigure",
-        "coords", "hit", "itemget", "find", "move", "scale", "delete", "addtag",
+        "coords", "hit", "itemcget", "find", "move", "scale", "delete", "addtag",
         "bind", "raise", "lower", "dtag", "gettags", "canvasx", "canvasy",
-        "copy", "index", "view", "center", "transform"
+        "copy", "index", "newtype", "bbox", "type", "zoom", "transformer"
     };
     static final private int OPT_CGET = 0;
     static final private int OPT_CONFIGURE = 1;
@@ -50,7 +44,7 @@ class SwkCanvasWidgetCmd implements Command {
     static final private int OPT_ITEMCONFIG = 5;
     static final private int OPT_COORDS = 6;
     static final private int OPT_HIT = 7;
-    static final private int OPT_ITEMGET = 8;
+    static final private int OPT_ITEMCGET = 8;
     static final private int OPT_FIND = 9;
     static final private int OPT_MOVE = 10;
     static final private int OPT_SCALE = 11;
@@ -65,664 +59,257 @@ class SwkCanvasWidgetCmd implements Command {
     static final private int OPT_CANVASY = 20;
     static final private int OPT_COPY = 21;
     static final private int OPT_INDEX = 22;
-    static final private int OPT_VIEW = 23;
-    static final private int OPT_CENTER = 24;
-    static final private int OPT_TRANSFORM = 25;
+    static final private int OPT_NEWTYPE = 23;
+    static final private int OPT_BBOX = 24;
+    static final private int OPT_TYPE = 25;
+    static final private int OPT_ZOOM = 26;
+    static final private int OPT_TRANSFORMER = 27;
+    static boolean gotDefaults = false;
+    Map newTypes = new HashMap();
+    Interp interp = null;
 
-    public void cmdProc(Interp interp, TclObject[] argv)
-        throws TclException {
+    public static String[] getValidCmds() {
+        return validCmds;
+    }
+
+    public void cmdProc(final Interp interp, final TclObject[] argv)
+            throws TclException {
         int i;
-        boolean gotDefaults = false;
-        Vector shapeList = null;
 
         if (argv.length < 2) {
             throw new TclNumArgsException(interp, 1, argv,
-                "option ?arg arg ...?");
+                    "option ?arg arg ...?");
         }
 
-        int opt = TclIndex.get(interp, argv[1], validCmds, "option", 0);
-        TclObject tObj = (TclObject) Widgets.theWidgets.get(argv[0].toString());
+        this.interp = interp;
+
+        final int opt = TclIndex.get(interp, argv[1], validCmds, "option", 0);
+        final TclObject tObj = (TclObject) Widgets.getWidget(interp, argv[0].toString());
 
         if (tObj == null) {
             throw new TclException(interp,
-                "bad window path name \"" + argv[0].toString() + "\"");
+                    "bad window path name \"" + argv[0].toString() + "\"");
         }
 
-        SwkCanvas3D swkcanvas = (SwkCanvas3D) ReflectObject.get(interp, tObj);
+        final SwkCanvas swkcanvas = (SwkCanvas) ReflectObject.get(interp, tObj);
+        final SwkImageCanvas swkImageCanvas = swkcanvas.getSwkImageCanvas();
 
         switch (opt) {
-        case OPT_CGET:
+            case OPT_CGET:
 
-            if (argv.length != 3) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
+                if (argv.length != 3) {
+                    throw new TclNumArgsException(interp, 2, argv, "option");
+                }
 
-            interp.setResult(jget(interp, swkcanvas, argv[2]));
+                interp.setResult(swkcanvas.jget(interp, argv[2]));
 
-            break;
+                break;
 
-        case OPT_CONFIGURE:
+            case OPT_CONFIGURE:
 
-            if (!gotDefaults) {
-                swkcanvas.setResourceDefaults();
-                gotDefaults = true;
-            }
+                if (!gotDefaults) {
+                    swkcanvas.setResourceDefaults();
+                    gotDefaults = true;
+                }
 
-            if (argv.length == 2) {
-                String keyName;
-                ResourceObject ro;
-                String result;
-                TclObject list2 = TclList.newInstance();
-                Enumeration e = SwkCanvas3D.resourceDB.keys();
-
-                while (e.hasMoreElements()) {
-                    TclObject list1 = TclList.newInstance();
-                    keyName = (String) e.nextElement();
-
-                    if (keyName == null) {
-                        continue;
-                    }
-
-                    ro = (ResourceObject) SwkCanvas3D.resourceDB.get(keyName);
-
-                    if (ro == null) {
-                        continue;
-                    }
-
-                    tObj = TclString.newInstance(keyName);
-
-                    try {
-                        result = jget(interp, swkcanvas, tObj);
-                    } catch (TclException tclE) {
-                        continue;
-                    }
-
-                    TclList.append(interp, list1, tObj);
-                    TclList.append(interp, list1,
-                        TclString.newInstance(ro.resource));
-                    TclList.append(interp, list1,
-                        TclString.newInstance(ro.className));
-
-                    if (ro.defaultVal == null) {
-                        TclList.append(interp, list1, TclString.newInstance(""));
-                    } else {
-                        TclList.append(interp, list1,
+                if (argv.length == 2) {
+                    swkcanvas.jgetAll(interp);
+                } else if (argv.length == 3) {
+                    String result = swkcanvas.jget(interp, argv[2]);
+                    ResourceObject ro = (ResourceObject) SwkCanvas.resourceDB.get(argv[2].toString());
+                    TclObject list = TclList.newInstance();
+                    TclList.append(interp, list,
+                            TclString.newInstance(argv[2].toString()));
+                    TclList.append(interp, list, TclString.newInstance(ro.resource));
+                    TclList.append(interp, list, TclString.newInstance(ro.className));
+                    TclList.append(interp, list,
                             TclString.newInstance(ro.defaultVal));
-                    }
-
-                    if (result == null) {
-                        result = "";
-                    }
-
-                    TclList.append(interp, list1, TclString.newInstance(result));
-                    TclList.append(interp, list2, list1);
+                    TclList.append(interp, list, TclString.newInstance(result));
+                    interp.setResult(list);
+                } else {
+                    swkcanvas.configure(interp, argv, 2);
                 }
 
-                interp.setResult(list2);
-            } else if (argv.length == 3) {
-                String result = jget(interp, swkcanvas, argv[2]);
-                ResourceObject ro = (ResourceObject) SwkCanvas3D.resourceDB.get(argv[2].toString());
-                TclObject list = TclList.newInstance();
-                TclList.append(interp, list,
-                    TclString.newInstance(argv[2].toString()));
-                TclList.append(interp, list, TclString.newInstance(ro.resource));
-                TclList.append(interp, list, TclString.newInstance(ro.className));
-                TclList.append(interp, list,
-                    TclString.newInstance(ro.defaultVal));
-                TclList.append(interp, list, TclString.newInstance(result));
-                interp.setResult(list);
-            } else {
-                configure(interp, swkcanvas, argv, 2);
-            }
+                break;
 
-            break;
+            case OPT_OBJECT:
+                interp.setResult(tObj);
 
-        case OPT_OBJECT:
-            interp.setResult(tObj);
+                break;
 
-            break;
+            case OPT_JADD:
 
-        case OPT_JADD:
-
-            if (argv.length != 3) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-
-            jadd(interp, swkcanvas, argv[2]);
-
-            break;
-
-        case OPT_CREATE:
-
-            SwkShape3D swkShape = null;
-
-            if (argv.length < 3) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-
-            if (argv[2].toString().equals("sphere")) {
-                if (argv.length < 6) {
-                    throw new TclNumArgsException(interp, 3, argv, "option");
+                if (argv.length != 3) {
+                    throw new TclNumArgsException(interp, 2, argv, "option");
                 }
 
-                if (((argv.length - 6) % 2) != 0) {
-                    throw new TclNumArgsException(interp, 3, argv, "option");
+                jadd(interp, swkcanvas, argv[2]);
+
+                break;
+
+            case OPT_CREATE:
+                create(interp, swkImageCanvas, argv);
+
+                break;
+
+            case OPT_ITEMCONFIG:
+                if (argv.length < 3) {
+                    throw new TclNumArgsException(interp, 2, argv, "option");
                 }
-
-                SwkSphere swkSphere = new SwkSphere(swkcanvas);
-                swkSphere.coords(interp, swkcanvas, argv, 3);
-                swkSphere.config(interp, argv, 6);
-                swkSphere.genShape();
-                swkcanvas.addShape(swkSphere);
-                swkcanvas.repaint();
-                interp.setResult(swkSphere.id);
-            } else if ("cylinder".startsWith(argv[2].toString())) {
-                if (argv.length < 9) {
-                    throw new TclNumArgsException(interp, 3, argv, "option");
-                }
-
-                if (((argv.length - 9) % 2) != 0) {
-                    throw new TclNumArgsException(interp, 3, argv, "option");
-                }
-
-                SwkCylinder swkCylinder = new SwkCylinder(swkcanvas);
-                swkCylinder.coords(interp, swkcanvas, argv, 3);
-                swkCylinder.config(interp, argv, 9);
-                swkCylinder.genShape();
-                swkcanvas.addShape(swkCylinder);
-                swkcanvas.repaint();
-                interp.setResult(swkCylinder.id);
-            } else if ("text2d".startsWith(argv[2].toString())) {
-                if (argv.length < 6) {
-                    throw new TclNumArgsException(interp, 3, argv, "option");
-                }
-
-                if (((argv.length - 6) % 2) != 0) {
-                    throw new TclNumArgsException(interp, 3, argv, "option");
-                }
-
-                System.out.println("create swkText2D");
-
-                SwkText2D swkText2D = new SwkText2D(swkcanvas);
-                System.out.println("created swkText2D " + swkText2D.toString());
-                swkText2D.coords(interp, swkcanvas, argv, 3);
-                System.out.println("coords");
-                swkText2D.config(interp, argv, 6);
-                System.out.println("configed");
-                swkText2D.genShape();
-                System.out.println("gened");
-                swkcanvas.addShape(swkText2D);
-                swkcanvas.repaint();
-                interp.setResult(swkText2D.id);
-            } else {
-                Class newClass = null;
-
-                try {
-                    newClass = Class.forName(argv[2].toString());
-                } catch (ClassNotFoundException cnfE) {
-                    throw new TclException(interp,
-                        "class " + argv[2].toString() + " doesn't exist");
-                }
-
-                Object newObject = null;
-
-                try {
-                    newObject = newClass.newInstance();
-                } catch (InstantiationException iE) {
-                    throw new TclException(interp,
-                        "class " + argv[2].toString() +
-                        " can't be instantiated");
-                } catch (IllegalAccessException iaE) {
-                    throw new TclException(interp,
-                        "class " + argv[2].toString() +
-                        " can't be illegal access ");
-                }
-
-                if (!(newObject instanceof SwkShape3D)) {
-                    throw new TclException(interp,
-                        "class " + argv[2].toString() +
-                        " can't be illegal access");
-                }
-
-                swkShape = (SwkShape3D) newObject;
-                swkShape.setCanvas(swkcanvas);
-                swkShape.coords(interp, swkcanvas, argv, 3);
-                swkShape.config(interp, argv, 6);
-                swkcanvas.addShape(swkShape);
-                swkcanvas.repaint();
-                interp.setResult(swkShape.id);
-            }
-
-            break;
-
-        case OPT_ITEMCONFIG:
-
-            if (argv.length < 3) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-
-            shapeList = swkcanvas.getShapesWithTags(interp, argv[2]);
-
-            for (i = 0; i < shapeList.size(); i++) {
-                swkShape = (SwkShape3D) shapeList.elementAt(i);
-                swkShape.config(interp, argv, 3);
-            }
-
-            swkcanvas.repaint();
-
-            break;
-
-        case OPT_INDEX:
-
-            if (argv.length != 4) {
-                throw new TclNumArgsException(interp, 2, argv, "tagOrId arg");
-            }
-
-            shapeList = swkcanvas.getShapesWithTags(interp, argv[2]);
-
-            if (shapeList.size() == 0) {
-                return;
-            }
-
-            swkShape = (SwkShape3D) shapeList.elementAt(0);
-            interp.setResult(swkShape.getIndex(interp, argv[3]));
-
-            break;
-
-        case OPT_ITEMGET:
-
-            if (argv.length != 4) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-
-            //swkShape = (SwkShape3D) swkcanvas.getShape(interp, argv[2]);
-            //interp.setResult(swkShape.itemGet(interp, argv[3]));
-            break;
-
-        case OPT_COORDS:
-
-            if (argv.length < 3) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-
-            shapeList = swkcanvas.getShapesWithTags(interp, argv[2]);
-
-            if (argv.length == 3) {
-                if (shapeList.size() != 1) {
-                    throw new TclException(interp,
-                        "Must specify exactly one shape");
-                }
-
-                swkShape = (SwkShape3D) shapeList.elementAt(0);
-                swkShape.coords(interp);
-            } else {
-                for (i = 0; i < shapeList.size(); i++) {
-                    swkShape = (SwkShape3D) shapeList.elementAt(i);
-                    swkShape.coords(interp, swkcanvas, argv, 3);
-                }
-            }
-
-            swkcanvas.repaint();
-
-            break;
-
-        case OPT_HIT:
-
-            if (argv.length != 5) {
-                throw new TclNumArgsException(interp, 2, argv, "item x y");
-            }
-
-            swkShape = null;
-
-            // swkShape = (SwkShape3D) swkcanvas.getShape(interp, argv[2]);
-            double scanX = TclDouble.get(interp, argv[3]);
-            double scanY = TclDouble.get(interp, argv[4]);
-            interp.setResult(swkShape.hit(scanX, scanY));
-
-            //swkcanvas.scanCanvas(scanX,scanY);
-            break;
-
-        case OPT_FIND:
-
-            if (argv.length < 3) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-
-            swkcanvas.search(interp, argv, 2);
-
-            break;
-
-        case OPT_DELETE:
-
-            if (argv.length < 3) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-
-            swkcanvas.delete(interp, argv, 2);
-            swkcanvas.repaint();
-
-            break;
-
-        case OPT_RAISE:
-
-            if ((argv.length != 3) && (argv.length != 4)) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-
-            if (argv.length == 3) {
-                //  swkcanvas.raise(interp, argv[2], null);
-            } else {
-                // swkcanvas.raise(interp, argv[2], argv[3]);
-            }
-
-            swkcanvas.repaint();
-
-            break;
-
-        case OPT_LOWER:
-
-            if ((argv.length != 3) && (argv.length != 4)) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-
-            if (argv.length == 3) {
-                //  swkcanvas.lower(interp, argv[2], null);
-            } else {
-                //  swkcanvas.lower(interp, argv[2], argv[3]);
-            }
-
-            swkcanvas.repaint();
-
-            break;
-
-        case OPT_MOVE:
-
-            if (argv.length != 5) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-
-            shapeList = swkcanvas.getShapesWithTags(interp, argv[2]);
-
-            double dX = SwankUtil.getTkSizeD(interp, (Component) swkcanvas,
-                    argv[3]);
-            double dY = SwankUtil.getTkSizeD(interp, (Component) swkcanvas,
-                    argv[4]);
-
-            for (i = 0; i < shapeList.size(); i++) {
-                swkShape = (SwkShape3D) shapeList.elementAt(i);
-                swkShape.move(dX, dY);
-            }
-
-            swkcanvas.repaint();
-
-            break;
-
-        case OPT_DTAG:
-
-            if ((argv.length != 3) && (argv.length != 4)) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-
-            shapeList = swkcanvas.getShapesWithTags(interp, argv[2]);
-
-            for (i = 0; i < shapeList.size(); i++) {
-                swkShape = (SwkShape3D) shapeList.elementAt(i);
 
                 if (argv.length == 3) {
-                    //   swkcanvas.removeTags(interp, argv[2], false, swkShape);
+                    interp.setResult((new SwkShapeItemGet(interp, swkImageCanvas,
+                            argv[2].toString(), null)).exec(true));
+                } else if (argv.length == 4) {
+                    interp.setResult((new SwkShapeItemGet(interp, swkImageCanvas,
+                            argv[2].toString(), argv[3].toString())).exec(true));
                 } else {
-                    //   swkcanvas.removeTags(interp, argv[3], false, swkShape);
+                    SwkShape.config(interp, swkImageCanvas, argv, 3);
                 }
-            }
 
-            swkcanvas.repaint();
+                break;
 
-            break;
+            case OPT_INDEX:
+                (new Index()).exec(interp, swkImageCanvas, argv);
 
-        case OPT_ADDTAG:
+                break;
 
-            if (argv.length < 4) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-
-            shapeList = swkcanvas.getShapesWithTags(interp, argv, 3);
-
-            for (i = 0; i < shapeList.size(); i++) {
-                System.out.println("add tag to " + i);
-                swkShape = (SwkShape3D) shapeList.elementAt(i);
-                swkcanvas.addTags(interp, argv[2], swkShape);
-            }
-
-            swkcanvas.repaint();
-
-            break;
-
-        case OPT_GETTAGS:
-
-            if (argv.length != 3) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-
-            shapeList = swkcanvas.getShapesWithTags(interp, argv[2]);
-
-            if (shapeList.size() > 0) {
-                swkShape = (SwkShape3D) shapeList.elementAt(0);
-                interp.setResult(swkcanvas.getTags(interp, swkShape));
-                swkcanvas.repaint();
-            }
-
-            break;
-
-        case OPT_BIND:
-
-            if (argv.length < 4) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-
-            SwkBinding binding = SwkBind.getBinding(interp, argv, 3);
-
-            /* FIXME
-                        if (binding != null) {
-                            swkcanvas.setupBinding(interp, binding, argv[2].toString());
-                        }
-            */
-            break;
-
-        case OPT_SCALE:
-
-            if (argv.length != 7) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-
-            shapeList = swkcanvas.getShapesWithTags(interp, argv[2]);
-
-            double xOrigin = TclDouble.get(interp, argv[3]);
-            double yOrigin = TclDouble.get(interp, argv[4]);
-            double xScale = TclDouble.get(interp, argv[5]);
-            double yScale = TclDouble.get(interp, argv[6]);
-
-            for (i = 0; i < shapeList.size(); i++) {
-                swkShape = (SwkShape3D) shapeList.elementAt(i);
-                swkShape.scale(xOrigin, yOrigin, xScale, yScale);
-            }
-
-            swkcanvas.repaint();
-
-            break;
-
-        case OPT_CANVASX:
-
-            if ((argv.length != 3) && (argv.length != 4)) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-
-            if (argv.length == 4) {
-                double grid = SwankUtil.getTkSizeD(interp,
-                        (Component) swkcanvas, argv[3]);
-                double x = TclDouble.get(interp, argv[2]);
-                interp.setResult((int) (Math.round(x / grid) * grid));
-            } else {
-                interp.setResult(TclDouble.get(interp, argv[2]));
-            }
-
-            break;
-
-        case OPT_CANVASY:
-
-            if ((argv.length != 3) && (argv.length != 4)) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-
-            if (argv.length == 4) {
-                double grid = SwankUtil.getTkSizeD(interp,
-                        (Component) swkcanvas, argv[3]);
-                double x = TclDouble.get(interp, argv[2]);
-                interp.setResult((int) (Math.round(x / grid) * grid));
-            } else {
-                interp.setResult(TclDouble.get(interp, argv[2]));
-            }
-
-            break;
-
-        case OPT_COPY: {
-            final Clipboard clipboard = Toolkit.getDefaultToolkit()
-                                               .getSystemClipboard();
-            System.out.println("exporting to clipboard");
-
-            // FIXME swkcanvas.copyImageToClipboard(clipboard);
-            interp.setResult("");
-
-            break;
-        }
-
-        case OPT_VIEW: {
-            if ((argv.length != 2) && (argv.length != 6)) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-
-            if (argv.length == 6) {
-                if (argv[2].toString().equals("eye")) {
-                    float x = (float) TclDouble.get(interp, argv[3]);
-                    float y = (float) TclDouble.get(interp, argv[4]);
-                    float z = (float) TclDouble.get(interp, argv[5]);
-                    swkcanvas.setEyePosition(x, y, z);
-                } else if (argv[2].toString().equals("center")) {
-                    float x = (float) TclDouble.get(interp, argv[3]);
-                    float y = (float) TclDouble.get(interp, argv[4]);
-                    float z = (float) TclDouble.get(interp, argv[5]);
-                    swkcanvas.setViewCenter(x, y, z);
-                } else if (argv[2].toString().equals("up")) {
-                    float x = (float) TclDouble.get(interp, argv[3]);
-                    float y = (float) TclDouble.get(interp, argv[4]);
-                    float z = (float) TclDouble.get(interp, argv[5]);
-                    swkcanvas.setUpDirection(x, y, z);
+            case OPT_ITEMCGET: {
+                if (argv.length != 4) {
+                    throw new TclNumArgsException(interp, 2, argv, "option");
                 }
-            } else {
-                Transform3D t3 = new Transform3D();
-                TransformGroup tG = swkcanvas.universe.getViewingPlatform()
-                                                      .getViewPlatformTransform();
-                tG.getTransform(t3);
-                interp.setResult(t3.toString());
+
+                interp.setResult((new SwkShapeItemGet(interp, swkImageCanvas,
+                        argv[2].toString(), argv[3].toString())).exec(false));
+
+                break;
             }
 
-            break;
-        }
+            case OPT_COORDS:
+                coords(interp, swkImageCanvas, argv);
 
-        case OPT_CENTER: {
-            if ((argv.length != 2) && (argv.length != 5)) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
+                break;
+
+            case OPT_HIT:
+                (new Hit()).exec(interp, swkImageCanvas, argv);
+
+                break;
+
+            case OPT_FIND:
+                (new Search()).exec(interp, swkImageCanvas, argv);
+
+                break;
+
+            case OPT_DELETE: {
+                (new Delete()).exec(interp, swkImageCanvas, argv);
+
+                break;
             }
 
-            if (argv.length == 5) {
-                double x = TclDouble.get(interp, argv[2]);
-                double y = TclDouble.get(interp, argv[3]);
-                double z = TclDouble.get(interp, argv[4]);
-                swkcanvas.setCenter((float) x, (float) y, (float) z);
-            } else {
-                interp.setResult(TclDouble.get(interp, argv[2]));
+            case OPT_RAISE:
+                (new RaiseOrLower()).raise(interp, swkImageCanvas, argv);
+
+                break;
+
+            case OPT_LOWER:
+                (new RaiseOrLower()).lower(interp, swkImageCanvas, argv);
+
+                break;
+
+            case OPT_MOVE: {
+                (new Move()).exec(interp, swkImageCanvas, argv);
+
+                break;
             }
 
-            break;
-        }
+            case OPT_DTAG: {
+                (new DTags()).exec(interp, swkImageCanvas, argv);
 
-        case OPT_TRANSFORM: {
-            if ((argv.length != 3) && (argv.length != 6)) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
+                break;
             }
 
-            if (argv[2].toString().equals("reset")) {
-                swkcanvas.resetTransform();
+            case OPT_ADDTAG: {
+                (new AddTag()).exec(interp, swkImageCanvas, argv);
+
+                break;
             }
 
-            break;
-        }
+            case OPT_GETTAGS:
+                (new GetTags()).exec(interp, swkImageCanvas, argv);
 
-        default:
-            throw new TclRuntimeError("TclIndex.get() error");
+                break;
+
+            case OPT_BIND:
+
+                if (argv.length < 4) {
+                    throw new TclNumArgsException(interp, 2, argv, "option");
+                }
+
+                SwkBinding binding = SwkBind.getBinding(interp, argv, 3);
+
+                if (binding != null) {
+                    SwkBind.updateBindingCommand(interp, binding, argv, 3);
+                    swkcanvas.setupBinding(interp, binding, argv[2].toString());
+                }
+
+                break;
+
+            case OPT_SCALE: {
+                (new Scale()).exec(interp, swkImageCanvas, argv);
+
+                break;
+            }
+
+            case OPT_ZOOM:
+                (new Zoom()).exec(interp, swkImageCanvas, argv);
+
+                break;
+
+            case OPT_CANVASY:
+            case OPT_CANVASX:
+                canvasXY(interp, swkcanvas, argv);
+
+                break;
+
+            case OPT_COPY: {
+                (new Copy()).exec(interp, swkcanvas, argv);
+
+                break;
+            }
+
+            case OPT_NEWTYPE: {
+                newType(interp, argv);
+
+                break;
+            }
+
+            case OPT_BBOX: {
+                (new BBox()).exec(interp, swkImageCanvas, argv);
+
+                break;
+            }
+
+            case OPT_TYPE: {
+                (new Type()).exec(interp, swkImageCanvas, argv);
+
+                break;
+            }
+
+            case OPT_TRANSFORMER: {
+                (new TransformerSet()).exec(interp, swkImageCanvas, argv);
+
+                break;
+            }
+
+            default:
+                throw new TclRuntimeError("TclIndex.get() error");
         }
     }
 
-    public static void configure(Interp interp, SwkCanvas3D swkcanvas,
-        TclObject[] argv, int start) throws TclException {
+    public static void jadd(Interp interp, SwkCanvas swkcanvas,
+            TclObject tclObject) throws TclException {
         int i;
-
-        if (argv.length <= start) {
-            return;
-        }
-
-        ResourceObject ro = null;
-
-        for (i = start; i < argv.length; i += 2) {
-            if ((i + 1) >= argv.length) {
-                throw new TclException(interp,
-                    "value for \"" + argv[i].toString() + "\" missing");
-            }
-
-            ro = (ResourceObject) SwkCanvas3D.resourceDB.get(argv[i].toString());
-
-            if (ro == null) {
-                throw new TclException(interp,
-                    "unknown option \"" + argv[i].toString() + "\"");
-            }
-
-            if (ro.defaultVal == null) {
-                ro.defaultVal = jget(interp, swkcanvas, argv[i]);
-            }
-
-            if (argv[i].toString().equals("-thread")) {
-                System.out.println("Current thread is " +
-                    Thread.currentThread().getName());
-            } else if (argv[i].toString().equals("-bg")) {
-                Color background = SwankUtil.getColor(interp, argv[i + 1]);
-                swkcanvas.setBackground3D(background);
-            } else if (argv[i].toString().equals("-background")) {
-                Color background = SwankUtil.getColor(interp, argv[i + 1]);
-                swkcanvas.setBackground3D(background);
-            } else {
-                throw new TclException(interp,
-                    "unknown option \"" + argv[i].toString() + "\"");
-            }
-        }
-    }
-
-    public static String jget(Interp interp, SwkCanvas3D swkcanvas,
-        TclObject tclObject) throws TclException {
-        if (tclObject.toString().equals("-thread")) {
-            return (Thread.currentThread().getName());
-        } else if (tclObject.toString().equals("-bg")) {
-            return (SwankUtil.parseColor(interp, swkcanvas.getBackground3D()));
-        } else if (tclObject.toString().equals("-background")) {
-            return (SwankUtil.parseColor(interp, swkcanvas.getBackground()));
-        }
-
-        throw new TclException(interp,
-            "unknown option \"" + tclObject.toString() + "\"");
-    }
-
-    public static void jadd(Interp interp, SwkCanvas3D swkcanvas,
-        TclObject tclObject) throws TclException {
-        int i;
-        TclObject tObj = (TclObject) Widgets.theWidgets.get(tclObject.toString());
+        TclObject tObj = (TclObject) Widgets.getWidget(interp, tclObject.toString());
 
         if (tObj != null) {
             Object object = ReflectObject.get(interp, tObj);
@@ -736,6 +323,1043 @@ class SwkCanvasWidgetCmd implements Command {
 
         if (tObj == null) {
             throw new TclException(interp, "Object not found");
+        }
+    }
+
+    int findCoords(Interp interp, TclObject[] argv, int start)
+            throws TclException {
+        int lastCoord = 0;
+
+        for (int i = start; i < argv.length; i++) {
+            lastCoord = i;
+
+            if (argv[i].toString().startsWith("-")) {
+                if (!Character.isDigit(argv[i].toString().charAt(1))) {
+                    lastCoord = i - 1;
+
+                    break;
+                }
+            }
+        }
+
+        return lastCoord;
+    }
+
+    double[] getCoords(Interp interp, SwkImageCanvas canvas, TclObject[] argv,
+            int start, int lastCoord) throws TclException {
+        int nCoords = lastCoord - start + 1;
+        double[] coords = null;
+
+        if (nCoords == 1) {
+            TclObject[] coordList = TclList.getElements(interp, argv[start]);
+
+            if ((coordList == null) || (coordList.length == 0)) {
+                return null;
+            }
+
+            coords = new double[coordList.length];
+
+            for (int i = 0; i < coords.length; i++) {
+                coords[i] = SwankUtil.getTkSizeD(interp, canvas.getComponent(),
+                        coordList[i]);
+            }
+        } else {
+            coords = new double[nCoords];
+
+            for (int i = start; i <= lastCoord; i++) {
+                coords[i - start] = SwankUtil.getTkSizeD(interp,
+                        canvas.getComponent(), argv[i]);
+            }
+        }
+
+        return coords;
+    }
+
+    void coords(Interp interp, SwkImageCanvas swkcanvas, TclObject[] argv)
+            throws TclException {
+        if (argv.length < 3) {
+            throw new TclNumArgsException(interp, 2, argv, "option");
+        }
+
+        if (argv.length == 3) {
+            (new CoordsGet()).exec(interp, swkcanvas, argv);
+        } else {
+            (new CoordsSet()).exec(interp, swkcanvas, argv);
+        }
+    }
+
+    void create(final Interp interp, final SwkImageCanvas swkcanvas,
+            final TclObject[] argv) throws TclException {
+        final SwkShape swkShape;
+        Vector shapeList = null;
+
+        if (argv.length < 3) {
+            throw new TclNumArgsException(interp, 2, argv,
+                    "type coords ?arg arg ...?");
+        }
+
+        if (argv.length < 4) {
+            throw new TclNumArgsException(interp, 3, argv,
+                    "coords ?arg arg ...?");
+        }
+
+        int lastCoord = findCoords(interp, argv, 3);
+        double[] coordArray = getCoords(interp, swkcanvas, argv, 3, lastCoord);
+        int n = coordArray.length/3;
+        float[] coords = new float[n*3];
+        float[] colors = new float[n*3];
+        float[] radii = new float[n];
+
+        for (int iElem = 0; iElem < n; iElem++) {
+            coords[iElem*3] = (float) coordArray[iElem];
+            coords[iElem*3+1] = (float) coordArray[iElem*3+1];
+            coords[iElem*3+2] = (float) coordArray[iElem*3+2];
+            colors[iElem*3] = 1.0f;
+            colors[iElem*3+1] = 1.0f;
+            colors[iElem*3+2] = 1.0f;
+            radii[iElem] = 1.0f; 
+        }
+
+        int id = swkcanvas.addSpheres(coords, colors, radii);
+
+        if (id >= 0) {
+            interp.setResult(id);
+        } else {
+            throw new TclException(interp,
+                    "couldn't add lines, no scene or root");
+        }
+
+//        try {
+//          } catch (SwkException swkE) {
+//            throw new TclException(interp, swkE.getMessage());
+//        }
+
+        swkcanvas.repaint(50);
+    }
+
+    void addShape(final SwkImageCanvas swkcanvas, final SwkShape swkShape) {
+        swkShape.id = swkcanvas.lastShapeId;
+        swkcanvas.lastShapeId++;
+
+        (new AddShape()).exec(swkcanvas, swkShape);
+
+    //  UpdateCmd.addRepaintRequest((JComponent) swkcanvas);
+    }
+
+    void canvasXY(Interp interp, SwkCanvas swkcanvas, TclObject[] argv)
+            throws TclException {
+        if ((argv.length != 3) && (argv.length != 4)) {
+            throw new TclNumArgsException(interp, 2, argv, "option");
+        }
+
+        if (argv.length == 4) {
+            double grid = SwankUtil.getTkSizeD(interp, (Component) swkcanvas,
+                    argv[3]);
+            double x = TclDouble.get(interp, argv[2]);
+            interp.setResult((int) (Math.round(x / grid) * grid));
+        } else {
+            interp.setResult(TclDouble.get(interp, argv[2]));
+        }
+    }
+
+    void newType(Interp interp, TclObject[] argv) throws TclException {
+        if (argv.length != 5) {
+            throw new TclNumArgsException(interp, 2, argv, "name class nCoords");
+        }
+
+        if (newTypes.containsKey(argv[2].toString())) {
+            throw new TclException(interp,
+                    "type \"" + argv[2].toString() + "\" already exists");
+        }
+
+        Class newClass = null;
+
+        try {
+            newClass = Class.forName(argv[3].toString());
+        } catch (ClassNotFoundException cnfE) {
+            throw new TclException(interp,
+                    "class " + argv[3].toString() + " doesn't exist " +
+                    cnfE.toString());
+        }
+
+        int nCoords = TclInteger.get(interp, argv[4]);
+        CanvasType canvasType = new CanvasType(newClass, nCoords);
+        newTypes.put(argv[2].toString(), canvasType);
+    }
+
+    static void getResult(Interp interp, ArrayList shapeList)
+            throws TclException {
+        TclObject list = TclList.newInstance();
+
+        if (shapeList != null) {
+            for (int j = 0; j < shapeList.size(); j++) {
+                int id = ((Integer) shapeList.get(j)).intValue();
+                TclList.append(interp, list, TclInteger.newInstance(id));
+            }
+        }
+
+        interp.setResult(list);
+    }
+
+    class CoordsGet extends GetValueOnEventThread {
+
+        SwkImageCanvas swkcanvas = null;
+        String tagName = "";
+        double[] coords = null;
+
+        void exec(Interp interp, SwkImageCanvas swkcanvas, TclObject[] argv)
+                throws TclException {
+            if (argv.length != 3) {
+                throw new TclNumArgsException(interp, 2, argv, "item");
+            }
+
+            this.swkcanvas = swkcanvas;
+            tagName = argv[2].toString();
+            execOnThread();
+
+            TclObject list = TclList.newInstance();
+
+            if (coords != null) {
+                for (int i = 0; i < coords.length; i++) {
+                    TclList.append(interp, list,
+                            TclDouble.newInstance(coords[i]));
+                }
+            }
+
+            interp.setResult(list);
+        }
+
+        public void run() {
+            try {
+                Vector shapes = swkcanvas.getShapesWithTags(tagName);
+
+                if ((shapes != null) && (shapes.size() != 0)) {
+                    SwkShape swkShape = (SwkShape) shapes.elementAt(0);
+
+                    if (swkShape != null) {
+                        // fixme coords = swkShape.coords();
+                    }
+                }
+            } catch (SwkException swkE) {
+            }
+        }
+    }
+
+    class CoordsSet extends UpdateOnEventThread {
+
+        SwkImageCanvas swkcanvas = null;
+        String tagName = "";
+        double[] coords = null;
+
+        void exec(Interp interp, SwkImageCanvas swkcanvas, TclObject[] argv)
+                throws TclException {
+            this.swkcanvas = swkcanvas;
+            tagName = argv[2].toString();
+
+            int lastCoord = findCoords(interp, argv, 3);
+            coords = getCoords(interp, swkcanvas, argv, 3, lastCoord);
+            execOnThread();
+        }
+
+        public void run() {
+            try {
+                Vector shapes = swkcanvas.getShapesWithTags(tagName);
+
+                if ((shapes != null) && (shapes.size() != 0)) {
+                    SwkShape swkShape = (SwkShape) shapes.elementAt(0);
+
+                    if (swkShape != null) {
+                        // fixme swkShape.coords(swkcanvas, coords);
+                        swkcanvas.repaint();
+                    }
+                }
+            } catch (SwkException swkE) {
+                System.out.println("error in coordset");
+            }
+        }
+    }
+
+    class RaiseOrLower extends UpdateOnEventThread {
+
+        SwkImageCanvas swkcanvas = null;
+        boolean raiseMode = false;
+        String shapeArg = null;
+        String relativeArg = null;
+
+        void raise(Interp interp, SwkImageCanvas swkcanvas, TclObject[] argv)
+                throws TclException {
+            raiseMode = true;
+            doIt(interp, swkcanvas, argv);
+        }
+
+        void lower(Interp interp, SwkImageCanvas swkcanvas, TclObject[] argv)
+                throws TclException {
+            raiseMode = false;
+            doIt(interp, swkcanvas, argv);
+        }
+
+        void doIt(Interp interp, SwkImageCanvas swkcanvas, TclObject[] argv)
+                throws TclException {
+            this.swkcanvas = swkcanvas;
+
+            if ((argv.length != 3) && (argv.length != 4)) {
+                throw new TclNumArgsException(interp, 2, argv, "option");
+            }
+
+            shapeArg = argv[2].toString();
+
+            if (argv.length == 4) {
+                relativeArg = argv[3].toString();
+            }
+
+            execOnThread();
+            swkcanvas.repaint();
+        }
+
+        public void run() {
+            try {
+                if (raiseMode) {
+                    swkcanvas.raise(shapeArg, relativeArg);
+                } else {
+                    swkcanvas.lower(shapeArg, relativeArg);
+                }
+            } catch (SwkException swkE) {
+                interp.addErrorInfo(swkE.getMessage());
+                interp.backgroundError();
+            }
+        }
+    }
+
+    class Hit extends GetValueOnEventThread {
+
+        SwkImageCanvas swkcanvas = null;
+        double x = 0;
+        double y = 0;
+        String tagName = "";
+        String result = "";
+
+        void exec(Interp interp, SwkImageCanvas swkcanvas, TclObject[] argv)
+                throws TclException {
+            if (argv.length != 5) {
+                throw new TclNumArgsException(interp, 2, argv, "item x y");
+            }
+
+            this.swkcanvas = swkcanvas;
+            tagName = argv[2].toString();
+            x = TclDouble.get(interp, argv[3]);
+            y = TclDouble.get(interp, argv[4]);
+            execOnThread();
+            interp.setResult(result);
+        }
+
+        public void run() {
+            try {
+                SwkShape swkShape = (SwkShape) swkcanvas.getShape(tagName);
+
+                if (swkShape != null) {
+                    // fixme  result = swkShape.hit(x, y);
+                }
+            } catch (SwkException swkE) {
+            }
+        }
+    }
+
+    class Type extends GetValueOnEventThread {
+
+        SwkImageCanvas swkcanvas = null;
+        String tagName = "";
+        String result = "";
+
+        void exec(Interp interp, SwkImageCanvas swkcanvas, TclObject[] argv)
+                throws TclException {
+            this.swkcanvas = swkcanvas;
+
+            if (argv.length != 3) {
+                throw new TclNumArgsException(interp, 2, argv, "tagOrId");
+            }
+
+            tagName = argv[2].toString();
+            execOnThread();
+            interp.setResult(result);
+        }
+
+        public void run() {
+            try {
+                Vector shapes = swkcanvas.getShapesWithTags(tagName);
+
+                if ((shapes != null) && (shapes.size() != 0)) {
+                    SwkShape swkShape = (SwkShape) shapes.elementAt(0);
+
+                    if (swkShape != null) {
+                        result = swkShape.getType();
+                    }
+                }
+            } catch (SwkException swkE) {
+            }
+        }
+    }
+
+    class BBox extends GetValueOnEventThread {
+
+        SwkImageCanvas swkcanvas = null;
+        String[] tags = null;
+        Rectangle2D rect = null;
+
+        void exec(Interp interp, SwkImageCanvas swkcanvas, TclObject[] argv)
+                throws TclException {
+            this.swkcanvas = swkcanvas;
+
+            if (argv.length < 3) {
+                throw new TclNumArgsException(interp, 2, argv,
+                        "tagOrId ?tagOrId tagOrId ...?");
+            }
+
+            tags = SwankUtil.argvToStrings(argv, 2);
+            rect = null;
+            execOnThread();
+
+            if (rect != null) {
+                TclObject list = TclList.newInstance();
+                TclList.append(interp, list, TclDouble.newInstance(rect.getX()));
+                TclList.append(interp, list, TclDouble.newInstance(rect.getY()));
+                TclList.append(interp, list,
+                        TclDouble.newInstance(rect.getX() + rect.getWidth()));
+                TclList.append(interp, list,
+                        TclDouble.newInstance(rect.getY() + rect.getHeight()));
+                interp.setResult(list);
+            } else {
+                interp.setResult("");
+            }
+        }
+
+        public void run() {
+            try {
+                rect = swkcanvas.getShapeBounds(tags);
+            } catch (SwkException swkE) {
+            }
+        }
+    }
+
+    class Scale extends UpdateOnEventThread {
+
+        SwkImageCanvas swkcanvas = null;
+        double xOrigin = 0;
+        double yOrigin = 0;
+        double xScale = 0;
+        double yScale = 0;
+        String tagName = null;
+
+        void exec(Interp interp, SwkImageCanvas swkcanvas, TclObject[] argv)
+                throws TclException {
+            if (argv.length != 7) {
+                throw new TclNumArgsException(interp, 2, argv, "option");
+            }
+
+            tagName = argv[2].toString();
+            this.swkcanvas = swkcanvas;
+            xOrigin = TclDouble.get(interp, argv[3]);
+            yOrigin = TclDouble.get(interp, argv[4]);
+            xScale = TclDouble.get(interp, argv[5]);
+            yScale = TclDouble.get(interp, argv[6]);
+            execOnThread();
+            swkcanvas.repaint();
+        }
+
+        public void run() {
+            try {
+                Vector shapeList = swkcanvas.getShapesWithTags(tagName);
+
+                for (int i = 0; i < shapeList.size(); i++) {
+                    SwkShape swkShape2 = (SwkShape) shapeList.elementAt(i);
+                    swkShape2.scale(xOrigin, yOrigin, xScale, yScale);
+                }
+            } catch (SwkException swkE) {
+            }
+        }
+    }
+
+    class Zoom extends GetValueOnEventThread {
+
+        SwkImageCanvas swkcanvas = null;
+        double zoom = 0;
+        boolean setValue = false;
+
+        void exec(Interp interp, SwkImageCanvas swkcanvas, TclObject[] argv)
+                throws TclException {
+            if ((argv.length != 2) && (argv.length != 3)) {
+                throw new TclNumArgsException(interp, 2, argv, "option");
+            }
+
+            this.swkcanvas = swkcanvas;
+
+            if (argv.length == 3) {
+                zoom = TclDouble.get(interp, argv[2]);
+                setValue = true;
+            }
+
+            execOnThread();
+
+            interp.setResult(zoom);
+
+            // FIXME swkcanvas.revalidate();
+            swkcanvas.repaint();
+        }
+
+        public void run() {
+            if (setValue) {
+                swkcanvas.setZoom(zoom);
+            }
+
+            zoom = swkcanvas.getZoom();
+        }
+    }
+
+    class Move extends GetValueOnEventThread {
+
+        SwkImageCanvas swkcanvas = null;
+        double dX = 0;
+        double dY = 0;
+        boolean setValue = false;
+        String tagName = null;
+
+        void exec(Interp interp, SwkImageCanvas swkcanvas, TclObject[] argv)
+                throws TclException {
+            if (argv.length != 5) {
+                throw new TclNumArgsException(interp, 2, argv, "option");
+            }
+
+            this.swkcanvas = swkcanvas;
+            tagName = argv[2].toString();
+            dX = SwankUtil.getTkSizeD(interp, swkcanvas.getComponent(), argv[3]);
+            dY = SwankUtil.getTkSizeD(interp, swkcanvas.getComponent(), argv[4]);
+            execOnThread();
+            swkcanvas.repaint();
+        }
+
+        public void run() {
+            try {
+                Vector shapeList = swkcanvas.getShapesWithTags(tagName);
+
+                for (int i = 0; i < shapeList.size(); i++) {
+                    SwkShape swkShape2 = (SwkShape) shapeList.elementAt(i);
+                    swkShape2.move(dX, dY);
+                }
+            } catch (SwkException swkE) {
+            }
+        }
+    }
+
+    class GetTags extends GetValueOnEventThread {
+
+        SwkImageCanvas swkcanvas = null;
+        ArrayList tagList = null;
+        String tagName = "";
+
+        void exec(Interp interp, SwkImageCanvas swkcanvas, TclObject[] argv)
+                throws TclException {
+            this.swkcanvas = swkcanvas;
+
+            if (argv.length != 3) {
+                throw new TclNumArgsException(interp, 2, argv, "option");
+            }
+
+            tagName = argv[2].toString();
+            execOnThread();
+
+            TclObject list = TclList.newInstance();
+
+            if (tagList != null) {
+                for (int i = 0,  n = tagList.size(); i < n; i++) {
+                    TclList.append(interp, list,
+                            TclString.newInstance((String) tagList.get(i)));
+                }
+            }
+
+            interp.setResult(list);
+        }
+
+        public void run() {
+            try {
+                Vector shapeList = swkcanvas.getShapesWithTags(tagName);
+
+                if (shapeList.size() > 0) {
+                    SwkShape swkShape = (SwkShape) shapeList.elementAt(0);
+                    tagList = swkcanvas.getTags(swkShape);
+                }
+            } catch (SwkException swkE) {
+            }
+        }
+    }
+
+    class Index extends GetValueOnEventThread {
+
+        SwkImageCanvas swkcanvas = null;
+        Vector shapeList = null;
+        String tagName = "";
+        int index = 0;
+        SwkShape swkShape = null;
+
+        void exec(Interp interp, SwkImageCanvas swkcanvas, TclObject[] argv)
+                throws TclException {
+            this.swkcanvas = swkcanvas;
+
+            if (argv.length != 4) {
+                throw new TclNumArgsException(interp, 2, argv, "tagOrId arg");
+            }
+
+            tagName = argv[2].toString();
+
+            if (swkShape != null) {
+                index = swkShape.getIndex(interp, argv[3]);
+            }
+
+            execOnThread();
+            interp.setResult(index);
+        }
+
+        public void run() {
+            try {
+                Vector shapeList = swkcanvas.getShapesWithTags(tagName);
+
+                if (shapeList.size() == 0) {
+                    return;
+                }
+
+                swkShape = (SwkShape) shapeList.elementAt(0);
+            } catch (SwkException swkE) {
+            }
+        }
+    }
+
+    class Delete extends UpdateOnEventThread {
+
+        SwkImageCanvas swkcanvas = null;
+        String[] tags = null;
+
+        void exec(Interp interp, SwkImageCanvas swkcanvas, TclObject[] argv)
+                throws TclException {
+            if (argv.length < 3) {
+                throw new TclNumArgsException(interp, 2, argv, "option");
+            }
+
+            tags = SwankUtil.argvToStrings(argv, 2);
+            this.swkcanvas = swkcanvas;
+            execOnThread();
+            swkcanvas.repaint();
+        }
+
+        public void run() {
+            try {
+                swkcanvas.delete(tags);
+            } catch (SwkException swkE) {
+            }
+        }
+    }
+
+    class Copy extends UpdateOnEventThread {
+
+        SwkCanvas swkcanvas = null;
+
+        void exec(Interp interp, SwkCanvas swkcanvas, TclObject[] argv)
+                throws TclException {
+            this.swkcanvas = swkcanvas;
+            execOnThread();
+        }
+
+        public void run() {
+            final Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            swkcanvas.copyImageToClipboard(clipboard);
+        }
+    }
+
+    class DTags extends UpdateOnEventThread {
+
+        SwkImageCanvas swkcanvas = null;
+        String tagName = null;
+        String[] tagStrings = null;
+
+        void exec(Interp interp, SwkImageCanvas swkcanvas, TclObject[] argv)
+                throws TclException {
+            if ((argv.length != 3) && (argv.length != 4)) {
+                throw new TclNumArgsException(interp, 2, argv, "option");
+            }
+
+            this.swkcanvas = swkcanvas;
+            tagName = argv[2].toString();
+
+            TclObject[] tagList = TclList.getElements(interp,
+                    argv[argv.length - 1]);
+            tagStrings = SwankUtil.argvToStrings(tagList, 0);
+            execOnThread();
+            swkcanvas.repaint();
+        }
+
+        public void run() {
+            try {
+                Vector shapeList = swkcanvas.getShapesWithTags(tagName);
+
+                for (int i = 0; i < shapeList.size(); i++) {
+                    SwkShape swkShape2 = (SwkShape) shapeList.elementAt(i);
+                    swkcanvas.removeTags(tagStrings, false, swkShape2);
+                }
+            } catch (SwkException swkE) {
+            }
+        }
+    }
+
+    class AddTag extends UpdateOnEventThread {
+
+        SwkImageCanvas swkcanvas = null;
+        String[] args = null;
+        String tagString = null;
+
+        void exec(Interp interp, SwkImageCanvas swkcanvas, TclObject[] argv)
+                throws TclException {
+            if (argv.length < 4) {
+                throw new TclNumArgsException(interp, 2, argv, "option");
+            }
+
+            this.swkcanvas = swkcanvas;
+            tagString = argv[2].toString();
+            args = SwankUtil.argvToStrings(argv, 3);
+            execOnThread();
+            swkcanvas.repaint();
+        }
+
+        public void run() {
+            try {
+                Vector shapeList = swkcanvas.getShapesWithTags(args);
+                String[] tagStrings = {tagString};
+
+                for (int i = 0; i < shapeList.size(); i++) {
+                    SwkShape swkShape2 = (SwkShape) shapeList.elementAt(i);
+                    swkcanvas.addTags(tagStrings, swkShape2);
+                }
+            } catch (SwkException swkE) {
+            }
+        }
+    }
+
+    class TransformerSet extends UpdateOnEventThread {
+
+        SwkImageCanvas swkcanvas = null;
+        double[] values = null;
+        String name = null;
+
+        void exec(Interp interp, SwkImageCanvas swkcanvas, TclObject[] argv)
+                throws TclException {
+            if (argv.length != 10) {
+                throw new TclNumArgsException(interp, 2, argv,
+                        "transformerName m00 m10 m01 m11 m02 m12");
+            }
+
+            this.swkcanvas = swkcanvas;
+
+            double[] values = new double[6];
+
+            for (int i = 4; i < 10; i++) {
+                values[i - 4] = TclDouble.get(interp, argv[i]);
+            }
+
+            name = argv[3].toString();
+            execOnThread();
+            swkcanvas.repaint();
+        }
+
+        public void run() {
+            Transformer transformer = swkcanvas.getTransformer(name);
+
+            if (transformer == null) {
+                transformer = swkcanvas.setTransformer(name, null);
+            }
+
+            transformer.getTransform().setTransform(values[0], values[1],
+                    values[2], values[3], values[4], values[5]);
+        }
+    }
+
+    class CanvasType {
+
+        Class myTypeClass = null;
+        int myNCoords = 0;
+
+        CanvasType(Class typeClass, int nCoords) {
+            myTypeClass = typeClass;
+            myNCoords = nCoords;
+        }
+    }
+
+    class AddShape extends UpdateOnEventThread {
+
+        SwkImageCanvas swkcanvas = null;
+        SwkShape swkShape = null;
+
+        void exec(final SwkImageCanvas swkcanvas, final SwkShape swkShape) {
+            this.swkcanvas = swkcanvas;
+            this.swkShape = swkShape;
+            execOnThread();
+        }
+
+        public void run() {
+            try {
+                swkcanvas.addShape(swkShape);
+            } catch (SwkException swkE) {
+                System.out.println("error adding shape " + swkE.getMessage());
+            }
+
+            swkcanvas.repaint();
+        }
+    }
+
+    class Search extends GetValueOnEventThread {
+
+        public static final int NEXT = 0;
+        public static final int PREVIOUS = 1;
+        public static final int ALL = 2;
+        public static final int ENCLOSED = 3;
+        public static final int OVERLAPPING = 4;
+        public static final int WITHTAG = 5;
+        public static final int CLOSEST = 6;
+        SwkImageCanvas swkcanvas = null;
+        String tagName = null;
+        SwkShape swkShape = null;
+        SwkShape bestShape = null;
+        ArrayList shapeList = null;
+        String refTag = "";
+        int mode = NEXT;
+        Point2D pt = null;
+        float halo = 0.0f;
+        Rectangle2D rect = null;
+
+        void exec(Interp interp, SwkImageCanvas swkcanvas, TclObject[] argv)
+                throws TclException {
+            if (argv.length < 3) {
+                throw new TclNumArgsException(interp, 2, argv, "option");
+            }
+
+            this.swkcanvas = swkcanvas;
+
+            SwkShape swkShape = null;
+            SwkShape nextShape = null;
+            int start = 2;
+
+            if (argv.length < (start + 1)) {
+                throw new TclNumArgsException(interp, 0, argv, "option");
+            }
+
+            if (argv[start].toString().equals("above")) {
+                if (argv.length != (start + 2)) {
+                    throw new TclNumArgsException(interp, 1, argv, "option");
+                }
+                tagName = argv[start + 1].toString();
+                interp.resetResult();
+                mode = NEXT;
+                execOnThread();
+
+                if (swkShape != null) {
+                    interp.setResult(swkShape.id);
+                }
+            } else if (argv[start].toString().equals("all")) {
+                if (argv.length != (start + 1)) {
+                    throw new TclNumArgsException(interp, 1, argv, "option");
+                }
+
+                mode = ALL;
+                execOnThread();
+                getResult(interp, shapeList);
+            } else if (argv[start].toString().equals("below")) {
+                if (argv.length != (start + 2)) {
+                    throw new TclNumArgsException(interp, 1, argv, "option");
+                }
+
+                if (argv.length != (start + 2)) {
+                    throw new TclNumArgsException(interp, 1, argv, "option");
+                }
+
+                tagName = argv[start + 1].toString();
+                interp.resetResult();
+                mode = PREVIOUS;
+                execOnThread();
+
+                if (swkShape != null) {
+                    interp.setResult(swkShape.id);
+                }
+            } else if (argv[start].toString().equals("closest")) {
+                if ((argv.length < (start + 3)) || (argv.length > (start + 5))) {
+                    throw new TclNumArgsException(interp, 1, argv,
+                            "x y ?halo? ?start?");
+                }
+
+                float x1 = (float) TclDouble.get(interp, argv[start + 1]);
+                float y1 = (float) TclDouble.get(interp, argv[start + 2]);
+
+                refTag = null;
+
+                if (argv.length > (start + 3)) {
+                    halo = (float) TclDouble.get(interp, argv[start + 3]);
+
+                    if (halo < 0.0) {
+                        throw new TclException(interp,
+                                "closest: halo cannot be less than 0.0");
+                    }
+
+                    if (argv.length > (start + 4)) {
+                        refTag = argv[start + 4].toString();
+                    }
+                }
+
+                pt = new Point2D.Float(x1, y1);
+                mode = CLOSEST;
+                execOnThread();
+
+                if (bestShape == null) {
+                    interp.setResult("");
+                } else {
+                    interp.setResult(bestShape.id);
+                }
+            } else if (argv[start].toString().equals("enclosed") ||
+                    argv[start].toString().equals("overlapping")) {
+                Rectangle2D bounds = null;
+
+                if (argv.length != (start + 5)) {
+                    throw new TclNumArgsException(interp, 1, argv, "option");
+                }
+
+                float x1 = (float) TclDouble.get(interp, argv[start + 1]);
+                float y1 = (float) TclDouble.get(interp, argv[start + 2]);
+                float x2 = (float) TclDouble.get(interp, argv[start + 3]);
+                float y2 = (float) TclDouble.get(interp, argv[start + 4]);
+
+                if (x1 > x2) {
+                    throw new TclException(interp,
+                            "enclosed: x1 must be less than x2");
+                }
+
+                if (y1 > y2) {
+                    throw new TclException(interp,
+                            "enclosed: y1 must be less than y2");
+                }
+
+                rect = new Rectangle2D.Float(x1, y1, x2 - x1, y2 - y1);
+                mode = ENCLOSED;
+
+                if (argv[start].toString().equals("overlapping")) {
+                    mode = OVERLAPPING;
+                }
+
+                execOnThread();
+                getResult(interp, shapeList);
+            } else if (argv[start].toString().equals("withtag")) {
+                if (argv.length != (start + 2)) {
+                    throw new TclNumArgsException(interp, 1, argv, "option");
+                }
+
+                refTag = argv[start + 1].toString();
+                mode = WITHTAG;
+                execOnThread();
+                getResult(interp, shapeList);
+            }
+        }
+
+        public void run() {
+            try {
+                switch (mode) {
+                    case NEXT:
+                    case PREVIOUS:
+                        getOne();
+
+                        break;
+
+                    case ALL:
+                        getSome();
+
+                        break;
+
+                    case CLOSEST:
+                        getClosest();
+
+                        break;
+
+                    case ENCLOSED:
+                    case OVERLAPPING:
+                        getRectShapes();
+
+                        break;
+
+                    case WITHTAG:
+                        withTag();
+
+                        break;
+
+                    default:
+                }
+            } catch (SwkException swkE) {
+            }
+        }
+
+        void getOne() throws SwkException {
+            SwkShape swkShape = (SwkShape) swkcanvas.getShape(tagName);
+            if (swkShape != null) {
+                if (mode == NEXT) {
+                    swkShape = swkShape.next;
+                } else {
+                    swkShape = swkShape.previous;
+                }
+            }
+        }
+
+        void getSome() {
+            SwkShape swkShape = swkcanvas.firstShape;
+            SwkShape nextShape = swkcanvas.firstShape;
+
+            if (swkcanvas.firstShape != null) {
+                shapeList = new ArrayList();
+
+                while (nextShape != null) {
+                    swkShape = nextShape;
+                    nextShape = swkShape.next;
+                    shapeList.add(new Integer(swkShape.id));
+                }
+            }
+        }
+
+        void withTag() throws SwkException {
+            Vector shapes = swkcanvas.getShapesWithTags(refTag);
+            shapeList = new ArrayList();
+
+            for (int i = 0,  n = shapes.size(); i < n; i++) {
+                shapeList.add(new Integer(((SwkShape) shapes.elementAt(i)).id));
+            }
+        }
+
+        void getClosest() throws SwkException {
+        }
+
+        void getRectShapes() {
+            /* fixme  Rectangle2D bounds = null;
+            Enumeration e = swkcanvas.swkShapes.elements();
+            
+            while (e.hasMoreElements()) {
+            swkShape = (SwkShape) e.nextElement();
+            
+            if (swkShape.shape != null) {
+            // fixme   bounds = swkShape.shape.getBounds2D();
+            } else {
+            bounds = null;
+            }
+            
+            if (bounds != null) {
+            if (((mode == ENCLOSED) && rect.contains(bounds)) ||
+            ((mode == OVERLAPPING) && rect.intersects(bounds))) {
+            if (shapeList == null) {
+            shapeList = new ArrayList();
+            }
+            
+            shapeList.add(new Integer(swkShape.id));
+            }
+            }
+            }
+             */
         }
     }
 }

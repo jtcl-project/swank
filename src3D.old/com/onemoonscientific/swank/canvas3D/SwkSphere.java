@@ -1,24 +1,59 @@
+/*
+ *
+ *
+ * Copyright (c) 2000-2004 One Moon Scientific, Inc., Westfield, N.J., USA
+ *
+ * See the file \"LICENSE\" for information on usage and redistribution
+ * of this file.
+ * IN NO EVENT SHALL THE AUTHORS OR DISTRIBUTORS BE LIABLE TO
+ * ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR
+ * CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OF THIS
+ * SOFTWARE, ITS DOCUMENTATION, OR ANY DERIVATIVES THEREOF,
+ * EVEN IF THE AUTHORS HAVE BEEN ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ *
+ * THE AUTHORS AND DISTRIBUTORS SPECIFICALLY DISCLAIM ANY
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+ * PURPOSE, AND NON-INFRINGEMENT.  THIS SOFTWARE
+ * IS PROVIDED ON AN "AS IS" BASIS, AND THE AUTHORS AND
+ * DISTRIBUTORS HAVE NO OBLIGATION TO PROVIDE MAINTENANCE,
+ * SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+ *
+ *
+ */
+
+/**
+ *
+ * @author  JOHNBRUC
+ * @version
+ */
 package com.onemoonscientific.swank.canvas3D;
 
+import com.onemoonscientific.swank.*;
 
 import com.sun.j3d.utils.geometry.*;
 
 import tcl.lang.*;
 
+import java.awt.*;
+import java.awt.geom.*;
 
 import java.lang.*;
 
+import java.util.*;
 
 import javax.media.j3d.*;
 
 import javax.vecmath.*;
 
 
-public class SwkText2D extends SwkShape {
-    String text = "duck";
+public class SwkSphere extends SwkShape3D {
+    int nDivisions = 15;
+    float radius = 1.0f;
     Point3d a = new Point3d();
 
-    SwkText2D(SwkCanvas canvas) {
+    SwkSphere(SwkCanvas3D canvas) {
         super(canvas);
     }
 
@@ -38,7 +73,7 @@ public class SwkText2D extends SwkShape {
         interp.setResult(list);
     }
 
-    public void coords(Interp interp, SwkCanvas canvas, TclObject[] argv,
+    public void coords(Interp interp, SwkCanvas3D canvas, TclObject[] argv,
         int start) throws TclException {
         a.x = TclDouble.get(interp, argv[start]);
         a.y = TclDouble.get(interp, argv[start + 1]);
@@ -50,11 +85,9 @@ public class SwkText2D extends SwkShape {
         t3D.setTranslation(new Vector3d(a.x, a.y, a.z));
 
         TransformGroup tG = new TransformGroup(t3D);
-        System.out.println("create text2d");
-        Shape3D shape = new Text2D(text, new Color3f(0.1f, 0.95f, 0.1f), "SansSerif",
-                240, 0);
-        System.out.println("created text2d " + shape.toString());
-        tG.addChild(shape);
+        primitive = new Sphere(radius, Primitive.GENERATE_NORMALS, nDivisions,
+                appearance);
+        tG.addChild(primitive);
         bG.removeAllChildren();
         bG.addChild(tG);
         bG.setCapability(NvBranchGroup.ALLOW_DETACH);
@@ -71,11 +104,14 @@ public class SwkText2D extends SwkShape {
         boolean doGen = false;
 
         for (int i = start; i < argv.length; i += 2) {
-            if ("-text".startsWith(argv[i].toString())) {
-                text = new String(argv[i + 1].toString());
+            if ("-radius".startsWith(argv[i].toString())) {
+                radius = (float) TclDouble.get(interp, argv[i + 1]);
+                doGen = true;
+            } else if ("-ndivisions".startsWith(argv[i].toString())) {
+                nDivisions = TclInteger.get(interp, argv[i + 1]);
                 doGen = true;
             } else if (argv[i].toString().startsWith("-tag")) {
-             // fixme   canvas.setTags(interp, argv[i + 1], (SwkShape) this);
+                canvas.setTags(interp, argv[i + 1], (SwkShape3D) this);
             }
 
             doGen = true;

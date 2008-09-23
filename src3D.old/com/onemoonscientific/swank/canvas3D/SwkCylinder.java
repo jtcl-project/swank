@@ -48,13 +48,13 @@ import javax.media.j3d.*;
 import javax.vecmath.*;
 
 
-public class SwkCylinder extends SwkShape {
+public class SwkCylinder extends SwkShape3D {
     int xDivisions = 15;
     float radius = 1.0f;
     Point3d a = new Point3d(0.0, 0.0, 0.0);
     Point3d b = new Point3d(0.0, 1.0, 0.0);
 
-    SwkCylinder(SwkCanvas canvas) {
+    SwkCylinder(SwkCanvas3D canvas) {
         super(canvas);
     }
 
@@ -74,7 +74,7 @@ public class SwkCylinder extends SwkShape {
         interp.setResult(list);
     }
 
-    public void coords(Interp interp, SwkCanvas canvas, TclObject[] argv,
+    public void coords(Interp interp, SwkCanvas3D canvas, TclObject[] argv,
         int start) throws TclException {
         if ((argv.length - start) >= 6) {
             System.out.println("get coords");
@@ -118,7 +118,7 @@ public class SwkCylinder extends SwkShape {
                 xDivisions = TclInteger.get(interp, argv[i + 1]);
                 doGen = true;
             } else if (argv[i].toString().startsWith("-tag")) {
-               // fixme canvas.setTags(interp, argv[i + 1], (SwkShape) this);
+                canvas.setTags(interp, argv[i + 1], (SwkShape3D) this);
             }
 
             doGen = true;

@@ -4,14 +4,10 @@ import com.onemoonscientific.swank.*;
 
 import tcl.lang.*;
 
-import java.awt.*;
 
 import java.lang.*;
 
-import java.util.*;
 
-import javax.swing.*;
-import javax.swing.text.*;
 
 
 class SwkCanvas3DCmd implements Command {
@@ -40,7 +36,7 @@ class SwkCanvas3DCmd implements Command {
         TclObject tObj = ReflectObject.newInstance(interp, SwkCanvas3D.class,
                 swkCanvas3D);
         tObj.preserve();
-        Widgets.theWidgets.put(argv[1].toString(), tObj);
+        Widgets.addNewWidget(interp,argv[1].toString(), tObj);
         interp.setResult(argv[1].toString());
         swkCanvas3D.setCreated(true);
 

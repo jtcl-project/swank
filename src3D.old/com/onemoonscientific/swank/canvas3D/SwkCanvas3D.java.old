@@ -1125,7 +1125,7 @@ public class SwkCanvas3D extends JPanel implements SwkWidget {
         this.borderWidth = borderWidth;
     }
 
-    public double getBorderWidth() {
+    public int getBorderWidth() {
         return (borderWidth);
     }
 

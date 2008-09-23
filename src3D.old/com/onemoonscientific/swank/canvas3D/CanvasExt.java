@@ -1,7 +1,8 @@
 /*
  *
+ * $Id: CanvasExt.java,v 1.2 2000/05/05 18:14:00 johnsonb Exp $
  *
- * Copyright (c) 2000-2004 One Moon Scientific, Inc., Westfield, N.J., USA
+ * Copyright (c) 2000 Merck & Co., Inc., Whitehouse Station, N.J., USA
  *
  * See the file \"LICENSE\" for information on usage and redistribution
  * of this file.
@@ -24,15 +25,24 @@
  */
 package com.onemoonscientific.swank.canvas3D;
 
-import com.onemoonscientific.swank.*;
 
+/*
+ * NvExtension.java --
+ *
+ */
 import tcl.lang.*;
 
 
-public interface SwkShape3DConfig {
-    public void config(Interp interp, TclObject[] argv, int start)
-        throws TclException;
-
-    public void coords(Interp interp, SwkCanvas canvas, TclObject[] argv,
-        int start) throws TclException;
+/*
+ * This class implements a simple Tcl extension package "NvExtension". This
+ * extension contains one Tcl command "nvcmd".  See the API documentation of
+ * the tcl.lang.Extension class for details.
+ */
+public class CanvasExt extends Extension {
+    /*
+     * Create all the commands in the Simple package.
+     */
+    public void init(Interp interp) {
+        interp.createCommand("canvas3D", new SwkCanvas3DCmd());
+    }
 }
