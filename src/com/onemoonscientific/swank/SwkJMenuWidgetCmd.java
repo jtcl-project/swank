@@ -27,7 +27,7 @@ import javax.swing.tree.*;
 class SwkJMenuWidgetCmd implements Command {
     static final private String[] validCmds = {
         "cget", "configure", "add", "delete", "popup", "post",
-        "invoke", "index"
+        "invoke", "index","insert"
     };
     static final private int OPT_CGET = 0;
     static final private int OPT_CONFIGURE = 1;
@@ -37,6 +37,7 @@ class SwkJMenuWidgetCmd implements Command {
     static final private int OPT_POST = 5;
     static final private int OPT_INVOKE = 6;
     static final private int OPT_INDEX = 7;
+    static final private int OPT_INSERT = 8;
     static boolean gotDefaults = false;
     Interp interp;
 
@@ -142,6 +143,11 @@ class SwkJMenuWidgetCmd implements Command {
 
             break;
         }
+        case OPT_INSERT:
+            insertmenu(interp, swkjmenu, argv);
+
+            break;
+
 
         default:
             throw new TclRuntimeError("TclIndex.get() error");
@@ -266,29 +272,40 @@ class SwkJMenuWidgetCmd implements Command {
           }
 
      */
-    public void addmenu(Interp interp, SwkJMenu swkjmenu, TclObject[] argv)
+    public void insertmenu(Interp interp, SwkJMenu swkjmenu, TclObject[] argv) throws TclException {
+         addOrInsertMenu(interp,swkjmenu,argv,true);
+    }
+    public void addmenu(Interp interp, SwkJMenu swkjmenu, TclObject[] argv) throws TclException {
+         addOrInsertMenu(interp,swkjmenu,argv,false);
+    }
+    public void addOrInsertMenu(Interp interp, SwkJMenu swkjmenu, TclObject[] argv,boolean insertMode)
         throws TclException {
         int i;
-
+        int start = 3;
+        int insertPos = -1;
+        if (insertMode) {
+            start = 4;
+            insertPos = TclInteger.get(interp,argv[2]);
+        }
         if (argv.length < 3) {
             throw new TclNumArgsException(interp, 1, argv,
                 "option ?arg arg ...?");
         }
 
-        String itemType = argv[2].toString();
+        String itemType = argv[start-1].toString();
 
         if (itemType.equals("cascade")) {
             String menuName = null;
             int j = 0;
 
-            if (((argv.length - 3) % 2) != 0) {
+            if (((argv.length - start) % 2) != 0) {
                 throw new TclNumArgsException(interp, 1, argv,
                     "arguments not multiple of 2");
             }
 
-            TclObject[] argNew = new TclObject[argv.length - 5];
+            TclObject[] argNew = new TclObject[argv.length - start-2];
 
-            for (i = 3; i < argv.length; i += 2) {
+            for (i = start; i < argv.length; i += 2) {
                 if (argv[i].toString().equals("-menu")) {
                     menuName = argv[i + 1].toString();
                 } else {
@@ -301,7 +318,7 @@ class SwkJMenuWidgetCmd implements Command {
             TclObject tObj = (TclObject) Widgets.getWidget(interp,menuName);
 
             if (tObj == null) {
-                SwkJMenu cascade = (new Add()).exec(swkjmenu, menuName, itemType);
+                SwkJMenu cascade = (new Add()).exec(swkjmenu, menuName, itemType,insertPos);
                 interp.createCommand(menuName, new SwkJMenuWidgetCmd());
                 tObj = ReflectObject.newInstance(interp, SwkJMenu.class, cascade);
                 tObj.preserve();
@@ -312,14 +329,14 @@ class SwkJMenuWidgetCmd implements Command {
                 cascade.setCreated(false);
             } else {
                 SwkJMenu cascade = (SwkJMenu) ReflectObject.get(interp, tObj);
-                (new Add()).exec(swkjmenu, menuName, cascade);
+                (new Add()).exec(swkjmenu, menuName, cascade,insertPos);
                 cascade.configure(interp, argNew, 0);
             }
         } else {
-            SwkWidget swkWidget = (new Add()).exec(swkjmenu, itemType);
+            SwkWidget swkWidget = (new Add()).exec(swkjmenu, itemType,insertPos);
 
             if (swkWidget != null) {
-                swkWidget.configure(interp, argv, 3);
+                swkWidget.configure(interp, argv, start);
             }
         }
 
@@ -505,31 +522,35 @@ class SwkJMenuWidgetCmd implements Command {
         String menuName = "";
         SwkWidget swkWidget = null;
         SwkJMenu cascade = null;
+        int insertPos = -1;
 
-        SwkWidget exec(final SwkJMenu swkjmenu, final String itemType) {
+        SwkWidget exec(final SwkJMenu swkjmenu, final String itemType,final int insertPos) {
             this.swkjmenu = swkjmenu;
             this.itemType = itemType;
+            this.insertPos = insertPos;
             execOnThread();
 
             return swkWidget;
         }
 
         SwkJMenu exec(final SwkJMenu swkjmenu, final String menuName,
-            final String itemType) {
+            final String itemType,final int insertPos) {
             this.swkjmenu = swkjmenu;
             this.itemType = itemType;
             this.menuName = menuName;
+            this.insertPos = insertPos;
             execOnThread();
 
             return cascade;
         }
 
         SwkJMenu exec(final SwkJMenu swkjmenu, final String menuName,
-            SwkJMenu cascade) {
+            SwkJMenu cascade,final int insertPos) {
             this.swkjmenu = swkjmenu;
             this.cascade = cascade;
             this.itemType = "cascade";
             this.menuName = menuName;
+            this.insertPos = insertPos;
             execOnThread();
 
             return cascade;
@@ -540,28 +561,47 @@ class SwkJMenuWidgetCmd implements Command {
             if (itemType.equals("command")) {
                 SwkJMenuItem jmenuItem = new SwkJMenuItem(interp, "",
                         "SwkJMenuItem");
-                swkjmenu.add(jmenuItem);
+                if (insertPos != -1) {
+                    swkjmenu.insert(jmenuItem,insertPos);
+                } else {
+                    swkjmenu.add(jmenuItem);
+                }
                 swkWidget = (SwkWidget) jmenuItem;
             } else if (itemType.startsWith("check")) {
                 SwkJCheckBoxMenuItem jmenuItem = new SwkJCheckBoxMenuItem(interp,
                         "", "SwkJMenuItem");
-                swkjmenu.add(jmenuItem);
+                if (insertPos != -1) {
+                    swkjmenu.insert(jmenuItem,insertPos);
+                } else {
+                    swkjmenu.add(jmenuItem);
+                }
                 swkWidget = (SwkWidget) jmenuItem;
             } else if (itemType.startsWith("radio")) {
                 SwkJRadioButtonMenuItem jmenuItem = new SwkJRadioButtonMenuItem(interp,
                         "", "SwkJMenuItem");
-                swkjmenu.add(jmenuItem);
+                if (insertPos != -1) {
+                    swkjmenu.insert(jmenuItem,insertPos);
+                } else {
+                    swkjmenu.add(jmenuItem);
+                }
                 swkWidget = (SwkWidget) jmenuItem;
             } else if (itemType.startsWith("sepa")) {
                 SwkJMenuItem jmenuItem = null;
-                swkjmenu.addSeparator();
-                ;
+                if (insertPos != -1) {
+                    swkjmenu.insertSeparator(insertPos);
+                } else {
+                    swkjmenu.addSeparator();
+                }
             } else if (itemType.equals("cascade")) {
                 if (cascade == null) {
                     cascade = new SwkJMenu(interp, menuName, "Menu");
                 }
 
-                swkjmenu.add(cascade);
+                if (insertPos != -1) {
+                    swkjmenu.insert(cascade,insertPos);
+                } else {
+                    swkjmenu.add(cascade);
+                }
             }
         }
     }
