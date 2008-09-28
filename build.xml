@@ -121,6 +121,13 @@
     <!-- Put everything in ${dir.chartbuild} into the MyProject-${DSTAMP}.jar file -->
     <jar basedir="${dir.chartbuild}" jarfile="${dir.dist}/lib/swankchart.jar"/>
   </target>
+  <target depends="compile_3d" description="generate the distribution" name="3ddist">
+    <!-- Create the distribution directory -->
+    <mkdir dir="${dir.dist}/lib"/>
+
+    <!-- Put everything in ${dir.3dbuild} into the MyProject-${DSTAMP}.jar file -->
+    <jar basedir="${dir.3dbuild}" jarfile="${dir.dist}/lib/swank3d.jar"/>
+  </target>
 
   <target  depends="prepare" description="build the source " name="gensrc">
     <java fork="yes" classname="tcl.lang.Shell">
