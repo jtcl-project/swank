@@ -157,6 +157,11 @@ public class SwkCylinder extends SwkShape {
          */
         return (TclString.newInstance(""));
     }
+//
+
+// Code for following transform from CylinderCreateor.java @ http://teresi.us/html/main/programming.html
+//        Scott Teresi, www.teresi.us
+
 
     TransformGroup makeTransform(Point3d b, Point3d a) {
         Vector3d base = new Vector3d();
