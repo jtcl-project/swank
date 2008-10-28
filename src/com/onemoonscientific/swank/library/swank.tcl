@@ -38,28 +38,53 @@ proc tk_getOpenFile {args} {
     }
     set currentDir [::swank::getLastDir]
     destroy .sk_filebox
-    jfilechooser .sk_filebox
+    set dialogMode 0
+    set multipleSelection 0
+    set title "Choose File to Open"
+    set dialogMode $::swank::defaultFileMode
     foreach "argType argVal" $args {
         switch -- $argType {
+            -filedialog {
+                set dialogMode $argVal
+            }
             -filetypes {
                 set filters [lindex $argVal 0]
-                .sk_filebox filter [lindex $filters 1] [lindex $filters 0]
             }
-            
             -initialdir {
                  set currentDir $argVal
             }
             -title {
-                .sk_filebox configure -dialogtitle $argVal
+                 set title $argVal
             }
             -multiple {
-                .sk_filebox configure -multiselectionenabled $argVal
+                 set multipleSelection $argVal
+            }
+            default {
+                 error "Invalid option type \"$argType\""
             }
         }
     }
+    if {$multipleSelection} {
+         set dialogMode 0
+    }
     
-    .sk_filebox configure -currentdirectory $currentDir
-    .sk_filebox configure -visible true
+    if {!$dialogMode} {
+        jfilechooser .sk_filebox
+        .sk_filebox configure -currentdirectory $currentDir
+        .sk_filebox configure -multiselectionenabled $multipleSelection
+        .sk_filebox configure -dialogtitle $title
+         if {[info exists filters]} {
+            .sk_filebox filter [lindex $filters 1] [lindex $filters 0]
+         }
+        .sk_filebox configure -visible true
+    } else {
+        filedialog .sk_filebox
+        .sk_filebox configure -directory $currentDir
+        .sk_filebox configure -title $title
+         if {[info exists filters]} {
+            .sk_filebox filter [lindex $filters 1] [lindex $filters 0]
+         }
+    }
     set result [.sk_filebox open]
     destroy .sk_filebox
     if {$result != ""} {
@@ -68,31 +93,53 @@ proc tk_getOpenFile {args} {
     return $result
 }
 
+
 proc tk_getSaveFile {args} {
-    destroy .sk_filebox
+    global env 
+    if { [expr [llength $args] % 2] != 0} {
+        error "args not multiple of two"
+    }
     set currentDir [::swank::getLastDir]
-    jfilechooser .sk_filebox
-     foreach "argType argVal" $args {
+    destroy .sk_filebox
+    set dialogMode $::swank::defaultFileMode
+    set title "Choose File to Save"
+    foreach "argType argVal" $args {
         switch -- $argType {
-            -filetypes {
-                set filters $argVal
-                foreach filter $filters {
-                        set description [lindex $filter 0]
-                        set extensions [lindex $filter 1]
-                        .sk_filebox filter $extensions $description
-                    }
+            -filedialog {
+                set dialogMode $argVal
             }
-            
+            -filetypes {
+                set filters [lindex $argVal 0]
+            }
             -initialdir {
                  set currentDir $argVal
             }
             -title {
-                .sk_filebox configure -dialogtitle $argVal
+                 set title $argVal
+            }
+            default {
+                 error "Invalid option type \"$argType\""
             }
         }
     }
-    .sk_filebox configure -currentdirectory $currentDir
-    .sk_filebox configure -visible true
+
+    
+    if {!$dialogMode} {
+        jfilechooser .sk_filebox
+        .sk_filebox configure -currentdirectory $currentDir
+        .sk_filebox configure -dialogtitle $title
+         if {[info exists filters]} {
+            .sk_filebox filter [lindex $filters 1] [lindex $filters 0]
+         }
+        .sk_filebox configure -visible true
+    } else {
+        filedialog .sk_filebox
+        .sk_filebox configure -directory $currentDir
+        .sk_filebox configure -title $title
+         if {[info exists filters]} {
+            .sk_filebox filter [lindex $filters 1] [lindex $filters 0]
+         }
+    }
     set result [.sk_filebox save]
     destroy .sk_filebox
     if {$result != ""} {
@@ -100,6 +147,55 @@ proc tk_getSaveFile {args} {
     }
     return $result
 }
+proc tk_chooseDirectory {args} {
+    global env 
+    if { [expr [llength $args] % 2] != 0} {
+        error "args not multiple of two"
+    }
+    set currentDir [::swank::getLastDir]
+    destroy .sk_filebox
+    set dialogMode $::swank::defaultFileMode
+    set title "Choose File to Open"
+    foreach "argType argVal" $args {
+        switch -- $argType {
+            -filedialog {
+                set dialogMode $argVal
+            }
+            -initialdir {
+                 set currentDir $argVal
+            }
+            -title {
+                 set title $argVal
+            }
+            default {
+                 error "Invalid option type \"$argType\""
+            }
+        }
+    }
+    # fixme  should allow dialogMode on Mac OS by setting Property
+    set dialogMode 0
+    
+    
+    if {!$dialogMode} {
+        jfilechooser .sk_filebox
+        .sk_filebox configure -currentdirectory $currentDir
+        .sk_filebox configure -fileselectionmode [java::field javax.swing.JFileChooser DIRECTORIES_ONLY]
+        .sk_filebox configure -dialogtitle $title
+        .sk_filebox configure -visible true
+    } else {
+        filedialog .sk_filebox
+        .sk_filebox configure -directory $currentDir
+        .sk_filebox configure -title $title
+    }
+    set result [.sk_filebox open]
+    destroy .sk_filebox
+    if {$result != ""} {
+        ::swank::setLastDir [file dirname $result]
+    }
+    return $result
+}
+
+
 
 proc tk_chooseDirectory {args} {
     destroy .sk_filebox
@@ -202,6 +298,7 @@ proc console {mode args} {
 namespace eval ::swank {
     global env 
     variable lastDir $env(HOME)
+    variable defaultFileMode 0
     proc setLastDir {dir} {
          set ::swank::lastDir $dir
     }
@@ -330,5 +427,3 @@ namespace eval ::swank {
 }
 
 set tk_library resource:/com/onemoonscientific/swank/library
-catch "toplevel ."
-raise .
