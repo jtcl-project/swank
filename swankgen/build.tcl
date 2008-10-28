@@ -17,7 +17,7 @@ set widgets { JButton {SMenuButton JButton} JLabel JCheckBox JCheckBoxMenuItem
 		    JMenu JMenuBar JMenuItem JOptionPane JPanel {LabelFrame JPanel} JPopupMenu {SMenu JPopupMenu} JProgressBar JRadioButton
 		    JRadioButtonMenuItem JScrollBar JScrollPane {JSlider JPanel JSlider} JSplitPane
 		    JTabbedPane JTable JTextArea JTextField JPasswordField JTextPane JToggleButton JToolBar
-		    JEditorPane JTree JWindow {Canvas JPanel} JInternalFrame JDesktopPane JFileChooser JColorChooser}
+		    JEditorPane JTree JWindow {Canvas JPanel} JInternalFrame JDesktopPane JFileChooser JColorChooser FileDialog}
 
 proc makeWidget {f1 type widgetType widget} {
     global specialImports
@@ -96,6 +96,8 @@ foreach widgetArg $widgets {
         foreach widgetClass $widgetClasses {
 	    if {[string match *Document* $widgetClass]} {
 		set widget javax.swing.text.$widgetClass
+	    } elseif {[string match FileDialog $widgetClass]} {
+		set widget java.awt.$widgetClass
 	    } else {
 		set widget javax.swing.$widgetClass
 	    }
