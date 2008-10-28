@@ -167,9 +167,26 @@ public class CursorCmd implements Command {
         }
 
         Image image = imageIcon.getImage();
+        int curWidth = image.getWidth(null);
+        int curHeight = image.getHeight(null);
+
         Toolkit toolkit = Toolkit.getDefaultToolkit();
-        Cursor cursor = toolkit.createCustomCursor(image, new Point(x, y),
-                cursorName);
+        Dimension bestSize = toolkit.getBestCursorSize(curWidth,curHeight);
+        int bestWidth = (int) bestSize.getWidth();
+        int bestHeight = (int) bestSize.getHeight();
+        //System.out.println(cursorName+" "+bestWidth+" "+bestHeight+" "+curWidth+" "+curHeight);
+        if ((bestWidth > curWidth) && (bestHeight > curHeight)) {
+            Image fullImage = new BufferedImage(bestWidth,bestHeight,BufferedImage.TYPE_INT_ARGB);
+            Graphics g2D = fullImage.getGraphics();
+            Color transpColor = new Color(0,true);
+            int xOff = (bestWidth-curWidth)/2;
+            int yOff = (bestHeight-curHeight)/2;
+            x += xOff;
+            y += yOff;
+            g2D.drawImage(image,xOff,yOff,transpColor,null);
+            image = fullImage;
+        }
+        Cursor cursor = toolkit.createCustomCursor(image, new Point(x, y), cursorName);
 
         if (cursor == null) {
             throw new TclException(interp, "Couldn't create cursor from image");
