@@ -1611,10 +1611,11 @@ proc swkMakeSpecial {widget widgetVar} {
         append specialVars "
         SwkFileChooserListener fileChooserListener=null;
         "
-        append specialInits "
+        append specialInits {
+        putClientProperty("FileChooser.useShellFolder", Boolean.FALSE);
         fileChooserListener = new SwkFileChooserListener(interp,this);
         addActionListener (fileChooserListener);
-        "
+        }
         append specialMethods "
         public void setCommand(String name) \{
             fileChooserListener.setCommand(name);
