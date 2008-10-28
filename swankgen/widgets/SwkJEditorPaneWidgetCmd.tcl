@@ -139,14 +139,14 @@ append specialMethods {
                 Container parent = html.getParent();
                 parent.repaint();
                     if (loadScript.length() != 0) {
-                         BindEvent bEvent = new BindEvent(interp,loadScript+" loaded "+html.getName()+" "+url.toString());
+                         BindEvent bEvent = new BindEvent(interp,loadScript+" loaded "+html.getName()+" {"+url.toString()+"}");
                          interp.getNotifier().queueEvent(bEvent,TCL.QUEUE_TAIL);
                     }
            } else {
                 Document doc = html.getDocument();
                 try {
                         if (loadScript.length() != 0) {
-                         BindEvent bEvent = new BindEvent(interp,loadScript+" loading "+html.getName()+" "+url.toString());
+                         BindEvent bEvent = new BindEvent(interp,loadScript+" loading "+html.getName()+" {"+url.toString()+"}");
                          interp.getNotifier().queueEvent(bEvent,TCL.QUEUE_TAIL);
                         }
                      html.setPage2(url);
