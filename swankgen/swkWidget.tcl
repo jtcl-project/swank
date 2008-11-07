@@ -42,7 +42,7 @@ return $result
 
 
 proc swkMakeWidget {} {
-global widgetType widgetClass specialVars specialMethods specialInits resources specialImports
+global widgetType widgetClass specialVars specialMethods specialInits resources specialImports specialSuper
 global specialListeners tcljava
 
 set swankCmd [string tolower [string range  $widgetType 4 end]]
@@ -126,6 +126,7 @@ Dimension minimumSize = null;
 Vector tagList = new Vector();
 $specialVars
 ${widgetType}(Interp interp, String name, String className) \{
+        $specialSuper
         this.name=name.intern();
 		this.interp = interp;
         if (resourceDB == null) \{

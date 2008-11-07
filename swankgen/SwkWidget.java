@@ -53,6 +53,7 @@ public class ${widgetType} extends ${widget} implements SwkWidget, Printable$spe
 
 
     public ${widgetType}(final Interp interp, String name, String className) {
+        $specialSuper
         this.name = name.intern();
         this.interp = interp;
 

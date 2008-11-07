@@ -87,13 +87,14 @@ proc defpar {par widget default} {
 }
 
 proc swkMakeSpecial {widget widgetVar} {
-    global specialCmds specialInits specialVars specialMethods specialGets
+    global specialCmds specialInits specialVars specialMethods specialGets specialSuper
     global specialVCmds specialOpts specialListeners specialConfig specialImports specialWidgetTypeCmds
     
     set specialCmds ""
     set specialVCmds ""
     set specialOpts ""
     set specialInits ""
+    set specialSuper ""
     set specialVars ""
     set specialMethods " "
     set closeMethod {
@@ -1627,7 +1628,32 @@ proc swkMakeSpecial {widget widgetVar} {
         "
         lappend specialGets "setCommand java.lang.String Command"
     }
-    
+    set widgets "FileDialog"
+    if {[lsearch $widgets $widget] >= 0} {
+       append specialImports "import java.io.File;"
+       append specialSuper {
+        super(new Frame());
+       }
+
+       append specialMethods {
+       public void setBorder(SwkBorder border) {
+      }
+      public SwkBorder getBorder() {
+          return null;
+      }
+      public boolean isMultiSelectionEnabled() {
+          return false;
+      }
+      public File getSelectedFile() {
+          return new File(getFile());
+      }
+      public File[] getSelectedFiles() {
+             File[] files = new File[1];
+             files[0] = getSelectedFile();
+          return files;
+      }
+      }
+   } 
     
     set widgets "JRadioButton JRadioButtonMenuItem"
     if {[lsearch $widgets $widget] >= 0} {

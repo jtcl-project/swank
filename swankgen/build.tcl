@@ -22,6 +22,7 @@ set widgets { JButton {SMenuButton JButton} JLabel JCheckBox JCheckBoxMenuItem
 proc makeWidget {f1 type widgetType widget} {
     global specialImports
     global specialInits
+    global specialSuper
     global specialVars
     global specialMethods
     global specialListeners
