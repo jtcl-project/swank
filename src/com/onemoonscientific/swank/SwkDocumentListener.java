@@ -44,7 +44,7 @@ public class SwkDocumentListener implements DocumentListener, VarTrace,
     JTextComponent jtext;
     boolean traceLock = false;
     boolean insertLock = false;
-    boolean removeLock = true;
+    boolean removeLock = false;
 
     SwkDocumentListener(Interp interp, JTextComponent jtext) {
         this.interp = interp;
@@ -99,7 +99,9 @@ public class SwkDocumentListener implements DocumentListener, VarTrace,
                             // Perhaps this is actually OK, because according to the DocumentListener docs:
                             //        ...and all listeners must be notified prior to making further mutations to the Document.
                             if (s1.length() == 0) {
-                                setRemoveLock(true);
+                                if (jtext.getText().length() != 0) {
+                                    setRemoveLock(true);
+                                }
                             } else {
                                 setRemoveLock(true);
                                 setInsertLock(true);
@@ -131,7 +133,9 @@ public class SwkDocumentListener implements DocumentListener, VarTrace,
                 SwingUtilities.invokeLater(new Runnable() {
                         public void run() {
                             if (s1.length() == 0) {
-                                setRemoveLock(true);
+                                if (jtext.getText().length() != 0) {
+                                    setRemoveLock(true);
+                                }
                             } else {
                                 setRemoveLock(true);
                                 setInsertLock(true);
@@ -177,7 +181,7 @@ public class SwkDocumentListener implements DocumentListener, VarTrace,
         SetStringVarEvent dvEvent = new SetStringVarEvent(interp, this,
                 varName, null, string);
 
-        //       System.out.println("updateVar is called"+varName + " "+string + " " + this.toString());
+               //System.out.println("updateVar is called"+varName + " "+string + " " + this.toString());
         interp.getNotifier().queueEvent(dvEvent, TCL.QUEUE_TAIL);
     }
 
