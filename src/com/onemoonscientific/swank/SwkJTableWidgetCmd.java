@@ -177,12 +177,12 @@ class SwkJTableWidgetCmd implements Command {
             break;
 
         case OPT_COLUMNATPOINT:
-            rowOrColumnAtPoint(interp, swkjtable, argv, true);
+            rowOrColumnAtPoint(interp, swkjtable, argv, false);
 
             break;
 
         case OPT_ROWATPOINT:
-            rowOrColumnAtPoint(interp, swkjtable, argv, false);
+            rowOrColumnAtPoint(interp, swkjtable, argv, true);
 
             break;
 
