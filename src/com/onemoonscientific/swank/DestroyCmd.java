@@ -63,16 +63,24 @@ public class DestroyCmd implements Command {
 
     public static void destroyWidgets(final Interp interp,
         final String[] widgetNames) {
+        HashSet<Container> topLevels = new HashSet<Container>();
         for (int j = 0; j < widgetNames.length; j++) {
             try {
-                destroyWidget(interp, widgetNames[j]);
+                destroyWidget(interp, widgetNames[j],topLevels);
             } catch (TclException tclE) {
                 interp.backgroundError();
             }
         }
+        for(Container topLevel:topLevels) {
+             Widgets.relayoutContainer(topLevel);
+        }
     }
 
     public static void destroyWidget(final Interp interp, final String name)
+        throws TclException {
+                destroyWidget(interp, name,null);
+    }
+    public static void destroyWidget(final Interp interp, final String name, final HashSet topLevels)
         throws TclException {
         TclObject tObj = (TclObject) Widgets.getWidget(interp,name);
 
@@ -83,7 +91,7 @@ public class DestroyCmd implements Command {
         Vector childrenNames = Widgets.children(interp, name);
 
         for (int k = 0; k < childrenNames.size(); k++) {
-            destroyWidget(interp, (String) childrenNames.elementAt(k));
+            destroyWidget(interp, (String) childrenNames.elementAt(k),topLevels);
         }
 
         Widgets.removeChild(interp, name);
@@ -110,12 +118,18 @@ public class DestroyCmd implements Command {
                     if (container instanceof Window) {
                         // ((Window) container).pack();
                         //((Window) container).repaint();
+                        if (topLevels != null) {
+                            topLevels.add(container);
+                        }
                         break;
                     }
 
                     if (container instanceof JFrame) {
                         //((JFrame) container).pack();
                         //((JFrame) container).repaint();
+                        if (topLevels != null) {
+                            topLevels.add(container);
+                        }
                         break;
                     }
 
@@ -126,6 +140,9 @@ public class DestroyCmd implements Command {
 
         if (object instanceof Window) {
             ((Window) object).dispose();
+            if (topLevels != null) {
+                topLevels.remove((Container) object);
+            }
         }
 
         if (object instanceof SwkWidget) {
