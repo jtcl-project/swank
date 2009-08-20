@@ -40,6 +40,7 @@ proc tkerror err {
     wm minsize $w 1 1
     wm title $w "Stack Trace for Error"
     wm iconname $w "Stack Trace"
+    wm alwaysontop $w 1
     button $w.ok -text OK -command "destroy $w" -default active
     text $w.text -relief flat -bd 2 -highlightthickness 0 -width 60 -height 20
     jscrollpane $w.spane
