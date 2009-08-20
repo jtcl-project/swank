@@ -285,31 +285,34 @@ public class Widgets {
 
         return c;
     }
-
     public static void relayoutContainer(Container c) {
         Component component = (Component) c;
-
+ 
         while (true) {
             if (component == null) {
                 break;
             }
-
+            component.repaint();
             if (component instanceof Window) {
                 if (component instanceof SwkJFrame) {
                     ((SwkJFrame) component).isPacking = true;
+                    ((Window) component).pack();
+                } else if (component instanceof SwkJWindow) {
+                    ((Window) component).pack();
+                } else {
+                    ((Window) component).validate();
                 }
-
-                ((Window) component).pack();
-
+ 
                 break;
             }
-
+ 
             if (component instanceof JFrame) {
-                ((JFrame) component).pack();
-
+                ((JFrame) component).validate();
+                break;
+            } else if (component instanceof JWindow) {
+                ((JWindow) component).validate();
                 break;
             }
-
             component = ((Component) component).getParent();
         }
     }
