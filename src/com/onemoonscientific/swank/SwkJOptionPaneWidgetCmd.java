@@ -115,20 +115,25 @@ class SwkJOptionPaneWidgetCmd implements Command {
 
     void dialog(final Interp interp, final SwkJOptionPane swkjoptionpane,
         final TclObject[] argv) throws TclException {
-        if (argv.length != 3) {
-            throw new TclNumArgsException(interp, 2, argv, "title");
+        if ((argv.length != 3) && (argv.length != 4)) {
+            throw new TclNumArgsException(interp, 2, argv, "title ?alwaysOnTop?");
+        }
+        boolean alwaysOnTop = true;
+        if (argv.length == 4) {
+            alwaysOnTop = TclBoolean.get(interp,argv[3]);
         }
 
-        (new Dialog()).exec(argv[2].toString());
+        (new Dialog()).exec(argv[2].toString(),alwaysOnTop);
     }
 
     class Dialog extends GetValueOnEventThread {
         int index = -1;
         String title = "";
         Object result = null;
-
-        void exec(String title) {
+        boolean alwaysOnTop = true;
+        void exec(String title,boolean alwaysOnTop) {
             this.title = title;
+            this.alwaysOnTop = alwaysOnTop;
             execOnThread();
             if (result == null) {
                  interp.resetResult();
@@ -139,6 +144,7 @@ class SwkJOptionPaneWidgetCmd implements Command {
 
         public void run() {
             JDialog dialog = swkjoptionpane.createDialog(null, title);
+            dialog.setAlwaysOnTop(alwaysOnTop);
             dialog.show();
             dialog.pack();
             result = swkjoptionpane.getValue();
