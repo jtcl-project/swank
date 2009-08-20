@@ -7,6 +7,7 @@ package com.onemoonscientific.swank;
 
 import tcl.lang.*;
 
+import java.awt.Component;
 import javax.swing.*;
 
 
@@ -51,7 +52,7 @@ public class TkMessageBox implements Command {
         String message = "";
         String type = "ok";
         String defaultValue = "";
-        String parent = null;
+        String dialogParent = "";
         TclObject[] choices = null;
 
         for (int i = 1; i < argv.length; i += 2) {
@@ -64,7 +65,7 @@ public class TkMessageBox implements Command {
             } else if (option.equals("-message")) {
                 message = argv[i + 1].toString();
             } else if (option.equals("-parent")) {
-                parent = argv[i + 1].toString();
+                dialogParent = argv[i + 1].toString();
             } else if (option.equals("-choices")) {
                 choices = TclList.getElements(interp, argv[i + 1]);
             } else if (option.equals("-title")) {
@@ -124,9 +125,31 @@ public class TkMessageBox implements Command {
         } else {
             throw new TclException(interp, "invalid value for type");
         }
+        Component dParent = null;
+        if ((dialogParent != null) && (dialogParent.length() != 0)) {
+            TclObject tObj = (TclObject) Widgets.getWidget(interp,dialogParent);
+            if (tObj == null) {
+                throw new TclException(interp, "bad window path name \"" + dialogParent + "\"");
+            }
+            dParent = (Component) ReflectObject.get(interp, tObj);
+        } else {
+            String focusWindow = FocusCmd.getFocusWindow();
+            if ((focusWindow != null) && (focusWindow.length() != 0)) {
+                TclObject tObj = (TclObject) Widgets.getWidget(interp,focusWindow);
+                if (tObj != null) {
+                    dParent = (Component) ReflectObject.get(interp, tObj);
+                }
+            }
+            if (dParent == null) {
+                TclObject tObj = (TclObject) Widgets.getWidget(interp,".");
+                if (tObj != null) {
+                    dParent = (Component) ReflectObject.get(interp, tObj);
+                }
+            }
+        }
 
         (new Option()).exec(title, message, messageType, options, optionMode,
-            defaultValue);
+            defaultValue,dParent);
     }
 
     class Option extends GetValueOnEventThread {
@@ -139,15 +162,18 @@ public class TkMessageBox implements Command {
         String strResult = "";
         int result = -1;
         boolean optionMode = false;
+        Component dParent=null;
+
 
         void exec(String title, String message, int messageType,
-            String[] options, boolean optionMode, String defaultOption) {
+            String[] options, boolean optionMode, String defaultOption,Component dParent) {
             this.title = title;
             this.message = message;
             this.messageType = messageType;
             this.options = options;
             this.defaultOption = defaultOption;
             this.optionMode = optionMode;
+            this.dParent = dParent;
             execOnThread();
 
             if (optionMode) {
@@ -159,10 +185,10 @@ public class TkMessageBox implements Command {
 
         public void run() {
             if (optionMode) {
-                result = JOptionPane.showOptionDialog(null, message, title, 0,
+                result = JOptionPane.showOptionDialog(dParent, message, title, 0,
                         messageType, null, options, defaultOption);
             } else {
-                strResult = (String) JOptionPane.showInputDialog(null, message,
+                strResult = (String) JOptionPane.showInputDialog(dParent, message,
                         title, messageType, null, (Object[]) options,
                         (Object) defaultOption);
             }
