@@ -1514,6 +1514,13 @@ proc swkMakeSpecial {widget widgetVar} {
                 });
             }
         }
+        set closeMethod {
+            public void close() throws TclException {
+                if ((textVariable != null) && (textVariable.length() != 0)) {
+                    interp.untraceVar(textVariable,this,TCL.TRACE_WRITES| TCL.GLOBAL_ONLY);
+                }
+            }
+        }
     }
     
     
@@ -1609,9 +1616,10 @@ proc swkMakeSpecial {widget widgetVar} {
     
     set widgets "JFileChooser"
     if {[lsearch $widgets $widget] >= 0} {
-        append specialVars "
+        append specialVars {
         SwkFileChooserListener fileChooserListener=null;
-        "
+        String dialogParent="";
+        }
         append specialInits {
         putClientProperty("FileChooser.useShellFolder", Boolean.FALSE);
         fileChooserListener = new SwkFileChooserListener(interp,this);
@@ -1624,9 +1632,16 @@ proc swkMakeSpecial {widget widgetVar} {
         public String getCommand() \{
             return(fileChooserListener.getCommand());
         \}
+        public void setDialogParent(String name) \{
+            dialogParent = name;
+        \}
+        public String getDialogParent() \{
+            return dialogParent;
+        \}
         
         "
         lappend specialGets "setCommand java.lang.String Command"
+        lappend specialGets "setDialogParent java.lang.String DialogParent"
     }
     set widgets "FileDialog"
     if {[lsearch $widgets $widget] >= 0} {
@@ -2552,9 +2567,6 @@ Dimension dSize = new Dimension(scrollRegion[1][0]-scrollRegion[0][0],scrollRegi
     }
     
     append specialMethods {
-        public boolean isFocusTraversable() {
-            return true;
-        }
         public boolean isCreated() {
             return created;
         }
