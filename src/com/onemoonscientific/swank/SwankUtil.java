@@ -75,36 +75,14 @@ public class SwankUtil {
         if (argv.length == 1) {
             if (argv[0].toString().charAt(0) == '#') {
                 String colorName = argv[0].toString();
-                int len = colorName.length() - 1;
-                int r;
-                int g;
-                int b;
 
-                if ((len % 3) != 0) {
-                    throw new TclException(interp,
-                        "invalid color name \"" + colorName + "\"");
-                } else if (len == 3) {
-                    r = Integer.parseInt(colorName.substring(1, 2), 16) * 16;
-                    g = Integer.parseInt(colorName.substring(2, 3), 16) * 16;
-                    b = Integer.parseInt(colorName.substring(3, 4), 16) * 16;
-                } else if (len == 6) {
-                    r = Integer.parseInt(colorName.substring(1, 3), 16);
-                    g = Integer.parseInt(colorName.substring(3, 5), 16);
-                    b = Integer.parseInt(colorName.substring(5, 7), 16);
-                } else if (len == 9) {
-                    r = Integer.parseInt(colorName.substring(1, 4), 16) / 16;
-                    g = Integer.parseInt(colorName.substring(4, 7), 16) / 16;
-                    b = Integer.parseInt(colorName.substring(7, 10), 16) / 16;
-                } else if (len == 12) {
-                    r = Integer.parseInt(colorName.substring(1, 5), 16) / 256;
-                    g = Integer.parseInt(colorName.substring(5, 9), 16) / 256;
-                    b = Integer.parseInt(colorName.substring(9, 13), 16) / 256;
+                Color color = parseHexColor(colorName);
+                if (color == null) {
+                    throw new TclException(interp, "invalid color name \"" + colorName + "\"");
                 } else {
-                    throw new TclException(interp,
-                        "invalid color name \"" + colorName + "\"");
+                    return color;
                 }
 
-                return new Color(r, g, b);
             } else {
                 Color color = (Color) colorTable.get(argv[0].toString()
                                                             .toLowerCase());
@@ -134,11 +112,17 @@ public class SwankUtil {
         }
     }
 
-    public static Color getColor(String name) {
+    public static Color getColor(String colorName) {
         if (colorTable == null) {
             initColorTable();
         }
-        return (Color) colorTable.get(name.toLowerCase());
+        Color color = null;
+        if (colorName.charAt(0) == '#') {
+            color = parseHexColor(colorName);
+        } else {
+            color = (Color) colorTable.get(colorName.toLowerCase());
+        }
+        return color;
     }
 
     public static GradientPaint getGradient(Interp interp, TclObject tclObject,
@@ -835,7 +819,7 @@ public class SwankUtil {
 
     public static BufferedImage makeBufferedImage(ImageIcon imageIcon) {
         BufferedImage bufferedImage = new BufferedImage(imageIcon.getIconWidth(),
-                imageIcon.getIconHeight(), BufferedImage.TYPE_INT_RGB);
+                imageIcon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = bufferedImage.createGraphics();
         g2.drawImage(imageIcon.getImage(), 0, 0, null);
 
@@ -2281,6 +2265,39 @@ public class SwankUtil {
             }
         }
                 
+    }
+
+    private static Color parseHexColor(String colorName) {
+        int len = colorName.length() - 1;
+        int r;
+        int g;
+        int b;
+        try {
+            if ((len % 3) != 0) {
+                return null;
+            } else if (len == 3) {
+                r = Integer.parseInt(colorName.substring(1, 2), 16) * 16;
+                g = Integer.parseInt(colorName.substring(2, 3), 16) * 16;
+                b = Integer.parseInt(colorName.substring(3, 4), 16) * 16;
+            } else if (len == 6) {
+                r = Integer.parseInt(colorName.substring(1, 3), 16);
+                g = Integer.parseInt(colorName.substring(3, 5), 16);
+                b = Integer.parseInt(colorName.substring(5, 7), 16);
+            } else if (len == 9) {
+                r = Integer.parseInt(colorName.substring(1, 4), 16) / 16;
+                g = Integer.parseInt(colorName.substring(4, 7), 16) / 16;
+                b = Integer.parseInt(colorName.substring(7, 10), 16) / 16;
+            } else if (len == 12) {
+                r = Integer.parseInt(colorName.substring(1, 5), 16) / 256;
+                g = Integer.parseInt(colorName.substring(5, 9), 16) / 256;
+                b = Integer.parseInt(colorName.substring(9, 13), 16) / 256;
+            } else {
+                return null;
+            }
+        } catch (NumberFormatException nFE) {
+            return null;
+        }
+        return new Color(r, g, b);
     }
        
   }
