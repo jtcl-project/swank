@@ -144,7 +144,16 @@ class SwkJFileChooserWidgetCmd implements Command {
             throw new TclNumArgsException(interp, 2, argv, "");
         }
 
-        File[] files = (new Open()).exec(swkjfilechooser);
+        String dialogParent = swkjfilechooser.getDialogParent();
+        Component dParent = null;
+        if ((dialogParent != null) && (dialogParent.length() != 0)) {
+            TclObject tObj = (TclObject) Widgets.getWidget(interp,dialogParent);
+            if (tObj == null) {
+                throw new TclException(interp, "bad window path name \"" + dialogParent + "\"");
+            }
+            dParent = (Component) ReflectObject.get(interp, tObj);
+        }
+        File[] files = (new Open()).exec(swkjfilechooser,dParent);
 
         if (files != null) {
             if (swkjfilechooser.isMultiSelectionEnabled()) {
@@ -173,8 +182,17 @@ class SwkJFileChooserWidgetCmd implements Command {
         if (argv.length != 2) {
             throw new TclNumArgsException(interp, 2, argv, "");
         }
+        String dialogParent = swkjfilechooser.getDialogParent();
+        Component dParent = null;
+        if ((dialogParent != null) && (dialogParent.length() != 0)) {
+            TclObject tObj = (TclObject) Widgets.getWidget(interp,dialogParent);
+            if (tObj == null) {
+                throw new TclException(interp, "bad window path name \"" + dialogParent + "\"");
+            }
+            dParent = (Component) ReflectObject.get(interp, tObj);
+        }
 
-        File file = (new Save()).exec(swkjfilechooser);
+        File file = (new Save()).exec(swkjfilechooser,dParent);
 
         if (file != null) {
             interp.setResult(file.getAbsolutePath());
@@ -196,10 +214,12 @@ class SwkJFileChooserWidgetCmd implements Command {
         int index = -1;
         String item = null;
         SwkJFileChooser swkjfilechooser;
+        Component dParent=null;
         File[] files = null;
 
-        File[] exec(SwkJFileChooser swkjfilechooser) {
+        File[] exec(SwkJFileChooser swkjfilechooser, Component dParent) {
             this.swkjfilechooser = swkjfilechooser;
+            this.dParent = dParent;
             execOnThread();
 
             return files;
@@ -208,7 +228,7 @@ class SwkJFileChooserWidgetCmd implements Command {
         public void run() {
             swkjfilechooser.setVisible(true);
 
-            int option = swkjfilechooser.showOpenDialog(swkjfilechooser.getParent());
+            int option = swkjfilechooser.showOpenDialog(dParent);
 
             if (option == JFileChooser.APPROVE_OPTION) {
                 if (swkjfilechooser.isMultiSelectionEnabled()) {
@@ -227,10 +247,12 @@ class SwkJFileChooserWidgetCmd implements Command {
         int index = -1;
         String item = null;
         SwkJFileChooser swkjfilechooser;
+        Component dParent=null;
         File file = null;
 
-        File exec(SwkJFileChooser swkjfilechooser) {
+        File exec(SwkJFileChooser swkjfilechooser, Component dParent) {
             this.swkjfilechooser = swkjfilechooser;
+            this.dParent = dParent;
             execOnThread();
 
             return file;
@@ -239,7 +261,7 @@ class SwkJFileChooserWidgetCmd implements Command {
         public void run() {
             swkjfilechooser.setVisible(true);
 
-            int soption = swkjfilechooser.showSaveDialog(swkjfilechooser.getParent());
+            int soption = swkjfilechooser.showSaveDialog(dParent);
 
             if (soption == JFileChooser.APPROVE_OPTION) {
                 file = swkjfilechooser.getSelectedFile();
