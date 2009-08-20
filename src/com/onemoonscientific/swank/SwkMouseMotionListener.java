@@ -80,7 +80,6 @@ public class SwkMouseMotionListener implements MouseMotionListener, SwkListener 
     public void mouseMoved(MouseEvent e) {
         // System.out.println("move "+e);
         if (processing) {
-            System.out.println("consume motion");
             e.consume();
         } else {
             //processing = true;
