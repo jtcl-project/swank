@@ -293,24 +293,27 @@ public class WinfoCmd implements Command {
         case OPT_VROOTX:
             winfo = new Winfo();
             winfo.exec(object);
-
+/*
             if (!winfo.showing) {
                 throw new TclException(interp, "component is not showing");
             }
 
             interp.setResult(winfo.locationOnScreen.x);
-
+*/
+            interp.setResult(0);
             break;
 
         case OPT_VROOTY:
             winfo = new Winfo();
             winfo.exec(object);
-
+/*
             if (!winfo.showing) {
                 throw new TclException(interp, "component is not showing");
             }
 
             interp.setResult(winfo.locationOnScreen.y);
+*/
+            interp.setResult(0);
 
             break;
 
