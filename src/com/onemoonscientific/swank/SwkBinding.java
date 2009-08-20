@@ -43,6 +43,7 @@ public class SwkBinding {
     public static final int COMPONENT = 5;
     public static final int CONTAINER = 6;
     public static final int WINDOW = 7;
+    public static final int APP = 8;
     public static final int PRESS = 0;
     public static final int RELEASE = 1;
     public static final int CLICK = 2;
