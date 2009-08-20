@@ -311,6 +311,10 @@ class SwkJTableWidgetCmd implements Command {
             interp.setResult("");
         } else if (tblObject instanceof TclObject) {
             interp.setResult((TclObject) tblObject);
+        } else if (tblObject instanceof Color) {
+            interp.setResult(SwankUtil.parseColor((Color) tblObject));
+        } else if (tblObject instanceof Boolean) {
+            interp.setResult(((Boolean) tblObject).booleanValue());
         } else {
             interp.setResult(tblObject.toString());
         }
