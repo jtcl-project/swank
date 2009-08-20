@@ -41,6 +41,14 @@ proc tk_getOpenFile {args} {
     set dialogMode 0
     set multipleSelection 0
     set title "Choose File to Open"
+    set parent ""
+    if {![catch {focus} fWin] && ($fWin ne "")} {
+        set fTWin [winfo toplevel $fWin]
+        if {[winfo exists $fTWin] && [winfo viewable $fTWin]} {
+            set parent $fTWin
+        }
+    }
+
     set dialogMode $::swank::defaultFileMode
     foreach "argType argVal" $args {
         switch -- $argType {
@@ -59,6 +67,9 @@ proc tk_getOpenFile {args} {
             -multiple {
                  set multipleSelection $argVal
             }
+            -parent {
+                 set parent $argVal
+            }
             default {
                  error "Invalid option type \"$argType\""
             }
@@ -73,6 +84,7 @@ proc tk_getOpenFile {args} {
         .sk_filebox configure -currentdirectory $currentDir
         .sk_filebox configure -multiselectionenabled $multipleSelection
         .sk_filebox configure -dialogtitle $title
+        .sk_filebox configure -dialogparent $parent
          if {[info exists filters]} {
             .sk_filebox filter [lindex $filters 1] [lindex $filters 0]
          }
@@ -103,6 +115,13 @@ proc tk_getSaveFile {args} {
     destroy .sk_filebox
     set dialogMode $::swank::defaultFileMode
     set title "Choose File to Save"
+    set parent ""
+    if {![catch {focus} fWin] && ($fWin ne "")} {
+        set fTWin [winfo toplevel $fWin]
+        if {[winfo exists $fTWin] && [winfo viewable $fTWin]} {
+            set parent $fTWin
+        }
+    }
     foreach "argType argVal" $args {
         switch -- $argType {
             -filedialog {
@@ -117,6 +136,9 @@ proc tk_getSaveFile {args} {
             -title {
                  set title $argVal
             }
+            -parent {
+                 set parent $argVal
+            }
             default {
                  error "Invalid option type \"$argType\""
             }
@@ -128,6 +150,7 @@ proc tk_getSaveFile {args} {
         jfilechooser .sk_filebox
         .sk_filebox configure -currentdirectory $currentDir
         .sk_filebox configure -dialogtitle $title
+        .sk_filebox configure -dialogparent $parent
          if {[info exists filters]} {
             .sk_filebox filter [lindex $filters 1] [lindex $filters 0]
          }
@@ -156,6 +179,13 @@ proc tk_chooseDirectory {args} {
     destroy .sk_filebox
     set dialogMode $::swank::defaultFileMode
     set title "Choose File to Open"
+    set parent ""
+    if {![catch {focus} fWin] && ($fWin ne "")} {
+        set fTWin [winfo toplevel $fWin]
+        if {[winfo exists $fTWin] && [winfo viewable $fTWin]} {
+            set parent $fTWin
+        }
+    }
     foreach "argType argVal" $args {
         switch -- $argType {
             -filedialog {
@@ -166,6 +196,9 @@ proc tk_chooseDirectory {args} {
             }
             -title {
                  set title $argVal
+            }
+            -parent {
+                 set parent $argVal
             }
             default {
                  error "Invalid option type \"$argType\""
@@ -179,6 +212,7 @@ proc tk_chooseDirectory {args} {
     if {!$dialogMode} {
         jfilechooser .sk_filebox
         .sk_filebox configure -currentdirectory $currentDir
+        .sk_filebox configure -dialogparent $parent
         .sk_filebox configure -fileselectionmode [java::field javax.swing.JFileChooser DIRECTORIES_ONLY]
         .sk_filebox configure -dialogtitle $title
         .sk_filebox configure -visible true
@@ -191,33 +225,6 @@ proc tk_chooseDirectory {args} {
     destroy .sk_filebox
     if {$result != ""} {
         ::swank::setLastDir [file dirname $result]
-    }
-    return $result
-}
-
-
-
-proc tk_chooseDirectory {args} {
-    destroy .sk_filebox
-    set currentDir [::swank::getLastDir]
-    jfilechooser .sk_filebox -currentdirectory $currentDir
-     foreach "argType argVal" $args {
-        switch -- $argType {
-             -initialdir {
-                 set currentDir $argVal
-            }
-            -title {
-                .sk_filebox configure -dialogtitle $argVal
-            }
-        }
-    }
-    .sk_filebox configure -currentdirectory $currentDir
-    .sk_filebox configure -fileselectionmode [java::field javax.swing.JFileChooser DIRECTORIES_ONLY]
-    .sk_filebox configure -visible true
-    set result [.sk_filebox open]
-    destroy .sk_filebox
-    if {$result != ""} {
-        ::swank::setLastDir $result
     }
     return $result
 }
