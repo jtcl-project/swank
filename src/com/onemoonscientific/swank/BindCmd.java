@@ -32,6 +32,7 @@ import java.awt.event.*;
 import java.util.*;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionListener;
 
 
 /** This class implements the Jacl bind command.
@@ -55,9 +56,11 @@ public class BindCmd implements Command {
     public static Hashtable mouseTable = new Hashtable();
     public static Hashtable stateChangeTable = new Hashtable();
     public static Hashtable selectionChangeTable = new Hashtable();
+    public static Hashtable appChangeTable = new Hashtable();
 
     // This Hashtable stores class level mousemotion bindings.
     public static Hashtable mouseMotionTable = new Hashtable();
+    public static  SwkAppListener swkAppListener = null;
 
     /** Method called to process the bind command.
      * @param interp The interpreter in which this command is active.
@@ -119,6 +122,8 @@ public class BindCmd implements Command {
                 currentTable = stateChangeTable;
             } else if (binding.type == SwkBinding.SELECTIONCHANGED) {
                 currentTable = selectionChangeTable;
+            } else if (binding.type == SwkBinding.APP) {
+                currentTable = appChangeTable;
             } else {
                 throw new TclException(interp,
                     "invalid binding type \"" + binding.type +
@@ -258,7 +263,14 @@ public class BindCmd implements Command {
      */
     public static void setupBinding(Interp interp, SwkBinding binding,
         SwkWidget swkWidget, Vector bindingVector) {
-        if (binding.type == SwkBinding.FOCUS) {
+        if (binding.type == SwkBinding.APP) {
+            if (swkAppListener == null) {
+                KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+                swkAppListener = new SwkAppListener(interp);
+                focusManager.addPropertyChangeListener(swkAppListener);
+            }
+            swkAppListener.setBinding(binding);
+        } else if (binding.type == SwkBinding.FOCUS) {
             if (swkWidget == null) {
                 setClassBinding(bindingVector,binding);
             } else {
@@ -303,18 +315,16 @@ public class BindCmd implements Command {
             if (swkWidget == null) {
                 setClassBinding(bindingVector,binding);
             } else {
-                if (swkWidget instanceof SwkJTable) {
-                    SwkJTable swkjtable = (SwkJTable) swkWidget;
-                    ListSelectionModel listSelectionModel = swkjtable.getSelectionModel();
-
-                    if (swkjtable.getListSelectionListener() == null) {
+                if (swkWidget instanceof SwkListListener) {
+                    SwkListListener swkListListener = (SwkListListener) swkWidget;
+                    if (swkListListener.getListSelectionListener() == null) {
                         SwkListSelectionListener selectionListener = new SwkListSelectionListener(interp,
                                 (Component) swkWidget);
-                        swkjtable.getSelectionModel().addListSelectionListener(selectionListener);
-                        swkjtable.setListSelectionListener(selectionListener);
+                        swkListListener.getSelectionModel().addListSelectionListener(selectionListener);
+                        swkListListener.setListSelectionListener(selectionListener);
                     }
 
-                    swkjtable.getListSelectionListener().setBinding(binding);
+                    swkListListener.getListSelectionListener().setBinding(binding);
                 }
             }
         } else if (binding.type == SwkBinding.MOUSE) {
