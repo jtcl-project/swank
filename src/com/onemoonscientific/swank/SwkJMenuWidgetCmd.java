@@ -27,7 +27,7 @@ import javax.swing.tree.*;
 class SwkJMenuWidgetCmd implements Command {
     static final private String[] validCmds = {
         "cget", "configure", "add", "delete", "popup", "post",
-        "invoke", "index","insert"
+        "invoke", "index","insert","entrycget", "entryconfigure"
     };
     static final private int OPT_CGET = 0;
     static final private int OPT_CONFIGURE = 1;
@@ -38,6 +38,8 @@ class SwkJMenuWidgetCmd implements Command {
     static final private int OPT_INVOKE = 6;
     static final private int OPT_INDEX = 7;
     static final private int OPT_INSERT = 8;
+    static final private int OPT_ENTRYCGET = 9;
+    static final private int OPT_ENTRYCONFIGURE = 10;
     static boolean gotDefaults = false;
     Interp interp;
 
@@ -106,6 +108,41 @@ class SwkJMenuWidgetCmd implements Command {
                 interp.setResult(list);
             } else {
                 swkjmenu.configure(interp, argv, 2);
+            }
+
+            break;
+        case OPT_ENTRYCGET:
+            if (argv.length != 4) {
+                throw new TclNumArgsException(interp, 2, argv, "option");
+            }
+            String ecgetResult = (new EntryConfigure()).execGet(interp, swkjmenu,  argv, 2);
+            interp.setResult(ecgetResult);
+            break;
+
+        case OPT_ENTRYCONFIGURE:
+            if (argv.length == 2) {
+                throw new TclNumArgsException(interp, 2, argv, "index ?options?");
+            } else if (argv.length == 3) {
+                (new EntryConfigure()).execGetAll(interp, swkjmenu, argv, 2);
+            } else if (argv.length == 4) {
+                String result = (new EntryConfigure()).execGet(interp, swkjmenu,  argv, 2);
+                ResourceObject ro = (ResourceObject) SwkJMenu.resourceDB.get(argv[3].toString());
+
+                if (ro == null) {
+                    throw new TclException(interp,
+                        "unknown option \"" + argv[2].toString() + "\"");
+                }
+
+                TclObject list = TclList.newInstance();
+                TclList.append(interp, list,
+                    TclString.newInstance(argv[3].toString()));
+                TclList.append(interp, list, TclString.newInstance(argv[3].toString()));
+                TclList.append(interp, list, TclString.newInstance(argv[3].toString()));
+                TclList.append(interp, list, TclString.newInstance(""));
+                TclList.append(interp, list, TclString.newInstance(result));
+                interp.setResult(list);
+            } else {
+                (new EntryConfigure()).execConfigure(interp, swkjmenu, argv, 2);
             }
 
             break;
@@ -604,5 +641,56 @@ class SwkJMenuWidgetCmd implements Command {
                 }
             }
         }
+    }
+    class EntryConfigure extends GetValueOnEventThread {
+        SwkJMenu swkjmenu = null;
+        TclObject entryArg = null;
+        String sIndex = null;
+        int index = 0;
+        SwkJMenuItem jMenuItem = null;
+        String execGet(Interp interp, final SwkJMenu swkjmenu, final TclObject[] argv, final int start) throws TclException {
+            this.entryArg = argv[start];
+            this.swkjmenu = swkjmenu;
+            getEntry();
+            if (jMenuItem != null) {
+                  return jMenuItem.jget(interp, argv[start+1]);
+            }
+            return "";
+        }
+        void execConfigure(Interp interp, final SwkJMenu swkjmenu, final TclObject[] argv, final int start) throws TclException {
+            this.entryArg = argv[start];
+            this.swkjmenu = swkjmenu;
+            getEntry();
+            if (jMenuItem != null) {
+                  jMenuItem.configure(interp, argv, start+1);
+            }
+        }
+
+        void execGetAll(Interp interp, final SwkJMenu swkjmenu, final TclObject[] argv, final int start) throws TclException {
+            this.entryArg = argv[start];
+            this.swkjmenu = swkjmenu;
+            getEntry();
+            if (jMenuItem != null) {
+                  jMenuItem.jgetAll(interp);
+            }
+        }
+        void getEntry() {
+            try {
+                index = TclInteger.get(interp, entryArg);
+            } catch (TclException tclE) {
+                sIndex = entryArg.toString();
+            }
+            execOnThread();
+        }
+
+        public void run() {
+            if (sIndex != null) {
+                index = swkjmenu.getIndex(sIndex, -1);
+            }
+           Component comp = swkjmenu.getPopupMenu().getComponent(index);
+            if (comp instanceof SwkJMenuItem) {
+                 jMenuItem = (SwkJMenuItem) comp;
+            }
+       }
     }
 }
