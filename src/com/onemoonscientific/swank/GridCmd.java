@@ -209,6 +209,12 @@ public class GridCmd implements Command {
             if (master == null) {
                 System.out.println("mnull");
             }
+        } else if (component instanceof JWindow) {
+            master = ((JWindow) component).getContentPane();
+
+            if (master == null) {
+                System.out.println("mnull");
+            }
         } else if (component instanceof JInternalFrame) {
             master = ((JInternalFrame) component).getContentPane();
         } else {
@@ -1196,6 +1202,8 @@ public class GridCmd implements Command {
 
         if (masterObj instanceof JFrame) {
             master = ((JFrame) masterObj).getContentPane();
+        } else if (masterObj instanceof JWindow) {
+            master = ((JWindow) masterObj).getContentPane();
         } else if (masterObj instanceof JInternalFrame) {
             master = ((JInternalFrame) masterObj).getContentPane();
         } else {
