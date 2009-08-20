@@ -28,9 +28,11 @@ append specialVars {
   JScrollPane jscroll=null;
   JComponent packComponent=null;
   private static final String longItem = "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm";
+  SwkListSelectionListener selectionListener = null;
+
 }
 
-append specialListeners {,ChangeListener}
+append specialListeners {,ChangeListener,SwkListListener}
 
 
 append specialInits {
@@ -71,6 +73,13 @@ append specialInits {
 
 
 append specialMethods {
+         public SwkListSelectionListener getListSelectionListener() {
+             return(selectionListener);
+         }
+         public void setListSelectionListener(SwkListSelectionListener selectionListener) {
+             this.selectionListener = selectionListener;
+         }
+
 public void stateChanged(ChangeEvent event) {
     			 if (jview == null) {
     			     jview = (JViewport) getParent();
