@@ -30,6 +30,7 @@ append specialVars {
     
     SwkListSelectionListener selectionListener = null;
 }
+append specialListeners {,SwkListListener}
 
 append specialImports {
 
