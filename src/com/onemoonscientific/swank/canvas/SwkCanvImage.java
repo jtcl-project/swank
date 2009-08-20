@@ -75,7 +75,29 @@ public class SwkCanvImage extends SwkShape {
     public BufferedImage getImage() {
         return bufferedImage;
     }
+    public boolean hitShape(double x1, double y1) {
+        boolean hit = false;
+        if (bufferedImage != null) {
+            AffineTransform aT = new AffineTransform();
+            AffineTransform shapeTransform = this.getTransform();
 
+            if (shapeTransform != null) {
+                aT.setTransform(shapeTransform);
+            }
+
+            double x= storeCoords[0];
+            double y= storeCoords[1];
+            aT.rotate(this.rotate, x, y);
+            double width = bufferedImage.getWidth();
+            double height = bufferedImage.getHeight();
+            Rectangle2D.Double rf1 = new Rectangle2D.Double(x, y, width, height);
+            Rectangle2D rf1d = aT.createTransformedShape(rf1).getBounds2D();
+            shape = rf1d;
+ 
+            hit = shape.contains(x1, y1);
+        }
+        return hit;
+    }
     public void coords(SwkImageCanvas canvas, double[] coords)
         throws SwkException {
         if (coords.length != 2) {
