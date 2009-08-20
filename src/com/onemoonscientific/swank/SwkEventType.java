@@ -64,6 +64,8 @@ public class SwkEventType {
         new SwkEventType("Destroy", SwkBinding.WINDOW, SwkBinding.DESTROY),
         new SwkEventType("Unmap", SwkBinding.WINDOW, SwkBinding.EXPOSE),
         new SwkEventType("Configure", SwkBinding.COMPONENT, SwkBinding.COMPONENT),
+        new SwkEventType("AppOut", SwkBinding.APP, SwkBinding.OUT),
+        new SwkEventType("AppIn", SwkBinding.APP, SwkBinding.IN),
         new SwkEventType("<<StateChanged>>", SwkBinding.STATECHANGED,
             SwkBinding.STATECHANGED),
         new SwkEventType("<<SelectionChanged>>", SwkBinding.SELECTIONCHANGED,
