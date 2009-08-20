@@ -781,7 +781,11 @@ public class SwkImageCanvas implements SwkCanvasType {
                 continue;
             }
 
-            if (swkShape.shape == null) {
+            if (swkShape instanceof SwkCanvImage) {
+                if (!swkShape.hitShape(x1, y1)) {
+                    continue;
+                }
+            } else if (swkShape.shape == null) {
                 if (!swkShape.hitShape(x1, y1)) {
                     continue;
                 }
