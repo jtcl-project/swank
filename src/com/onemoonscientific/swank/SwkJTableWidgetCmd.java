@@ -811,15 +811,17 @@ class SwkJTableWidgetCmd implements Command {
 
         public void run() {
             TableColumnModel cM = swkjtable.getColumnModel();
-            TableColumn tableColumn = cM.getColumn(column);
-            tableColumn.setPreferredWidth(width);
+            if (column < cM.getColumnCount()) {
+                TableColumn tableColumn = cM.getColumn(column);
+                tableColumn.setPreferredWidth(width);
 
-            if (width == 0) {
-                tableColumn.setMinWidth(width);
-                tableColumn.setMaxWidth(width);
-            }
+                if (width == 0) {
+                    tableColumn.setMinWidth(width);
+                    tableColumn.setMaxWidth(width);
+                }
 
-            tableColumn.setWidth(width);
+                tableColumn.setWidth(width);
+           }
         }
     }
 
@@ -838,8 +840,10 @@ class SwkJTableWidgetCmd implements Command {
 
         public void run() {
             TableColumnModel cM = swkjtable.getColumnModel();
-            TableColumn tableColumn = cM.getColumn(column);
-            width = tableColumn.getWidth();
+            if (column < cM.getColumnCount()) {
+                TableColumn tableColumn = cM.getColumn(column);
+                width = tableColumn.getWidth();
+            }
         }
     }
 
@@ -858,8 +862,10 @@ class SwkJTableWidgetCmd implements Command {
 
         public void run() {
             TableColumnModel cM = swkjtable.getColumnModel();
-            TableColumn tableColumn = cM.getColumn(column);
-            tableColumn.setResizable(resizable);
+            if (column < cM.getColumnCount()) {
+                TableColumn tableColumn = cM.getColumn(column);
+                tableColumn.setResizable(resizable);
+            }
         }
     }
 
@@ -879,8 +885,10 @@ class SwkJTableWidgetCmd implements Command {
 
         public void run() {
             TableColumnModel cM = swkjtable.getColumnModel();
-            TableColumn tableColumn = cM.getColumn(column);
-            resizable = tableColumn.getResizable();
+            if (column < cM.getColumnCount()) {
+                TableColumn tableColumn = cM.getColumn(column);
+                resizable = tableColumn.getResizable();
+            }
         }
     }
 }
