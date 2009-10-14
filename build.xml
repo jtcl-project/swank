@@ -59,7 +59,7 @@
 
   <target depends="prepare" description="compile the source " name="compile_swank">
     <!-- Compile the java code from ${dir.src} into ${dir.build} -->
-    <javac debug="true" destdir="${dir.build}" srcdir="${dir.src}:${dir.gensrc}">
+    <javac source="1.5" debug="true" destdir="${dir.build}" srcdir="${dir.src}:${dir.gensrc}">
          <classpath refid="jacl.classpath"/>
     <exclude name="**/swank/canvas/SwankUtil.java"/>
      </javac>
@@ -68,21 +68,21 @@
   
   <target description="compile the source help " name="compile_help">
     <!-- Compile the java code from ${dir.hsrc} into ${dir.build} -->
-    <javac debug="true" destdir="${dir.hbuild}" srcdir="${dir.hsrc}">
+    <javac source="1.5" debug="true" destdir="${dir.hbuild}" srcdir="${dir.hsrc}">
          <classpath refid="help.classpath"/>
     </javac>
   </target>
 
   <target depends="prepare" description="compile the chart files" name="compile_chart">
     <!-- Compile the java code from ${dir.chartsrc} into ${dir.chartbuild} -->
-    <javac debug="true" destdir="${dir.chartbuild}" srcdir="${dir.chartsrc}">
+    <javac source="1.5" debug="true" destdir="${dir.chartbuild}" srcdir="${dir.chartsrc}">
          <classpath refid="chart.classpath"/>
     </javac>
   </target>
 
   <target depends="prepare" description="compile the 3d files" name="compile_3d">
     <!-- Compile the java code from ${dir.src3d} into ${dir.3dbuild} -->
-    <javac debug="true" destdir="${dir.3dbuild}" srcdir="${dir.src3d}">
+    <javac source="1.5" debug="true" destdir="${dir.3dbuild}" srcdir="${dir.src3d}">
          <classpath refid="canvas3d.classpath"/>
     </javac>
   </target>
