@@ -104,7 +104,7 @@ public class BindCmd implements Command {
     void addBinding(Interp interp, SwkBinding binding, String tag)
         throws TclException {
         SwkWidget swkWidget = null;
-        Vector bindingVector = null;
+        ArrayList<SwkBinding> bindingVector = null;
         Hashtable currentTable = null;
 
         if (tag.charAt(0) != '.') {
@@ -130,10 +130,10 @@ public class BindCmd implements Command {
                     "\" in bind cmd");
             }
 
-            bindingVector = (Vector) currentTable.get(tag);
+            bindingVector = (ArrayList<SwkBinding>) currentTable.get(tag);
 
             if (bindingVector == null) {
-                bindingVector = new Vector();
+                bindingVector = new ArrayList<SwkBinding>();
                 currentTable.put(tag, bindingVector);
             }
         } else {
@@ -155,32 +155,32 @@ public class BindCmd implements Command {
         setupBinding(interp, binding, swkWidget, bindingVector);
     }
 
-    public static Vector getMouseBindings(String tag) {
-        Vector bindingVector = (Vector) mouseTable.get(tag);
+    public static ArrayList<SwkBinding> getMouseBindings(String tag) {
+        ArrayList<SwkBinding> bindingVector = (ArrayList<SwkBinding>) mouseTable.get(tag);
 
         return bindingVector;
     }
 
-    public static Vector getMouseMotionBindings(String tag) {
-        Vector bindingVector = (Vector) mouseMotionTable.get(tag);
+    public static ArrayList<SwkBinding> getMouseMotionBindings(String tag) {
+        ArrayList<SwkBinding> bindingVector = (ArrayList<SwkBinding>) mouseMotionTable.get(tag);
 
         return bindingVector;
     }
 
-    public static Vector getKeyBindings(String tag) {
-        Vector bindingVector = (Vector) keyTable.get(tag);
+    public static ArrayList<SwkBinding> getKeyBindings(String tag) {
+        ArrayList<SwkBinding> bindingVector = (ArrayList<SwkBinding>) keyTable.get(tag);
 
         return bindingVector;
     }
 
-    public static Vector getFocusBindings(String tag) {
-        Vector bindingVector = (Vector) focusTable.get(tag);
+    public static ArrayList<SwkBinding> getFocusBindings(String tag) {
+        ArrayList<SwkBinding> bindingVector = (ArrayList<SwkBinding>) focusTable.get(tag);
 
         return bindingVector;
     }
 
-    public static Vector getVirtualBindings(String tag) {
-        Vector bindingVector = (Vector) virtualTable.get(tag);
+    public static ArrayList<SwkBinding> getVirtualBindings(String tag) {
+        ArrayList<SwkBinding> bindingVector = (ArrayList<SwkBinding>) virtualTable.get(tag);
 
         return bindingVector;
     }
@@ -262,7 +262,7 @@ public class BindCmd implements Command {
      * @param bindingVector This Vector stores all the bindings of this type.
      */
     public static void setupBinding(Interp interp, SwkBinding binding,
-        SwkWidget swkWidget, Vector bindingVector) {
+        SwkWidget swkWidget, ArrayList<SwkBinding> bindingVector) {
         if (binding.type == SwkBinding.APP) {
             if (swkAppListener == null) {
                 KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
@@ -417,38 +417,38 @@ public class BindCmd implements Command {
             throw new TclException(interp, "bad window path name ");
         }
 
-        Vector bindingVector = (Vector) BindCmd.mouseTable.get(className);
+        ArrayList<SwkBinding> bindingVector = (ArrayList<SwkBinding>) BindCmd.mouseTable.get(className);
 
         if (bindingVector != null) {
             for (i = 0; i < bindingVector.size(); i++) {
-                setupBinding(interp, (SwkBinding) bindingVector.elementAt(i),
+                setupBinding(interp, (SwkBinding) bindingVector.get(i),
                     swkWidget, bindingVector);
             }
         }
 
-        bindingVector = (Vector) BindCmd.mouseMotionTable.get(className);
+        bindingVector = (ArrayList<SwkBinding>) BindCmd.mouseMotionTable.get(className);
 
         if (bindingVector != null) {
             for (i = 0; i < bindingVector.size(); i++) {
-                setupBinding(interp, (SwkBinding) bindingVector.elementAt(i),
+                setupBinding(interp, (SwkBinding) bindingVector.get(i),
                     swkWidget, bindingVector);
             }
         }
 
-        bindingVector = (Vector) BindCmd.keyTable.get(className);
+        bindingVector = (ArrayList<SwkBinding>) BindCmd.keyTable.get(className);
 
         if (bindingVector != null) {
             for (i = 0; i < bindingVector.size(); i++) {
-                setupBinding(interp, (SwkBinding) bindingVector.elementAt(i),
+                setupBinding(interp, (SwkBinding) bindingVector.get(i),
                     swkWidget, bindingVector);
             }
         }
 
-        bindingVector = (Vector) BindCmd.focusTable.get(className);
+        bindingVector = (ArrayList<SwkBinding>) BindCmd.focusTable.get(className);
 
         if (bindingVector != null) {
             for (i = 0; i < bindingVector.size(); i++) {
-                setupBinding(interp, (SwkBinding) bindingVector.elementAt(i),
+                setupBinding(interp, (SwkBinding) bindingVector.get(i),
                     swkWidget, bindingVector);
             }
         }
@@ -649,49 +649,49 @@ public class BindCmd implements Command {
         SwkExceptionCmd.doExceptionCmd(interp, sbuf.toString());
     }
 
-    public static void setClassBinding(Vector bindings, SwkBinding newBinding) {
+    public static void setClassBinding(ArrayList<SwkBinding> bindings, SwkBinding newBinding) {
         SwkBinding binding = null;
 
         if (!newBinding.add) {
             for (int i = 0; i < bindings.size(); i++) {
-                binding = (SwkBinding) bindings.elementAt(i);
+                binding = (SwkBinding) bindings.get(i);
 
                 if (binding.equals(newBinding)) {
                     if (newBinding.remove) {
-                        bindings.removeElementAt(i);
+                        bindings.remove(i);
                     } else {
-                        bindings.setElementAt(newBinding, i);
+                        bindings.add(i,newBinding);
                     }
                     return;
                 }
             }
         }
 
-        bindings.addElement(newBinding);
+        bindings.add(newBinding);
     }
 
     public static void setVirtualBinding(SwkWidget swkWidget,
         SwkBinding newBinding) {
         SwkBinding binding = null;
-        Vector bindings = swkWidget.getVirtualBindings();
+        ArrayList<SwkBinding> bindings = swkWidget.getVirtualBindings();
 
         if (bindings == null) {
-            bindings = new Vector();
+            bindings = new ArrayList<SwkBinding>();
             swkWidget.setVirtualBindings(bindings);
         }
 
         if (!newBinding.add) {
             for (int i = 0; i < bindings.size(); i++) {
-                binding = (SwkBinding) bindings.elementAt(i);
+                binding = (SwkBinding) bindings.get(i);
 
                 if (binding.equals(newBinding)) {
-                    bindings.setElementAt(newBinding, i);
+                    bindings.add(i,newBinding);
 
                     return;
                 }
             }
         }
 
-        bindings.addElement(newBinding);
+        bindings.add(newBinding);
     }
 }

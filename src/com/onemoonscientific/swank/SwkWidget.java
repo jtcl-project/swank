@@ -98,9 +98,9 @@ public interface SwkWidget {
 
     public void close() throws TclException;
 
-    public Vector getVirtualBindings();
+    public ArrayList<SwkBinding> getVirtualBindings();
 
-    public void setVirtualBindings(Vector bindings);
+    public void setVirtualBindings(ArrayList<SwkBinding> bindings);
 
     public void setValues(Setter setter, int iOpt);
 

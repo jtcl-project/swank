@@ -42,12 +42,12 @@ public class SwkFocusListener implements FocusListener, SwkListener {
     Interp interp;
     String command = "puts Focus";
     Component component;
-    Vector bindings;
+    ArrayList<SwkBinding> bindings;
 
     SwkFocusListener(Interp interp, Component component) {
         this.interp = interp;
         this.component = component;
-        bindings = new Vector();
+        bindings = new ArrayList<SwkBinding>();
     }
 
     public void setCommand(String name) {
@@ -63,17 +63,17 @@ public class SwkFocusListener implements FocusListener, SwkListener {
 
         if (!newBinding.add) {
             for (int i = 0; i < bindings.size(); i++) {
-                binding = (SwkBinding) bindings.elementAt(i);
+                binding = bindings.get(i);
 
                 if (binding.equals(newBinding)) {
-                    bindings.setElementAt(newBinding, i);
+                    bindings.add(i,newBinding);
 
                     return;
                 }
             }
         }
 
-        bindings.addElement(newBinding);
+        bindings.add(newBinding);
     }
 
     public void focusGained(FocusEvent e) {
@@ -96,7 +96,7 @@ public class SwkFocusListener implements FocusListener, SwkListener {
         int i;
 
         for (i = 0; i < bindings.size(); i++) {
-            binding = (SwkBinding) bindings.elementAt(i);
+            binding = bindings.get(i);
 
             if (binding.subtype != subtype) {
                 continue;

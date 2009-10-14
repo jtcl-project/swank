@@ -43,11 +43,11 @@ import java.beans.PropertyChangeListener;
 public class SwkAppListener implements PropertyChangeListener, SwkListener {
     Interp interp;
     String command = "puts App";
-    Vector bindings;
+    ArrayList<SwkBinding> bindings;
 
     SwkAppListener(Interp interp) {
         this.interp = interp;
-        bindings = new Vector();
+        bindings = new ArrayList<SwkBinding>();
     }
 
     public void setCommand(String name) {
@@ -63,17 +63,17 @@ public class SwkAppListener implements PropertyChangeListener, SwkListener {
 
         if (!newBinding.add) {
             for (int i = 0; i < bindings.size(); i++) {
-                binding = (SwkBinding) bindings.elementAt(i);
+                binding = bindings.get(i);
 
                 if (binding.equals(newBinding)) {
-                    bindings.setElementAt(newBinding, i);
+                    bindings.add(i,newBinding);
 
                     return;
                 }
             }
         }
 
-        bindings.addElement(newBinding);
+        bindings.add(newBinding);
     }
 
     public void processEvent(EventObject eventObject, Object obj, int subtype) {
@@ -84,7 +84,7 @@ public class SwkAppListener implements PropertyChangeListener, SwkListener {
         int i;
 
         for (i = 0; i < bindings.size(); i++) {
-            binding = (SwkBinding) bindings.elementAt(i);
+            binding = bindings.get(i);
             if (binding.subtype != subtype) {
                 continue;
             }

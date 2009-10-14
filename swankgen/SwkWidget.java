@@ -33,7 +33,7 @@ public class ${widgetType} extends ${widget} implements SwkWidget, Printable$spe
     String name = null;
     String className = null;
     LinkedList children = null;
-    Vector virtualBindings = null;
+    ArrayList<SwkBinding> virtualBindings = null;
     int active = 0;
     boolean created = false;
     TclObject tclObject = null;
@@ -133,11 +133,11 @@ public class ${widgetType} extends ${widget} implements SwkWidget, Printable$spe
         }
     }
 
-    public void setVirtualBindings(Vector bindings) {
+    public void setVirtualBindings(ArrayList<SwkBinding> bindings) {
         virtualBindings = bindings;
     }
 
-    public Vector getVirtualBindings() {
+    public ArrayList<SwkBinding> getVirtualBindings() {
         return (virtualBindings);
     }
 

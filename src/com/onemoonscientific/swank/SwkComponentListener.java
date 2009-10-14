@@ -41,14 +41,14 @@ import javax.swing.text.*;
 public class SwkComponentListener implements ComponentListener, SwkListener {
     Interp interp;
     String command = "puts component";
-    Vector bindings;
+    ArrayList<SwkBinding> bindings;
     Component component;
     boolean shown = false;
 
     SwkComponentListener(Interp interp, Component component) {
         this.interp = interp;
         this.component = component;
-        bindings = new Vector();
+        bindings = new ArrayList<SwkBinding>();
     }
 
     public void setCommand(String name) {
@@ -60,17 +60,17 @@ public class SwkComponentListener implements ComponentListener, SwkListener {
 
         if (!newBinding.add) {
             for (int i = 0; i < bindings.size(); i++) {
-                binding = (SwkBinding) bindings.elementAt(i);
+                binding = (SwkBinding) bindings.get(i);
 
                 if (binding.equals(newBinding)) {
-                    bindings.setElementAt(newBinding, i);
+                    bindings.add(i,newBinding);
 
                     return;
                 }
             }
         }
 
-        bindings.addElement(newBinding);
+        bindings.add(newBinding);
     }
 
     public String getCommand() {
@@ -128,7 +128,7 @@ public class SwkComponentListener implements ComponentListener, SwkListener {
         SwkBinding binding;
 
         for (int i = 0; i < bindings.size(); i++) {
-            binding = (SwkBinding) bindings.elementAt(i);
+            binding = (SwkBinding) bindings.get(i);
 
             if ((binding.command != null) && (binding.command.length() != 0)) {
                 try {

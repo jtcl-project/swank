@@ -41,17 +41,17 @@ import javax.swing.text.*;
 public class SwkKeyListener implements KeyListener, SwkListener {
     Interp interp;
     String command = "puts key";
-    Vector bindings;
+    ArrayList<SwkBinding> bindings;
     Component component;
     boolean consumeNextType = false;
 
     SwkKeyListener(Interp interp, Component component) {
         this.interp = interp;
         this.component = component;
-        bindings = new Vector();
+        bindings = new ArrayList<SwkBinding>();
     }
 
-    public Vector getBindings() {
+    public ArrayList<SwkBinding> getBindings() {
         return bindings;
     }
 
@@ -64,17 +64,17 @@ public class SwkKeyListener implements KeyListener, SwkListener {
 
         if (!newBinding.add) {
             for (int i = 0; i < bindings.size(); i++) {
-                binding = (SwkBinding) bindings.elementAt(i);
+                binding = bindings.get(i);
 
                 if (binding.equals(newBinding)) {
-                    bindings.setElementAt(newBinding, i);
+                    bindings.add(i,newBinding);
 
                     return;
                 }
             }
         }
 
-        bindings.addElement(newBinding);
+        bindings.add(newBinding);
     }
 
     public String getCommand() {
@@ -151,7 +151,7 @@ public class SwkKeyListener implements KeyListener, SwkListener {
         }
 
         KeyStroke keyStroke = KeyStroke.getKeyStrokeForEvent(e);
-        Vector bindings = null;
+        ArrayList<SwkBinding> bindings = null;
         Vector tagList = ((SwkWidget) component).getTagList();
         boolean nativeProcessEvent = true;
         boolean breakOut = false;
@@ -186,7 +186,7 @@ public class SwkKeyListener implements KeyListener, SwkListener {
 
             //System.out.println("bindings "+bindings.size()); 
             for (i = 0; i < bindings.size(); i++) {
-                binding = (SwkBinding) bindings.elementAt(i);
+                binding = (SwkBinding) bindings.get(i);
 
                 //System.out.println("binding is "+binding.toString()+" "+binding.subtype+" "+subtype);    
                 if (binding.subtype != subtype) {

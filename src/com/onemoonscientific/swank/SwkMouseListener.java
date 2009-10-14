@@ -33,28 +33,25 @@ import java.lang.*;
 
 import java.util.*;
 
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.text.*;
 
 
 public class SwkMouseListener implements MouseListener, SwkListener {
     Interp interp;
     String command = "puts mouse";
-    Vector bindings;
+    ArrayList<SwkBinding> bindings;
     Component component;
 
     SwkMouseListener(Interp interp, Component component) {
         this.interp = interp;
         this.component = component;
-        bindings = new Vector();
+        bindings = new ArrayList<SwkBinding>();
     }
 
     public void setCommand(String name) {
         command = name.intern();
     }
 
-    public Vector getBindings() {
+    public ArrayList<SwkBinding> getBindings() {
         return bindings;
     }
 
@@ -63,17 +60,17 @@ public class SwkMouseListener implements MouseListener, SwkListener {
 
         if (!newBinding.add) {
             for (int i = 0; i < bindings.size(); i++) {
-                binding = (SwkBinding) bindings.elementAt(i);
+                binding = (SwkBinding) bindings.get(i);
 
                 if (binding.equals(newBinding)) {
-                    bindings.setElementAt(newBinding, i);
-
+                    bindings.add(i,newBinding);
+                    Collections.sort(bindings);
                     return;
                 }
             }
         }
-
-        bindings.addElement(newBinding);
+        bindings.add(newBinding);
+        Collections.sort(bindings);
     }
 
     public String getCommand() {
@@ -122,7 +119,7 @@ public class SwkMouseListener implements MouseListener, SwkListener {
             //component.requestFocus ();
         }
 
-        Vector bindings = null;
+        ArrayList<SwkBinding> bindings = null;
         Vector tagList = ((SwkWidget) component).getTagList();
 
         for (int j = 0; j < tagList.size(); j++) {
@@ -145,9 +142,9 @@ public class SwkMouseListener implements MouseListener, SwkListener {
             if (bindings == null) {
                 continue;
             }
-
+            SwkBinding lastBinding = null;
             for (i = 0; i < bindings.size(); i++) {
-                binding = (SwkBinding) bindings.elementAt(i);
+                binding = bindings.get(i);
 
                 if (binding.type != SwkBinding.MOUSE) {
                     continue;
@@ -156,11 +153,10 @@ public class SwkMouseListener implements MouseListener, SwkListener {
                 if (binding.subtype != subtype) {
                     continue;
                 }
-
                 if ((subtype != SwkBinding.ENTER) &&
                         (subtype != SwkBinding.EXIT)) {
                     if ((e.getClickCount() > 0) &&
-                            (binding.count != e.getClickCount())) {
+                            (binding.count > e.getClickCount())) {
                         continue;
                     }
 
@@ -172,6 +168,9 @@ public class SwkMouseListener implements MouseListener, SwkListener {
                     if (!SwkMouseMotionListener.checkMods(binding.mod, mods)) {
                         continue;
                     }
+                }
+                if (binding.sameButClick(lastBinding)) {
+                    continue;
                 }
 
                 if ((binding.command != null) &&
@@ -190,6 +189,7 @@ public class SwkMouseListener implements MouseListener, SwkListener {
                         }
                     }
                 }
+                lastBinding = binding;
             }
         }
     }

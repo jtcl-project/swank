@@ -41,14 +41,14 @@ import javax.swing.text.*;
 public class SwkMouseMotionListener implements MouseMotionListener, SwkListener {
     Interp interp;
     String command = "puts mouse";
-    Vector bindings;
+    ArrayList<SwkBinding> bindings;
     Component component;
     boolean processing = false;
 
     SwkMouseMotionListener(Interp interp, Component component) {
         this.interp = interp;
         this.component = component;
-        bindings = new Vector();
+        bindings = new ArrayList<SwkBinding>();
     }
 
     public void setCommand(String name) {
@@ -60,17 +60,17 @@ public class SwkMouseMotionListener implements MouseMotionListener, SwkListener 
 
         if (!newBinding.add) {
             for (int i = 0; i < bindings.size(); i++) {
-                binding = (SwkBinding) bindings.elementAt(i);
+                binding = (SwkBinding) bindings.get(i);
 
                 if (binding.equals(newBinding)) {
-                    bindings.setElementAt(newBinding, i);
+                    bindings.add(i,newBinding);
 
                     return;
                 }
             }
         }
 
-        bindings.addElement(newBinding);
+        bindings.add(newBinding);
     }
 
     public String getCommand() {
@@ -118,7 +118,7 @@ public class SwkMouseMotionListener implements MouseMotionListener, SwkListener 
             int buttons = e.getButton();
 
             // System.out.println("button "+e.getButton());
-            Vector bindings = null;
+            ArrayList<SwkBinding> bindings = null;
             Vector tagList = ((SwkWidget) component).getTagList();
 
             for (int j = 0; j < tagList.size(); j++) {
@@ -135,7 +135,7 @@ public class SwkMouseMotionListener implements MouseMotionListener, SwkListener 
                 }
 
                 for (i = 0; i < bindings.size(); i++) {
-                    binding = (SwkBinding) bindings.elementAt(i);
+                    binding = bindings.get(i);
 
                     // System.out.println("binding is "+binding.toString()+" "+binding.subtype+" bmod "+binding.mod+" mod "+mods);
                     if (binding.subtype != SwkBinding.MOTION) {

@@ -34,8 +34,8 @@ import java.util.*;
 
 import javax.swing.*;
 
+public class SwkBinding implements Comparable {
 
-public class SwkBinding {
     public static final int FOCUS = 1;
     public static final int MOUSE = 2;
     public static final int KEY = 3;
@@ -75,7 +75,7 @@ public class SwkBinding {
     public String string = null;
 
     public String toString() {
-        return SwkEventType.getStringRep(type, subtype, detail);
+        return SwkEventType.getStringRep(type, subtype, detail)+" "+command;
     }
 
     public boolean equals(SwkBinding testBinding) {
@@ -94,5 +94,44 @@ public class SwkBinding {
         } else {
             return (true);
         }
+    }
+
+    public boolean sameButClick(SwkBinding testBinding) {
+        if (testBinding == null) {
+            return false;
+        } else if (type != testBinding.type) {
+            return false;
+        } else if (subtype != testBinding.subtype) {
+            return false;
+        } else if (mod != testBinding.mod) {
+            return false;
+        } else if (detail != testBinding.detail) {
+            return false;
+        } else if (keyStroke != testBinding.keyStroke) {
+            return false;
+        } else if (count == testBinding.count) {
+            return false;
+       } else {
+            return (true);
+        }
+    }
+
+    public int compareTo(Object o) {
+        int result = 0;
+        if (o == null) {
+            result = 1;
+        } else {
+            if (!(o instanceof SwkBinding)) {
+                result = 1;
+            } else {
+                SwkBinding b2 = (SwkBinding) o;
+                if (count > b2.count) {
+                    result = -1;
+                } else if (count < b2.count) {
+                    result = 1;
+                }
+            }
+        }
+        return result;
     }
 }
