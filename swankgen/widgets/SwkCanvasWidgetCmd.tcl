@@ -328,11 +328,11 @@ append specialMethods {
         swkImageCanvas.setEventCurrentShape(eventCurrentShape);
 
         // System.out.println("processE "+type+" "+subtype+" C "+currentTag+" P "+previousTag);
-        Vector bindings = null;
+        ArrayList<SwkBinding> bindings = null;
 
         if (type == SwkBinding.FOCUS) {
             if ((currentTag != null) && (focusHash != null)) {
-                bindings = (Vector) focusHash.get(currentTag);
+                bindings = (ArrayList<SwkBinding>) focusHash.get(currentTag);
             }
 
             if (bindings == null) {
@@ -341,11 +341,11 @@ append specialMethods {
         } else if (type == SwkBinding.MOUSE) {
             if (subtype == SwkBinding.EXIT) {
                 if ((previousTag != null) && (mouseHash != null)) {
-                    bindings = (Vector) mouseHash.get(previousTag);
+                    bindings = (ArrayList<SwkBinding>) mouseHash.get(previousTag);
                 }
             } else {
                 if ((currentTag != null) && (mouseHash != null)) {
-                    bindings = (Vector) mouseHash.get(currentTag);
+                    bindings = (ArrayList<SwkBinding>) mouseHash.get(currentTag);
                 }
             }
 
@@ -354,7 +354,7 @@ append specialMethods {
             }
         } else if (type == SwkBinding.MOUSEMOTION) {
             if ((currentTag != null) && (mouseMotionHash != null)) {
-                bindings = (Vector) mouseMotionHash.get(currentTag);
+                bindings = (ArrayList<SwkBinding>) mouseMotionHash.get(currentTag);
             }
 
             if (bindings == null) {
@@ -362,7 +362,7 @@ append specialMethods {
             }
         } else if (type == SwkBinding.KEY) {
             if ((currentTag != null) && (keyHash != null)) {
-                bindings = (Vector) keyHash.get(currentTag);
+                bindings = (ArrayList<SwkBinding>) keyHash.get(currentTag);
             }
 
             if (bindings == null) {
@@ -377,9 +377,9 @@ append specialMethods {
         //    System.out.println("event "+e);
         //    System.out.println("emods "+mods);
         int i;
-
+        SwkBinding lastBinding = null;
         for (i = 0; i < bindings.size(); i++) {
-            binding = (SwkBinding) bindings.elementAt(i);
+            binding =  bindings.get(i);
 
             //  System.out.println(type+" "+subtype+" "+" "+binding.type+" "+binding.subtype);
             if (binding.subtype != subtype) {
@@ -388,7 +388,7 @@ append specialMethods {
 
             if ((subtype != SwkBinding.ENTER) && (subtype != SwkBinding.EXIT)) {
                 if ((type == SwkBinding.MOUSE) && (e.getClickCount() > 0) &&
-                        (binding.count != e.getClickCount())) {
+                        (binding.count > e.getClickCount())) {
                     continue;
                 }
 
@@ -411,6 +411,10 @@ append specialMethods {
                     continue;
                 }
             }
+            if (binding.sameButClick(lastBinding)) {
+                continue;
+            }
+
 
             if ((binding.command != null) && (binding.command.length() != 0)) {
                 try {
@@ -426,6 +430,7 @@ append specialMethods {
                     }
                 }
             }
+            lastBinding = binding;
         }
     }
 
@@ -453,57 +458,57 @@ append specialMethods {
 
    public void setupBinding(Interp interp, SwkBinding newBinding,
         String tagName) {
-        Vector bindVec = null;
+        ArrayList<SwkBinding> bindVec = null;
 
         if (newBinding.type == SwkBinding.FOCUS) {
             if (focusHash == null) {
                 focusHash = new Hashtable();
-                bindVec = new Vector(2);
+                bindVec = new ArrayList<SwkBinding>(2);
                 focusHash.put(tagName, bindVec);
             } else {
-                bindVec = (Vector) focusHash.get(tagName);
+                bindVec = (ArrayList<SwkBinding>) focusHash.get(tagName);
 
                 if (bindVec == null) {
-                    bindVec = new Vector(2);
+                    bindVec = new ArrayList<SwkBinding>(2);
                     focusHash.put(tagName, bindVec);
                 }
             }
         } else if (newBinding.type == SwkBinding.MOUSE) {
             if (mouseHash == null) {
                 mouseHash = new Hashtable();
-                bindVec = new Vector(2);
+                bindVec = new ArrayList<SwkBinding>(2);
                 mouseHash.put(tagName, bindVec);
             } else {
-                bindVec = (Vector) mouseHash.get(tagName);
+                bindVec = (ArrayList<SwkBinding>) mouseHash.get(tagName);
 
                 if (bindVec == null) {
-                    bindVec = new Vector(2);
+                    bindVec = new ArrayList<SwkBinding>(2);
                     mouseHash.put(tagName, bindVec);
                 }
             }
         } else if (newBinding.type == SwkBinding.MOUSEMOTION) {
             if (mouseMotionHash == null) {
                 mouseMotionHash = new Hashtable();
-                bindVec = new Vector(2);
+                bindVec = new ArrayList<SwkBinding>(2);
                 mouseMotionHash.put(tagName, bindVec);
             } else {
-                bindVec = (Vector) mouseMotionHash.get(tagName);
+                bindVec = (ArrayList<SwkBinding>) mouseMotionHash.get(tagName);
 
                 if (bindVec == null) {
-                    bindVec = new Vector(2);
+                    bindVec = new ArrayList<SwkBinding>(2);
                     mouseMotionHash.put(tagName, bindVec);
                 }
             }
         } else if (newBinding.type == SwkBinding.KEY) {
             if (keyHash == null) {
                 keyHash = new Hashtable();
-                bindVec = new Vector(2);
+                bindVec = new ArrayList<SwkBinding>(2);
                 keyHash.put(tagName, bindVec);
             } else {
-                bindVec = (Vector) keyHash.get(tagName);
+                bindVec = (ArrayList<SwkBinding>) keyHash.get(tagName);
 
                 if (bindVec == null) {
-                    bindVec = new Vector(2);
+                    bindVec = new ArrayList<SwkBinding>(2);
                     keyHash.put(tagName, bindVec);
                 }
             }
@@ -512,17 +517,17 @@ append specialMethods {
         if (bindVec != null) {
             if (!newBinding.add) {
                 for (int i = 0; i < bindVec.size(); i++) {
-                    SwkBinding binding = (SwkBinding) bindVec.elementAt(i);
+                    SwkBinding binding =  bindVec.get(i);
 
                     if (binding.equals(newBinding)) {
-                        bindVec.setElementAt(newBinding, i);
+                        bindVec.add(i,newBinding);
 
                         return;
                     }
                 }
             }
 
-            bindVec.addElement(newBinding);
+            bindVec.add(newBinding);
         }
     }
 
