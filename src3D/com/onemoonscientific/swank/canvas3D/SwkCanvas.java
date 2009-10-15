@@ -33,7 +33,7 @@ public class SwkCanvas extends javax.swing.JPanel implements SwkWidget, Printabl
     String name = null;
     String className = null;
     LinkedList children = null;
-    Vector virtualBindings = null;
+    ArrayList<SwkBinding> virtualBindings = null;
     int active = 0;
     boolean created = false;
     TclObject tclObject = null;
@@ -429,11 +429,11 @@ private static final int OPT_YSCROLLCOMMAND = 51;
         }
     }
 
-    public void setVirtualBindings(Vector bindings) {
+    public void setVirtualBindings(ArrayList<SwkBinding> bindings) {
         virtualBindings = bindings;
     }
 
-    public Vector getVirtualBindings() {
+    public ArrayList<SwkBinding> getVirtualBindings() {
         return (virtualBindings);
     }
 
