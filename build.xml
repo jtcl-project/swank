@@ -12,6 +12,8 @@
   <property name="dir.chartbuild" value="chartbuild"/>
   <property name="dir.dist" value="dist"/>
   <property name="dir.libs" value="../../libs"/>
+  <property name="srclvl" value="1.5"/>
+  <property name="trgtlvl" value="1.5"/>
   <taskdef classname="de.hunsicker.jalopy.plugin.ant.AntPlugin" name="jalopy">
   <classpath>
     <fileset dir="/usr/local/jalopy/lib">
@@ -59,35 +61,37 @@
 
   <target depends="prepare" description="compile the source " name="compile_swank">
     <!-- Compile the java code from ${dir.src} into ${dir.build} -->
-    <javac source="1.5" debug="true" destdir="${dir.build}" srcdir="${dir.src}:${dir.gensrc}">
+    <javac target="${trgtlvl}" source="${srclvl}" debug="true" destdir="${dir.build}" srcdir="${dir.src}:${dir.gensrc}">
          <classpath refid="jacl.classpath"/>
     <exclude name="**/swank/canvas/SwankUtil.java"/>
      </javac>
 
   </target>
   
-  <target description="compile the source help " name="compile_help">
+  <target description="compile the source help " depends="prepare" name="compile_help">
     <!-- Compile the java code from ${dir.hsrc} into ${dir.build} -->
-    <javac source="1.5" debug="true" destdir="${dir.hbuild}" srcdir="${dir.hsrc}">
+    <javac target="${trgtlvl}" source="${srclvl}" debug="true" destdir="${dir.hbuild}" srcdir="${dir.hsrc}">
          <classpath refid="help.classpath"/>
     </javac>
   </target>
 
   <target depends="prepare" description="compile the chart files" name="compile_chart">
     <!-- Compile the java code from ${dir.chartsrc} into ${dir.chartbuild} -->
-    <javac source="1.5" debug="true" destdir="${dir.chartbuild}" srcdir="${dir.chartsrc}">
+    <javac target="${trgtlvl}" source="${srclvl}" debug="true" destdir="${dir.chartbuild}" srcdir="${dir.chartsrc}">
          <classpath refid="chart.classpath"/>
     </javac>
   </target>
 
   <target depends="prepare" description="compile the 3d files" name="compile_3d">
     <!-- Compile the java code from ${dir.src3d} into ${dir.3dbuild} -->
-    <javac source="1.5" debug="true" destdir="${dir.3dbuild}" srcdir="${dir.src3d}">
+    <javac target="${trgtlvl}" source="${srclvl}" debug="true" destdir="${dir.3dbuild}" srcdir="${dir.src3d}">
          <classpath refid="canvas3d.classpath"/>
     </javac>
   </target>
 
   <target depends="compile_swank" name="compile">
+  </target>
+ <target depends="dist,hdist,cdist,3ddist" name="alldist">
   </target>
 
   <target depends="compile" description="generate the distribution" name="dist">
@@ -152,6 +156,10 @@
   <target description="clean up" name="clean">
     <!-- Delete the ${dir.build} and ${dir.dist} directory trees -->
     <delete dir="${dir.build}"/>
+    <delete dir="${dir.hbuild}"/>
+    <delete dir="${dir.chartbuild}"/>
+    <delete dir="${dir.3dbuild}"/>
+
     <delete dir="${dir.dist}"/>
     <delete dir="${dir.gensrc}"/>
   </target>
