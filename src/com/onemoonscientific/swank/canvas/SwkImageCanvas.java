@@ -1023,31 +1023,33 @@ public class SwkImageCanvas implements SwkCanvasType {
                 if (swkShape.shape == null) {
                     swkShape.paintShape(g2);
                 } else {
-                    if (swkShape instanceof SwkPolygon) {
-                    }
+                    if (swkShape instanceof SwkLine) {
+                        swkShape.paintShape(g2);
+                    } else {
 
-                    AffineTransform shapeTransform = swkShape.getTransform();
-                    Shape shape = swkShape.shape;
-                    if (shapeTransform != null) {
-                        shape = shapeTransform.createTransformedShape(shape);
-                    }
+                        AffineTransform shapeTransform = swkShape.getTransform();
+                        Shape shape = swkShape.shape;
+                        if (shapeTransform != null) {
+                            shape = shapeTransform.createTransformedShape(shape);
+                        }
 
-                    if (swkShape.texturePaint != null) {
-                        g2.setPaint(swkShape.texturePaint);
-                        g2.fill(shape);
+                        if (swkShape.texturePaint != null) {
+                            g2.setPaint(swkShape.texturePaint);
+                            g2.fill(shape);
 
-                        //g.drawImage(swkShape.textureImage.getImage(),0,0,null);
-                    } else if (swkShape.fillGradient != null) {
-                        g2.setPaint(swkShape.fillGradient);
-                        g2.fill(shape);
-                    } else if (swkShape.fill != null) {
-                        g2.setPaint(swkShape.fill);
-                        g2.fill(shape);
-                    }
+                            //g.drawImage(swkShape.textureImage.getImage(),0,0,null);
+                        } else if (swkShape.fillGradient != null) {
+                            g2.setPaint(swkShape.fillGradient);
+                            g2.fill(shape);
+                        } else if (swkShape.fill != null) {
+                            g2.setPaint(swkShape.fill);
+                            g2.fill(shape);
+                        }
 
-                    if (swkShape.outline != null) {
-                        g2.setPaint(swkShape.outline);
-                        g2.draw(shape);
+                        if (swkShape.outline != null) {
+                            g2.setPaint(swkShape.outline);
+                            g2.draw(shape);
+                        }
                     }
                 }
             }
