@@ -153,12 +153,14 @@ public class XYArrayData extends XYData   {
      * @return the number of items within the series.
      */
     public int getItemCount(int series) {
-        ArrayList<Double> yData = (ArrayList<Double>) ySeries.get(series);
-        if (yData != null) {
-            return yData.size();
-        } else {
-            return 0;
+        int count = 0;
+        if ((series >= 0) && (series < ySeries.size())) {
+            ArrayList<Double> yData = (ArrayList<Double>) ySeries.get(series);
+            if (yData != null) {
+                count = yData.size();
+            }
         }
+        return count;
     }
     public int getItemCount() {
         int count = 0;
@@ -189,7 +191,7 @@ public class XYArrayData extends XYData   {
      * @return The index.
      */
     public int indexOf(Comparable seriesKey) {
-        return -1;
+        return ySeriesNames.indexOf(seriesKey);
     }
 
     /**
