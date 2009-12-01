@@ -54,7 +54,7 @@ import java.text.DecimalFormat;
 public class XYLineAndShape extends XYPlotShape {
     static CanvasParameter[] parameters = {
         new TagsParameter(), new RangeaxisParameter(), new DomainaxisParameter(), new DatasetParameter(), new ShapesvisibleParameter(),
-         new PaintParameter(), new LinesvisibleParameter() };
+         new PaintParameter(), new LinesvisibleParameter(), new SplineParameter() };
     static Map parameterMap = new TreeMap();
 
     static {
@@ -77,6 +77,12 @@ public class XYLineAndShape extends XYPlotShape {
 
     public  void setRenderer() {
         renderer = new XYLineAndShapeRenderer();
+        plot.setRenderer(renderer);
+        XYToolTipGenerator generator = new DCXYToolTipGenerator("{0} {1} {2} {3}", new DecimalFormat("0.000"), new DecimalFormat("0.000") ); 
+        renderer.setToolTipGenerator(generator); 
+    }
+    public  void setRenderer(XYItemRenderer newRenderer) {
+        renderer = newRenderer;
         plot.setRenderer(renderer);
         XYToolTipGenerator generator = new DCXYToolTipGenerator("{0} {1} {2} {3}", new DecimalFormat("0.000"), new DecimalFormat("0.000") ); 
         renderer.setToolTipGenerator(generator); 
@@ -154,7 +160,11 @@ public class XYLineAndShape extends XYPlotShape {
                 int nSeries = data.getSeriesCount();
                 StringBuffer sBuf = new StringBuffer();
                 for (int i=0;i<nSeries;i++) {
-                    boolean bValue = (((XYLineAndShapeRenderer) renderer).getSeriesShapesVisible(i)).booleanValue();
+                    Boolean visible = (((XYLineAndShapeRenderer) renderer).getSeriesShapesVisible(i));
+                    boolean bValue = false;
+                    if (visible != null) {
+                        bValue = visible.booleanValue();
+                    }
                     if (i > 0) {
                        sBuf.append(' ');
                     }
@@ -244,4 +254,43 @@ public class XYLineAndShape extends XYPlotShape {
             }
         }
     }
+   static class SplineParameter extends IntegerParameter {
+        private static String name = "spline";
+
+        SplineParameter() {
+            CanvasParameter.addParameter(this);
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public int getValue(SwkShape swkShape) {
+            int value = 0;
+            XYItemRenderer renderer = ((XYPlotShape) swkShape).renderer;
+            if (renderer instanceof XYSplineRenderer) {
+                   XYSplineRenderer splineRenderer = (XYSplineRenderer) renderer;
+                   value = splineRenderer.getPrecision();
+            } 
+            return value;
+        }
+
+        public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
+            XYItemRenderer renderer = ((XYPlotShape) swkShape).renderer;
+            int newValue = getNewValue();
+            if (newValue <= 0) {
+                if (renderer instanceof XYSplineRenderer) {
+                    XYPlotShape plotShape = (XYPlotShape) swkShape;
+                    plotShape.setRenderer(new XYLineAndShapeRenderer());
+                }
+            } else
+                if (renderer instanceof XYSplineRenderer) {
+                     XYSplineRenderer splineRenderer = (XYSplineRenderer) renderer;
+                     splineRenderer.setPrecision(newValue);
+                } else {
+                    XYPlotShape plotShape = (XYPlotShape) swkShape;
+                    plotShape.setRenderer(new XYSplineRenderer(newValue));
+                }
+            }
+        }
 }
