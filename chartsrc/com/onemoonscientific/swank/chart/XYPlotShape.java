@@ -92,6 +92,10 @@ public class XYPlotShape extends SwkShape {
         renderer = new XYLineAndShapeRenderer();
         plot.setRenderer(renderer);
     }
+    public  void setRenderer(XYItemRenderer newRenderer) {
+        renderer = newRenderer;
+        plot.setRenderer(renderer);
+    }
     public void setDataset(String name) {
         XYData xyData = XYData.get(name);
         plot.setDataset(xyData);
