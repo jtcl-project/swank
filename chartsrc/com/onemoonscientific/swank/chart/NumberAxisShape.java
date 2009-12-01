@@ -53,7 +53,7 @@ public class NumberAxisShape extends SwkShape {
 
     static CanvasParameter[] parameters = {
         new TagsParameter(), new EdgeParameter(), new CursorParameter(),
-        new LabelParameter(), new MinParameter(), new MaxParameter()
+        new LabelParameter(), new MinParameter(), new MaxParameter(), new AutoParameter()
     };
     static Map parameterMap = new TreeMap();
 
@@ -306,6 +306,26 @@ public class NumberAxisShape extends SwkShape {
 
         public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
             ( (NumberAxis) ((NumberAxisShape) swkShape).axis).setUpperBound(getNewValue());
+        }
+    }
+   static class AutoParameter extends BooleanParameter {
+        private static String name = "auto";
+
+        AutoParameter() {
+            CanvasParameter.addParameter(this);
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public boolean getValue(SwkShape swkShape) {
+            return ((NumberAxis) ((NumberAxisShape) swkShape).axis).isAutoRange();
+        }
+
+        public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
+            ( (NumberAxis) ((NumberAxisShape) swkShape).axis).setAutoRange(getNewValue());
+            System.out.println(((NumberAxis) ((NumberAxisShape) swkShape).axis).isAutoRange());
         }
     }
 
