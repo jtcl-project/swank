@@ -32,7 +32,7 @@ public abstract class BooleanParameter extends CanvasParameter {
         }
     }
 
-    boolean getValue(SwkShape swkShape) {
+    public boolean getValue(SwkShape swkShape) {
         return false;
     }
 
