@@ -101,7 +101,6 @@ public class LegendShape extends SwkShape {
     }
     public void coords(SwkImageCanvas canvas, double[] coords)
     throws SwkException {
-        System.out.println("coords");
         
         if (coords.length != 4) {
             throw new SwkException("wrong # coordinates: expected 4, got " +
@@ -114,7 +113,6 @@ public class LegendShape extends SwkShape {
         }
         
         System.arraycopy(coords, 0, storeCoords, 0, coords.length);
-        System.out.println("apply");
         applyCoordinates();
     }
     
