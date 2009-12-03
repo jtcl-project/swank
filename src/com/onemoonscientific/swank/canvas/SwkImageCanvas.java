@@ -766,14 +766,6 @@ public class SwkImageCanvas implements SwkCanvasType {
 
         SwkShape swkShape = null;
         SwkShape nextShape = lastShape;
-        int closeEnough = 2;
-        int closeEnough2 = closeEnough * closeEnough;
-        double[] tcoords = new double[6];
-        double tx1 = 0.0;
-        double ty1 = 0.0;
-        double tx2 = 0.0;
-        double ty2 = 0.0;
-
         while (nextShape != null) {
             swkShape = nextShape;
             nextShape = swkShape.previous;
@@ -781,70 +773,10 @@ public class SwkImageCanvas implements SwkCanvasType {
             if (swkShape.getState() != SwkShape.ACTIVE) {
                 continue;
             }
-
-            if (swkShape instanceof SwkCanvImage) {
-                if (!swkShape.hitShape(x1, y1)) {
+            if (!swkShape.hitShape(x1, y1)) {
                     continue;
-                }
-            } else if (swkShape.shape == null) {
-                if (!swkShape.hitShape(x1, y1)) {
-                    continue;
-                }
-            } else {
-                boolean hit = false;
-
-                if (swkShape.fill != null) {
-                    Rectangle bounds = swkShape.shape.getBounds();
-
-                    if (!bounds.contains(x1, y1)) {
-                        continue;
-                    } else {
-                        hit = true;
-                    }
-                }
-
-                if (!hit) {
-                    PathIterator pI = swkShape.shape.getPathIterator(null);
-                    boolean intersects = false;
-
-                    while (!pI.isDone()) {
-                        int type = pI.currentSegment(tcoords);
-
-                        if (type == PathIterator.SEG_LINETO) {
-                            tx2 = tcoords[0];
-                            ty2 = tcoords[0];
-
-                            double dis = Line2D.ptSegDistSq(tx1, ty1, tx2, ty2,
-                                    x1, y1);
-                            tx1 = tx2;
-                            ty1 = ty2;
-
-                            if (dis <= closeEnough2) {
-                                intersects = true;
-
-                                break;
-                            }
-                        } else if (type == PathIterator.SEG_MOVETO) {
-                            tx1 = tcoords[0];
-                            ty1 = tcoords[0];
-                        }
-
-                        pI.next();
-                    }
-
-                    if (!intersects) {
-                        continue;
-                    }
-
-                    /*
-                    if (!swkShape.shape.intersects(x1 - closeEnough,
-                    y1 - closeEnough, 2 * closeEnough, 2 * closeEnough)) {
-                    continue;
-                    }
-                     */
-                }
             }
-
+ 
             lastShapeScanned = swkShape;
 
             tagOrId = String.valueOf(swkShape.id);

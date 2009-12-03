@@ -495,8 +495,53 @@ public abstract class SwkShape implements SwkShapeConfig {
         gradPt2 = p2;
     }
 
-    public boolean hitShape(double x, double y) {
-        return false;
+    public boolean hitShape(double x1, double y1) {
+        boolean hit = false;
+        if (shape != null) {
+            if ((fill != null) || (fillGradient != null) || (texturePaint != null)) {
+                Rectangle bounds = shape.getBounds();
+                if (bounds.contains(x1, y1)) {
+                    hit = true;
+                }
+            }
+
+            if (!hit) {
+                PathIterator pI = shape.getPathIterator(null);
+                double[] tcoords = new double[6];
+                double tx1 = 0.0;
+                double ty1 = 0.0;
+                double tx2 = 0.0;
+                double ty2 = 0.0;
+                int closeEnough = 2;
+                int closeEnough2 = closeEnough * closeEnough;
+
+                while (!pI.isDone()) {
+                    int type = pI.currentSegment(tcoords);
+
+                    if (type == PathIterator.SEG_LINETO) {
+                        tx2 = tcoords[0];
+                        ty2 = tcoords[0];
+
+                        double dis = Line2D.ptSegDistSq(tx1, ty1, tx2, ty2,
+                                x1, y1);
+                        tx1 = tx2;
+                        ty1 = ty2;
+
+                        if (dis <= closeEnough2) {
+                            hit = true;
+
+                            break;
+                        }
+                    } else if (type == PathIterator.SEG_MOVETO) {
+                        tx1 = tcoords[0];
+                        ty1 = tcoords[0];
+                    }
+
+                    pI.next();
+                }
+            }
+        }
+        return hit;
     }
 
     public String hit(double x, double y) {
