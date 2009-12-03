@@ -32,7 +32,6 @@ import java.awt.event.*;
 import java.util.*;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionListener;
 
 
 /** This class implements the Jacl bind command.
