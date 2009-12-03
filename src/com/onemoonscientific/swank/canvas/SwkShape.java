@@ -38,11 +38,12 @@ import java.util.*;
 
 import javax.swing.*;
 
-
 public abstract class SwkShape implements SwkShapeConfig {
+
     static public final byte ACTIVE = 0;
     static public final byte DISABLED = 1;
     static public final byte HIDDEN = 2;
+    static BasicStroke bstroke = new BasicStroke();
     Shape shape = null;
     int id;
     public double[] storeCoords = null;
@@ -64,7 +65,7 @@ public abstract class SwkShape implements SwkShapeConfig {
     int join = BasicStroke.JOIN_MITER;
     float miterLimit = 10.0f;
     String dashString = "";
-    float[] dash = {  };
+    float[] dash = {};
     float[] dashTemp = null;
     float dashPhase = 0.0f;
     boolean dashIntPattern = false;
@@ -79,6 +80,7 @@ public abstract class SwkShape implements SwkShapeConfig {
     SwkImageCanvas canvas = null;
     boolean xorMode = false;
     Composite composite = null;
+
     public SwkShape() {
     }
 
@@ -240,20 +242,50 @@ public abstract class SwkShape implements SwkShapeConfig {
     }
 
     public void paintShape(Graphics2D g2) {
+        if (shape != null) {
+            if (stroke != null) {
+                g2.setStroke(stroke);
+            } else {
+                g2.setStroke(bstroke);
+            }
+            AffineTransform shapeTransform = getTransform();
+            Shape shape2 = shape;
+            if (shapeTransform != null) {
+                shape2 = shapeTransform.createTransformedShape(shape);
+            }
+
+            if (texturePaint != null) {
+                g2.setPaint(texturePaint);
+                g2.fill(shape2);
+
+                //g.drawImage(swkShape.textureImage.getImage(),0,0,null);
+            } else if (fillGradient != null) {
+                g2.setPaint(fillGradient);
+                g2.fill(shape2);
+            } else if (fill != null) {
+                g2.setPaint(fill);
+                g2.fill(shape2);
+            }
+
+            if (outline != null) {
+                g2.setPaint(outline);
+                g2.draw(shape2);
+            }
+        }
     }
 
     public abstract CanvasParameter[] getParameters();
 
     public void configOld(Interp interp, TclObject[] argv, int start)
-        throws TclException {
+            throws TclException {
         if (((argv.length - start) % 2) != 0) {
             throw new TclNumArgsException(interp, 0, argv,
-                "-option value ? -option value? ...");
+                    "-option value ? -option value? ...");
         }
     }
 
     public void configShape(Interp interp, SwkImageCanvas swkCanvas,
-        TclObject[] argv, int start) throws TclException {
+            TclObject[] argv, int start) throws TclException {
         Map parameterMap = getParameterMap();
         CanvasParameter[] setPars = new CanvasParameter[(argv.length - start) / 2];
 
@@ -266,9 +298,9 @@ public abstract class SwkShape implements SwkShapeConfig {
 
             if (cPar == null) {
                 String parName = "com.onemoonscientific.swank.canvas." +
-                    argv[i].toString().substring(1, 2).toUpperCase() +
-                    argv[i].toString().substring(2).toLowerCase() +
-                    "Parameter";
+                        argv[i].toString().substring(1, 2).toUpperCase() +
+                        argv[i].toString().substring(2).toLowerCase() +
+                        "Parameter";
                 Class newClass = null;
 
                 try {
@@ -282,10 +314,10 @@ public abstract class SwkShape implements SwkShapeConfig {
                     cPar = (CanvasParameter) newClass.newInstance();
                 } catch (InstantiationException iE) {
                     throw new TclException(interp,
-                        "can't instantiate " + parName);
+                            "can't instantiate " + parName);
                 } catch (IllegalAccessException iaE) {
                     throw new TclException(interp,
-                        "can't instantiate " + parName);
+                            "can't instantiate " + parName);
                 }
             }
 
@@ -302,7 +334,7 @@ public abstract class SwkShape implements SwkShapeConfig {
     }
 
     public static void config(Interp interp, SwkImageCanvas swkCanvas,
-        TclObject[] argv, int start) throws TclException {
+            TclObject[] argv, int start) throws TclException {
         // Map parameterMap = getParameterMap();
         CanvasParameter[] setPars = new CanvasParameter[(argv.length - start) / 2];
         boolean gotPar = false;
@@ -313,20 +345,20 @@ public abstract class SwkShape implements SwkShapeConfig {
             CanvasParameter cPar = null;
 
             cPar = CanvasParameter.getStdPar(argv[i].toString());
-           //  Mostly not used as custom pars are added automatically to stdPars
+            //  Mostly not used as custom pars are added automatically to stdPars
 
             if (cPar == null) {
                 String parName = "com.onemoonscientific.swank.canvas." +
-                    argv[i].toString().substring(1, 2).toUpperCase() +
-                    argv[i].toString().substring(2) + "Parameter";
+                        argv[i].toString().substring(1, 2).toUpperCase() +
+                        argv[i].toString().substring(2) + "Parameter";
                 Class newClass = null;
 
                 try {
                     newClass = Class.forName(parName);
                 } catch (ClassNotFoundException cnfE) {
                     throw new TclException(interp,
-                        "class " + parName + " doesn't exist " +
-                        cnfE.toString());
+                            "class " + parName + " doesn't exist " +
+                            cnfE.toString());
 
                     //continue;
                 }
@@ -335,10 +367,10 @@ public abstract class SwkShape implements SwkShapeConfig {
                     cPar = (CanvasParameter) newClass.newInstance();
                 } catch (InstantiationException iE) {
                     throw new TclException(interp,
-                        "can't instantiate " + parName);
+                            "can't instantiate " + parName);
                 } catch (IllegalAccessException iaE) {
                     throw new TclException(interp,
-                        "can't instantiate " + parName);
+                            "can't instantiate " + parName);
                 }
             }
 
@@ -355,7 +387,7 @@ public abstract class SwkShape implements SwkShapeConfig {
     }
 
     public void itemConfigure(Interp interp, TclObject[] argv, int start)
-        throws TclException {
+            throws TclException {
         TclObject list = TclList.newInstance();
         interp.resetResult();
 
@@ -378,7 +410,7 @@ public abstract class SwkShape implements SwkShapeConfig {
     }
 
     public void coords(SwkImageCanvas canvas, double[] coordArray)
-        throws SwkException {
+            throws SwkException {
     }
 
     public double[] coords() {
@@ -386,7 +418,7 @@ public abstract class SwkShape implements SwkShapeConfig {
     }
 
     public TclObject itemGet(Interp interp, String argString,
-        boolean configStyle) throws TclException {
+            boolean configStyle) throws TclException {
         CanvasParameter par = getPar(argString);
 
         if (par != null) {
@@ -397,11 +429,11 @@ public abstract class SwkShape implements SwkShapeConfig {
             } else {
                 TclObject list = TclList.newInstance();
                 TclList.append(interp, list,
-                    TclString.newInstance("-" + par.getName()));
+                        TclString.newInstance("-" + par.getName()));
                 TclList.append(interp, list, TclString.newInstance(""));
                 TclList.append(interp, list, TclString.newInstance(""));
                 TclList.append(interp, list,
-                    TclString.newInstance(par.getDefault()));
+                        TclString.newInstance(par.getDefault()));
                 TclList.append(interp, list, value);
 
                 return (list);
@@ -444,7 +476,7 @@ public abstract class SwkShape implements SwkShapeConfig {
         }
     }
 
-    void applyCoordinates() {
+    public void applyCoordinates() {
     }
 
     public Point2D getGradPt1() {
@@ -479,7 +511,7 @@ public abstract class SwkShape implements SwkShapeConfig {
     }
 
     public int getIndex(Interp interp, TclObject indexArg)
-        throws TclException {
+            throws TclException {
         String indexString = indexArg.toString();
 
         if (indexString.startsWith("@")) {
@@ -488,7 +520,7 @@ public abstract class SwkShape implements SwkShapeConfig {
 
                 if (commaPos < 0) {
                     throw new TclException(interp,
-                        "bad text index \"" + indexString + "\"");
+                            "bad text index \"" + indexString + "\"");
                 }
 
                 String xS = indexString.substring(1, commaPos);
@@ -500,7 +532,7 @@ public abstract class SwkShape implements SwkShapeConfig {
                 return offset;
             } else {
                 throw new TclException(interp,
-                    "bad text index \"" + indexString + "\"");
+                        "bad text index \"" + indexString + "\"");
             }
         }
 
@@ -508,11 +540,11 @@ public abstract class SwkShape implements SwkShapeConfig {
     }
 
     public void scale(double xOrigin, double yOrigin, double xScale,
-        double yScale) {
+            double yScale) {
         for (int i = 0; i < storeCoords.length; i += 2) {
             storeCoords[i] = ((storeCoords[i] - xOrigin) * xScale) + xOrigin;
             storeCoords[i + 1] = ((storeCoords[i + 1] - yOrigin) * yScale) +
-                yOrigin;
+                    yOrigin;
         }
 
         applyCoordinates();
@@ -550,14 +582,14 @@ public abstract class SwkShape implements SwkShapeConfig {
             Point2D p1 = new Point2D.Double();
             Point2D p2 = new Point2D.Double();
             double x = ((storeCoords[2] - storeCoords[0]) * gradPt1.getX()) +
-                storeCoords[0];
+                    storeCoords[0];
             double y = ((storeCoords[3] - storeCoords[1]) * gradPt1.getY()) +
-                storeCoords[1];
+                    storeCoords[1];
             p1.setLocation(x, y);
             x = ((storeCoords[2] - storeCoords[0]) * gradPt2.getX()) +
-                storeCoords[0];
+                    storeCoords[0];
             y = ((storeCoords[3] - storeCoords[1]) * gradPt2.getY()) +
-                storeCoords[1];
+                    storeCoords[1];
             p2.setLocation(x, y);
 
             p1 = aT.transform(p1, p1);

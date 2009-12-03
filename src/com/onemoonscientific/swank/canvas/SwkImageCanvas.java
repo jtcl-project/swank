@@ -26,9 +26,9 @@ import javax.imageio.ImageIO;
 
 import javax.swing.SwingUtilities;
 
-
 /** Class for objects which represent a Swank swkcanvas widget. */
 public class SwkImageCanvas implements SwkCanvasType {
+
     static Hashtable resourceDB = null;
     static String[] validCmds = {
         "-alignmentx", "-alignmenty", "-anchor", "-autoscrolls", "-background",
@@ -41,8 +41,7 @@ public class SwkImageCanvas implements SwkCanvasType {
         "-location", "-maximumsize", "-minimumsize", "-name", "-opaque", "-padx",
         "-pady", "-preferredsize", "-relief", "-requestfocusenabled",
         "-scrollregion", "-size", "-tooltiptext", "-verifyinputwhenfocustarget",
-        "-visible", "-width", "-xscrollcommand", "-yscrollcommand",
-    };
+        "-visible", "-width", "-xscrollcommand", "-yscrollcommand",};
     private static final int OPT_ALIGNMENTX = 0;
     private static final int OPT_ALIGNMENTY = 1;
     private static final int OPT_ANCHOR = 2;
@@ -109,7 +108,7 @@ public class SwkImageCanvas implements SwkCanvasType {
     int insertOffTime = 0;
     int insertOnTime = 0;
     int[][] scrollRegion = new int[2][2];
-    float[] anchor = { 0.0f, 0.0f };
+    float[] anchor = {0.0f, 0.0f};
     double borderWidth = 0;
     Color highlightBackground = Color.white;
     Color highlightColor = Color.red;
@@ -178,9 +177,8 @@ public class SwkImageCanvas implements SwkCanvasType {
     public Vector getTagList() {
         return (tagList);
     }
-
     public void setTagList(Interp interp, TclObject tagListObj)
-        throws TclException {
+            throws TclException {
         TclObject[] tagObjs = TclList.getElements(interp, tagListObj);
         tagList.setSize(0);
 
@@ -290,7 +288,7 @@ public class SwkImageCanvas implements SwkCanvasType {
     }
 
     void removeTransformer(Interp interp, SwkShape shape)
-        throws TclException {
+            throws TclException {
         shape.transformer = null;
     }
 
@@ -314,18 +312,21 @@ public class SwkImageCanvas implements SwkCanvasType {
 
     /*
 
-        public Image paintImage() {
-            Dimension d = getSize();
-            Image offscreen = createImage(d.width, d.height);
-            Graphics2D offgraphics = (Graphics2D) offscreen.getGraphics();
-            boolean wasBuffered = SwankUtil.disableDoubleBuffering(this);
-            paint(offgraphics);
-            offgraphics.dispose();
-            SwankUtil.restoreDoubleBuffering(this, wasBuffered);
+    public Image paintImage() {
+    Dimension d = getSize();
+    Image offscreen = createImage(d.width, d.height);
+    Graphics2D offgraphics = (Graphics2D) offscreen.getGraphics();
+    boolean wasBuffered = SwankUtil.disableDoubleBuffering(this);
+    paint(offgraphics);
+    offgraphics.dispose();
+    SwankUtil.restoreDoubleBuffering(this, wasBuffered);
 
-            return (offscreen);
-        }
+    return (offscreen);
+    }
      */
+    public int getLastShapeId() {
+       return lastShapeId;
+    }
     public void addShape(SwkShape shape) throws SwkException {
         shape.previous = lastShape;
 
@@ -365,13 +366,13 @@ public class SwkImageCanvas implements SwkCanvasType {
 
                     if ((iElem < 0) || (iElem >= lastShapeId)) {
                         throw new SwkException("Invalid canvas item id " +
-                            iElem + " " + lastShapeId);
+                                iElem + " " + lastShapeId);
                     } else {
                         swkShape = (SwkShape) swkShapes.get(new Integer(iElem));
 
                         if (swkShape == null) {
                             throw new SwkException(
-                                "Invalid canvas item id null" + iElem);
+                                    "Invalid canvas item id null" + iElem);
                         }
                     }
                 } catch (NumberFormatException nfeE) {
@@ -577,7 +578,7 @@ public class SwkImageCanvas implements SwkCanvasType {
     }
 
     Vector getShapesWithTags(String tag) throws SwkException {
-        String[] tags = { tag };
+        String[] tags = {tag};
 
         return getShapesWithTags(tags, 0);
     }
@@ -587,7 +588,7 @@ public class SwkImageCanvas implements SwkCanvasType {
     }
 
     Vector getShapesWithTags(String[] tagList, int start)
-        throws SwkException {
+            throws SwkException {
         Vector shapeList = new Vector();
         Hashtable shapeHash = new Hashtable();
 
@@ -621,11 +622,11 @@ public class SwkImageCanvas implements SwkCanvasType {
 
                 if (intValid) {
                     SwkShape swkShape = (SwkShape) swkShapes.get(new Integer(
-                                iElem));
+                            iElem));
 
                     if (swkShape == null) {
                         throw new SwkException("Invalid canvas item id (null) " +
-                            iElem);
+                                iElem);
                     } else {
                         shapeHash.put(swkShape, swkShape);
                     }
@@ -666,17 +667,17 @@ public class SwkImageCanvas implements SwkCanvasType {
     }
 
     public void setTags(String[] tagList, SwkShape shape)
-        throws SwkException {
+            throws SwkException {
         setTags(tagList, true, shape);
     }
 
     public void addTags(String[] tagList, SwkShape shape)
-        throws SwkException {
+            throws SwkException {
         setTags(tagList, false, shape);
     }
 
     public void setTags(String[] tagList, boolean clearFirst, SwkShape shape)
-        throws SwkException {
+            throws SwkException {
         Tag tag = null;
 
         for (int i = 0; i < tagList.length; i++) {
@@ -723,7 +724,7 @@ public class SwkImageCanvas implements SwkCanvasType {
     }
 
     public String itemGet(Interp interp, TclObject argv, SwkShape swkshape)
-        throws TclException {
+            throws TclException {
         return ("");
     }
 
@@ -753,7 +754,7 @@ public class SwkImageCanvas implements SwkCanvasType {
         }
 
         mEvent.translatePoint((int) (transMouse.getX() - x),
-            (int) (transMouse.getY() - y));
+                (int) (transMouse.getY() - y));
     }
 
     public TclObject[] scanCanvasForTags(double x1, double y1) {
@@ -837,8 +838,8 @@ public class SwkImageCanvas implements SwkCanvasType {
 
                     /*
                     if (!swkShape.shape.intersects(x1 - closeEnough,
-                                y1 - closeEnough, 2 * closeEnough, 2 * closeEnough)) {
-                        continue;
+                    y1 - closeEnough, 2 * closeEnough, 2 * closeEnough)) {
+                    continue;
                     }
                      */
                 }
@@ -852,7 +853,7 @@ public class SwkImageCanvas implements SwkCanvasType {
 
             while (tags.hasMoreElements()) {
                 tagOrId = ((Tag) tags.nextElement()).name + " " +
-                    String.valueOf(swkShape.id);
+                        String.valueOf(swkShape.id);
                 shapeHash.put(tagOrId, tagOrId);
             }
 
@@ -904,12 +905,13 @@ public class SwkImageCanvas implements SwkCanvasType {
         final Component component2 = component;
 
         SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    if (component2 != null) {
-                        component2.repaint();
-                    }
+
+            public void run() {
+                if (component2 != null) {
+                    component2.repaint();
                 }
-            });
+            }
+        });
     }
 
     public void repaint(int delay) {
@@ -917,12 +919,13 @@ public class SwkImageCanvas implements SwkCanvasType {
         final int delay2 = delay;
 
         SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    if (component2 != null) {
-                        component2.repaint(delay2);
-                    }
+
+            public void run() {
+                if (component2 != null) {
+                    component2.repaint(delay2);
                 }
-            });
+            }
+        });
     }
 
     public void paint(int width, int height, String fileName) {
@@ -955,8 +958,8 @@ public class SwkImageCanvas implements SwkCanvasType {
 
         Dimension d = getSize();
         Graphics2D g2 = (Graphics2D) g;
-        g2.setRenderingHint(RenderingHints.KEY_RENDERING,RenderingHints.VALUE_RENDER_QUALITY);
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         AffineTransform storeAT = g2.getTransform();
         fRC = g2.getFontRenderContext();
 
@@ -970,8 +973,6 @@ public class SwkImageCanvas implements SwkCanvasType {
         g2.transform(canvasTransform);
         swkShape = firstShape;
         nextShape = firstShape;
-
-        int i = 0;
 
         while (nextShape != null) {
             swkShape = nextShape;
@@ -988,71 +989,7 @@ public class SwkImageCanvas implements SwkCanvasType {
                 g.setPaintMode();
             }
 
-            i++;
-
-            if (swkShape instanceof SwkCanvText) {
-                SwkCanvText text = (SwkCanvText) swkShape;
-                text.paint(g2, fRC);
-            } else if (swkShape instanceof SwkCanvImage) {
-                SwkCanvImage swkImage = (SwkCanvImage) swkShape;
-                AffineTransform aT = new AffineTransform();
-                aT.translate((int) swkShape.storeCoords[0],
-                    swkShape.storeCoords[1]);
-
-                if (swkImage.bufferedImage != null) {
-                    // FIXME can last argument be null?
-                    g2.drawImage(swkImage.bufferedImage, aT, null);
-                }
-            } else if (swkShape instanceof SwkCanvBitmap) {
-                SwkCanvBitmap swkImage = (SwkCanvBitmap) swkShape;
-
-                if (swkImage.image != null) {
-                    int imageWidth = swkImage.image.getIconWidth();
-                    int imageHeight = swkImage.image.getIconHeight();
-                    g.drawImage(swkImage.image.getImage(),
-                        (int) swkShape.storeCoords[0] - (imageWidth / 2),
-                        (int) swkShape.storeCoords[1] - (imageHeight / 2), null);
-                }
-            } else {
-                if (swkShape.stroke != null) {
-                    g2.setStroke(swkShape.stroke);
-                } else {
-                    g2.setStroke(stroke);
-                }
-
-                if (swkShape.shape == null) {
-                    swkShape.paintShape(g2);
-                } else {
-                    if (swkShape instanceof SwkLine) {
-                        swkShape.paintShape(g2);
-                    } else {
-
-                        AffineTransform shapeTransform = swkShape.getTransform();
-                        Shape shape = swkShape.shape;
-                        if (shapeTransform != null) {
-                            shape = shapeTransform.createTransformedShape(shape);
-                        }
-
-                        if (swkShape.texturePaint != null) {
-                            g2.setPaint(swkShape.texturePaint);
-                            g2.fill(shape);
-
-                            //g.drawImage(swkShape.textureImage.getImage(),0,0,null);
-                        } else if (swkShape.fillGradient != null) {
-                            g2.setPaint(swkShape.fillGradient);
-                            g2.fill(shape);
-                        } else if (swkShape.fill != null) {
-                            g2.setPaint(swkShape.fill);
-                            g2.fill(shape);
-                        }
-
-                        if (swkShape.outline != null) {
-                            g2.setPaint(swkShape.outline);
-                            g2.draw(shape);
-                        }
-                    }
-                }
-            }
+            swkShape.paintShape(g2);
         }
 
         g2.setTransform(storeAT);
@@ -1070,6 +1007,7 @@ public class SwkImageCanvas implements SwkCanvasType {
     }
 
     class Tag {
+
         int id = -1;
         String name = null;
         Hashtable tagShapes = new Hashtable();

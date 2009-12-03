@@ -27,7 +27,6 @@
  *
  * Created on February 19, 2000, 3:14 PM
  */
-
 /**
  *
  * @author  JOHNBRUC
@@ -46,8 +45,8 @@ import java.lang.*;
 
 import java.util.*;
 
-
 public class SwkLine extends SwkShape {
+
     static CanvasParameter[] parameters = {
         new FillParameter(), new SmoothParameter(), new DashParameter(),
         new DashPhaseParameter(), new WidthParameter(), new RotateParameter(),
@@ -60,7 +59,6 @@ public class SwkLine extends SwkShape {
     static {
         initializeParameters(parameters, parameterMap);
     }
-
     GeneralPath gPath = null;
     GeneralPath firstArrowPath = null;
     GeneralPath lastArrowPath = null;
@@ -68,7 +66,6 @@ public class SwkLine extends SwkShape {
     String smooth = "";
     double smoothValue = 1.0;
     final private int PTS_IN_ARROW = 6;
-    
     boolean arrowFirst = false;
     boolean arrowLast = false;
     double arrowShapeA = 8.0;
@@ -80,7 +77,13 @@ public class SwkLine extends SwkShape {
         gPath = (GeneralPath) shape;
         fill = null;
     }
+
     public void paintShape(Graphics2D g2) {
+        if (stroke != null) {
+            g2.setStroke(stroke);
+        } else {
+            g2.setStroke(bstroke);
+        }
         AffineTransform shapeTransform = getTransform();
 
         g2.setPaint(outline);
@@ -114,7 +117,7 @@ public class SwkLine extends SwkShape {
     }
 
     public void coords(SwkImageCanvas canvas, double[] coords)
-        throws SwkException {
+            throws SwkException {
         float x1;
         float y1;
 
@@ -132,7 +135,7 @@ public class SwkLine extends SwkShape {
         aT.shear(xShear, yShear);
         aT.translate(-storeCoords[0], -storeCoords[1]);
         aT.rotate(rotate, ((storeCoords[0] + storeCoords[2]) / 2.0),
-            ((storeCoords[1] + storeCoords[3]) / 2.0));
+                ((storeCoords[1] + storeCoords[3]) / 2.0));
         double[] arrowFirstCoords = null;
         double[] arrowLastCoords = null;
         if (arrowFirst) {
@@ -159,7 +162,7 @@ public class SwkLine extends SwkShape {
         }
         shape = aT.createTransformedShape(gPath);
         if (arrowFirst) {
-            addArrowPath(firstArrowPath,arrowFirstCoords);
+            addArrowPath(firstArrowPath, arrowFirstCoords);
         }
         if (arrowLast) {
             addArrowPath(lastArrowPath, arrowLastCoords);
@@ -167,92 +170,94 @@ public class SwkLine extends SwkShape {
 
 
     }
+
     double[] addArrowFirst(double[] storeCoords) {
-            double shapeA = arrowShapeA + 0.001;
-            double shapeB = arrowShapeB + 0.001;
-            double shapeC = arrowShapeC + width/2.0 + 0.001;
+        double shapeA = arrowShapeA + 0.001;
+        double shapeB = arrowShapeB + 0.001;
+        double shapeC = arrowShapeC + width / 2.0 + 0.001;
 
-            double fracHeight = (width/2.0)/shapeC;
-            double backup = fracHeight*shapeB + shapeA*(1.0 - fracHeight)/2.0;
+        double fracHeight = (width / 2.0) / shapeC;
+        double backup = fracHeight * shapeB + shapeA * (1.0 - fracHeight) / 2.0;
 
-            double x1 =  storeCoords[0];
-            double y1 =  storeCoords[1];
-            double x2 =  storeCoords[2];
-            double y2 =  storeCoords[3];
-            double[] poly = new double[PTS_IN_ARROW*2];
+        double x1 = storeCoords[0];
+        double y1 = storeCoords[1];
+        double x2 = storeCoords[2];
+        double y2 = storeCoords[3];
+        double[] poly = new double[PTS_IN_ARROW * 2];
 
-            poly[0] = poly[10] = x1;
-            poly[1] = poly[11] = y1;
-            double dx = poly[0] - x2;
-            double dy = poly[1] - y2;
-            double length = Math.hypot(dx, dy);
-            double sinTheta = 0.0;
-            double cosTheta = 0.0;
-            if (length != 0) {
-                sinTheta = dy/length;
-                cosTheta = dx/length;
-            }
-        double vertX = poly[0] - shapeA*cosTheta;
-        double vertY = poly[1] - shapeA*sinTheta;
-        double temp = shapeC*sinTheta;
-        poly[2] = poly[0] - shapeB*cosTheta + temp;
-        poly[8] = poly[2] - 2*temp;
-        temp = shapeC*cosTheta;
-        poly[3] = poly[1] - shapeB*sinTheta - temp;
-        poly[9] = poly[3] + 2*temp;
-        poly[4] = poly[2]*fracHeight + vertX*(1.0-fracHeight);
-        poly[5] = poly[3]*fracHeight + vertY*(1.0-fracHeight);
-        poly[6] = poly[8]*fracHeight + vertX*(1.0-fracHeight);
-        poly[7] = poly[9]*fracHeight + vertY*(1.0-fracHeight);
+        poly[0] = poly[10] = x1;
+        poly[1] = poly[11] = y1;
+        double dx = poly[0] - x2;
+        double dy = poly[1] - y2;
+        double length = Math.hypot(dx, dy);
+        double sinTheta = 0.0;
+        double cosTheta = 0.0;
+        if (length != 0) {
+            sinTheta = dy / length;
+            cosTheta = dx / length;
+        }
+        double vertX = poly[0] - shapeA * cosTheta;
+        double vertY = poly[1] - shapeA * sinTheta;
+        double temp = shapeC * sinTheta;
+        poly[2] = poly[0] - shapeB * cosTheta + temp;
+        poly[8] = poly[2] - 2 * temp;
+        temp = shapeC * cosTheta;
+        poly[3] = poly[1] - shapeB * sinTheta - temp;
+        poly[9] = poly[3] + 2 * temp;
+        poly[4] = poly[2] * fracHeight + vertX * (1.0 - fracHeight);
+        poly[5] = poly[3] * fracHeight + vertY * (1.0 - fracHeight);
+        poly[6] = poly[8] * fracHeight + vertX * (1.0 - fracHeight);
+        poly[7] = poly[9] * fracHeight + vertY * (1.0 - fracHeight);
 
-        storeCoords[0] = poly[0] - backup*cosTheta;
-        storeCoords[1] = poly[1] - backup*sinTheta;
+        storeCoords[0] = poly[0] - backup * cosTheta;
+        storeCoords[1] = poly[1] - backup * sinTheta;
         return poly;
     }
 
     double[] addArrowLast(double[] storeCoords) {
 
-            double shapeA = arrowShapeA + 0.001;
-            double shapeB = arrowShapeB + 0.001;
-            double shapeC = arrowShapeC + width/2.0 + 0.001;
+        double shapeA = arrowShapeA + 0.001;
+        double shapeB = arrowShapeB + 0.001;
+        double shapeC = arrowShapeC + width / 2.0 + 0.001;
 
-            double fracHeight = (width/2.0)/shapeC;
-            double backup = fracHeight*shapeB + shapeA*(1.0 - fracHeight)/2.0;
+        double fracHeight = (width / 2.0) / shapeC;
+        double backup = fracHeight * shapeB + shapeA * (1.0 - fracHeight) / 2.0;
 
-            int nElems = storeCoords.length;
-            double x1 =  storeCoords[nElems-4];
-            double y1 =  storeCoords[nElems-3];
-            double x2 =  storeCoords[nElems-2];
-            double y2 =  storeCoords[nElems-1];
-            double[] poly = new double[PTS_IN_ARROW*2];
+        int nElems = storeCoords.length;
+        double x1 = storeCoords[nElems - 4];
+        double y1 = storeCoords[nElems - 3];
+        double x2 = storeCoords[nElems - 2];
+        double y2 = storeCoords[nElems - 1];
+        double[] poly = new double[PTS_IN_ARROW * 2];
 
-            poly[0] = poly[10] = x2;
-            poly[1] = poly[11] = y2;
-            double dx = poly[0] - x1;
-            double dy = poly[1] - y1;
-            double length = Math.hypot(dx, dy);
-            double sinTheta = 0.0;
-            double cosTheta = 0.0;
-            if (length != 0) {
-                sinTheta = dy/length;
-                cosTheta = dx/length;
-            }
-            double vertX = poly[0] - shapeA*cosTheta;
-            double vertY = poly[1] - shapeA*sinTheta;
-            double temp = shapeC*sinTheta;
-            poly[2] = poly[0] - shapeB*cosTheta + temp;
-            poly[8] = poly[2] - 2*temp;
-            temp = shapeC*cosTheta;
-            poly[3] = poly[1] - shapeB*sinTheta - temp;
-            poly[9] = poly[3] + 2*temp;
-            poly[4] = poly[2]*fracHeight + vertX*(1.0-fracHeight);
-            poly[5] = poly[3]*fracHeight + vertY*(1.0-fracHeight);
-            poly[6] = poly[8]*fracHeight + vertX*(1.0-fracHeight);
-            poly[7] = poly[9]*fracHeight + vertY*(1.0-fracHeight);
-            storeCoords[nElems-2] = poly[0] - backup*cosTheta;
-            storeCoords[nElems-1] = poly[1] - backup*sinTheta;
-            return poly;
+        poly[0] = poly[10] = x2;
+        poly[1] = poly[11] = y2;
+        double dx = poly[0] - x1;
+        double dy = poly[1] - y1;
+        double length = Math.hypot(dx, dy);
+        double sinTheta = 0.0;
+        double cosTheta = 0.0;
+        if (length != 0) {
+            sinTheta = dy / length;
+            cosTheta = dx / length;
+        }
+        double vertX = poly[0] - shapeA * cosTheta;
+        double vertY = poly[1] - shapeA * sinTheta;
+        double temp = shapeC * sinTheta;
+        poly[2] = poly[0] - shapeB * cosTheta + temp;
+        poly[8] = poly[2] - 2 * temp;
+        temp = shapeC * cosTheta;
+        poly[3] = poly[1] - shapeB * sinTheta - temp;
+        poly[9] = poly[3] + 2 * temp;
+        poly[4] = poly[2] * fracHeight + vertX * (1.0 - fracHeight);
+        poly[5] = poly[3] * fracHeight + vertY * (1.0 - fracHeight);
+        poly[6] = poly[8] * fracHeight + vertX * (1.0 - fracHeight);
+        poly[7] = poly[9] * fracHeight + vertY * (1.0 - fracHeight);
+        storeCoords[nElems - 2] = poly[0] - backup * cosTheta;
+        storeCoords[nElems - 1] = poly[1] - backup * sinTheta;
+        return poly;
     }
+
     public void genPath() {
         float x1;
         float y1;

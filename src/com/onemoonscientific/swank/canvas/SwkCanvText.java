@@ -92,7 +92,9 @@ public class SwkCanvText extends SwkShape {
         setX(coords[0]);
         setY(coords[1]);
     }
-
+    public void paintShape(Graphics2D g2) {
+        paint(g2, getCanvas().getFontRenderContext());
+    }
     public CanvasParameter[] getParameters() {
         return parameters;
     }

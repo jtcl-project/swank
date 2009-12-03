@@ -107,7 +107,17 @@ public class SwkCanvImage extends SwkShape {
 
         System.arraycopy(coords, 0, storeCoords, 0, 2);
     }
+    @Override
+    public void paintShape(Graphics2D g2) {
+                AffineTransform aT = new AffineTransform();
+                aT.translate((int) storeCoords[0],storeCoords[1]);
 
+                if (bufferedImage != null) {
+                    // FIXME can last argument be null?
+                    g2.drawImage(bufferedImage, aT, null);
+                }
+       
+    }
     public CanvasParameter[] getParameters() {
         return parameters;
     }
