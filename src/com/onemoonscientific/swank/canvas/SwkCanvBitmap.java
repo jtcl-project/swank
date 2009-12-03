@@ -27,7 +27,6 @@
  *
  * Created on February 19, 2000, 3:14 PM
  */
-
 /**
  *
  * @author  JOHNBRUC
@@ -49,18 +48,16 @@ import java.util.*;
 
 import javax.swing.*;
 
-
 public class SwkCanvBitmap extends SwkShape {
+
     static CanvasParameter[] parameters = {
         new BitmapParameter(), new TagsParameter(), new StateParameter(),
-        new TransformerParameter(),
-    };
+        new TransformerParameter(),};
     static Map parameterMap = new TreeMap();
 
     static {
         initializeParameters(parameters, parameterMap);
     }
-
     ImageIcon image;
 
     SwkCanvBitmap(Shape shape, SwkImageCanvas canvas) {
@@ -77,13 +74,24 @@ public class SwkCanvBitmap extends SwkShape {
     }
 
     public void coords(SwkImageCanvas canvas, double[] coords)
-        throws SwkException {
+            throws SwkException {
         if (coords.length != 2) {
             throw new SwkException("wrong # coordinates: expected 2, got " +
-                coords.length);
+                    coords.length);
         }
 
         System.arraycopy(coords, 0, storeCoords, 0, 2);
+    }
+
+    public void paintShape(Graphics2D g2) {
+        if (image != null) {
+            int imageWidth = image.getIconWidth();
+            int imageHeight = image.getIconHeight();
+            g2.drawImage(image.getImage(),
+                    (int) storeCoords[0] - (imageWidth / 2),
+                    (int) storeCoords[1] - (imageHeight / 2), null);
+        }
+
     }
 
     public CanvasParameter[] getParameters() {
