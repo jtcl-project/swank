@@ -24,6 +24,7 @@
  */
 package com.onemoonscientific.swank;
 
+import com.onemoonscientific.swank.canvas.SwkShape;
 import tcl.lang.*;
 
 import java.awt.*;
@@ -527,6 +528,17 @@ public class BindCmd implements Command {
         //interp.eval(sbuf.toString());
         SwkExceptionCmd.doExceptionCmd(interp, sbuf.toString());
     }
+   /** Substitutes values into event fields and then executes command.
+     * @param interp The interpreter in which command is executing.
+     * @param command String containing the command to evaluate.
+     * @param e The Input Event that occured to trigger this binding response.
+     * @throws TclException if exception is thrown when evaluating the command.
+     */
+    public static void doCmd(Interp interp, String command, InputEvent e)
+        throws TclException {
+        doCmd(interp, command, e,null);
+
+    }
 
     /** Substitutes values into event fields and then executes command.
      * @param interp The interpreter in which command is executing.
@@ -534,7 +546,7 @@ public class BindCmd implements Command {
      * @param e The Input Event that occured to trigger this binding response.
      * @throws TclException if exception is thrown when evaluating the command.
      */
-    public static void doCmd(Interp interp, String command, InputEvent e)
+    public static void doCmd(Interp interp, String command, InputEvent e, SwkShape shape)
         throws TclException {
         int i;
         char type;
@@ -554,6 +566,36 @@ public class BindCmd implements Command {
                 type = command.charAt(i);
 
                 switch (type) {
+                  case 'b':
+                    if (e instanceof MouseEvent) {
+                        MouseEvent mE = (MouseEvent) e;
+                        switch (mE.getButton()) {
+                            case MouseEvent.BUTTON1:
+                            sbuf.append('1');
+                            break;
+                            case MouseEvent.BUTTON2:
+                            sbuf.append('2');
+                            break;
+                            case MouseEvent.BUTTON3:
+                            sbuf.append('3');
+                            break;
+                            default:
+                                sbuf.append('0');
+                        }
+                    } else {
+                        sbuf.append("??");
+                    }
+                    break;
+                case 'd':
+                    if (shape != null) {
+                        sbuf.append(shape.getId());
+                    } else {
+                        sbuf.append("??");
+                    }
+                    break;
+                case 't':
+                    sbuf.append(System.currentTimeMillis());
+                    break;
                 case 'x':
                 case 'X':
 
@@ -638,6 +680,7 @@ public class BindCmd implements Command {
                     }
 
                     break;
+                    default:sbuf.append("??");
                 }
             }
         }
