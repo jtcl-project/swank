@@ -86,7 +86,7 @@ public class SwkRectangle extends SwkShape {
         applyCoordinates();
     }
 
-    void applyCoordinates() {
+    public void applyCoordinates() {
         checkCoordinates(storeCoords);
         rect2D.setFrame(storeCoords[0], storeCoords[1],
             storeCoords[2] - storeCoords[0], storeCoords[3] - storeCoords[1]);

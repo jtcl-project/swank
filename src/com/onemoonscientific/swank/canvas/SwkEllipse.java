@@ -94,7 +94,7 @@ public class SwkEllipse extends SwkShape {
         return parameterMap;
     }
 
-    void applyCoordinates() {
+    public void applyCoordinates() {
         checkCoordinates(storeCoords);
 
         AffineTransform aT = new AffineTransform();

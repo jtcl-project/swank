@@ -91,7 +91,7 @@ public class SwkPolygon extends SwkShape {
         applyCoordinates();
     }
 
-    void applyCoordinates() {
+    public void applyCoordinates() {
         gPath.reset();
 
         for (int i = 0; i < storeCoords.length; i += 2) {

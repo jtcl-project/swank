@@ -110,7 +110,7 @@ public class SwkSymbols extends SwkShape implements SymbolInterface {
         applyCoordinates();
     }
 
-    void applyCoordinates() {
+    public void applyCoordinates() {
         for (int i = 0; i < storeCoords.length; i += 2) {
             addSymbol((float) storeCoords[i], (float) storeCoords[i + 1], radius);
         }

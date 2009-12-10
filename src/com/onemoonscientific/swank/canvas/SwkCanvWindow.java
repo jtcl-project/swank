@@ -52,7 +52,7 @@ import javax.swing.*;
 
 public class SwkCanvWindow extends SwkShape {
     static CanvasParameter[] parameters = {
-        new WindowParameter(), new TextParameter(), new AnchorParameter(),
+        new WindowParameter(), new AnchorParameter(),
         new WidthParameter(), new HeightParameter(), new TagsParameter(),
         new TransformerParameter(),
     };
@@ -157,6 +157,8 @@ public class SwkCanvWindow extends SwkShape {
 
         Container parent = (Container) canvas.getComponent();
         placeWindow(parent, placer, window, sbuf.toString());
+        Component comp = (Component) window;
+        shape = comp.getBounds();
     }
 
     void placeWindow(Container parent, PlacerLayout placer, SwkWidget window,

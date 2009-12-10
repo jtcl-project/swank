@@ -91,7 +91,7 @@ public class SwkArc extends SwkShape {
         return parameters;
     }
 
-    void applyCoordinates() {
+    public void applyCoordinates() {
         checkCoordinates(storeCoords);
 
         AffineTransform aT = new AffineTransform();

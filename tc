@@ -1,0 +1,4 @@
+pack [canvas .c -width 200 -height 200 -bg orange]
+.c create rectangle 50 50 100 100 -fill red
+.c bind 0 <KeyPress-a> "puts alpha"
+

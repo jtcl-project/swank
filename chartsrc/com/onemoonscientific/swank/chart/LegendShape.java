@@ -116,7 +116,7 @@ public class LegendShape extends SwkShape {
         applyCoordinates();
     }
     
-    void applyCoordinates() {
+    public void applyCoordinates() {
         AffineTransform aT = new AffineTransform();
         aT.translate(storeCoords[0], storeCoords[1]);
         aT.shear(getXShear(), getYShear());
