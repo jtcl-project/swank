@@ -34,7 +34,7 @@ public class SwkCanvasWidgetCmd implements Command {
         "cget", "configure", "object", "jadd", "create", "itemconfigure",
         "coords", "hit", "itemcget", "find", "move", "scale", "delete", "addtag",
         "bind", "raise", "lower", "dtag", "gettags", "canvasx", "canvasy",
-        "copy", "index", "newtype", "bbox", "type", "zoom", "transformer"
+        "copy", "index", "newtype", "bbox", "type", "zoom", "transformer","hselect"
     };
     static final private int OPT_CGET = 0;
     static final private int OPT_CONFIGURE = 1;
@@ -64,6 +64,7 @@ public class SwkCanvasWidgetCmd implements Command {
     static final private int OPT_TYPE = 25;
     static final private int OPT_ZOOM = 26;
     static final private int OPT_TRANSFORMER = 27;
+    static final private int OPT_HSELECT = 28;
     static boolean gotDefaults = false;
     Map newTypes = new HashMap();
     Interp interp = null;
@@ -300,6 +301,11 @@ public class SwkCanvasWidgetCmd implements Command {
 
             break;
         }
+        case OPT_HSELECT: {
+            (new HSelect()).exec(interp, swkImageCanvas, argv);
+
+            break;
+        }
 
         default:
             throw new TclRuntimeError("TclIndex.get() error");
@@ -418,6 +424,9 @@ public class SwkCanvasWidgetCmd implements Command {
                 swkShape = new SwkEllipse(ellipse2D, swkcanvas);
             } else if (argv[2].toString().equals("text")) {
                 swkShape = new SwkCanvText(null, swkcanvas);
+            } else if (argv[2].toString().equals("htext")) {
+                  Rectangle2D rect2D = new Rectangle2D.Double();
+              swkShape = new SwkCanvasHText(rect2D, swkcanvas);
             } else if (argv[2].toString().equals("image")) {
                 swkShape = new SwkCanvImage(null, swkcanvas);
             } else if (argv[2].toString().equals("bitmap")) {
@@ -891,6 +900,36 @@ public class SwkCanvasWidgetCmd implements Command {
                 for (int i = 0; i < shapeList.size(); i++) {
                     SwkShape swkShape2 = (SwkShape) shapeList.elementAt(i);
                     swkShape2.move(dX, dY);
+                }
+            } catch (SwkException swkE) {
+            }
+        }
+    }
+    class HSelect extends GetValueOnEventThread {
+        SwkImageCanvas swkcanvas = null;
+        boolean setValue = false;
+        String tagName = null;
+
+        void exec(Interp interp, SwkImageCanvas swkcanvas, TclObject[] argv)
+            throws TclException {
+            if (argv.length != 4) {
+                throw new TclNumArgsException(interp, 2, argv, "option");
+            }
+
+            this.swkcanvas = swkcanvas;
+            tagName = argv[2].toString();
+            setValue = TclBoolean.get(interp, argv[3]);
+            execOnThread();
+            swkcanvas.repaint();
+        }
+
+        public void run() {
+            try {
+                Vector shapeList = swkcanvas.getShapesWithTags(tagName);
+
+                for (int i = 0; i < shapeList.size(); i++) {
+                    SwkShape swkShape2 = (SwkShape) shapeList.elementAt(i);
+                    swkShape2.setSelected(setValue);
                 }
             } catch (SwkException swkE) {
             }

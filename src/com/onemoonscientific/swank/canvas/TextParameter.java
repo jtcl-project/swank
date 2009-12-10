@@ -28,11 +28,22 @@ public class TextParameter extends CanvasParameter {
 
     public TclObject getValue(Interp interp, SwkShape swkShape)
         throws TclException {
-        if (((SwkCanvText) swkShape).text == null) {
-            ((SwkCanvText) swkShape).text = "";
-        }
+// fixme switch to using a TextInterface
+// fixme shouldn't read shape on Tcl thread
+        if ((swkShape != null) && ((swkShape instanceof SwkCanvText))) {
+            if (((SwkCanvText) swkShape).getText() == null) {
+                ((SwkCanvText) swkShape).setText("");
+            }
 
-        return TclString.newInstance(((SwkCanvText) swkShape).text);
+            return TclString.newInstance(((SwkCanvText) swkShape).getText());
+        } else if ((swkShape != null) && ((swkShape instanceof SwkCanvasHText))) {
+            if (((SwkCanvasHText) swkShape).getText() == null) {
+                ((SwkCanvasHText) swkShape).setText("");
+            }
+            return TclString.newInstance(((SwkCanvasHText) swkShape).getText());
+        } else {
+            return TclString.newInstance("");
+        }
     }
 
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
@@ -45,8 +56,10 @@ public class TextParameter extends CanvasParameter {
     }
 
     public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
-        if ((swkShape != null) && (swkShape instanceof SwkCanvText)) {
-            ((SwkCanvText) swkShape).text = newValue;
+        if ((swkShape != null) && ((swkShape instanceof SwkCanvText))) {
+            ((SwkCanvText) swkShape).setText(newValue);
+        } else if ((swkShape != null) && ((swkShape instanceof SwkCanvasHText))) {
+            ((SwkCanvasHText) swkShape).setText(newValue);
         }
     }
 }

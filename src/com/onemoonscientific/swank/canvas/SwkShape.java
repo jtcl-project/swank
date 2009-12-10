@@ -44,7 +44,8 @@ public abstract class SwkShape implements SwkShapeConfig {
     static public final byte DISABLED = 1;
     static public final byte HIDDEN = 2;
     static BasicStroke bstroke = new BasicStroke();
-    Shape shape = null;
+    public static int handleSize = 6;
+   Shape shape = null;
     int id;
     public double[] storeCoords = null;
     SwkShape previous = null;
@@ -75,11 +76,12 @@ public abstract class SwkShape implements SwkShapeConfig {
     float yShear = 0.0f;
     float alpha = 1.0f;
     byte state = ACTIVE;
-    Hashtable tags = new Hashtable();
+    Map tags = new LinkedHashMap();
     String[] tagNames = null;
     SwkImageCanvas canvas = null;
     boolean xorMode = false;
     Composite composite = null;
+    boolean selected = false;
 
     public SwkShape() {
     }
@@ -92,8 +94,13 @@ public abstract class SwkShape implements SwkShapeConfig {
     public int getState() {
         return state;
     }
-
-    public float getXShear() {
+    public void setSelected (final boolean selected) {
+        this.selected = selected;
+    }
+    public boolean isSelected() {
+        return selected;
+    }
+       public float getXShear() {
         return xShear;
     }
 
@@ -225,7 +232,7 @@ public abstract class SwkShape implements SwkShapeConfig {
         return alpha;
     }
 
-    public Hashtable getTags() {
+    public Map getTags() {
         return tags;
     }
 
@@ -239,6 +246,54 @@ public abstract class SwkShape implements SwkShapeConfig {
 
     public void setShape(Shape shape) {
         this.shape = shape;
+    }
+    public boolean hitHandle(int x, int y, double xTest, double yTest) {
+        return (new Rectangle(x, y, handleSize, handleSize)).contains(xTest, yTest);
+    }
+
+    void drawHandle(Graphics2D g2, int x, int y) {
+        g2.setPaint(Color.WHITE);
+        g2.fillRect(x - handleSize / 2, y - handleSize / 2, handleSize, handleSize);
+        g2.setColor(Color.BLACK);
+        g2.setStroke(bstroke);
+        g2.drawRect(x - handleSize / 2, y - handleSize / 2, handleSize, handleSize);
+    }
+
+    public void drawHandles(Graphics2D g2) {
+        if (shape != null) {
+            Rectangle bounds = shape.getBounds();
+            int x1 = (int) bounds.getMinX();
+            int y1 = (int) bounds.getMinY();
+            int x2 = (int) bounds.getMaxX();
+            int y2 = (int) bounds.getMaxY();
+            int xm = (x1 + x2) / 2;
+            int ym = (y1 + y2) / 2;
+            int[] xy = {x1, y1, xm, y1, x2, y1, x2, ym, x2, y2, xm, y2, x1, y2, x1, ym};
+            for (int i = 0; i < xy.length; i += 2) {
+                drawHandle(g2, xy[i], xy[i + 1]);
+            }
+        }
+    }
+
+    public int hitHandles(double testX, double testY) {
+        int hitIndex = -1;
+        if (shape != null) {
+            Rectangle bounds = shape.getBounds();
+            int x1 = (int) bounds.getMinX();
+            int y1 = (int) bounds.getMinY();
+            int x2 = (int) bounds.getMaxX();
+            int y2 = (int) bounds.getMaxY();
+            int xm = (x1 + x2) / 2;
+            int ym = (y1 + y2) / 2;
+            int[] xy = {x1, y1, xm, y1, x2, y1, x2, ym, x2, y2, xm, y2, x1, y2, x1, ym};
+            for (int i = 0; i < xy.length; i += 2) {
+                if (hitHandle(xy[i], xy[i + 1], testX, testY)) {
+                    hitIndex = i;
+                    break;
+                }
+            }
+        }
+        return hitIndex;
     }
 
     public void paintShape(Graphics2D g2) {
@@ -619,7 +674,7 @@ public abstract class SwkShape implements SwkShapeConfig {
         }
     }
 
-    void genGradient(AffineTransform aT) {
+    public void genGradient(AffineTransform aT) {
         if ((gradPt1 != null) && (gradPt2 != null)) {
             Color c1 = fillGradient.getColor1();
             Color c2 = fillGradient.getColor2();

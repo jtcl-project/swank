@@ -22,8 +22,10 @@ import java.io.IOException;
 
 import java.util.*;
 
+import java.util.Map.Entry;
 import javax.imageio.ImageIO;
 
+import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
 /** Class for objects which represent a Swank swkcanvas widget. */
@@ -127,6 +129,7 @@ public class SwkImageCanvas implements SwkCanvasType {
     Point2D origMouse = new Point2D.Double();
     FontRenderContext fRC = null;
     Hashtable swkShapes = new Hashtable(16);
+
     int lastShapeId = 0;
     SwkShape firstShape = null;
     SwkShape lastShape = null;
@@ -141,14 +144,14 @@ public class SwkImageCanvas implements SwkCanvasType {
     Hashtable mouseHash = null;
     Hashtable mouseMotionHash = null;
     Hashtable keyHash = null;
-    Hashtable tagHash = new Hashtable();
+    Map tagHash = new LinkedHashMap(1);
     Vector tagVec = new Vector();
     int swkwidth = 1;
     int swkheight = 1;
     int mouseX = 0;
     int mouseY = 0;
     Component component = null;
-
+    BufferedImage bufOffscreen = null;
     public SwkImageCanvas(final Interp interp, String name, String className) {
         this.name = name.intern();
         this.interp = interp;
@@ -173,7 +176,9 @@ public class SwkImageCanvas implements SwkCanvasType {
     public void setCreated(boolean state) {
         isCreated = state;
     }
-
+    public BufferedImage getBuffer() {
+        return bufOffscreen;
+    }
     public Vector getTagList() {
         return (tagList);
     }
@@ -282,7 +287,7 @@ public class SwkImageCanvas implements SwkCanvasType {
 
         return transformer;
     }
-
+   
     public Transformer getTransformer(String name) {
         return (Transformer) transformerHash.get(name);
     }
@@ -443,17 +448,16 @@ public class SwkImageCanvas implements SwkCanvasType {
     void delete(final String[] tags) throws SwkException {
         Vector shapes = getShapesWithTags(tags);
         SwkShape swkShape = null;
-        Enumeration e;
         String tagString;
         Tag tag;
 
         for (int i = 0; i < shapes.size(); i++) {
             swkShape = (SwkShape) shapes.elementAt(i);
             swkShapes.remove(new Integer(swkShape.id));
-            e = swkShape.tags.elements();
 
-            while (e.hasMoreElements()) {
-                tag = (Tag) e.nextElement();
+            for (Object o:swkShape.tags.entrySet()) {
+                Entry entry = (Entry) o;
+                tag = (Tag) entry.getValue();
                 tag.tagShapes.remove(swkShape);
             }
 
@@ -687,10 +691,9 @@ public class SwkImageCanvas implements SwkCanvasType {
         }
 
         if (clearFirst) {
-            Enumeration e = shape.tags.elements();
-
-            while (e.hasMoreElements()) {
-                tag = (Tag) e.nextElement();
+           for (Object o:shape.tags.entrySet()) {
+                Entry entry = (Entry) o;
+                tag = (Tag) entry.getValue();
                 tag.tagShapes.remove(shape);
             }
 
@@ -732,10 +735,10 @@ public class SwkImageCanvas implements SwkCanvasType {
         Tag tag;
         String tagString = null;
         ArrayList list = new ArrayList();
-        Enumeration e = shape.tags.elements();
 
-        while (e.hasMoreElements()) {
-            tag = (Tag) e.nextElement();
+        for (Object o : shape.tags.entrySet()) {
+            Entry entry = (Entry) o;
+            tag = (Tag) entry.getValue();
             list.add(tag.name);
         }
 
@@ -756,9 +759,24 @@ public class SwkImageCanvas implements SwkCanvasType {
         mEvent.translatePoint((int) (transMouse.getX() - x),
                 (int) (transMouse.getY() - y));
     }
+    public Point transformPosition(double x, double y) {
+        Point loc = getComponent().getLocationOnScreen();
+        x -= loc.x;
+        y -= loc.y;
+        origMouse.setLocation(x, y);
+        transMouse.setLocation(x, y);
+        try {
+            transMouse = canvasTransform.inverseTransform(origMouse, transMouse);
+        } catch (java.awt.geom.NoninvertibleTransformException ntE) {
+        }
+        Point point = new Point((int) transMouse.getX(),(int) transMouse.getY());
+        return point;
+    }
 
     public TclObject[] scanCanvasForTags(double x1, double y1) {
-        Hashtable shapeHash = new Hashtable();
+
+
+        LinkedHashSet shapeHash = new LinkedHashSet();
         String tagOrId = null;
         Enumeration tags = null;
         Enumeration e = null;
@@ -780,17 +798,19 @@ public class SwkImageCanvas implements SwkCanvasType {
             lastShapeScanned = swkShape;
 
             tagOrId = String.valueOf(swkShape.id);
-            shapeHash.put(tagOrId, tagOrId);
-            tags = swkShape.tags.elements();
+            shapeHash.add(tagOrId);
 
-            while (tags.hasMoreElements()) {
-                tagOrId = ((Tag) tags.nextElement()).name + " " +
+            for (Object o : swkShape.tags.entrySet()) {
+                Entry entry = (Entry) o;
+                Tag tag = (Tag) entry.getValue();
+
+                tagOrId = tag.name + " " +
                         String.valueOf(swkShape.id);
-                shapeHash.put(tagOrId, tagOrId);
+                shapeHash.add(tagOrId);
             }
 
             tagOrId = "all " + String.valueOf(swkShape.id);
-            shapeHash.put(tagOrId, tagOrId);
+            shapeHash.add(tagOrId);
 
             break;
         }
@@ -800,12 +820,11 @@ public class SwkImageCanvas implements SwkCanvasType {
         }
 
         TclObject[] tagOrIds = new TclObject[shapeHash.size()];
-        e = shapeHash.elements();
 
         int i = 0;
 
-        while (e.hasMoreElements()) {
-            String shapeTagOrID = (String) e.nextElement();
+         for (Object o : shapeHash) {
+            String shapeTagOrID = (String) o;
             tagOrIds[i++] = TclString.newInstance(shapeTagOrID);
         }
 
@@ -840,6 +859,9 @@ public class SwkImageCanvas implements SwkCanvasType {
 
             public void run() {
                 if (component2 != null) {
+                    if (component2 instanceof SwkCanvas) {
+                        ((SwkCanvas) component2).changed = true;
+                    }
                     component2.repaint();
                 }
             }
@@ -854,7 +876,10 @@ public class SwkImageCanvas implements SwkCanvasType {
 
             public void run() {
                 if (component2 != null) {
-                    component2.repaint(delay2);
+                     if (component2 instanceof SwkCanvas) {
+                        ((SwkCanvas) component2).changed = true;
+                    }
+                   component2.repaint(delay2);
                 }
             }
         });
@@ -867,7 +892,7 @@ public class SwkImageCanvas implements SwkCanvasType {
         BufferedImage bufferedImage = new BufferedImage(swkwidth, swkheight,
                 BufferedImage.TYPE_INT_RGB);
         Graphics offgraphics = bufferedImage.getGraphics();
-        paintComponent(offgraphics);
+        paintComponent(offgraphics,null);
         offgraphics.dispose();
 
         if (fileName != null) {
@@ -885,9 +910,9 @@ public class SwkImageCanvas implements SwkCanvasType {
         }
     }
 
-    public void paintComponent(Graphics g) {
+    public void paintComponent(Graphics g, BufferedImage bufOffscreen) {
         g1 = g;
-
+        this.bufOffscreen = bufOffscreen;
         Dimension d = getSize();
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
@@ -922,8 +947,10 @@ public class SwkImageCanvas implements SwkCanvasType {
             }
 
             swkShape.paintShape(g2);
+            if (swkShape.isSelected()) {
+                swkShape.drawHandles(g2);
+            }
         }
-
         g2.setTransform(storeAT);
     }
 
