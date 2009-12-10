@@ -70,6 +70,7 @@ if {[string compare $tcljava(java.version) 1.2.0] != -1} {
           return PAGE_EXISTS;
         \}
 	"
+
 } else {
 	set printable ""
 	set printMethod ""

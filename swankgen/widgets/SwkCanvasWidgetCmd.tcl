@@ -33,11 +33,50 @@ append specialVars {
 }
 
 append specialListeners {,Scrollable}
+set specialPrints {
+             swkImageCanvas.setSize(getSize());
+             swkImageCanvas.paintComponent(g,null);
 
+}
 
 append specialInits {
         swkImageCanvas = new SwkImageCanvas(interp,name,className);
         swkImageCanvas.setComponent((Component) this);
+        addKeyListener(new KeyListener() {
+
+            public void keyTyped(KeyEvent e) {
+
+           }
+
+            public void keyPressed(KeyEvent e) {
+                Point point = MouseInfo.getPointerInfo().getLocation();
+                point = swkImageCanvas.transformPosition(point.x, point.y);
+                currentTags = getTagFromKeyEvent(point.x, point.y);
+                if (currentTags == null) {
+                    return;
+                }
+
+                for (int i = 0; i < currentTags.length; i++) {
+
+                    currentTag = getTagOrIDFromTagID(currentTags[i].toString());
+                    processKey(e, SwkBinding.PRESS);
+                }
+            }
+
+            public void keyReleased(KeyEvent e) {
+                Point point = MouseInfo.getPointerInfo().getLocation();
+                point = swkImageCanvas.transformPosition(point.x, point.y);
+                currentTags = getTagFromKeyEvent(point.x, point.y);
+                if (currentTags == null) {
+                    return;
+                }
+
+                for (int i = 0; i < currentTags.length; i++) {
+                    currentTag = getTagOrIDFromTagID(currentTags[i].toString());
+                    processKey(e, SwkBinding.RELEASE);
+                }
+            }
+        });
         addMouseListener(new MouseListener() {
                 public void mousePressed(MouseEvent mEvent) {
                     swkImageCanvas.transformMouse(mEvent);
@@ -138,27 +177,74 @@ String previousTag = null;
 TclObject currentTags[]=null;
 TclObject previousTags[]=null;
 
-Hashtable focusHash=null;
-Hashtable mouseHash=null;
-Hashtable mouseMotionHash = null;
-Hashtable keyHash=null;
+LinkedHashMap focusHash=null;
+LinkedHashMap mouseHash=null;
+LinkedHashMap mouseMotionHash = null;
+LinkedHashMap keyHash=null;
 Hashtable tagHash= new Hashtable();
 Vector tagVec = new Vector();
 
 SwkImageCanvas swkImageCanvas = null;
+       BufferedImage bufOffscreen=null;
+        Graphics2D g2Offscreen = null;
+boolean changed = false;
+
 }
 
 
 append specialImports "\nimport java.awt.geom.*;
 import java.awt.font.*;
 import java.awt.datatransfer.*;
-import com.onemoonscientific.swank.*;"
+import com.onemoonscientific.swank.*;
+import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+"
 	
 append specialMethods {
-    public void paintComponent(Graphics g) {
-        swkImageCanvas.setSize(getSize());
-        swkImageCanvas.paintComponent(g);
+    public void paintComponent(Graphics g){
+               Graphics2D g2 = (Graphics2D) g;     
+
+        fRC = g2.getFontRenderContext();
+        Dimension dimSize = getSize();
+        int w = dimSize.width;
+        int h = dimSize.height;
+
+        if ((w <= 0) || (h <= 0)) {
+            return;
+        }
+
+        if ((bufOffscreen == null) || (w != bufOffscreen.getWidth()) || (h != bufOffscreen.getHeight())) {
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            GraphicsDevice gs = ge.getDefaultScreenDevice();
+            GraphicsConfiguration gc = gs.getDefaultConfiguration();
+            if (g2Offscreen != null) {
+                g2Offscreen.dispose();
+                g2Offscreen = null;
+            }
+             bufOffscreen = gc.createCompatibleImage(w, h);
+             g2Offscreen = bufOffscreen.createGraphics();
+             changed = true;
+        }
+         if (changed) {
+             swkImageCanvas.setSize(getSize());
+             swkImageCanvas.paintComponent(g2Offscreen,bufOffscreen);
+             changed=false;
+             repaint();
+        } else {
+            g.drawImage(bufOffscreen,0,0,null);
+            Toolkit.getDefaultToolkit().sync();
+        }
+
     }
+    public BufferStrategy getBufferStrategy() {
+        BufferStrategy bufferStrategy = null;
+        Component comp = Widgets.getFrameOrWindow(getParent());
+        if (comp instanceof Window) {
+            bufferStrategy = ((Window) comp).getBufferStrategy();   
+        }
+        return bufferStrategy;
+    }
+
     public SwkImageCanvas getSwkImageCanvas() {
         return swkImageCanvas;
     }
@@ -310,6 +396,16 @@ append specialMethods {
         }
     }
 
+  public void processKey(KeyEvent e, int subtype) {
+        BindEvent bEvent = new BindEvent(interp, this, (EventObject) e,SwkBinding.KEY,
+                subtype, currentTag, previousTag, currentShape);
+        interp.getNotifier().queueEvent(bEvent, TCL.QUEUE_TAIL);
+
+        //bEvent.sync();
+        //processEvent(e,subtype);
+    }
+
+  
     public void processMouse(MouseEvent e, int type, int subtype) {
         BindEvent bEvent = new BindEvent(interp, this, (EventObject) e, type,
                 subtype, currentTag, previousTag, currentShape);
@@ -318,9 +414,47 @@ append specialMethods {
 
     public void processEvent(EventObject eventObject, int type, int subtype,
         String currentTag, String previousTag, SwkShape eventCurrentShape) {
-        MouseEvent e = (MouseEvent) eventObject;
+        if (eventObject instanceof KeyEvent) {
+            processKeyEvent((KeyEvent) eventObject,type,subtype,currentTag,previousTag,eventCurrentShape);
+        } else {
+             processMouseEvent(eventObject,type,subtype,currentTag,previousTag,eventCurrentShape);
 
-        //   System.out.println("processE "+type+" "+subtype+" C "+currentTag+" P "+previousTag);       
+        }
+    }
+
+    public void processKeyEvent(KeyEvent e, int type, int subtype,
+            String currentTag, String previousTag, SwkShape eventCurrentShape) {
+        //System.out.println("key event "+e.toString());
+        int buttonMask;
+        boolean debug = false;
+        int mods = e.getModifiersEx();
+        char keyChar = e.getKeyChar();
+
+        if (Character.isISOControl(keyChar)) {
+            keyChar = (char) (keyChar + 96);
+        }
+
+        int keyCode = e.getKeyCode();
+
+        if (debug) {
+            if (keyChar == KeyEvent.CHAR_UNDEFINED) {
+                //System.out.println(keyCode+" undef "+subtype);
+            } else {
+                //System.out.println(keyCode+" "+keyChar+" "+subtype);
+            }
+        }
+
+        if (Character.isISOControl(keyChar)) {
+            keyChar = (char) (keyChar + 64);
+        }
+
+
+        KeyStroke keyStroke = KeyStroke.getKeyStrokeForEvent(e);
+        boolean nativeProcessEvent = true;
+        boolean breakOut = false;
+
+
+
         if (e.isConsumed()) {
             return;
         }
@@ -328,15 +462,88 @@ append specialMethods {
         swkImageCanvas.setEventCurrentShape(eventCurrentShape);
 
         // System.out.println("processE "+type+" "+subtype+" C "+currentTag+" P "+previousTag);
-        ArrayList<SwkBinding> bindings = null;
 
+        ArrayList<SwkBinding> bindings = getBindings(currentTag,type, subtype);
+
+        if (bindings == null) {
+            return;
+        }
+
+        SwkBinding binding;
+
+
+        //    System.out.println("event "+e);
+        //    System.out.println("emods "+mods);
+        int i;
+        SwkBinding lastBinding = null;
+        for (i = 0; i < bindings.size(); i++) {
+            binding = (SwkBinding) bindings.get(i);
+
+            //System.out.println("binding is "+binding.toString()+" "+binding.subtype+" "+subtype);
+            if (binding.subtype != subtype) {
+                continue;
+            }
+
+            if (!((binding.subtype == SwkBinding.PRESS) &&
+                    (binding.detail == 0))) {
+                if (!((binding.subtype == SwkBinding.RELEASE) &&
+                        (binding.detail == 0))) {
+                    if (!((binding.subtype == SwkBinding.TYPE) &&
+                            (binding.detail == 0))) {
+                        //System.out.println("event mods "+mods+" binding mods "+binding.mod);
+                        if (binding.keyStroke == null) {
+                            //System.out.println("chars "+(keyChar+0)+" "+binding.detail);
+                            if (binding.detail != keyChar) {
+                                continue;
+                            }
+
+                            if (binding.mod != mods) {
+                                if ((binding.mod |
+                                        InputEvent.SHIFT_DOWN_MASK) != mods) {
+                                    continue;
+                                }
+                            }
+                        } else {
+                            //System.out.println(binding.detail+" <<>> "+keyCode);
+                            if (binding.detail != keyCode) {
+                                //System.out.println("keyCodes not equal");
+                                continue;
+                            }
+
+                            if (binding.mod != mods) {
+                                continue;
+                            }
+                        }
+                    }
+
+                    // second accounts for possibility of Caps-lock on
+                    // if matched above at detail == keyChar then the case was
+                    // right
+                    }
+
+                if ((binding.command != null) && (binding.command.length() != 0)) {
+                    try {
+                        BindCmd.doCmd(interp, binding.command, e,eventCurrentShape);
+                    } catch (TclException tclE) {
+                        if (tclE.getCompletionCode() == TCL.BREAK) {
+                            e.consume();
+
+                            return;
+                        } else {
+                            interp.addErrorInfo("\n    (\"binding\" script)");
+                            interp.backgroundError();
+                        }
+                    }
+                }
+                lastBinding = binding;
+            }
+        }
+    }
+ArrayList<SwkBinding> getBindings(String currentTag, int type, int subtype) {
+           ArrayList<SwkBinding> bindings = null;
         if (type == SwkBinding.FOCUS) {
             if ((currentTag != null) && (focusHash != null)) {
                 bindings = (ArrayList<SwkBinding>) focusHash.get(currentTag);
-            }
-
-            if (bindings == null) {
-                return;
             }
         } else if (type == SwkBinding.MOUSE) {
             if (subtype == SwkBinding.EXIT) {
@@ -349,30 +556,47 @@ append specialMethods {
                 }
             }
 
-            if (bindings == null) {
-                return;
-            }
-        } else if (type == SwkBinding.MOUSEMOTION) {
+         } else if (type == SwkBinding.MOUSEMOTION) {
             if ((currentTag != null) && (mouseMotionHash != null)) {
                 bindings = (ArrayList<SwkBinding>) mouseMotionHash.get(currentTag);
             }
 
-            if (bindings == null) {
-                return;
-            }
-        } else if (type == SwkBinding.KEY) {
+         } else if (type == SwkBinding.KEY) {
             if ((currentTag != null) && (keyHash != null)) {
                 bindings = (ArrayList<SwkBinding>) keyHash.get(currentTag);
             }
+       }
+        return bindings;
+
+}
+    public void processMouseEvent(EventObject eventObject, int type, int subtype,
+        String currentTag, String previousTag, SwkShape eventCurrentShape) {
+
+        //   System.out.println("processE "+type+" "+subtype+" C "+currentTag+" P "+previousTag);       
+        InputEvent iE = (InputEvent) eventObject;
+        if (iE.isConsumed()) {
+            return;
+        }
+
+        swkImageCanvas.setEventCurrentShape(eventCurrentShape);
+
+        // System.out.println("processE "+type+" "+subtype+" C "+currentTag+" P "+previousTag);
+
+               ArrayList<SwkBinding> bindings = getBindings(currentTag,type,subtype);
 
             if (bindings == null) {
                 return;
             }
-        }
 
         SwkBinding binding;
-        int buttons = e.getButton();
-        int mods = e.getModifiersEx();
+        MouseEvent mE = null;
+        int mods = iE.getModifiersEx();
+        int buttons = 0;
+        if (iE instanceof MouseEvent) {
+            mE = (MouseEvent) iE;
+            buttons = mE.getButton();
+        }
+
 
         //    System.out.println("event "+e);
         //    System.out.println("emods "+mods);
@@ -387,15 +611,15 @@ append specialMethods {
             }
 
             if ((subtype != SwkBinding.ENTER) && (subtype != SwkBinding.EXIT)) {
-                if ((type == SwkBinding.MOUSE) && (e.getClickCount() > 0) &&
-                        (binding.count > e.getClickCount())) {
+                if ((type == SwkBinding.MOUSE) && (mE.getClickCount() > 0) &&
+                        (binding.count > mE.getClickCount())) {
                     continue;
                 }
 
                 //System.out.println(binding.detail+" "+binding.mod+" "+mods+" "+(binding.mod  & mods));
                 // if ((binding.mod & buttonMask) != (mods & buttonMask)) {continue;}
                 if (type == SwkBinding.MOUSEMOTION) {
-                    if (!SwkMouseMotionListener.checkButtonState(e,
+                    if (!SwkMouseMotionListener.checkButtonState(mE,
                                 binding.mod, mods)) {
                         continue;
                     }
@@ -404,6 +628,8 @@ append specialMethods {
                                 buttons)) {
                         continue;
                     }
+                   
+
                 }
 
                 //  System.out.println("check mods");
@@ -418,10 +644,10 @@ append specialMethods {
 
             if ((binding.command != null) && (binding.command.length() != 0)) {
                 try {
-                    BindCmd.doCmd(interp, binding.command, e);
+                    BindCmd.doCmd(interp, binding.command, iE,eventCurrentShape);
                 } catch (TclException tclE) {
                     if (tclE.getCompletionCode() == TCL.BREAK) {
-                        e.consume();
+                        iE.consume();
 
                         return;
                     } else {
@@ -433,7 +659,6 @@ append specialMethods {
             lastBinding = binding;
         }
     }
-
     String getTagOrIDFromTagID(String tagID) {
         int spacePos = tagID.indexOf(" ");
 
@@ -449,6 +674,10 @@ append specialMethods {
 
         return (swkImageCanvas.scanCanvasForTags((double) mEvent.getX(), (double) mEvent.getY()));
     }
+    public TclObject[] getTagFromKeyEvent(int x, int y) {
+        currentTag = null;
+        return (swkImageCanvas.scanCanvasForTags((double) x, (double) y));
+    }
     public void removeBindingsForTag(String tagName) {
         focusHash.remove(tagName);
         mouseHash.remove(tagName);
@@ -462,7 +691,7 @@ append specialMethods {
 
         if (newBinding.type == SwkBinding.FOCUS) {
             if (focusHash == null) {
-                focusHash = new Hashtable();
+                focusHash = new LinkedHashMap();
                 bindVec = new ArrayList<SwkBinding>(2);
                 focusHash.put(tagName, bindVec);
             } else {
@@ -475,7 +704,7 @@ append specialMethods {
             }
         } else if (newBinding.type == SwkBinding.MOUSE) {
             if (mouseHash == null) {
-                mouseHash = new Hashtable();
+                mouseHash = new LinkedHashMap();
                 bindVec = new ArrayList<SwkBinding>(2);
                 mouseHash.put(tagName, bindVec);
             } else {
@@ -488,7 +717,7 @@ append specialMethods {
             }
         } else if (newBinding.type == SwkBinding.MOUSEMOTION) {
             if (mouseMotionHash == null) {
-                mouseMotionHash = new Hashtable();
+                mouseMotionHash = new LinkedHashMap();
                 bindVec = new ArrayList<SwkBinding>(2);
                 mouseMotionHash.put(tagName, bindVec);
             } else {
@@ -501,7 +730,7 @@ append specialMethods {
             }
         } else if (newBinding.type == SwkBinding.KEY) {
             if (keyHash == null) {
-                keyHash = new Hashtable();
+                keyHash = new LinkedHashMap();
                 bindVec = new ArrayList<SwkBinding>(2);
                 keyHash.put(tagName, bindVec);
             } else {
@@ -530,6 +759,7 @@ append specialMethods {
             bindVec.add(newBinding);
         }
     }
+
 
 
     public void drawBox(int x1, int y1, int width, int height) {

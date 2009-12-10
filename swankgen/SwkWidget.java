@@ -111,7 +111,7 @@ public class ${widgetType} extends ${widget} implements SwkWidget, Printable$spe
             g2.translate(pX,pY);
             g2.scale(sx, sy);
             boolean wasBuffered = SwankUtil.disableDoubleBuffering(this);
-            paint(g2);
+            $specialPrints
             SwankUtil.restoreDoubleBuffering(this, wasBuffered);
             result = PAGE_EXISTS;
         } 

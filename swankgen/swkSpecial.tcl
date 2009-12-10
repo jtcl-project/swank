@@ -88,7 +88,7 @@ proc defpar {par widget default} {
 
 proc swkMakeSpecial {widget widgetVar} {
     global specialCmds specialInits specialVars specialMethods specialGets specialSuper
-    global specialVCmds specialOpts specialListeners specialConfig specialImports specialWidgetTypeCmds
+    global specialVCmds specialOpts specialListeners specialConfig specialImports specialWidgetTypeCmds specialPrints
     
     set specialCmds ""
     set specialVCmds ""

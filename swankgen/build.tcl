@@ -38,6 +38,7 @@ proc makeWidget {f1 type widgetType widget} {
     global getOptions
     global getOPTs
     global getCASEs
+    global specialPrints
     source [file join swankgen ${type}.java]
     set widgetVar [string tolower $widgetType]
     puts $f1 [subst -nobackslashes -nocommand $body]
@@ -94,6 +95,7 @@ foreach widgetArg $widgets {
 	set simpleWidget $widget
         set methods ""
         set i 0
+        set specialPrints {paint(g2);}
         foreach widgetClass $widgetClasses {
 	    if {[string match *Document* $widgetClass]} {
 		set widget javax.swing.text.$widgetClass
