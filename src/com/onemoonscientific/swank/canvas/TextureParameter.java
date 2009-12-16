@@ -72,7 +72,11 @@ public class TextureParameter extends CanvasParameter {
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
         throws TclException {
         newName = arg.toString();
-        newValue = getFromImage(interp, arg);
+        if (newName.equals("")) {
+            newValue = null;
+        } else {
+            newValue = getFromImage(interp, arg);
+        }
     }
 
     public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
