@@ -25,6 +25,7 @@
 package com.onemoonscientific.swank;
 
 import com.onemoonscientific.swank.canvas.SwkShape;
+import com.onemoonscientific.swank.canvas.HitShape;
 import tcl.lang.*;
 
 import java.awt.*;
@@ -546,7 +547,7 @@ public class BindCmd implements Command {
      * @param e The Input Event that occured to trigger this binding response.
      * @throws TclException if exception is thrown when evaluating the command.
      */
-    public static void doCmd(Interp interp, String command, InputEvent e, SwkShape shape)
+    public static void doCmd(Interp interp, String command, InputEvent e, HitShape hitShape)
         throws TclException {
         int i;
         char type;
@@ -587,8 +588,12 @@ public class BindCmd implements Command {
                     }
                     break;
                 case 'd':
-                    if (shape != null) {
-                        sbuf.append(shape.getId());
+                    if ((hitShape != null) && (hitShape.getShape() != null)) {
+                            sbuf.append(hitShape.getShape().getId());
+                            if (hitShape.getHandle() >= 0) {
+                                sbuf.append('.');
+                                sbuf.append(hitShape.getHandle());
+                            }
                     } else {
                         sbuf.append("??");
                     }
@@ -644,7 +649,11 @@ public class BindCmd implements Command {
                     break;
 
                 case 'k':
-                    sbuf.append(((KeyEvent) e).getKeyCode());
+                    if (e instanceof KeyEvent) {
+                        sbuf.append(((KeyEvent) e).getKeyCode());
+                    } else {
+                        sbuf.append("??");
+                    }
 
                     break;
 

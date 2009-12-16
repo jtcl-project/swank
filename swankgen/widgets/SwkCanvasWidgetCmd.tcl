@@ -170,6 +170,8 @@ append specialInits {
 append specialVars {
 FontRenderContext fRC = null;
 int lastShapeId=0;
+HitShape hitShape = null;
+int handle = -1;
 SwkShape currentShape = null;
 Point currentPt = new Point(0,0);
 String currentTag = null;
@@ -324,7 +326,12 @@ append specialMethods {
              }
              **/
             checkForMouseExit(mEvent);
-            currentShape = swkImageCanvas.getLastShapeScanned();
+            hitShape = new HitShape(swkImageCanvas.getLastShapeScanned(), swkImageCanvas.getHandle());
+            if ((hitShape != null) && (hitShape.handle >= 0) && (hitShape.swkShape != null)) {
+                      setCursor(hitShape.swkShape.getHandleCursor(hitShape.handle));
+            } else {
+                 setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+            }
             checkForMouseEnter(mEvent);
         }
 
@@ -398,7 +405,7 @@ append specialMethods {
 
   public void processKey(KeyEvent e, int subtype) {
         BindEvent bEvent = new BindEvent(interp, this, (EventObject) e,SwkBinding.KEY,
-                subtype, currentTag, previousTag, currentShape);
+                subtype, currentTag, previousTag, hitShape);
         interp.getNotifier().queueEvent(bEvent, TCL.QUEUE_TAIL);
 
         //bEvent.sync();
@@ -408,12 +415,12 @@ append specialMethods {
   
     public void processMouse(MouseEvent e, int type, int subtype) {
         BindEvent bEvent = new BindEvent(interp, this, (EventObject) e, type,
-                subtype, currentTag, previousTag, currentShape);
+                subtype, currentTag, previousTag, hitShape);
         interp.getNotifier().queueEvent(bEvent, TCL.QUEUE_TAIL);
     }
 
     public void processEvent(EventObject eventObject, int type, int subtype,
-        String currentTag, String previousTag, SwkShape eventCurrentShape) {
+        String currentTag, String previousTag, HitShape eventCurrentShape) {
         if (eventObject instanceof KeyEvent) {
             processKeyEvent((KeyEvent) eventObject,type,subtype,currentTag,previousTag,eventCurrentShape);
         } else {
@@ -423,7 +430,7 @@ append specialMethods {
     }
 
     public void processKeyEvent(KeyEvent e, int type, int subtype,
-            String currentTag, String previousTag, SwkShape eventCurrentShape) {
+            String currentTag, String previousTag, HitShape eventCurrentShape) {
         //System.out.println("key event "+e.toString());
         int buttonMask;
         boolean debug = false;
@@ -570,7 +577,7 @@ ArrayList<SwkBinding> getBindings(String currentTag, int type, int subtype) {
 
 }
     public void processMouseEvent(EventObject eventObject, int type, int subtype,
-        String currentTag, String previousTag, SwkShape eventCurrentShape) {
+        String currentTag, String previousTag, HitShape eventCurrentShape) {
 
         //   System.out.println("processE "+type+" "+subtype+" C "+currentTag+" P "+previousTag);       
         InputEvent iE = (InputEvent) eventObject;

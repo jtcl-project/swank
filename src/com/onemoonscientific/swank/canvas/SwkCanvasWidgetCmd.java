@@ -34,7 +34,7 @@ public class SwkCanvasWidgetCmd implements Command {
         "cget", "configure", "object", "jadd", "create", "itemconfigure",
         "coords", "hit", "itemcget", "find", "move", "scale", "delete", "addtag",
         "bind", "raise", "lower", "dtag", "gettags", "canvasx", "canvasy",
-        "copy", "index", "newtype", "bbox", "type", "zoom", "transformer","hselect"
+        "copy", "index", "newtype", "bbox", "type", "zoom", "transformer","hselect","shapexy","invshapexy"
     };
     static final private int OPT_CGET = 0;
     static final private int OPT_CONFIGURE = 1;
@@ -65,6 +65,8 @@ public class SwkCanvasWidgetCmd implements Command {
     static final private int OPT_ZOOM = 26;
     static final private int OPT_TRANSFORMER = 27;
     static final private int OPT_HSELECT = 28;
+    static final private int OPT_SHAPEXY = 29;
+    static final private int OPT_INVSHAPEXY = 30;
     static boolean gotDefaults = false;
     Map newTypes = new HashMap();
     Interp interp = null;
@@ -297,13 +299,30 @@ public class SwkCanvasWidgetCmd implements Command {
         }
 
         case OPT_TRANSFORMER: {
-            (new TransformerSet()).exec(interp, swkImageCanvas, argv);
+            if (argv.length < 3) {
+                throw new TclNumArgsException(interp, 2, argv, "option");
+            }
+            if (argv[2].toString().equals("set")) {
+                (new TransformerSet()).exec(interp, swkImageCanvas, argv);
+            } else if (argv[2].toString().equals("get")) {
+                (new TransformerGet()).exec(interp, swkImageCanvas, argv);
+            } else {
+                 throw new TclException(interp,"Invalid transformer subcommand \""+argv[2].toString()+"\"");
+            }
 
             break;
         }
         case OPT_HSELECT: {
             (new HSelect()).exec(interp, swkImageCanvas, argv);
 
+            break;
+        }
+        case OPT_SHAPEXY: {
+            (new ShapeXY()).exec(interp, swkImageCanvas, argv,false);
+            break;
+        }
+        case OPT_INVSHAPEXY: {
+            (new ShapeXY()).exec(interp, swkImageCanvas, argv,true);
             break;
         }
 
@@ -899,12 +918,84 @@ public class SwkCanvasWidgetCmd implements Command {
 
                 for (int i = 0; i < shapeList.size(); i++) {
                     SwkShape swkShape2 = (SwkShape) shapeList.elementAt(i);
-                    swkShape2.move(dX, dY);
+                    AffineTransform shpTrans = swkShape2.getTransform();
+
+                    if (shpTrans != null) {
+                        double scaleX = shpTrans.getScaleX();
+                        double scaleY = shpTrans.getScaleY();
+                        double shpdX = dX / scaleX;
+                        double shpdY = dY / scaleY;
+                        swkShape2.move(shpdX, shpdY);
+                    } else {
+                        swkShape2.move(dX, dY);
+                    }
                 }
             } catch (SwkException swkE) {
             }
         }
     }
+   class ShapeXY extends GetValueOnEventThread {
+        SwkImageCanvas swkcanvas = null;
+        double[] xy;
+        String tagName = null;
+        boolean inverted=false;
+        boolean couldNotInvert = false;
+        void exec(Interp interp, SwkImageCanvas swkcanvas, TclObject[] argv,boolean inverted)
+            throws TclException {
+            if (argv.length != 4) {
+                throw new TclNumArgsException(interp, 2, argv, "option");
+            }
+
+            this.swkcanvas = swkcanvas;
+            this.inverted = inverted;
+            tagName = argv[2].toString();
+            TclObject[] coordList = TclList.getElements(interp, argv[3]);
+            int nCoords = coordList.length;
+            if ((nCoords <=0) || ((nCoords % 2) != 0)) {
+                 throw new TclException(interp,"shapexy must have even number of coordinates");
+            }
+            xy = new double[nCoords];
+            for (int i=0;i<nCoords;i++) {
+                xy[i] = TclDouble.get(interp,coordList[i]);
+            }
+            execOnThread();
+            if (couldNotInvert) {
+                 throw new TclException(interp,"Couldn't do inverse transform for shape  \""+tagName+"\"");
+            }
+            if (xy == null) {
+                 throw new TclException(interp,"shape \""+tagName+"\" doesn't exist");
+            }
+            TclObject resultList = TclList.newInstance();
+            for (int i=0;i<xy.length;i++) {
+                 TclList.append(interp,resultList,TclDouble.newInstance(xy[i]));
+            }
+            interp.setResult(resultList);
+        }
+
+        public void run() {
+            try {
+                SwkShape swkShape = (SwkShape) swkcanvas.getShape(tagName);
+                if (swkShape != null) {
+                    AffineTransform shpTrans = swkShape.getTransform();
+                    if (shpTrans != null) {
+                         if (inverted) {
+                             try {
+                                 shpTrans.inverseTransform(xy,0,xy,0,xy.length/2);
+                             } catch (NoninvertibleTransformException niTE) {
+                                 couldNotInvert = true;
+                             }
+                         } else {
+                             shpTrans.transform(xy,0,xy,0,xy.length/2);
+                         }
+                    }
+                } else {
+                    xy = null;
+                }
+            } catch (SwkException swkE) {
+            }
+        }
+    }
+
     class HSelect extends GetValueOnEventThread {
         SwkImageCanvas swkcanvas = null;
         boolean setValue = false;
@@ -1136,9 +1227,9 @@ public class SwkCanvasWidgetCmd implements Command {
 
             this.swkcanvas = swkcanvas;
 
-            double[] values = new double[6];
+            values = new double[6];
 
-            for (int i = 4; i < 10; i++) {
+            for (int i = 4; i < 9; i++) {
                 values[i - 4] = TclDouble.get(interp, argv[i]);
             }
 
@@ -1156,6 +1247,41 @@ public class SwkCanvasWidgetCmd implements Command {
 
             transformer.getTransform().setTransform(values[0], values[1],
                 values[2], values[3], values[4], values[5]);
+        }
+    }
+   class TransformerGet extends GetValueOnEventThread {
+        SwkImageCanvas swkcanvas = null;
+        double[] values = null;
+        String name = null;
+
+        void exec(Interp interp, SwkImageCanvas swkcanvas, TclObject[] argv)
+            throws TclException {
+            if (argv.length != 4) {
+                throw new TclNumArgsException(interp, 2, argv,
+                    "transformerName");
+            }
+            this.swkcanvas = swkcanvas;
+            name = argv[3].toString();
+            execOnThread();
+            if (values != null) {
+                TclObject transformList = TclList.newInstance();
+                for (int i = 0; i < values.length; i++) {
+                    TclList.append(interp, transformList,
+                        TclDouble.newInstance(values[i]));
+                }
+                interp.setResult(transformList);
+            } else {
+                throw new TclException(interp,"Transform \""+name+"\" doesn't exist");
+            }
+
+        }
+
+        public void run() {
+            Transformer transformer = swkcanvas.getTransformer(name);
+            if (transformer != null) {
+               values = new double[6];
+               transformer.getTransform().getMatrix(values);
+            }
         }
     }
 
@@ -1217,8 +1343,6 @@ public class SwkCanvasWidgetCmd implements Command {
 
             this.swkcanvas = swkcanvas;
 
-            SwkShape swkShape = null;
-            SwkShape nextShape = null;
             int start = 2;
 
             if (argv.length < (start + 1)) {
@@ -1375,13 +1499,14 @@ public class SwkCanvasWidgetCmd implements Command {
         }
 
         void getOne() throws SwkException {
-            SwkShape swkShape = (SwkShape) swkcanvas.getShape(tagName);
+            swkShape = (SwkShape) swkcanvas.getShape(tagName);
             if (swkShape != null) {
                 if (mode == NEXT) {
                     swkShape = swkShape.next;
                 } else {
                     swkShape = swkShape.previous;
                 }
+            } else {
             }
         }
 

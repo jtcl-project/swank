@@ -247,8 +247,41 @@ public abstract class SwkShape implements SwkShapeConfig {
     public void setShape(Shape shape) {
         this.shape = shape;
     }
+    public Cursor getHandleCursor(int handle) {
+         final Cursor cursor;
+         switch (handle) {
+             case 0:
+                 cursor = Cursor.getPredefinedCursor(Cursor.NW_RESIZE_CURSOR);
+                 break;
+             case 1:
+                 cursor = Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR);
+                 break;
+             case 2:
+                 cursor = Cursor.getPredefinedCursor(Cursor.NE_RESIZE_CURSOR);
+                 break;
+             case 3:
+                 cursor = Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR);
+                 break;
+             case 4:
+                 cursor = Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR);
+                 break;
+             case 5:
+                 cursor = Cursor.getPredefinedCursor(Cursor.S_RESIZE_CURSOR);
+                 break;
+             case 6:
+                 cursor = Cursor.getPredefinedCursor(Cursor.SW_RESIZE_CURSOR);
+                 break;
+             case 7:
+                 cursor = Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR);
+                 break;
+             default:
+                 cursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR);
+         }
+         return cursor;
+    }
     public boolean hitHandle(int x, int y, double xTest, double yTest) {
-        return (new Rectangle(x, y, handleSize, handleSize)).contains(xTest, yTest);
+        int fuzz=2;
+        return (new Rectangle(x-fuzz, y-fuzz, handleSize+2*fuzz, handleSize+2*fuzz)).contains(xTest, yTest);
     }
 
     void drawHandle(Graphics2D g2, int x, int y) {
@@ -261,16 +294,20 @@ public abstract class SwkShape implements SwkShapeConfig {
 
     public void drawHandles(Graphics2D g2) {
         if (shape != null) {
-            Rectangle bounds = shape.getBounds();
-            int x1 = (int) bounds.getMinX();
-            int y1 = (int) bounds.getMinY();
-            int x2 = (int) bounds.getMaxX();
-            int y2 = (int) bounds.getMaxY();
-            int xm = (x1 + x2) / 2;
-            int ym = (y1 + y2) / 2;
-            int[] xy = {x1, y1, xm, y1, x2, y1, x2, ym, x2, y2, xm, y2, x1, y2, x1, ym};
+            Rectangle2D bounds = shape.getBounds2D();
+            double x1 =  bounds.getMinX();
+            double y1 =  bounds.getMinY();
+            double x2 =  bounds.getMaxX();
+            double y2 =  bounds.getMaxY();
+            double xm = (x1 + x2) / 2;
+            double ym = (y1 + y2) / 2;
+            double[] xy = {x1, y1, xm, y1, x2, y1, x2, ym, x2, y2, xm, y2, x1, y2, x1, ym};
+            AffineTransform shapeTransform = getTransform();
+            if (shapeTransform != null) {
+                shapeTransform.transform(xy,0,xy,0,xy.length/2);
+            }
             for (int i = 0; i < xy.length; i += 2) {
-                drawHandle(g2, xy[i], xy[i + 1]);
+                drawHandle(g2, (int) xy[i], (int) xy[i + 1]);
             }
         }
     }
@@ -278,17 +315,22 @@ public abstract class SwkShape implements SwkShapeConfig {
     public int hitHandles(double testX, double testY) {
         int hitIndex = -1;
         if (shape != null) {
-            Rectangle bounds = shape.getBounds();
-            int x1 = (int) bounds.getMinX();
-            int y1 = (int) bounds.getMinY();
-            int x2 = (int) bounds.getMaxX();
-            int y2 = (int) bounds.getMaxY();
-            int xm = (x1 + x2) / 2;
-            int ym = (y1 + y2) / 2;
-            int[] xy = {x1, y1, xm, y1, x2, y1, x2, ym, x2, y2, xm, y2, x1, y2, x1, ym};
+            Rectangle2D bounds = shape.getBounds2D();
+            double x1 =  bounds.getMinX();
+            double y1 =  bounds.getMinY();
+            double x2 =  bounds.getMaxX();
+            double y2 =  bounds.getMaxY();
+            double xm = (x1 + x2) / 2;
+            double ym = (y1 + y2) / 2;
+            double[] xy = {x1, y1, xm, y1, x2, y1, x2, ym, x2, y2, xm, y2, x1, y2, x1, ym};
+            AffineTransform shapeTransform = getTransform();
+            if (shapeTransform != null) {
+                shapeTransform.transform(xy,0,xy,0,xy.length/2);
+            }
+
             for (int i = 0; i < xy.length; i += 2) {
-                if (hitHandle(xy[i], xy[i + 1], testX, testY)) {
-                    hitIndex = i;
+                if (hitHandle((int) xy[i], (int) xy[i + 1], testX, testY)) {
+                    hitIndex = i/2;
                     break;
                 }
             }
@@ -553,15 +595,20 @@ public abstract class SwkShape implements SwkShapeConfig {
     public boolean hitShape(double x1, double y1) {
         boolean hit = false;
         if (shape != null) {
+            Shape checkShape = shape;
+            AffineTransform shapeTransform = getTransform();
+            if (shapeTransform != null) {
+                checkShape = shapeTransform.createTransformedShape(shape);
+            }
             if ((fill != null) || (fillGradient != null) || (texturePaint != null)) {
-                Rectangle bounds = shape.getBounds();
+                Rectangle bounds = checkShape.getBounds();
                 if (bounds.contains(x1, y1)) {
                     hit = true;
                 }
             }
 
             if (!hit) {
-                PathIterator pI = shape.getPathIterator(null);
+                PathIterator pI = checkShape.getPathIterator(null);
                 double[] tcoords = new double[6];
                 double tx1 = 0.0;
                 double ty1 = 0.0;
@@ -575,7 +622,7 @@ public abstract class SwkShape implements SwkShapeConfig {
 
                     if (type == PathIterator.SEG_LINETO) {
                         tx2 = tcoords[0];
-                        ty2 = tcoords[0];
+                        ty2 = tcoords[1];
 
                         double dis = Line2D.ptSegDistSq(tx1, ty1, tx2, ty2,
                                 x1, y1);
@@ -589,7 +636,7 @@ public abstract class SwkShape implements SwkShapeConfig {
                         }
                     } else if (type == PathIterator.SEG_MOVETO) {
                         tx1 = tcoords[0];
-                        ty1 = tcoords[0];
+                        ty1 = tcoords[1];
                     }
 
                     pI.next();

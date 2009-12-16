@@ -133,8 +133,9 @@ public class SwkImageCanvas implements SwkCanvasType {
     int lastShapeId = 0;
     SwkShape firstShape = null;
     SwkShape lastShape = null;
-    SwkShape eventCurrentShape = null;
+    HitShape eventCurrentShape = null;
     SwkShape lastShapeScanned = null;
+    int handle = -1;
     Point currentPt = new Point(0, 0);
     String currentTag = null;
     String previousTag = null;
@@ -264,12 +265,15 @@ public class SwkImageCanvas implements SwkCanvasType {
         return (anchor);
     }
 
-    public void setEventCurrentShape(SwkShape shape) {
+    public void setEventCurrentShape(HitShape shape) {
         eventCurrentShape = shape;
     }
 
     public SwkShape getLastShapeScanned() {
         return lastShapeScanned;
+    }
+    public int getHandle() {
+        return handle;
     }
 
     public Transformer setTransformer(String transformerName, SwkShape shape) {
@@ -358,7 +362,7 @@ public class SwkImageCanvas implements SwkCanvasType {
 
         if (arg.equals("current")) {
             if (eventCurrentShape != null) {
-                swkShape = eventCurrentShape;
+                swkShape = eventCurrentShape.swkShape;
             } else {
                 throw new SwkException("tag doesn't exist");
             }
@@ -609,6 +613,15 @@ public class SwkImageCanvas implements SwkCanvasType {
                 }
 
                 return (shapeList);
+            } else if (tagList[i].equals("hselect")) {
+                Enumeration e = swkShapes.elements();
+
+                while (e.hasMoreElements()) {
+                    shape = (SwkShape) e.nextElement();
+                    if (shape.isSelected()) {
+                        shapeHash.put(shape, shape);
+                    }
+                }
             }
         }
 
@@ -642,7 +655,7 @@ public class SwkImageCanvas implements SwkCanvasType {
             if (!intValid) {
                 if (tagList[i].equals("current")) {
                     if (eventCurrentShape != null) {
-                        shapeHash.put(eventCurrentShape, eventCurrentShape);
+                        shapeHash.put(eventCurrentShape.swkShape, eventCurrentShape.swkShape);
                     }
 
                     continue;
@@ -784,35 +797,52 @@ public class SwkImageCanvas implements SwkCanvasType {
 
         SwkShape swkShape = null;
         SwkShape nextShape = lastShape;
-        while (nextShape != null) {
-            swkShape = nextShape;
-            nextShape = swkShape.previous;
+        for (int iMode=0;iMode<2;iMode++) {
+            handle = -1;
+            nextShape = lastShape;
+            while (nextShape != null) {
+                swkShape = nextShape;
+                nextShape = swkShape.previous;
 
-            if (swkShape.getState() != SwkShape.ACTIVE) {
-                continue;
-            }
-            if (!swkShape.hitShape(x1, y1)) {
+                if (swkShape.getState() != SwkShape.ACTIVE) {
                     continue;
-            }
- 
-            lastShapeScanned = swkShape;
+                }
+                if (iMode == 0) {
+                    if (swkShape.isSelected()) {
+                        handle = swkShape.hitHandles(x1,y1);
+                        if (handle < 0) {
+                            continue;
+                        }
+                    } else {
+                        continue;
+                    }
+                } else {
+                    if (!swkShape.hitShape(x1, y1)) {
+                        continue;
+                    }
+                }
+                lastShapeScanned = swkShape;
 
-            tagOrId = String.valueOf(swkShape.id);
-            shapeHash.add(tagOrId);
-
-            for (Object o : swkShape.tags.entrySet()) {
-                Entry entry = (Entry) o;
-                Tag tag = (Tag) entry.getValue();
-
-                tagOrId = tag.name + " " +
-                        String.valueOf(swkShape.id);
+                tagOrId = String.valueOf(swkShape.id);
                 shapeHash.add(tagOrId);
+
+                for (Object o : swkShape.tags.entrySet()) {
+                    Entry entry = (Entry) o;
+                    Tag tag = (Tag) entry.getValue();
+
+                    tagOrId = tag.name + " " +
+                        String.valueOf(swkShape.id);
+                    shapeHash.add(tagOrId);
+                }
+
+                tagOrId = "all " + String.valueOf(swkShape.id);
+                shapeHash.add(tagOrId);
+
+                break;
             }
-
-            tagOrId = "all " + String.valueOf(swkShape.id);
-            shapeHash.add(tagOrId);
-
-            break;
+            if (handle >= 0) {
+                break;
+            }
         }
 
         if (shapeHash.size() == 0) {
@@ -827,7 +857,6 @@ public class SwkImageCanvas implements SwkCanvasType {
             String shapeTagOrID = (String) o;
             tagOrIds[i++] = TclString.newInstance(shapeTagOrID);
         }
-
         return tagOrIds;
     }
 

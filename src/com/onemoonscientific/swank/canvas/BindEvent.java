@@ -17,11 +17,11 @@ class BindEvent extends TclEvent {
     int subtype = 0;
     String currentTag = null;
     String previousTag = null;
-    SwkShape currentShape = null;
+    HitShape currentShape = null;
 
     BindEvent(Interp interp, SwkCanvas swkCanvas, EventObject event, int type,
         int subtype, String currentTag, String previousTag,
-        SwkShape currentShape) {
+        HitShape currentShape) {
         this.interp = interp;
         this.swkCanvas = swkCanvas;
         this.event = event;
