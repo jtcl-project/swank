@@ -51,7 +51,11 @@ public class GradientParameter extends CanvasParameter {
 
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
         throws TclException {
-        newValue = SwankUtil.getGradient(interp, arg, p1, p2);
+        if (arg.toString().equals("")) {
+            newValue = null;
+        } else {
+            newValue = SwankUtil.getGradient(interp, arg, p1, p2);
+        }
     }
 
     public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
