@@ -27,8 +27,8 @@ global specialGets widgetVar components tkcomps resourceNames specialConfig opti
         set cmdElse2 "\")) \{"
        array set complexTypes {anchor float[] anchor2 int[] tkRectangle Rectangle 
                                     tkRectangleCorners int[][] javax.swing.Icon javax.swing.Icon 
-                                    java.io.File java.io.File java.net.URL java.net.URL menu Object options Object[]}
-       array set simpleTypes {java.lang.String s int i orient i textvariable s wrap s variable s justify s state s tkSize i tkSizeD d tkSizeDI d tkRelief s tkSelectMode i boolean b float f double d }
+                                    java.io.File java.io.File java.net.URL java.net.URL menu Object options Object[] spinlist java.util.List}
+       array set simpleTypes {java.lang.String s int i orient i textvariable s wrap s variable s justify s state s tkSize i tkSizeD d tkSizeDI d tkRelief s tkSelectMode i boolean b float f double d}
 
 catch "unset optionList"
 set setMethods ""
@@ -62,6 +62,7 @@ set excludeTypes "java.util.Locale java.lang.String {}"
 set setMethods [concat $specialGets $setMethods ]
 set result ""
 foreach method $setMethods {
+puts $method
      set methodClass [string tolower [lindex $method 4]]
      if {$methodClass != {}} {
                  set widgetVarLocal this.$methodClass
@@ -96,6 +97,7 @@ foreach method $setMethods {
 				}
 				set gotMethod 1
 				lappend dashOptions $dashOption
+puts startifs
 				if {[lsearch $components $argType ] >= 0} {
    					if {![regexp  {(.*\.)(.*\.)(.*)} $argType all a b c]} {
 						exit "bad $argType"
@@ -131,6 +133,7 @@ foreach method $setMethods {
 						set gotMethod 0
 						puts "no action for $method"
 				}
+puts endifs
 				if {$gotMethod} {
 					set optionList($dashOption) $cmd
 					set setterList($dashOption) $setter
@@ -173,4 +176,5 @@ foreach option $options {
 append configOptions "\};"
 append configCASEs "\}"
 append setterCASEs "\}"
+puts donewithsets
 }

@@ -137,6 +137,8 @@ foreach method $getMethods  {
 						set cmd "return(SwankUtil.parseImageIcon( $widgetVarLocal.${getMethod}()));"
 					} elseif {$argType == "java.io.File"} {
 						set cmd "return(SwankUtil.parseFile( $widgetVarLocal.${getMethod}()));"
+					} elseif {$argType == "spinlist"} {
+						set cmd "return(SwankUtil.parseSpinlist( $widgetVarLocal.${getMethod}()));"
 					} elseif {$argType == "java.net.URL"} {
 						set cmd "return(SwankUtil.parseURL((URL) $widgetVarLocal.${getMethod}()));"
 					} else {

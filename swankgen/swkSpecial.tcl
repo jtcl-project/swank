@@ -1946,6 +1946,9 @@ proc swkMakeSpecial {widget widgetVar} {
     }
     if {$widget == "JInternalFrame"} { source [file join swankgen widgets/SwkJInternalFrame.tcl]
     }
+    if {$widget == "JSpinner"} {
+        source [file join swankgen widgets/SwkJSpinner.tcl]
+    }
     
     
     if {[lsearch "JScrollBar" $widget] >= 0} {

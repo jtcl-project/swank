@@ -68,6 +68,9 @@ proc getSetter {widgetVar mode} {
         "java.io.File" {
            set result {Object value  = SwankUtil.getFile(interp,argv[i+1]);}
         }
+        "spinlist" {
+           set result {Object value  = SwankUtil.getSpinlist(interp,argv[i+1]);}
+        }
         "java.net.URL" {
            set result {Object value  = SwankUtil.getURL(interp,argv[i+1]);}
         }
