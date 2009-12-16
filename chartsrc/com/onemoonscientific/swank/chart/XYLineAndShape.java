@@ -64,8 +64,9 @@ public class XYLineAndShape extends XYPlotShape {
     String plotType = "lineandshape";
 
     public XYLineAndShape() {
+        rect2D = new Rectangle2D.Double();
         setRenderer();
-        setShape(null);
+        setShape(rect2D);
     }
     public CanvasParameter[] getParameters() {
         return parameters;

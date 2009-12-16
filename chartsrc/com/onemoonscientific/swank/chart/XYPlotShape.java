@@ -80,10 +80,12 @@ public class XYPlotShape extends SwkShape {
     String edgeString = "bottom";
     String plotType = "lineandshape";
     XYItemRenderer renderer = null;
+    Rectangle2D rect2D = null;
 
     public XYPlotShape() {
+        rect2D = new Rectangle2D.Double();
         setRenderer();
-        setShape(null);
+        setShape(rect2D);
     }
     public XYPlot getPlot() {
         return plot;
@@ -126,7 +128,7 @@ public class XYPlotShape extends SwkShape {
     public double getRadius() {
         return radius;
     }
-    public String hit(double x, double y) { 
+    public String hitIt(double x, double y) { 
         String result = "";
         if (state != null) {
             EntityCollection entities = state.getOwner().getEntityCollection();
@@ -141,18 +143,7 @@ public class XYPlotShape extends SwkShape {
          return result;
     }
     public boolean hitShape(double x, double y) {
-        boolean result = false;
-        if (state != null) {
-            EntityCollection entities = state.getOwner().getEntityCollection();
-            if (entities != null) {
-                ChartEntity entity = entities.getEntity(x, y);
-                if (entity != null) {
-                    result = true;
-                }
-            }
-         }
-
-         return result;
+        return rect2D.contains(x, y);
     }
 
     public void coords(SwkImageCanvas canvas, double[] coords)
@@ -174,6 +165,10 @@ public class XYPlotShape extends SwkShape {
 
     public void applyCoordinates() {
         AffineTransform aT = new AffineTransform();
+        checkCoordinates(storeCoords);
+        rect2D.setFrame(storeCoords[0], storeCoords[1],
+                storeCoords[2] - storeCoords[0], storeCoords[3] - storeCoords[1]);
+
         aT.translate(storeCoords[0], storeCoords[1]);
         aT.shear(getXShear(), getYShear());
         aT.translate(-storeCoords[0], -storeCoords[1]);
@@ -184,6 +179,25 @@ public class XYPlotShape extends SwkShape {
             storeCoords[2], storeCoords[3]);
 
         //shape = aT.createTransformedShape(gPath);
+    }
+    public void checkCoordinates(double[] coords) {
+        double hold;
+
+        if ((coords == null) || (coords.length != 4)) {
+            return;
+        }
+
+        if (coords[0] > coords[2]) {
+            hold = coords[0];
+            coords[0] = coords[2];
+            coords[2] = hold;
+        }
+
+        if (coords[1] > coords[3]) {
+            hold = coords[1];
+            coords[1] = coords[3];
+            coords[3] = hold;
+        }
     }
 
     public CanvasParameter[] getParameters() {
@@ -217,7 +231,7 @@ public class XYPlotShape extends SwkShape {
         double scaleX = (x2-x1) /(upperBoundX-lowerBoundX);
         double scaleY = (y2-y1) /(lowerBoundY-upperBoundY);
         SwkImageCanvas canvas = getCanvas();
-        Transformer plotTransformer =canvas.setTransformer("xyplot", this);
+        Transformer plotTransformer =canvas.setTransformer("xyplot"+getId(), null);
         AffineTransform aT = plotTransformer.getTransform();
         aT.setToIdentity();
         aT.translate(x1,y1);
