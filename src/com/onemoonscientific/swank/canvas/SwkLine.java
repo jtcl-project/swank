@@ -46,13 +46,111 @@ import java.lang.*;
 import java.util.*;
 
 public class SwkLine extends SwkShape {
+  public enum EndPointStyle {
+        NONE("none") {
+        },
+        SQUARE("square") {
+        double[] getPoly() {
+            return (new double[12]);
+        }
+        double[] calcShape(double[] shapePars,double x1,double y1,double x2,double y2,double[]  poly) {
+            double[] thetaTrig = calcSquare(shapePars,x1,y1,x2,y2,poly);
+            return thetaTrig;
+        }
+        },
+        CIRCLE("circle") {
+        double[] getPoly() {
+            return (new double[4]);
+        }
+        double[] calcShape(double[] shapePars,double x1,double y1,double x2,double y2,double[]  poly) {
+            double[] thetaTrig = calcCircle(shapePars,x1,y1,x2,y2,poly);
+            return thetaTrig;
+        }
+        },
+        DIAMOND("diamond") {
+        double[] getPoly() {
+            return (new double[10]);
+        }
+        double[] calcShape(double[] shapePars,double x1,double y1,double x2,double y2,double[]  poly) {
+            double[] thetaTrig = calcDiamond(shapePars,x1,y1,x2,y2,poly);
+            return thetaTrig;
+        }
+        },
+        ARROW("arrow") {
+        double[] getPoly() {
+            return (new double[12]);
+        }
+        double[] calcShape(double[] shapePars,double x1,double y1,double x2,double y2,double[]  poly) {
+            double[] thetaTrig = calcArrow(shapePars,x1,y1,x2,y2,poly);
+            return thetaTrig;
+        }
+        };
+        private String description;
+
+        EndPointStyle(String description) {
+            this.description = description;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+        double[] calcShape(double[] shapePars,double x1,double y1,double x2,double y2,double[]  poly) {
+            double[] thetaTrig = calcSquare(shapePars,x1,y1,x2,y2,poly);
+            return thetaTrig;
+        }
+        double[] getPoly() {
+            return (new double[12]);
+        }
+
+        double[] addArrowFirst(double[] shapePars,double[] storeCoords) {
+            double x1 = storeCoords[0];
+            double y1 = storeCoords[1];
+            double x2 = storeCoords[2];
+            double y2 = storeCoords[3];
+            double[] poly = getPoly();
+
+            double[] thetaTrig = calcShape(shapePars,x1,y1,x2,y2,poly);
+
+            double backup  = calcBackup(shapePars);
+            storeCoords[0] = poly[0] - backup * thetaTrig[0];
+            storeCoords[1] = poly[1] - backup * thetaTrig[1];
+            return poly;
+         }
+
+         double[] addArrowLast(double[] shapePars,double[] storeCoords) {
+            int nElems = storeCoords.length;
+            double x1 = storeCoords[nElems - 4];
+            double y1 = storeCoords[nElems - 3];
+            double x2 = storeCoords[nElems - 2];
+            double y2 = storeCoords[nElems - 1];
+            double[] poly = getPoly();
+
+            double[] thetaTrig = calcShape(shapePars,x2,y2,x1,y1,poly);
+
+            double backup  = calcBackup(shapePars);
+            storeCoords[nElems - 2] = poly[0] - backup * thetaTrig[0];
+            storeCoords[nElems - 1] = poly[1] - backup * thetaTrig[1];
+            return poly;
+         }
+         double calcBackup(double[] shapePars) {
+            double shapeA = shapePars[0] + 0.001;
+            double shapeB = shapePars[1] + 0.001;
+            double width = shapePars[3];
+            double shapeC = shapePars[2] + width / 2.0 + 0.001;
+            double fracHeight = (width / 2.0) / shapeC;
+            double backup = fracHeight * shapeB + shapeA * (1.0 - fracHeight) / 2.0;
+            return backup;
+         }
+
+    }
+  
 
     static CanvasParameter[] parameters = {
         new FillParameter(), new SmoothParameter(), new DashParameter(),
         new DashPhaseParameter(), new WidthParameter(), new RotateParameter(),
         new ShearParameter(), new TagsParameter(), new StateParameter(),
         new TransformerParameter(), new CapstyleParameter(),
-        new JoinstyleParameter(), new ArrowParameter(), new ArrowShapeParameter()
+        new JoinstyleParameter(), new ArrowParameter(), new ArrowShapeParameter(), new EndstyleParameter(),new StartstyleParameter()
     };
     static Map parameterMap = new TreeMap();
 
@@ -65,12 +163,15 @@ public class SwkLine extends SwkShape {
     boolean closePath = false;
     String smooth = "";
     double smoothValue = 1.0;
-    final private int PTS_IN_ARROW = 6;
+    final static private int PTS_IN_ARROW = 6;
     boolean arrowFirst = false;
     boolean arrowLast = false;
     double arrowShapeA = 8.0;
     double arrowShapeB = 10.0;
     double arrowShapeC = 3.0;
+
+    EndPointStyle endPointStyle1 = EndPointStyle.NONE;
+    EndPointStyle endPointStyle2 = EndPointStyle.NONE;
 
     SwkLine(Shape shape, SwkImageCanvas canvas) {
         super(shape, canvas);
@@ -78,39 +179,55 @@ public class SwkLine extends SwkShape {
         fill = null;
     }
 
-    public void paintShape(Graphics2D g2) {
-        if (stroke != null) {
+     public void paintShape(Graphics2D g2) {
+       if (stroke != null) {
             g2.setStroke(stroke);
         } else {
             g2.setStroke(bstroke);
         }
+        if (storeCoords == null) {return;};
         AffineTransform shapeTransform = getTransform();
 
         g2.setPaint(outline);
-
-        // draw line
-        if (shapeTransform != null) {
-            g2.draw(shapeTransform.createTransformedShape(shape));
-        } else {
-            g2.draw(shape);
-        }
-
-        // draw first arrow head
-        if (firstArrowPath != null) {
+        if ((endPointStyle1 == EndPointStyle.NONE) && (endPointStyle2 == EndPointStyle.NONE)) {
             if (shapeTransform != null) {
-                g2.fill(shapeTransform.createTransformedShape(firstArrowPath));
-                g2.draw(shapeTransform.createTransformedShape(firstArrowPath));
+                g2.draw(shapeTransform.createTransformedShape(shape));
             } else {
-                g2.fill(firstArrowPath);
-                g2.draw(firstArrowPath);
+                g2.draw(shape);
             }
-        }
-        if (lastArrowPath != null) {
+        } else {
+            applyCoordinates();
+ 
+            // draw line
             if (shapeTransform != null) {
-                g2.fill(shapeTransform.createTransformedShape(lastArrowPath));
-                g2.draw(shapeTransform.createTransformedShape(lastArrowPath));
+                g2.draw(shapeTransform.createTransformedShape(shape));
             } else {
+                g2.draw(shape);
+            }
+
+            // draw first arrow head
+            if (firstArrowPath != null) {
+                if (shapeTransform != null) {
+                    //g2.fill(shapeTransform.createTransformedShape(firstArrowPath));
+                    //g2.draw(shapeTransform.createTransformedShape(firstArrowPath));
+                } else {
+                    //g2.fill(firstArrowPath);
+                    //g2.draw(firstArrowPath);
+                }
+                    g2.fill(firstArrowPath);
+            g2.setStroke(bstroke);
+                    g2.draw(firstArrowPath);
+            }
+            if (lastArrowPath != null) {
+                if (shapeTransform != null) {
+                    //g2.fill(shapeTransform.createTransformedShape(lastArrowPath));
+                    //g2.draw(shapeTransform.createTransformedShape(lastArrowPath));
+                } else {
+                    //g2.fill(lastArrowPath);
+                    //g2.draw(lastArrowPath);
+                }
                 g2.fill(lastArrowPath);
+            g2.setStroke(bstroke);
                 g2.draw(lastArrowPath);
             }
         }
@@ -120,7 +237,6 @@ public class SwkLine extends SwkShape {
             throws SwkException {
         float x1;
         float y1;
-
         if ((storeCoords == null) || (storeCoords.length != coords.length)) {
             storeCoords = new double[coords.length];
         }
@@ -130,61 +246,119 @@ public class SwkLine extends SwkShape {
     }
 
     public void applyCoordinates() {
+        double[] shapePars = {arrowShapeA,arrowShapeB,arrowShapeC,width};
         AffineTransform aT = new AffineTransform();
         aT.translate(storeCoords[0], storeCoords[1]);
         aT.shear(xShear, yShear);
         aT.translate(-storeCoords[0], -storeCoords[1]);
         aT.rotate(rotate, ((storeCoords[0] + storeCoords[2]) / 2.0),
                 ((storeCoords[1] + storeCoords[3]) / 2.0));
-        double[] arrowFirstCoords = null;
-        double[] arrowLastCoords = null;
-        if (arrowFirst) {
-            arrowFirstCoords = addArrowFirst(storeCoords);
-            if (firstArrowPath == null) {
-                firstArrowPath = new GeneralPath();
-            }
-        } else {
-            firstArrowPath = null;
-        }
-        if (arrowLast) {
-            arrowLastCoords = addArrowLast(storeCoords);
-            if (lastArrowPath == null) {
-                lastArrowPath = new GeneralPath();
-            }
-        } else {
-            lastArrowPath = null;
-        }
+        AffineTransform shapeTransform = getTransform();
 
         if ((smooth == null) || smooth.equals("")) {
-            genPath();
+            genPath(storeCoords);
         } else {
-            genSmoothPath();
+            genSmoothPath(storeCoords);
         }
         shape = aT.createTransformedShape(gPath);
-        if (arrowFirst) {
-            addArrowPath(firstArrowPath, arrowFirstCoords);
-        }
-        if (arrowLast) {
-            addArrowPath(lastArrowPath, arrowLastCoords);
-        }
 
+        if ((endPointStyle1 != EndPointStyle.NONE) || (endPointStyle2 != EndPointStyle.NONE)) {
+            double[] tempCoords = new double[storeCoords.length];
+            if (shapeTransform != null) {
+                shapeTransform.transform(storeCoords, 0, tempCoords, 0, storeCoords.length / 2);
+            } else {
+                System.arraycopy(storeCoords, 0, tempCoords, 0, storeCoords.length);
+            }
+
+            double[] arrowFirstCoords = null;
+            double[] arrowLastCoords = null;
+            if (endPointStyle1 != EndPointStyle.NONE) {
+                arrowFirstCoords = endPointStyle1.addArrowFirst(shapePars,tempCoords);
+                if (firstArrowPath == null) {
+                    firstArrowPath = new GeneralPath();
+                }
+            } else {
+                firstArrowPath = null;
+            }
+            if (endPointStyle2 != EndPointStyle.NONE) {
+                arrowLastCoords = endPointStyle2.addArrowLast(shapePars,tempCoords);
+                if (lastArrowPath == null) {
+                    lastArrowPath = new GeneralPath();
+                }
+            } else {
+                lastArrowPath = null;
+            }
+
+            if ((smooth == null) || smooth.equals("")) {
+                genPath(tempCoords);
+            } else {
+                genSmoothPath(tempCoords);
+            }
+            shape = aT.createTransformedShape(gPath);
+
+            if (endPointStyle1 != EndPointStyle.NONE) {
+                if (endPointStyle1 == EndPointStyle.CIRCLE) {
+                    addArrowPathCircle(firstArrowPath, arrowFirstCoords);
+                } else {
+                    addArrowPath(firstArrowPath, arrowFirstCoords);
+                }
+            }
+            if (endPointStyle2 != EndPointStyle.NONE) {
+                if (endPointStyle2 == EndPointStyle.CIRCLE) {
+                    addArrowPathCircle(lastArrowPath, arrowLastCoords);
+                } else {
+                    addArrowPath(lastArrowPath, arrowLastCoords);
+                }
+            }
+        }
 
     }
-
-    double[] addArrowFirst(double[] storeCoords) {
+    double calcBackup() {
         double shapeA = arrowShapeA + 0.001;
         double shapeB = arrowShapeB + 0.001;
         double shapeC = arrowShapeC + width / 2.0 + 0.001;
-
         double fracHeight = (width / 2.0) / shapeC;
         double backup = fracHeight * shapeB + shapeA * (1.0 - fracHeight) / 2.0;
+        return backup;
+    }
 
+    double[] addArrowFirst(double[] shapePars,double[] storeCoords) {
         double x1 = storeCoords[0];
         double y1 = storeCoords[1];
         double x2 = storeCoords[2];
         double y2 = storeCoords[3];
         double[] poly = new double[PTS_IN_ARROW * 2];
 
+        double[] thetaTrig = calcSquare(shapePars,x1,y1,x2,y2,poly);
+
+        double backup  = calcBackup();
+        storeCoords[0] = poly[0] - backup * thetaTrig[0];
+        storeCoords[1] = poly[1] - backup * thetaTrig[1];
+        return poly;
+    }
+
+    double[] addArrowLast(double[] shapePars,double[] storeCoords) {
+        int nElems = storeCoords.length;
+        double x1 = storeCoords[nElems - 4];
+        double y1 = storeCoords[nElems - 3];
+        double x2 = storeCoords[nElems - 2];
+        double y2 = storeCoords[nElems - 1];
+        double[] poly = new double[PTS_IN_ARROW * 2];
+
+        double[] thetaTrig = calcSquare(shapePars,x2,y2,x1,y1,poly);
+
+        double backup  = calcBackup();
+        storeCoords[nElems - 2] = poly[0] - backup * thetaTrig[0];
+        storeCoords[nElems - 1] = poly[1] - backup * thetaTrig[1];
+        return poly;
+    }
+
+
+    static double[] calcArrow(double[] shapePars,double x1, double y1, double x2, double y2, double[] poly) {
+        double shapeA = shapePars[0] + 0.001;
+        double shapeB = shapePars[1] + 0.001;
+        double width = shapePars[3];
+        double shapeC = shapePars[2] + width / 2.0 + 0.001;
         poly[0] = poly[10] = x1;
         poly[1] = poly[11] = y1;
         double dx = poly[0] - x2;
@@ -204,36 +378,22 @@ public class SwkLine extends SwkShape {
         temp = shapeC * cosTheta;
         poly[3] = poly[1] - shapeB * sinTheta - temp;
         poly[9] = poly[3] + 2 * temp;
+        double fracHeight = (width / 2.0) / shapeC;
         poly[4] = poly[2] * fracHeight + vertX * (1.0 - fracHeight);
         poly[5] = poly[3] * fracHeight + vertY * (1.0 - fracHeight);
         poly[6] = poly[8] * fracHeight + vertX * (1.0 - fracHeight);
         poly[7] = poly[9] * fracHeight + vertY * (1.0 - fracHeight);
-
-        storeCoords[0] = poly[0] - backup * cosTheta;
-        storeCoords[1] = poly[1] - backup * sinTheta;
-        return poly;
+        double[] thetaTrig = new double[2];
+        thetaTrig[0] = cosTheta;
+        thetaTrig[1] = sinTheta;
+        return thetaTrig;
     }
-
-    double[] addArrowLast(double[] storeCoords) {
-
-        double shapeA = arrowShapeA + 0.001;
-        double shapeB = arrowShapeB + 0.001;
-        double shapeC = arrowShapeC + width / 2.0 + 0.001;
-
-        double fracHeight = (width / 2.0) / shapeC;
-        double backup = fracHeight * shapeB + shapeA * (1.0 - fracHeight) / 2.0;
-
-        int nElems = storeCoords.length;
-        double x1 = storeCoords[nElems - 4];
-        double y1 = storeCoords[nElems - 3];
-        double x2 = storeCoords[nElems - 2];
-        double y2 = storeCoords[nElems - 1];
-        double[] poly = new double[PTS_IN_ARROW * 2];
-
-        poly[0] = poly[10] = x2;
-        poly[1] = poly[11] = y2;
-        double dx = poly[0] - x1;
-        double dy = poly[1] - y1;
+    static double[] calcDiamond(double[] shapePars,double x1, double y1, double x2, double y2, double[] poly) {
+        double shapeA = shapePars[0] + 0.001;
+        poly[0] = poly[8] = x1;
+        poly[1] = poly[9] = y1;
+        double dx = poly[0] - x2;
+        double dy = poly[1] - y2;
         double length = Math.hypot(dx, dy);
         double sinTheta = 0.0;
         double cosTheta = 0.0;
@@ -243,29 +403,86 @@ public class SwkLine extends SwkShape {
         }
         double vertX = poly[0] - shapeA * cosTheta;
         double vertY = poly[1] - shapeA * sinTheta;
-        double temp = shapeC * sinTheta;
-        poly[2] = poly[0] - shapeB * cosTheta + temp;
+        double temp = shapeA/2 * sinTheta;
+        poly[2] = poly[0] - shapeA/2 * cosTheta + temp;
+        poly[6] = poly[2] - 2 * temp;
+
+        poly[4] = vertX;
+        poly[5] = vertY;
+        temp = shapeA/2 * cosTheta;
+        poly[3] = poly[1] - shapeA/2 * sinTheta - temp;
+        poly[7] = poly[3] + 2 * temp;
+
+        double[] thetaTrig = new double[2];
+        thetaTrig[0] = cosTheta;
+        thetaTrig[1] = sinTheta;
+        return thetaTrig;
+    }
+    static double[] calcCircle(double[] shapePars,double x1, double y1, double x2, double y2, double[] poly) {
+        double dx = x1 - x2;
+        double dy = y1 - y2;
+        double length = Math.hypot(dx, dy);
+        double sinTheta = 0.0;
+        double cosTheta = 0.0;
+        if (length != 0) {
+            sinTheta = dy / length;
+            cosTheta = dx / length;
+        }
+        double shapeA = shapePars[0] + 0.001;
+        poly[0] =  x1-shapeA/2*cosTheta;
+        poly[1] =  y1-shapeA/2*sinTheta;
+        poly[2] =  shapeA;
+        poly[3] =  shapeA;
+        double[] thetaTrig = new double[2];
+        thetaTrig[0] = 0;
+        thetaTrig[1] = 0;
+        return thetaTrig;
+    }
+    static double[] calcSquare(double[] shapePars,double x1, double y1, double x2, double y2, double[] poly) {
+        double shapeA = shapePars[0] + 0.001;
+        poly[0] = poly[10] = x1;
+        poly[1] = poly[11] = y1;
+        double dx = poly[0] - x2;
+        double dy = poly[1] - y2;
+
+        double length = Math.hypot(dx, dy);
+        double sinTheta = 0.0;
+        double cosTheta = 0.0;
+        if (length != 0) {
+            sinTheta = dy / length;
+            cosTheta = dx / length;
+        }
+        double vertX = poly[0] - shapeA * cosTheta;
+        double vertY = poly[1] - shapeA * sinTheta;
+
+        double temp = shapeA/2 * sinTheta;
+        poly[2] = poly[0] + temp;
         poly[8] = poly[2] - 2 * temp;
-        temp = shapeC * cosTheta;
-        poly[3] = poly[1] - shapeB * sinTheta - temp;
+
+        poly[4] = vertX + temp;
+        poly[6] = poly[4] - 2 * temp;
+
+        temp = shapeA/2 * cosTheta;
+        poly[3] = poly[1]  - temp;
         poly[9] = poly[3] + 2 * temp;
-        poly[4] = poly[2] * fracHeight + vertX * (1.0 - fracHeight);
-        poly[5] = poly[3] * fracHeight + vertY * (1.0 - fracHeight);
-        poly[6] = poly[8] * fracHeight + vertX * (1.0 - fracHeight);
-        poly[7] = poly[9] * fracHeight + vertY * (1.0 - fracHeight);
-        storeCoords[nElems - 2] = poly[0] - backup * cosTheta;
-        storeCoords[nElems - 1] = poly[1] - backup * sinTheta;
-        return poly;
+
+        poly[5] = vertY - temp;
+        poly[7] = poly[5] + 2 * temp;
+
+        double[] thetaTrig = new double[2];
+        thetaTrig[0] = cosTheta;
+        thetaTrig[1] = sinTheta;
+        return thetaTrig;
     }
 
-    public void genPath() {
+    public void genPath(double[] coords) {
         float x1;
         float y1;
         gPath.reset();
 
-        for (int i = 0; i < storeCoords.length; i += 2) {
-            x1 = (float) storeCoords[i];
-            y1 = (float) storeCoords[i + 1];
+        for (int i = 0; i < coords.length; i += 2) {
+            x1 = (float) coords[i];
+            y1 = (float) coords[i + 1];
 
             if (i == 0) {
                 gPath.moveTo(x1, y1);
@@ -279,12 +496,20 @@ public class SwkLine extends SwkShape {
         }
     }
 
+    public void addArrowPathCircle(GeneralPath arrowPath, double[] arrowCoords) {
+        arrowPath.reset();
+        float x1 = (float) arrowCoords[0];
+        float y1 = (float) arrowCoords[1];
+        float radius  = (float) (arrowCoords[2]/2);
+        Arc2D.Double arc = new Arc2D.Double(x1-radius,y1-radius,radius*2,radius*2, 0, 360,Arc2D.CHORD);
+        arrowPath.append(arc,false);
+    }
     public void addArrowPath(GeneralPath arrowPath, double[] arrowCoords) {
         arrowPath.reset();
         float x1;
         float y1;
-
-        for (int i = 0; i < arrowCoords.length; i += 2) {
+        int nCoords = arrowCoords.length;
+        for (int i = 0; i < nCoords; i += 2) {
             x1 = (float) arrowCoords[i];
             y1 = (float) arrowCoords[i + 1];
 
@@ -297,18 +522,15 @@ public class SwkLine extends SwkShape {
         arrowPath.closePath();
     }
 
-    public void genSmoothPath() {
-        float x1;
-        float y1;
-        float x2;
-        float y2;
+    public void genSmoothPath(double[] coords) {
         gPath.reset();
-        BezierPath.makeBezierCurve(storeCoords, 1, gPath, smoothValue);
+        BezierPath.makeBezierCurve(coords, 1, gPath, smoothValue);
 
         if (closePath) {
             gPath.closePath();
         }
     }
+
 
     public CanvasParameter[] getParameters() {
         return parameters;
@@ -321,4 +543,45 @@ public class SwkLine extends SwkShape {
     public String getType() {
         return "line";
     }
+    public void drawHandles(Graphics2D g2) {
+        if (shape != null) {
+            int x1 = (int) storeCoords[0];
+            int y1 = (int) storeCoords[1];
+            int x2 = (int) storeCoords[2];
+            int y2 = (int) storeCoords[3];
+            drawHandle(g2, x1,y1);
+            drawHandle(g2, x2,y2);
+        }
+    }
+   public int hitHandles(double testX, double testY) {
+        int hitIndex = -1;
+        if (shape != null) {
+            int x1 = (int) storeCoords[0];
+            int y1 = (int) storeCoords[1];
+            int x2 = (int) storeCoords[2];
+            int y2 = (int) storeCoords[3];
+            if (hitHandle(x1,y1,testX,testY)) {
+               hitIndex = 0;
+            } else if (hitHandle(x2,y2,testX,testY)) {
+               hitIndex = 1;
+            }
+        }
+        return hitIndex;
+    }
+
+   public Cursor getHandleCursor(int handle) {
+         final Cursor cursor;
+         switch (handle) {
+             case 0:
+                 cursor = Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR);
+                 break;
+             case 1:
+                 cursor = Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR);
+                 break;
+             default:
+                 cursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR);
+         }
+         return cursor;
+    }
+
 }
