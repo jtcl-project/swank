@@ -15,7 +15,7 @@ set specialVars ""
 set widgets { JButton {SMenuButton JButton} JLabel JCheckBox JCheckBoxMenuItem 
 		    JComboBox JDialog JFrame JLabel JList
 		    JMenu JMenuBar JMenuItem JOptionPane JPanel {LabelFrame JPanel} JPopupMenu {SMenu JPopupMenu} JProgressBar JRadioButton
-		    JRadioButtonMenuItem JScrollBar JScrollPane {JSlider JPanel JSlider} JSplitPane
+		    JRadioButtonMenuItem JScrollBar JScrollPane {JSlider JPanel JSlider} JSplitPane JSpinner
 		    JTabbedPane JTable JTextArea JTextField JPasswordField JTextPane JToggleButton JToolBar
 		    JEditorPane JTree JWindow {Canvas JPanel} JInternalFrame JDesktopPane JFileChooser JColorChooser FileDialog}
 
