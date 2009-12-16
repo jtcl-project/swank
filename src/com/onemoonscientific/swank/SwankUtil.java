@@ -123,7 +123,7 @@ public class SwankUtil {
             color = (Color) colorTable.get(colorName.toLowerCase());
         }
         return color;
-    }
+    } 
 
     public static GradientPaint getGradient(Interp interp, TclObject tclObject,
         Point2D p1, Point2D p2) throws TclException {
@@ -161,6 +161,43 @@ public class SwankUtil {
             throw new TclNumArgsException(interp, 0, argv,
                 "x1 y1 color1 x2 y2 color2 ?cyclic?");
         }
+    }
+    public static String parseGradient(GradientPaint gradientPaint) {
+          String result = "";
+          if (gradientPaint != null) {
+                StringBuilder sBuild = new StringBuilder();
+                Point2D pt1 = gradientPaint.getPoint1();
+                Color color1 = gradientPaint.getColor1();
+                Point2D pt2 = gradientPaint.getPoint2();
+                Color color2 = gradientPaint.getColor2();
+                sBuild.append(pt1.getX());
+                sBuild.append(" ");
+                sBuild.append(pt1.getY());
+                sBuild.append(" ");
+                String colorName = parseColor(color1);
+                if (colorName.indexOf(' ') != -1) {
+                    sBuild.append('{');
+                }
+                sBuild.append(colorName);
+                if (colorName.indexOf(' ') != -1) {
+                    sBuild.append('}');
+                }
+                sBuild.append(" ");
+                sBuild.append(pt2.getX());
+                sBuild.append(" ");
+                sBuild.append(pt2.getY());
+                sBuild.append(" ");
+                colorName = parseColor(color2);
+                if (colorName.indexOf(' ') != -1) {
+                    sBuild.append('{');
+                }
+                sBuild.append(colorName);
+                if (colorName.indexOf(' ') != -1) {
+                    sBuild.append('}');
+                }
+                result = sBuild.toString();
+          }
+          return result;
     }
 
     public static String parseColor(Color color) {
@@ -900,6 +937,30 @@ public class SwankUtil {
         }
 
         return (sBuf.toString());
+    }
+   public static java.util.List getSpinlist(Interp interp, TclObject tclObject)
+        throws TclException {
+        TclObject[] argv = TclList.getElements(interp, tclObject);
+        java.util.List spinValues = new ArrayList(argv.length);
+        for (TclObject arg: argv) {
+             spinValues.add(arg.toString());
+        }
+        return spinValues;
+    }
+    public static String parseSpinlist(Object object) {
+        java.util.List list = (java.util.List) object;
+// fixme  need to build proper Tcl list result
+         boolean first = true;
+         StringBuffer sbuf = new StringBuffer();
+         for (Object o:list) {
+             if (!first) {
+                 sbuf.append(' ');
+             } else {
+                  first = false;
+             }
+             sbuf.append(o.toString());
+         }
+         return sbuf.toString();
     }
 
     public static String getTkRelief(Interp interp, TclObject tclObject)
