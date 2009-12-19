@@ -45,6 +45,9 @@ public abstract class SwkShape implements SwkShapeConfig {
     static public final byte HIDDEN = 2;
     static BasicStroke bstroke = new BasicStroke();
     public static int handleSize = 6;
+
+    StrokeParameters strokePar = StrokeParameters.getDefault();
+
     Shape shape = null;
     int id;
     public double[] storeCoords = null;
@@ -57,19 +60,15 @@ public abstract class SwkShape implements SwkShapeConfig {
     TexturePaint texturePaint = null;
     String imageName = "";
     Color outline = Color.black;
+
     BasicStroke stroke = null;
     boolean newStroke = false;
     boolean newTransform = false;
     float width = (float) 1.0;
     float height = (float) 1.0;
-    int cap = BasicStroke.CAP_SQUARE;
-    int join = BasicStroke.JOIN_MITER;
-    float miterLimit = 10.0f;
-    String dashString = "";
-    float[] dash = {};
-    float[] dashTemp = null;
-    float dashPhase = 0.0f;
-    boolean dashIntPattern = false;
+
+
+
     Transformer transformer = null;
     float rotate = 0.0f;
     float xShear = 0.0f;
@@ -193,11 +192,11 @@ public abstract class SwkShape implements SwkShapeConfig {
     }
 
     public int getCap() {
-        return cap;
+        return strokePar.cap;
     }
 
     public void setCap(int newValue) {
-        cap = newValue;
+        strokePar.cap = newValue;
     }
 
     public void setXOrMode(boolean value) {
@@ -205,23 +204,23 @@ public abstract class SwkShape implements SwkShapeConfig {
     }
 
     public int getJoin() {
-        return join;
+        return strokePar.join;
     }
 
     public void setJoin(int newValue) {
-        join = newValue;
+        strokePar.join = newValue;
     }
 
     public float getMiterLimit() {
-        return miterLimit;
+        return strokePar.miterLimit;
     }
 
     public float[] getDash() {
-        return dash;
+        return strokePar.dash;
     }
 
     public float getDashPhase() {
-        return dashPhase;
+        return strokePar.dashPhase;
     }
 
     public float getRotate() {
@@ -699,25 +698,7 @@ public abstract class SwkShape implements SwkShapeConfig {
 
     void updateStroke() {
         if (newStroke) {
-            if (dashString.equals("")) {
-                stroke = new BasicStroke(width, cap, join, miterLimit);
-            } else {
-                if (dashIntPattern || (width == 1.0f) || (width == 0.0f)) {
-                    stroke = new BasicStroke(width, cap, join, miterLimit,
-                            dash, dashPhase);
-                } else {
-                    if ((dashTemp == null) || (dashTemp.length != dash.length)) {
-                        dashTemp = new float[dash.length];
-                    }
-
-                    for (int i = 0; i < dash.length; i++) {
-                        dashTemp[i] = dash[i] * width;
-                    }
-
-                    stroke = new BasicStroke(width, cap, join, miterLimit,
-                            dashTemp, dashPhase);
-                }
-            }
+            stroke = strokePar.getStroke(width);
         }
     }
 
