@@ -24,11 +24,12 @@ import javax.swing.tree.*;
 
 class SwkJSpinnerWidgetCmd implements Command {
     static final private String[] validCmds = {
-        "cget", "configure", "get",
+        "cget", "configure", "get","set"
     };
     static final private int OPT_CGET = 0;
     static final private int OPT_CONFIGURE = 1;
     static final private int OPT_GET = 2;
+    static final private int OPT_SET = 3;
     static boolean gotDefaults = false;
     int index;
 
@@ -98,14 +99,28 @@ class SwkJSpinnerWidgetCmd implements Command {
 
             break;
 
-        case OPT_GET:
-
+        case OPT_GET: {
             if (argv.length != 2) {
                 throw new TclNumArgsException(interp, 2, argv, "");
             }
             String value = (new Get()).exec(swkjspinner);
             interp.setResult(value);
             break;
+            }
+       case OPT_SET: {
+
+            if ((argv.length != 2) && (argv.length != 3)) {
+                throw new TclNumArgsException(interp, 2, argv, "?string?");
+            }
+            if (argv.length == 2) {
+                String value = (new Get()).exec(swkjspinner);
+                interp.setResult(value);
+            } else {
+                String value = (new Set()).exec(interp,swkjspinner,argv[2]);
+                interp.setResult(value);
+            }
+            break;
+            }
 
         default:
             throw new TclRuntimeError("TclIndex.get() error");
@@ -131,4 +146,44 @@ class SwkJSpinnerWidgetCmd implements Command {
             }
         }
     }
+    class Set extends GetValueOnEventThread {
+        Interp interp;
+        SwkJSpinner swkjspinner = null;
+        String sValue;
+        double dValue;
+        String value = "";
+
+        String exec(final Interp interp, final SwkJSpinner swkjspinner,TclObject arg) throws TclException {
+            this.interp = interp;
+            this.swkjspinner = swkjspinner;
+            SpinnerModel model = swkjspinner.getModel();
+              if (arg != null) {
+                  if ((model == null) || !(model instanceof SpinnerNumberModel)) {
+                      sValue = arg.toString().trim();
+                      dValue = 0.0;
+                  } else {
+                      dValue = TclDouble.get(interp,arg);
+                      sValue = null;
+                  }
+               }
+               execOnThread();
+               return value; 
+        }
+
+        public void run() {
+            if (sValue == null) {
+                swkjspinner.setValue(new Double(dValue));
+            } else {
+                swkjspinner.setValue(sValue);
+            }
+
+            Object object = swkjspinner.getValue();
+            if (object == null) {
+                value = "";
+            } else {
+                value = object.toString();
+            }
+        }
+    }
+
 

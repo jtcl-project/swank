@@ -22,19 +22,50 @@
 #
 
 append specialVars {
+    String textVariable="";
 }
 
 append specialInits {
         SpinnerNumberModel model = new SpinnerNumberModel(1.0,0.0,100.0,1.0);
         setModel(model);
 }
+append specialListeners { ,VarTrace,SwkTextVariable }
   
-
-
 append specialMethods {
-     public void setVarName(Interp interp, String name) throws TclException {
-//            commandListener.setVarName(interp,name);
-     }
+           public void setTextVariable(Interp interp, String name) throws TclException {
+                 String text =  SwankUtil.setupTrace(interp,this, textVariable, name);
+                 textVariable = name;
+                 if (text != null) {
+                    (new Setter((SwkWidget) this,OPT_TEXT)).exec(text);
+                 }
+           }
+            public void setSwkText(String value)  {
+                if ((value != null) && (textVariable != null) && !textVariable.equals ("")) {
+                     BindEvent bEvent = new BindEvent(interp,textVariable,null,value);
+                     interp.getNotifier().queueEvent(bEvent,TCL.QUEUE_TAIL);
+                }
+                super.setValue(value);
+            }
+            public String getSwkText()  {
+                return(super.getText());
+            }
+
+            public String getTextVariable() {
+                return(textVariable);
+            }
+
+            public void traceProc(Interp interp, String string1, String string2, int flags) throws TclException
+            {
+                TclObject tObj = interp.getVar(textVariable,TCL.GLOBAL_ONLY);
+                final String s = tObj.toString();
+                SwingUtilities.invokeLater(new Runnable() {
+                      public void run()  {
+                           setValue(s);
+                      }
+                });
+            }
+
+
      public void setIncrement(double step) {
         Object model = getModel();
          if ((model != null) && (model instanceof SpinnerNumberModel)) {
@@ -112,11 +143,25 @@ append specialMethods {
             }
         }
      }
+     public void setCommand(String name) {
+         changeListener.setCommand(name);
+     }
+     public String getCommand() {
+         return(changeListener.getCommand());
+     }
 
+}
+set closeMethod {
+    public void close() throws TclException {
+        if ((textVariable != null) && (textVariable.length() != 0)) {
+            interp.untraceVar(textVariable,this,TCL.TRACE_WRITES| TCL.GLOBAL_ONLY);
+        }
+    }
 }
 
 lappend specialGets "setValues spinlist values -values"
 lappend specialGets "setFrom double from -from"
 lappend specialGets "setTo double to -to"
 lappend specialGets "setIncrement double increment -increment"
-
+lappend specialGets "setTextVariable textvariable TextVariable -textvariable"
+lappend specialGets "setCommand java.lang.String Command"
