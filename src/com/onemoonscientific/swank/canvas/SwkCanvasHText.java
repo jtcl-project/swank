@@ -53,7 +53,7 @@ import java.util.*;
 import javax.swing.*;
 
 
-public class SwkCanvasHText extends SwkShape {
+public class SwkCanvasHText extends SwkShape implements TextInterface {
     static CanvasParameter[] parameters = {
         new TextParameter(), new AnchorParameter(), new FontParameter(),
         new WidthParameter(), new FillParameter(), new TagsParameter(),
@@ -176,6 +176,12 @@ public class SwkCanvasHText extends SwkShape {
 
     public void setFont(final Font font) {
         this.font = font;
+    }
+   public Color getTextColor() {
+        return fill;
+    }
+    public void setTextColor(Color color) {
+        this.fill = color;
     }
 
 

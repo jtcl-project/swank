@@ -45,7 +45,7 @@ public abstract class SwkShape implements SwkShapeConfig {
     static public final byte HIDDEN = 2;
     static BasicStroke bstroke = new BasicStroke();
     public static int handleSize = 6;
-   Shape shape = null;
+    Shape shape = null;
     int id;
     public double[] storeCoords = null;
     SwkShape previous = null;

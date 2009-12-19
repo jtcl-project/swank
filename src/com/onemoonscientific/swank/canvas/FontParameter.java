@@ -35,7 +35,7 @@ public class FontParameter extends CanvasParameter {
         }
 
         return TclString.newInstance(SwankUtil.parseFont(
-                ((SwkCanvText) swkShape).getFont()));
+                ((TextInterface) swkShape).getFont()));
     }
 
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
@@ -44,9 +44,9 @@ public class FontParameter extends CanvasParameter {
     }
 
     public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
-        if ((swkShape != null) && (swkShape instanceof SwkCanvText) &&
+        if ((swkShape != null) && (swkShape instanceof TextInterface) &&
                 (newValue != null)) {
-            ((SwkCanvText) swkShape).setFont(newValue);
+            ((TextInterface) swkShape).setFont(newValue);
         }
     }
 }

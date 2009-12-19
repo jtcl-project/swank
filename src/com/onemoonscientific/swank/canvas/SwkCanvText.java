@@ -53,7 +53,7 @@ import java.util.*;
 import javax.swing.*;
 
 
-public class SwkCanvText extends SwkShape {
+public class SwkCanvText extends SwkShape implements TextInterface {
     static BreakIterator wordIterator = BreakIterator.getWordInstance();
     static CanvasParameter[] parameters = {
         new TextParameter(), new AnchorParameter(), new FontParameter(),
@@ -146,7 +146,12 @@ public class SwkCanvText extends SwkShape {
     public void setFont(final Font font) {
         this.font = font;
     }
-
+    public Color getTextColor() {
+        return fill;
+    }
+    public void setTextColor(Color color) {
+        this.fill = color;
+    }
     int getLineBreaks(FontRenderContext fRC, Font font, String text) {
         float width1 = (float) (font.getStringBounds(text, fRC).getWidth());
         int iEnd = 1;

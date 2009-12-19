@@ -33,7 +33,7 @@ public class AnchorParameter extends CanvasParameter {
         }
 
         return TclString.newInstance(SwankUtil.parseAnchor(
-                ((SwkCanvText) swkShape).getAnchor()));
+                ((TextInterface) swkShape).getAnchor()));
     }
 
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
@@ -43,8 +43,8 @@ public class AnchorParameter extends CanvasParameter {
 
     public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
         if ((swkShape != null) && (newValue != null)) {
-            if (swkShape instanceof SwkCanvText) {
-                ((SwkCanvText) swkShape).setAnchor(newValue);
+            if (swkShape instanceof TextInterface) {
+                ((TextInterface) swkShape).setAnchor(newValue);
             }
         }
     }
