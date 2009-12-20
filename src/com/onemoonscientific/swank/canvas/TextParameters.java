@@ -25,7 +25,6 @@ public class TextParameters {
     private float[] anchor = {0.0f, 0.0f};
     static BreakIterator wordIterator = BreakIterator.getWordInstance();
     int[] ends = null;
-    Rectangle2D.Float rf2 = new Rectangle2D.Float();
 
     static TextParameters getDefault() {
         return defaultPar;
@@ -110,7 +109,7 @@ public class TextParameters {
         if (newValue.length != strokePar.anchor.length) {
             change = true;
         } else {
-            for (int i = 0; i > newValue.length; i++) {
+            for (int i = 0; i < newValue.length; i++) {
                 if (newValue[i] != strokePar.anchor[i]) {
                     change = true;
                     break;
@@ -196,25 +195,22 @@ public class TextParameters {
         return iEnd;
     }
 
-    public void paint(Graphics2D g2, FontRenderContext fRC, SwkShape swkShape, double x, double y) {
-        if (this.getFont() != null) {
-            g2.setFont(this.getFont());
+    public Rectangle2D paint(Graphics2D g2, FontRenderContext fRC, SwkShape swkShape, double x, double y) {
+        Font paintFont = g2.getFont();
+        if (getFont() != null) {
+            paintFont = getFont();
+            g2.setFont(paintFont);
         }
-
-
 
         g2.setPaint(getTextColor());
 
         String text = this.getText();
-
+        Rectangle2D rf1d = null;
         if ((text == null) || (text.equals(""))) {
-            swkShape.shape = new Rectangle2D.Float((float) x, (float) y,
+            return  new Rectangle2D.Float((float) x, (float) y,
                     1, 1);
-
-            return;
         }
-
-        int nLines = getLineBreaks(fRC, getFont(), text, swkShape.width);
+        int nLines = getLineBreaks(fRC, paintFont, text, swkShape.width);
         String textLine = text;
         float width2 = 0;
 
@@ -223,8 +219,8 @@ public class TextParameters {
                 textLine = text.substring(ends[i], ends[i + 1]).trim();
             }
 
-            float width1 = (float) (this.getFont().getStringBounds(textLine, fRC).getWidth());
-            float height1 = (float) (this.getFont().getStringBounds(textLine, fRC).getHeight());
+            float width1 = (float) (paintFont.getStringBounds(textLine, fRC).getWidth());
+            float height1 = (float) (paintFont.getStringBounds(textLine, fRC).getHeight());
 
             if (i == 0) {
                 width2 = (float) (width1 * this.getAnchor()[1]);
@@ -247,8 +243,7 @@ public class TextParameters {
             Rectangle2D.Double rf1 = new Rectangle2D.Double((float) (x
                     - width2), (float) (y - height1 + height2), width1, height1);
 
-            Rectangle2D rf1d = aT.createTransformedShape(rf1).getBounds2D();
-            swkShape.shape = rf1d;
+            rf1d = aT.createTransformedShape(rf1).getBounds2D();
 
             if (swkShape.rotate != 0.0) {
                 g2.rotate(swkShape.rotate, rf2D.getX(), rf2D.getY());
@@ -264,5 +259,6 @@ public class TextParameters {
 
             y += height1;
         }
+        return rf1d;
     }
 }

@@ -53,7 +53,7 @@ public class ItemRectangle extends SwkShape implements TextInterface {
         new FillParameter(), new OutlineParameter(), new TagsParameter(),
         new TransformerParameter(), new RotateParameter(), new ShearParameter(),
         new StateParameter(),
-        new TextParameter(), new FontParameter(), new AnchorParameter(), new TextColorParameter(),
+        new TextParameter(), new FontParameter(), new AnchorParameter(), new TextcolorParameter(),
     };
     static Map parameterMap = new TreeMap();
 
@@ -135,7 +135,13 @@ public class ItemRectangle extends SwkShape implements TextInterface {
         genGradient(aT);
         shape = aT.createTransformedShape(rect2D);
     }
+    public void paintShape(Graphics2D g2) {
+        super.paintShape(g2);
+        double x = (storeCoords[0]+storeCoords[2])/2.0;
+        double y = (storeCoords[1]+storeCoords[3])/2.0;
 
+        textPar.paint(g2, getCanvas().getFontRenderContext(), this,x,y);
+  }
     public CanvasParameter[] getParameters() {
         return parameters;
     }

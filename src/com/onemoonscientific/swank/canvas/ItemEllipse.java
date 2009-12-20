@@ -49,7 +49,9 @@ public class ItemEllipse extends SwkShape implements TextInterface {
         new FillParameter(), new OutlineParameter(), new TextureParameter(),
         new GradientParameter(), new RotateParameter(), new ShearParameter(),
         new StateParameter(), new TagsParameter(), new WidthParameter(),
-        new TransformerParameter(),};
+        new TransformerParameter(),
+            new TextParameter(), new FontParameter(), new AnchorParameter(), new TextcolorParameter(),
+};
     static Map parameterMap = new TreeMap();
 
     static {
@@ -106,6 +108,13 @@ public class ItemEllipse extends SwkShape implements TextInterface {
         System.arraycopy(coords, 0, storeCoords, 0, 4);
         applyCoordinates();
     }
+   public void paintShape(Graphics2D g2) {
+        super.paintShape(g2);
+        double x = (storeCoords[0]+storeCoords[2])/2.0;
+        double y = (storeCoords[1]+storeCoords[3])/2.0;
+
+        textPar.paint(g2, getCanvas().getFontRenderContext(), this,x,y);
+  }
 
     public String getType() {
         return "oval";
