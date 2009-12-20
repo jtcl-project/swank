@@ -73,7 +73,6 @@ public abstract class SwkShape implements SwkShapeConfig {
     float rotate = 0.0f;
     float xShear = 0.0f;
     float yShear = 0.0f;
-    float alpha = 1.0f;
     byte state = ACTIVE;
     Map tags = new LinkedHashMap();
     String[] tagNames = null;
@@ -236,10 +235,6 @@ public abstract class SwkShape implements SwkShapeConfig {
     }
     public float getRotate() {
         return rotate;
-    }
-
-    public float getAlpha() {
-        return alpha;
     }
 
     public Map getTags() {
