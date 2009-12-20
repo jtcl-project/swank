@@ -32,7 +32,7 @@ public class JustifyParameter extends CanvasParameter {
             throw new TclException(interp, "shape doesn't exist");
         }
 
-        SwkLine swkLine = (SwkLine) swkShape;
+        ItemLine swkLine = (ItemLine) swkShape;
 
         return TclString.newInstance(swkLine.smooth);
     }
@@ -47,7 +47,7 @@ public class JustifyParameter extends CanvasParameter {
     }
 
     public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
-        if ((swkShape != null) && (swkShape instanceof SwkCanvText)) {
+        if ((swkShape != null) && (swkShape instanceof ItemText)) {
         }
     }
 }

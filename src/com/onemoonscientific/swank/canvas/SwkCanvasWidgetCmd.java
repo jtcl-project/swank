@@ -434,36 +434,36 @@ public class SwkCanvasWidgetCmd implements Command {
         try {
             if (argv[2].toString().equals("arc")) {
                 Arc2D arc2D = new Arc2D.Double();
-                swkShape = new SwkArc(arc2D, swkcanvas);
+                swkShape = new ItemArc(arc2D, swkcanvas);
             } else if (argv[2].toString().startsWith("rect")) {
                 Rectangle2D rect2D = new Rectangle2D.Double();
-                swkShape = new SwkRectangle(rect2D, swkcanvas);
+                swkShape = new ItemRectangle(rect2D, swkcanvas);
             } else if (argv[2].toString().equals("oval")) {
                 Ellipse2D ellipse2D = new Ellipse2D.Double();
-                swkShape = new SwkEllipse(ellipse2D, swkcanvas);
+                swkShape = new ItemEllipse(ellipse2D, swkcanvas);
             } else if (argv[2].toString().equals("text")) {
-                swkShape = new SwkCanvText(null, swkcanvas);
+                swkShape = new ItemText(null, swkcanvas);
             } else if (argv[2].toString().equals("htext")) {
                   Rectangle2D rect2D = new Rectangle2D.Double();
-              swkShape = new SwkCanvasHText(rect2D, swkcanvas);
+              swkShape = new ItemHTML(rect2D, swkcanvas);
             } else if (argv[2].toString().equals("image")) {
-                swkShape = new SwkCanvImage(null, swkcanvas);
+                swkShape = new ItemImage(null, swkcanvas);
             } else if (argv[2].toString().equals("bitmap")) {
-                swkShape = new SwkCanvBitmap(null, swkcanvas);
+                swkShape = new ItemBitmap(null, swkcanvas);
             } else if (argv[2].toString().equals("window")) {
-                swkShape = new SwkCanvWindow(null, swkcanvas);
+                swkShape = new ItemWindow(null, swkcanvas);
             } else if (argv[2].toString().equals("line")) {
                 GeneralPath gPath = new GeneralPath();
-                swkShape = new SwkLine(gPath, swkcanvas);
+                swkShape = new ItemLine(gPath, swkcanvas);
             } else if (argv[2].toString().startsWith("sym")) {
                 GeneralPath gPath = new GeneralPath();
-                swkShape = new SwkSymbols(gPath, swkcanvas);
+                swkShape = new ItemSymbols(gPath, swkcanvas);
             } else if (argv[2].toString().startsWith("seg")) {
                 GeneralPath gPath = new GeneralPath();
-                swkShape = new SwkSegments(gPath, swkcanvas);
+                swkShape = new ItemSegments(gPath, swkcanvas);
             } else if (argv[2].toString().startsWith("poly")) {
                 GeneralPath gPath = new GeneralPath();
-                swkShape = new SwkPolygon(gPath, swkcanvas);
+                swkShape = new ItemPolygon(gPath, swkcanvas);
             } else {
                 CanvasType canvasType = (CanvasType) newTypes.get(argv[2].toString());
 

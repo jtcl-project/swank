@@ -32,8 +32,8 @@ public class ArcStyleParameter extends CanvasParameter {
             throw new TclException(interp, "shape doesn't exist");
         }
 
-        if (swkShape instanceof SwkArc) {
-            Arc2D arc2D = ((SwkArc) swkShape).arc2D;
+        if (swkShape instanceof ItemArc) {
+            Arc2D arc2D = ((ItemArc) swkShape).arc2D;
 
             String arcType = null;
 
@@ -76,8 +76,8 @@ public class ArcStyleParameter extends CanvasParameter {
             return;
         }
 
-        if (swkShape instanceof SwkArc) {
-            Arc2D arc2D = ((SwkArc) swkShape).arc2D;
+        if (swkShape instanceof ItemArc) {
+            Arc2D arc2D = ((ItemArc) swkShape).arc2D;
             arc2D.setArcType(newValue);
         }
     }

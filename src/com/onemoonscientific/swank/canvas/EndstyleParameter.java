@@ -8,7 +8,7 @@ import java.awt.BasicStroke;
 public class EndstyleParameter extends CanvasParameter {
     private static String name = "endstyle";
     private static String defValue = "none";
-    SwkLine.EndPointStyle newValue = SwkLine.EndPointStyle.NONE;
+    ItemLine.EndPointStyle newValue = ItemLine.EndPointStyle.NONE;
 
     public String getName() {
         return name;
@@ -31,7 +31,7 @@ public class EndstyleParameter extends CanvasParameter {
         if (swkShape == null) {
             throw new TclException(interp, "shape doesn't exist");
         }
-        SwkLine swkLine = (SwkLine) swkShape;
+        ItemLine swkLine = (ItemLine) swkShape;
         String type = swkLine.endPointStyle2.getDescription();
         return TclString.newInstance(type);
     }
@@ -39,21 +39,21 @@ public class EndstyleParameter extends CanvasParameter {
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
         throws TclException {
         if (arg.toString().startsWith("circle")) {
-            newValue = SwkLine.EndPointStyle.CIRCLE;
+            newValue = ItemLine.EndPointStyle.CIRCLE;
         } else if (arg.toString().startsWith("arrow")) {
-            newValue = SwkLine.EndPointStyle.ARROW;
+            newValue = ItemLine.EndPointStyle.ARROW;
         } else if (arg.toString().equals("square")) {
-            newValue = SwkLine.EndPointStyle.SQUARE;
+            newValue = ItemLine.EndPointStyle.SQUARE;
         } else if (arg.toString().equals("diamond")) {
-            newValue = SwkLine.EndPointStyle.DIAMOND;
+            newValue = ItemLine.EndPointStyle.DIAMOND;
         } else {
-            newValue = SwkLine.EndPointStyle.NONE;
+            newValue = ItemLine.EndPointStyle.NONE;
         }
     }
 
     public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
-        if ((swkShape != null) && (swkShape instanceof SwkLine)) {
-            SwkLine swkLine = (SwkLine) swkShape;
+        if ((swkShape != null) && (swkShape instanceof ItemLine)) {
+            ItemLine swkLine = (ItemLine) swkShape;
             swkLine.endPointStyle2 = newValue;
         }
     }

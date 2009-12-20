@@ -7,8 +7,8 @@ import tcl.lang.*;
 import java.awt.*;
 
 
-public class FillParameter extends CanvasParameter {
-    private static String name = "fill";
+public class TextColorParameter extends CanvasParameter {
+    private static String name = "textcolor";
     private static Color defValue = null;
     private Color newValue = null;
 
@@ -21,7 +21,7 @@ public class FillParameter extends CanvasParameter {
     }
 
     public boolean isParameterLabel(String s) {
-        if ((s.length() > 3) && "-fill".startsWith(s)) {
+        if ((s.length() > 3) && "-textcolor".startsWith(s)) {
             return true;
         } else {
             return false;
@@ -36,8 +36,8 @@ public class FillParameter extends CanvasParameter {
 
         Color colorVal;
 
-        if (swkShape instanceof ItemLine) {
-            colorVal = swkShape.outline;
+        if (swkShape instanceof TextInterface) {
+            colorVal = ((TextInterface) swkShape).getTextColor();
         } else {
             colorVal = swkShape.fill;
         }
@@ -52,8 +52,8 @@ public class FillParameter extends CanvasParameter {
 
     public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
         if (swkShape != null) {
-            if (swkShape instanceof ItemLine) {
-                swkShape.outline = newValue;
+            if (swkShape instanceof TextInterface) {
+                ((TextInterface) swkShape).setTextColor(newValue);
             } else {
                 swkShape.fill = newValue;
             }

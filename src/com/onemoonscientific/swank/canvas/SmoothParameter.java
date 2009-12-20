@@ -32,7 +32,7 @@ public class SmoothParameter extends CanvasParameter {
             throw new TclException(interp, "shape doesn't exist");
         }
 
-        SwkLine swkLine = (SwkLine) swkShape;
+        ItemLine swkLine = (ItemLine) swkShape;
 
         return TclString.newInstance(swkLine.smooth);
     }
@@ -55,8 +55,8 @@ public class SmoothParameter extends CanvasParameter {
     }
 
     public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
-        if ((swkShape != null) && (swkShape instanceof SwkLine)) {
-            SwkLine swkLine = (SwkLine) swkShape;
+        if ((swkShape != null) && (swkShape instanceof ItemLine)) {
+            ItemLine swkLine = (ItemLine) swkShape;
             swkLine.smooth = newValue;
         }
     }

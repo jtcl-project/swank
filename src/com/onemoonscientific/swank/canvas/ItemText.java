@@ -27,7 +27,6 @@
  *
  * Created on February 19, 2000, 3:14 PM
  */
-
 /**
  *
  * @author  JOHNBRUC
@@ -37,44 +36,34 @@ package com.onemoonscientific.swank.canvas;
 
 import com.onemoonscientific.swank.*;
 
-import tcl.lang.*;
 
 import java.awt.*;
 import java.awt.font.*;
 import java.awt.geom.*;
-import java.awt.image.*;
-
-import java.lang.*;
-
 import java.text.*;
 
 import java.util.*;
 
-import javax.swing.*;
 
+public class ItemText extends SwkShape implements TextInterface {
 
-public class SwkCanvText extends SwkShape implements TextInterface {
     static BreakIterator wordIterator = BreakIterator.getWordInstance();
     static CanvasParameter[] parameters = {
         new TextParameter(), new AnchorParameter(), new FontParameter(),
         new WidthParameter(), new FillParameter(), new TagsParameter(),
-        new TransformerParameter(), new RotateParameter(),
-    };
+        new TransformerParameter(), new RotateParameter(),};
     static Map parameterMap = new TreeMap();
 
     static {
         initializeParameters(parameters, parameterMap);
     }
-
-    String text = null;
-    Font font = null;
+    TextParameters textPar = TextParameters.getDefault();
     double x = 0.0;
     double y = 0.0;
-    float[] anchor = { 0.0f, 0.0f };
     int[] ends = null;
     Rectangle2D.Float rf2 = new Rectangle2D.Float();
 
-    SwkCanvText(Shape shape, SwkImageCanvas canvas) {
+    ItemText(Shape shape, SwkImageCanvas canvas) {
         super(shape, canvas);
         width = 0;
         storeCoords = new double[2];
@@ -83,18 +72,20 @@ public class SwkCanvText extends SwkShape implements TextInterface {
     }
 
     public void coords(SwkImageCanvas canvas, double[] coords)
-        throws SwkException {
+            throws SwkException {
         if (coords.length != 2) {
-            throw new SwkException("wrong # coordinates: expected 2, got " +
-                coords.length);
+            throw new SwkException("wrong # coordinates: expected 2, got "
+                    + coords.length);
         }
 
         setX(coords[0]);
         setY(coords[1]);
     }
+
     public void paintShape(Graphics2D g2) {
         paint(g2, getCanvas().getFontRenderContext());
     }
+
     public CanvasParameter[] getParameters() {
         return parameters;
     }
@@ -124,34 +115,37 @@ public class SwkCanvText extends SwkShape implements TextInterface {
     }
 
     public String getText() {
-        return this.text;
+        return textPar.getText();
     }
 
-    public void setText(final String text) {
-        this.text = text;
+    public void setText(String newValue) {
+        textPar = TextParameters.setText(textPar, newValue);
     }
 
     public float[] getAnchor() {
-        return this.anchor;
+        return textPar.getAnchor();
     }
 
-    public void setAnchor(final float[] anchor) {
-        this.anchor = anchor;
+    public void setAnchor(float[] newValue) {
+        textPar = TextParameters.setAnchor(textPar, newValue);
     }
 
     public Font getFont() {
-        return this.font;
+        return textPar.getFont();
     }
 
-    public void setFont(final Font font) {
-        this.font = font;
+    public void setFont(Font newValue) {
+        textPar = TextParameters.setFont(textPar, newValue);
     }
+
     public Color getTextColor() {
-        return fill;
+        return textPar.getTextColor();
     }
-    public void setTextColor(Color color) {
-        this.fill = color;
+
+    public void setTextColor(Color newValue) {
+        textPar = TextParameters.setTextColor(textPar, newValue);
     }
+
     int getLineBreaks(FontRenderContext fRC, Font font, String text) {
         float width1 = (float) (font.getStringBounds(text, fRC).getWidth());
         int iEnd = 1;
@@ -252,11 +246,9 @@ public class SwkCanvText extends SwkShape implements TextInterface {
             g2.setFont(this.getFont());
         }
 
-        if (this.fill == null) {
-            this.fill = Color.BLACK;
-        }
 
-        g2.setPaint(this.fill);
+
+        g2.setPaint(getTextColor());
 
         String text = this.getText();
 
@@ -277,11 +269,8 @@ public class SwkCanvText extends SwkShape implements TextInterface {
                 textLine = text.substring(ends[i], ends[i + 1]).trim();
             }
 
-            float width1 = (float) (this.getFont().getStringBounds(textLine, fRC)
-                                        .getWidth());
-            float height1 = (float) (this.getFont()
-                                         .getStringBounds(textLine, fRC)
-                                         .getHeight());
+            float width1 = (float) (this.getFont().getStringBounds(textLine, fRC).getWidth());
+            float height1 = (float) (this.getFont().getStringBounds(textLine, fRC).getHeight());
 
             if (i == 0) {
                 width2 = (float) (width1 * this.getAnchor()[1]);
@@ -297,12 +286,12 @@ public class SwkCanvText extends SwkShape implements TextInterface {
 
             aT.rotate(this.rotate, this.getX(), y);
 
-            Rectangle2D.Double rf2 = new Rectangle2D.Double((this.getX() -
-                    width2), (y + height2), 0.0, 0.0);
+            Rectangle2D.Double rf2 = new Rectangle2D.Double((this.getX()
+                    - width2), (y + height2), 0.0, 0.0);
             Rectangle2D rf2D = aT.createTransformedShape(rf2).getBounds2D();
 
-            Rectangle2D.Double rf1 = new Rectangle2D.Double((float) (this.getX() -
-                    width2), (float) (y - height1 + height2), width1, height1);
+            Rectangle2D.Double rf1 = new Rectangle2D.Double((float) (this.getX()
+                    - width2), (float) (y - height1 + height2), width1, height1);
 
             Rectangle2D rf1d = aT.createTransformedShape(rf1).getBounds2D();
             this.shape = rf1d;

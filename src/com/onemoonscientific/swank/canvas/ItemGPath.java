@@ -22,6 +22,11 @@
  *
  *
  */
+/*
+ * SwkGPath.java
+ *
+ * Created on February 19, 2000, 3:14 PM
+ */
 
 /**
  *
@@ -42,13 +47,12 @@ import java.lang.*;
 import java.util.*;
 
 
-public class SwkArc extends SwkShape {
+public class ItemGPath extends SwkShape {
     static CanvasParameter[] parameters = {
-        new ExtentParameter(), new AngleStartParameter(),
-        new ArcStyleParameter(), new DashParameter(), new DashPhaseParameter(),
-        new FillParameter(), new OutlineParameter(), new StateParameter(),
-        new RotateParameter(), new ShearParameter(), new TagsParameter(),
-        new TransformerParameter(), new WidthParameter(),
+        new DashParameter(), new DashPhaseParameter(), new WidthParameter(),
+        new FillParameter(), new OutlineParameter(), new RotateParameter(),
+        new ShearParameter(), new StateParameter(), new TagsParameter(),
+        new TransformerParameter(),
     };
     static Map parameterMap = new TreeMap();
 
@@ -56,52 +60,59 @@ public class SwkArc extends SwkShape {
         initializeParameters(parameters, parameterMap);
     }
 
-    String imageName = "";
-    Arc2D arc2D = null;
+    boolean closePath = false;
+    GeneralPath gPath = null;
 
-    SwkArc(Shape shape, SwkImageCanvas canvas) {
+    ItemGPath(Shape shape, SwkImageCanvas canvas) {
         super(shape, canvas);
-        storeCoords = new double[4];
-        arc2D = (Arc2D) shape;
-
-        // FIXME  should get from ExtentParameter
-        arc2D.setAngleExtent(90);
-    }
-
-    public Map getParameterMap() {
-        return parameterMap;
+        gPath = (GeneralPath) shape;
+        fill = null;
     }
 
     public void coords(SwkImageCanvas canvas, double[] coords)
         throws SwkException {
-        if (coords.length != 4) {
-            throw new SwkException("wrong # coordinates: expected 4, got " +
-                coords.length);
+        if ((storeCoords == null) || (storeCoords.length != coords.length)) {
+            storeCoords = new double[coords.length];
         }
 
-        System.arraycopy(coords, 0, storeCoords, 0, 4);
+        System.arraycopy(coords, 0, storeCoords, 0, coords.length);
         applyCoordinates();
     }
 
-    public String getType() {
-        return "arc";
+    public void applyCoordinates() {
+        AffineTransform aT = new AffineTransform();
+        aT.translate(storeCoords[0], storeCoords[1]);
+        aT.shear(xShear, yShear);
+        aT.translate(-storeCoords[0], -storeCoords[1]);
+
+        aT.rotate(rotate, ((storeCoords[0] + storeCoords[2]) / 2.0),
+            ((storeCoords[1] + storeCoords[3]) / 2.0));
+        gPath.reset();
+
+        for (int i = 0; i < storeCoords.length; i += 2) {
+            if (i == 0) {
+                gPath.moveTo((float) storeCoords[i], (float) storeCoords[i + 1]);
+            } else {
+                gPath.lineTo((float) storeCoords[i], (float) storeCoords[i + 1]);
+            }
+        }
+
+        if (closePath) {
+            gPath.closePath();
+        }
+
+        shape = aT.createTransformedShape(gPath);
     }
 
     public CanvasParameter[] getParameters() {
         return parameters;
     }
 
-    public void applyCoordinates() {
-        checkCoordinates(storeCoords);
+    public Map getParameterMap() {
+        return parameterMap;
+    }
 
-        AffineTransform aT = new AffineTransform();
-        aT.translate(storeCoords[0], storeCoords[1]);
-        aT.shear(xShear, yShear);
-        aT.translate(-storeCoords[0], -storeCoords[1]);
-        aT.rotate(rotate, ((storeCoords[0] + storeCoords[2]) / 2.0),
-            ((storeCoords[1] + storeCoords[3]) / 2.0));
-        arc2D.setFrame(storeCoords[0], storeCoords[1],
-            storeCoords[2] - storeCoords[0], storeCoords[3] - storeCoords[1]);
-        shape = aT.createTransformedShape(arc2D);
+    public String getType() {
+        return "line";
     }
 }

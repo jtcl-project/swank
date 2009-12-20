@@ -45,7 +45,7 @@ import java.lang.*;
 
 import java.util.*;
 
-public class SwkLine extends SwkShape {
+public class ItemLine extends SwkShape {
   public enum EndPointStyle {
         NONE("none") {
         },
@@ -173,7 +173,7 @@ public class SwkLine extends SwkShape {
     EndPointStyle endPointStyle1 = EndPointStyle.NONE;
     EndPointStyle endPointStyle2 = EndPointStyle.NONE;
 
-    SwkLine(Shape shape, SwkImageCanvas canvas) {
+    ItemLine(Shape shape, SwkImageCanvas canvas) {
         super(shape, canvas);
         gPath = (GeneralPath) shape;
         fill = null;

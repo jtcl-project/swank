@@ -32,8 +32,8 @@ public class AngleStartParameter extends CanvasParameter {
             throw new TclException(interp, "shape doesn't exist");
         }
 
-        if (swkShape instanceof SwkArc) {
-            Arc2D arc2D = ((SwkArc) swkShape).arc2D;
+        if (swkShape instanceof ItemArc) {
+            Arc2D arc2D = ((ItemArc) swkShape).arc2D;
 
             return TclDouble.newInstance(arc2D.getAngleStart());
         } else {
@@ -51,8 +51,8 @@ public class AngleStartParameter extends CanvasParameter {
             return;
         }
 
-        if (swkShape instanceof SwkArc) {
-            Arc2D arc2D = ((SwkArc) swkShape).arc2D;
+        if (swkShape instanceof ItemArc) {
+            Arc2D arc2D = ((ItemArc) swkShape).arc2D;
             arc2D.setAngleStart(newValue);
             swkShape.applyCoordinates();
         }

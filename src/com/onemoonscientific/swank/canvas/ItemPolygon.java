@@ -23,7 +23,7 @@
  *
  */
 /*
- * SwkGPath.java
+ * SwkPolygon.java
  *
  * Created on February 19, 2000, 3:14 PM
  */
@@ -47,7 +47,7 @@ import java.lang.*;
 import java.util.*;
 
 
-public class SwkSegments extends SwkShape {
+public class ItemPolygon extends SwkShape {
     static CanvasParameter[] parameters = {
         new DashParameter(), new DashPhaseParameter(), new WidthParameter(),
         new FillParameter(), new OutlineParameter(), new RotateParameter(),
@@ -60,10 +60,10 @@ public class SwkSegments extends SwkShape {
         initializeParameters(parameters, parameterMap);
     }
 
-    boolean closePath = false;
+    boolean closePath = true;
     GeneralPath gPath = null;
 
-    SwkSegments(Shape shape, SwkImageCanvas canvas) {
+    ItemPolygon(Shape shape, SwkImageCanvas canvas) {
         super(shape, canvas);
         gPath = (GeneralPath) shape;
         fill = null;
@@ -77,9 +77,9 @@ public class SwkSegments extends SwkShape {
                 coords.length);
         }
 
-        if ((coords.length % 4) != 0) {
+        if ((coords.length % 2) != 0) {
             throw new SwkException(
-                "wrong # coordinates: expected multiple of 4, got " +
+                "wrong # coordinates: expected even number, got " +
                 coords.length);
         }
 
@@ -94,9 +94,16 @@ public class SwkSegments extends SwkShape {
     public void applyCoordinates() {
         gPath.reset();
 
-        for (int i = 0; i < storeCoords.length; i += 4) {
-            gPath.moveTo((float) storeCoords[i], (float) storeCoords[i + 1]);
-            gPath.lineTo((float) storeCoords[i + 2], (float) storeCoords[i + 3]);
+        for (int i = 0; i < storeCoords.length; i += 2) {
+            if (i == 0) {
+                gPath.moveTo((float) storeCoords[i], (float) storeCoords[i + 1]);
+            } else {
+                gPath.lineTo((float) storeCoords[i], (float) storeCoords[i + 1]);
+            }
+        }
+
+        if (closePath) {
+            gPath.closePath();
         }
 
         AffineTransform aT = new AffineTransform();
@@ -118,6 +125,6 @@ public class SwkSegments extends SwkShape {
     }
 
     public String getType() {
-        return "segments";
+        return "polygon";
     }
 }

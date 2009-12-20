@@ -32,8 +32,8 @@ public class ExtentParameter extends CanvasParameter {
             throw new TclException(interp, "shape doesn't exist");
         }
 
-        if (swkShape instanceof SwkArc) {
-            Arc2D arc2D = ((SwkArc) swkShape).arc2D;
+        if (swkShape instanceof ItemArc) {
+            Arc2D arc2D = ((ItemArc) swkShape).arc2D;
 
             return TclDouble.newInstance(arc2D.getAngleExtent());
         } else {
@@ -48,8 +48,8 @@ public class ExtentParameter extends CanvasParameter {
 
     public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
         if ((swkShape != null) && (swkShape.shape != null) &&
-                (swkShape instanceof SwkArc)) {
-            Arc2D arc2D = ((SwkArc) swkShape).arc2D;
+                (swkShape instanceof ItemArc)) {
+            Arc2D arc2D = ((ItemArc) swkShape).arc2D;
             arc2D.setAngleExtent(newValue);
             swkShape.applyCoordinates();
         }

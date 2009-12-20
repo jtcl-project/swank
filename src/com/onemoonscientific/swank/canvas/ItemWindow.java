@@ -50,7 +50,7 @@ import java.util.*;
 import javax.swing.*;
 
 
-public class SwkCanvWindow extends SwkShape {
+public class ItemWindow extends SwkShape {
     static CanvasParameter[] parameters = {
         new WindowParameter(), new AnchorParameter(),
         new WidthParameter(), new HeightParameter(), new TagsParameter(),
@@ -69,7 +69,7 @@ public class SwkCanvWindow extends SwkShape {
     PlacerLayout placer = null;
     SwkWidget window = null;
 
-    SwkCanvWindow(Shape shape, SwkImageCanvas canvas) {
+    ItemWindow(Shape shape, SwkImageCanvas canvas) {
         super(shape, canvas);
         storeCoords = new double[2];
     }

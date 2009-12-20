@@ -1,5 +1,5 @@
 /*
-
+ *
  *
  * Copyright (c) 2000-2004 One Moon Scientific, Inc., Westfield, N.J., USA
  *
@@ -22,11 +22,6 @@
  *
  *
  */
-/*
- * SwkRectangle.java
- *
- * Created on February 19, 2000, 3:02 PM
- */
 
 /**
  *
@@ -47,12 +42,13 @@ import java.lang.*;
 import java.util.*;
 
 
-public class SwkRectangle extends SwkShape {
+public class ItemArc extends SwkShape {
     static CanvasParameter[] parameters = {
-        new WidthParameter(), new TextureParameter(), new GradientParameter(),
-        new FillParameter(), new OutlineParameter(), new TagsParameter(),
-        new TransformerParameter(), new RotateParameter(), new ShearParameter(),
-        new StateParameter(),
+        new ExtentParameter(), new AngleStartParameter(),
+        new ArcStyleParameter(), new DashParameter(), new DashPhaseParameter(),
+        new FillParameter(), new OutlineParameter(), new StateParameter(),
+        new RotateParameter(), new ShearParameter(), new TagsParameter(),
+        new TransformerParameter(), new WidthParameter(),
     };
     static Map parameterMap = new TreeMap();
 
@@ -61,11 +57,19 @@ public class SwkRectangle extends SwkShape {
     }
 
     String imageName = "";
-    Rectangle2D rect2D = null;
+    Arc2D arc2D = null;
 
-    SwkRectangle(Shape shape, SwkImageCanvas canvas) {
+    ItemArc(Shape shape, SwkImageCanvas canvas) {
         super(shape, canvas);
-        rect2D = (Rectangle2D) shape;
+        storeCoords = new double[4];
+        arc2D = (Arc2D) shape;
+
+        // FIXME  should get from ExtentParameter
+        arc2D.setAngleExtent(90);
+    }
+
+    public Map getParameterMap() {
+        return parameterMap;
     }
 
     public void coords(SwkImageCanvas canvas, double[] coords)
@@ -75,21 +79,20 @@ public class SwkRectangle extends SwkShape {
                 coords.length);
         }
 
-        if ((storeCoords == null) || (storeCoords.length != coords.length)) {
-            storeCoords = new double[coords.length];
-        }
-
-        storeCoords[0] = coords[0];
-        storeCoords[1] = coords[1];
-        storeCoords[2] = coords[2];
-        storeCoords[3] = coords[3];
+        System.arraycopy(coords, 0, storeCoords, 0, 4);
         applyCoordinates();
+    }
+
+    public String getType() {
+        return "arc";
+    }
+
+    public CanvasParameter[] getParameters() {
+        return parameters;
     }
 
     public void applyCoordinates() {
         checkCoordinates(storeCoords);
-        rect2D.setFrame(storeCoords[0], storeCoords[1],
-            storeCoords[2] - storeCoords[0], storeCoords[3] - storeCoords[1]);
 
         AffineTransform aT = new AffineTransform();
         aT.translate(storeCoords[0], storeCoords[1]);
@@ -97,19 +100,8 @@ public class SwkRectangle extends SwkShape {
         aT.translate(-storeCoords[0], -storeCoords[1]);
         aT.rotate(rotate, ((storeCoords[0] + storeCoords[2]) / 2.0),
             ((storeCoords[1] + storeCoords[3]) / 2.0));
-        genGradient(aT);
-        shape = aT.createTransformedShape(rect2D);
-    }
-
-    public CanvasParameter[] getParameters() {
-        return parameters;
-    }
-
-    public Map getParameterMap() {
-        return parameterMap;
-    }
-
-    public String getType() {
-        return "rectangle";
+        arc2D.setFrame(storeCoords[0], storeCoords[1],
+            storeCoords[2] - storeCoords[0], storeCoords[3] - storeCoords[1]);
+        shape = aT.createTransformedShape(arc2D);
     }
 }

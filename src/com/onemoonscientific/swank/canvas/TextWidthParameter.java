@@ -32,7 +32,7 @@ public class TextWidthParameter extends CanvasParameter {
             throw new TclException(interp, "shape doesn't exist");
         }
 
-        return (TclDouble.newInstance(((SwkCanvText) swkShape).width));
+        return (TclDouble.newInstance(((ItemText) swkShape).width));
     }
 
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
@@ -42,8 +42,8 @@ public class TextWidthParameter extends CanvasParameter {
     }
 
     public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
-        if ((swkShape != null) && (swkShape instanceof SwkCanvText)) {
-            ((SwkCanvText) swkShape).width = newValue;
+        if ((swkShape != null) && (swkShape instanceof ItemText)) {
+            ((ItemText) swkShape).width = newValue;
             swkShape.newStroke = true;
         }
     }

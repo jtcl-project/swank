@@ -1,5 +1,5 @@
 /*
- *
+
  *
  * Copyright (c) 2000-2004 One Moon Scientific, Inc., Westfield, N.J., USA
  *
@@ -23,9 +23,9 @@
  *
  */
 /*
- * SwkGPath.java
+ * SwkRectangle.java
  *
- * Created on February 19, 2000, 3:14 PM
+ * Created on February 19, 2000, 3:02 PM
  */
 
 /**
@@ -47,61 +47,93 @@ import java.lang.*;
 import java.util.*;
 
 
-public class SwkGPath extends SwkShape {
+public class ItemRectangle extends SwkShape implements TextInterface {
     static CanvasParameter[] parameters = {
-        new DashParameter(), new DashPhaseParameter(), new WidthParameter(),
-        new FillParameter(), new OutlineParameter(), new RotateParameter(),
-        new ShearParameter(), new StateParameter(), new TagsParameter(),
-        new TransformerParameter(),
+        new WidthParameter(), new TextureParameter(), new GradientParameter(),
+        new FillParameter(), new OutlineParameter(), new TagsParameter(),
+        new TransformerParameter(), new RotateParameter(), new ShearParameter(),
+        new StateParameter(),
+        new TextParameter(), new FontParameter(), new AnchorParameter(), new TextColorParameter(),
     };
     static Map parameterMap = new TreeMap();
 
     static {
         initializeParameters(parameters, parameterMap);
     }
+    TextParameters textPar = TextParameters.getDefault();
 
-    boolean closePath = false;
-    GeneralPath gPath = null;
+    String imageName = "";
+    Rectangle2D rect2D = null;
+    Color textColor = null;
 
-    SwkGPath(Shape shape, SwkImageCanvas canvas) {
+    ItemRectangle(Shape shape, SwkImageCanvas canvas) {
         super(shape, canvas);
-        gPath = (GeneralPath) shape;
-        fill = null;
+        rect2D = (Rectangle2D) shape;
     }
+     public String getText() {
+        return textPar.getText();
+    }
+
+    public void setText(String newValue) {
+        textPar = TextParameters.setText(textPar, newValue);
+    }
+
+    public float[] getAnchor() {
+        return textPar.getAnchor();
+    }
+
+    public void setAnchor(float[] newValue) {
+        textPar = TextParameters.setAnchor(textPar, newValue);
+    }
+
+    public Font getFont() {
+        return textPar.getFont();
+    }
+
+    public void setFont(Font newValue) {
+        textPar = TextParameters.setFont(textPar, newValue);
+    }
+
+    public Color getTextColor() {
+        return textPar.getTextColor();
+    }
+
+    public void setTextColor(Color newValue) {
+        textPar = TextParameters.setTextColor(textPar, newValue);
+    }
+
 
     public void coords(SwkImageCanvas canvas, double[] coords)
         throws SwkException {
+        if (coords.length != 4) {
+            throw new SwkException("wrong # coordinates: expected 4, got " +
+                coords.length);
+        }
+
         if ((storeCoords == null) || (storeCoords.length != coords.length)) {
             storeCoords = new double[coords.length];
         }
 
-        System.arraycopy(coords, 0, storeCoords, 0, coords.length);
+        storeCoords[0] = coords[0];
+        storeCoords[1] = coords[1];
+        storeCoords[2] = coords[2];
+        storeCoords[3] = coords[3];
         applyCoordinates();
     }
 
     public void applyCoordinates() {
+        checkCoordinates(storeCoords);
+        rect2D.setFrame(storeCoords[0], storeCoords[1],
+            storeCoords[2] - storeCoords[0], storeCoords[3] - storeCoords[1]);
+
         AffineTransform aT = new AffineTransform();
         aT.translate(storeCoords[0], storeCoords[1]);
         aT.shear(xShear, yShear);
         aT.translate(-storeCoords[0], -storeCoords[1]);
-
         aT.rotate(rotate, ((storeCoords[0] + storeCoords[2]) / 2.0),
             ((storeCoords[1] + storeCoords[3]) / 2.0));
-        gPath.reset();
-
-        for (int i = 0; i < storeCoords.length; i += 2) {
-            if (i == 0) {
-                gPath.moveTo((float) storeCoords[i], (float) storeCoords[i + 1]);
-            } else {
-                gPath.lineTo((float) storeCoords[i], (float) storeCoords[i + 1]);
-            }
-        }
-
-        if (closePath) {
-            gPath.closePath();
-        }
-
-        shape = aT.createTransformedShape(gPath);
+        genGradient(aT);
+        shape = aT.createTransformedShape(rect2D);
     }
 
     public CanvasParameter[] getParameters() {
@@ -113,6 +145,6 @@ public class SwkGPath extends SwkShape {
     }
 
     public String getType() {
-        return "line";
+        return "rectangle";
     }
 }

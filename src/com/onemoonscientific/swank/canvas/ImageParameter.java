@@ -35,7 +35,7 @@ public class ImageParameter extends CanvasParameter {
             throw new TclException(interp, "shape doesn't exist");
         }
 
-        if (swkShape instanceof SwkCanvImage) {
+        if (swkShape instanceof ItemImage) {
             return TclString.newInstance(swkShape.imageName);
         } else {
             throw new TclException(interp, "shape not image");
@@ -49,9 +49,9 @@ public class ImageParameter extends CanvasParameter {
     }
 
     public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
-        if ((swkShape != null) && (swkShape instanceof SwkCanvImage)) {
+        if ((swkShape != null) && (swkShape instanceof ItemImage)) {
             swkShape.imageName = newName;
-            ((SwkCanvImage) swkShape).setImage(newImage);
+            ((ItemImage) swkShape).setImage(newImage);
         }
     }
 }

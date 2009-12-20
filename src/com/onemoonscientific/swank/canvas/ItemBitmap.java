@@ -23,11 +23,10 @@
  *
  */
 /*
- * SwkEllipse.java
+ * SwkBitmap.java
  *
  * Created on February 19, 2000, 3:14 PM
  */
-
 /**
  *
  * @author  JOHNBRUC
@@ -49,41 +48,50 @@ import java.util.*;
 
 import javax.swing.*;
 
+public class ItemBitmap extends SwkShape {
 
-public class SwkEllipse extends SwkShape {
     static CanvasParameter[] parameters = {
-        new FillParameter(), new OutlineParameter(), new TextureParameter(),
-        new GradientParameter(), new RotateParameter(), new ShearParameter(),
-        new StateParameter(), new TagsParameter(), new WidthParameter(),
-        new TransformerParameter(),
-    };
+        new BitmapParameter(), new TagsParameter(), new StateParameter(),
+        new TransformerParameter(),};
     static Map parameterMap = new TreeMap();
 
     static {
         initializeParameters(parameters, parameterMap);
     }
+    ImageIcon image;
 
-    Ellipse2D ellipse2D = null;
-
-    SwkEllipse(Shape shape, SwkImageCanvas canvas) {
+    ItemBitmap(Shape shape, SwkImageCanvas canvas) {
         super(shape, canvas);
-        storeCoords = new double[4];
-        ellipse2D = (Ellipse2D) shape;
+        storeCoords = new double[2];
+    }
+
+    public void setImageIcon(ImageIcon newImage) {
+        image = newImage;
+    }
+
+    public ImageIcon getImageIcon() {
+        return image;
     }
 
     public void coords(SwkImageCanvas canvas, double[] coords)
-        throws SwkException {
-        if (coords.length != 4) {
-            throw new SwkException("wrong # coordinates: expected 4, got " +
-                coords.length);
+            throws SwkException {
+        if (coords.length != 2) {
+            throw new SwkException("wrong # coordinates: expected 2, got " +
+                    coords.length);
         }
 
-        System.arraycopy(coords, 0, storeCoords, 0, 4);
-        applyCoordinates();
+        System.arraycopy(coords, 0, storeCoords, 0, 2);
     }
 
-    public String getType() {
-        return "oval";
+    public void paintShape(Graphics2D g2) {
+        if (image != null) {
+            int imageWidth = image.getIconWidth();
+            int imageHeight = image.getIconHeight();
+            g2.drawImage(image.getImage(),
+                    (int) storeCoords[0] - (imageWidth / 2),
+                    (int) storeCoords[1] - (imageHeight / 2), null);
+        }
+
     }
 
     public CanvasParameter[] getParameters() {
@@ -94,16 +102,7 @@ public class SwkEllipse extends SwkShape {
         return parameterMap;
     }
 
-    public void applyCoordinates() {
-        checkCoordinates(storeCoords);
-
-        AffineTransform aT = new AffineTransform();
-        aT.shear(xShear, yShear);
-        aT.rotate(rotate, ((storeCoords[0] + storeCoords[2]) / 2.0),
-            ((storeCoords[1] + storeCoords[3]) / 2.0));
-        ellipse2D.setFrame(storeCoords[0], storeCoords[1],
-            storeCoords[2] - storeCoords[0], storeCoords[3] - storeCoords[1]);
-        genGradient(aT);
-        shape = aT.createTransformedShape(ellipse2D);
+    public String getType() {
+        return "bitmap";
     }
 }

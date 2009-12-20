@@ -47,7 +47,7 @@ import java.lang.*;
 import java.util.*;
 
 
-public class SwkSymbols extends SwkShape implements SymbolInterface {
+public class ItemSymbols extends SwkShape implements SymbolInterface {
     static CanvasParameter[] parameters = {
         new SymbolParameter(), new RadiusParameter(), new RotateParameter(),
         new ShearParameter(), new TagsParameter(), new StateParameter(),
@@ -64,7 +64,7 @@ public class SwkSymbols extends SwkShape implements SymbolInterface {
     GeneralPath gPath = null;
     boolean closePath = false;
 
-    public SwkSymbols(Shape shape, SwkImageCanvas canvas) {
+    public ItemSymbols(Shape shape, SwkImageCanvas canvas) {
         super(shape, canvas);
         gPath = (GeneralPath) shape;
         fill = null;

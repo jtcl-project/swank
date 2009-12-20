@@ -34,9 +34,9 @@ public class BitmapParameter extends CanvasParameter {
             throw new TclException(interp, "shape doesn't exist");
         }
 
-        if (swkShape instanceof SwkCanvBitmap) {
+        if (swkShape instanceof ItemBitmap) {
             return TclString.newInstance(SwankUtil.parseImageIcon(
-                    ((SwkCanvBitmap) swkShape).getImageIcon()));
+                    ((ItemBitmap) swkShape).getImageIcon()));
         } else {
             throw new TclException(interp, "shape not bitmap");
         }
@@ -52,8 +52,8 @@ public class BitmapParameter extends CanvasParameter {
             return;
         }
 
-        if ((swkShape instanceof SwkCanvBitmap) && (newValue != null)) {
-            ((SwkCanvBitmap) swkShape).setImageIcon(newValue);
+        if ((swkShape instanceof ItemBitmap) && (newValue != null)) {
+            ((ItemBitmap) swkShape).setImageIcon(newValue);
         }
     }
 }

@@ -558,8 +558,8 @@ public class SwkImageCanvas implements SwkCanvasType {
             Rectangle2D thisBound = null;
 
             if (swkShape.shape == null) {
-                if (swkShape instanceof SwkCanvText) {
-                    thisBound = ((SwkCanvText) swkShape).getBounds();
+                if (swkShape instanceof ItemText) {
+                    thisBound = ((ItemText) swkShape).getBounds();
                 }
             } else {
                 thisBound = swkShape.shape.getBounds2D();

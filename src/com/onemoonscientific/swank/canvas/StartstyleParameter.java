@@ -30,14 +30,14 @@ public class StartstyleParameter extends EndstyleParameter {
         if (swkShape == null) {
             throw new TclException(interp, "shape doesn't exist");
         }
-        SwkLine swkLine = (SwkLine) swkShape;
+        ItemLine swkLine = (ItemLine) swkShape;
         String type = swkLine.endPointStyle1.getDescription();
         return TclString.newInstance(type);
     }
 
     public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
-        if ((swkShape != null) && (swkShape instanceof SwkLine)) {
-            SwkLine swkLine = (SwkLine) swkShape;
+        if ((swkShape != null) && (swkShape instanceof ItemLine)) {
+            ItemLine swkLine = (ItemLine) swkShape;
             swkLine.endPointStyle1 = newValue;
         }
     }

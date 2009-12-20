@@ -31,10 +31,10 @@ public class ArrowShapeParameter extends CanvasParameter {
 
     public TclObject getValue(Interp interp, SwkShape swkShape)
         throws TclException {
-        if ((swkShape == null) || !(swkShape instanceof SwkLine)) {
+        if ((swkShape == null) || !(swkShape instanceof ItemLine)) {
             throw new TclException(interp, "line shape doesn't exist");
         }
-        SwkLine swkLine = (SwkLine) swkShape;
+        ItemLine swkLine = (ItemLine) swkShape;
 
         TclObject list = TclList.newInstance();
         TclList.append(interp, list, TclDouble.newInstance(swkLine.arrowShapeA));
@@ -59,8 +59,8 @@ public class ArrowShapeParameter extends CanvasParameter {
     }
 
     public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
-        if ((swkShape != null) && (swkShape instanceof SwkLine)) {
-            SwkLine swkLine = (SwkLine) swkShape;
+        if ((swkShape != null) && (swkShape instanceof ItemLine)) {
+            ItemLine swkLine = (ItemLine) swkShape;
             swkLine.arrowShapeA = arrowShapeA;
             swkLine.arrowShapeB = arrowShapeB;
             swkLine.arrowShapeC = arrowShapeC;

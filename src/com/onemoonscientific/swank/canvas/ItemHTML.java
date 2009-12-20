@@ -53,7 +53,7 @@ import java.util.*;
 import javax.swing.*;
 
 
-public class SwkCanvasHText extends SwkShape implements TextInterface {
+public class ItemHTML extends SwkShape implements TextInterface {
     static CanvasParameter[] parameters = {
         new TextParameter(), new AnchorParameter(), new FontParameter(),
         new WidthParameter(), new FillParameter(), new TagsParameter(),
@@ -64,16 +64,15 @@ public class SwkCanvasHText extends SwkShape implements TextInterface {
     static {
         initializeParameters(parameters, parameterMap);
     }
+    TextParameters textPar = TextParameters.getDefault();
 
-    Font font = null;
     double x = 0.0;
     double y = 0.0;
-    float[] anchor = { 0.0f, 0.0f };
     int[] ends = null;
     Rectangle2D.Double rect2D = new Rectangle2D.Double();
     JLabel jLabel = new JLabel();
 
-    SwkCanvasHText(Shape shape, SwkImageCanvas canvas) {
+    ItemHTML(Shape shape, SwkImageCanvas canvas) {
         super(shape, canvas);
         rect2D = (Rectangle2D.Double) shape;
         width = 0;
@@ -162,29 +161,30 @@ public class SwkCanvasHText extends SwkShape implements TextInterface {
         jLabel.setText(text);
     }
 
+
     public float[] getAnchor() {
-        return this.anchor;
+        return textPar.getAnchor();
     }
 
-    public void setAnchor(final float[] anchor) {
-        this.anchor = anchor;
+    public void setAnchor(float[] newValue) {
+        textPar = TextParameters.setAnchor(textPar, newValue);
     }
 
     public Font getFont() {
-        return this.font;
+        return textPar.getFont();
     }
 
-    public void setFont(final Font font) {
-        this.font = font;
-    }
-   public Color getTextColor() {
-        return fill;
-    }
-    public void setTextColor(Color color) {
-        this.fill = color;
+    public void setFont(Font newValue) {
+        textPar = TextParameters.setFont(textPar, newValue);
     }
 
+    public Color getTextColor() {
+        return textPar.getTextColor();
+    }
 
+    public void setTextColor(Color newValue) {
+        textPar = TextParameters.setTextColor(textPar, newValue);
+    }
     public void paint(Graphics2D g2, FontRenderContext fRC) {
         if (this.getFont() != null) {
             g2.setFont(this.getFont());
@@ -205,11 +205,9 @@ public class SwkCanvasHText extends SwkShape implements TextInterface {
             g2.setColor(fill);
             g2.fillRect(0,0,(int) rect2D.getWidth(),(int) rect2D.getHeight());
         }
-        if (outline != null) {
-            jLabel.setForeground(outline);
-        } else {
-            jLabel.setForeground(Color.BLACK);
-        }
+
+        jLabel.setForeground(getTextColor());
+        
 
         //jLabel.setText("hello");
         jLabel.paint((Graphics) g2);

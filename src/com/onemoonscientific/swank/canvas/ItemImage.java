@@ -50,7 +50,7 @@ import java.util.*;
 import javax.swing.*;
 
 
-public class SwkCanvImage extends SwkShape {
+public class ItemImage extends SwkShape {
     static CanvasParameter[] parameters = {
         new ImageParameter(), new TagsParameter(), new StateParameter(),
         new TransformerParameter(),
@@ -63,7 +63,7 @@ public class SwkCanvImage extends SwkShape {
 
     BufferedImage bufferedImage;
 
-    SwkCanvImage(Shape shape, SwkImageCanvas canvas) {
+    ItemImage(Shape shape, SwkImageCanvas canvas) {
         super(shape, canvas);
         storeCoords = new double[2];
     }

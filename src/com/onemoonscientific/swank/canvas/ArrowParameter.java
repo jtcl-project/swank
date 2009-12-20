@@ -31,7 +31,7 @@ public class ArrowParameter extends CanvasParameter {
         if (swkShape == null) {
             throw new TclException(interp, "shape doesn't exist");
         }
-        SwkLine swkLine = (SwkLine) swkShape;
+        ItemLine swkLine = (ItemLine) swkShape;
         String arrow = "none";
         if ((swkLine.arrowFirst) && (swkLine.arrowLast)) {
            arrow = "both";
@@ -60,8 +60,8 @@ public class ArrowParameter extends CanvasParameter {
     }
 
     public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
-        if ((swkShape != null) && (swkShape instanceof SwkLine)) {
-            SwkLine swkLine = (SwkLine) swkShape;
+        if ((swkShape != null) && (swkShape instanceof ItemLine)) {
+            ItemLine swkLine = (ItemLine) swkShape;
             switch (newValue) {
                case 0: 
                   swkLine.arrowFirst = false;

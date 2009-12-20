@@ -28,11 +28,11 @@ public class WindowParameter extends CanvasParameter {
 
     public TclObject getValue(Interp interp, SwkShape swkShape)
         throws TclException {
-        if (((SwkCanvWindow) swkShape).windowName == null) {
-            ((SwkCanvWindow) swkShape).windowName = "";
+        if (((ItemWindow) swkShape).windowName == null) {
+            ((ItemWindow) swkShape).windowName = "";
         }
 
-        return TclString.newInstance(((SwkCanvWindow) swkShape).windowName);
+        return TclString.newInstance(((ItemWindow) swkShape).windowName);
     }
 
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
@@ -45,8 +45,8 @@ public class WindowParameter extends CanvasParameter {
     }
 
     public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
-        if ((swkShape != null) && (swkShape instanceof SwkCanvWindow)) {
-            ((SwkCanvWindow) swkShape).windowName = newValue;
+        if ((swkShape != null) && (swkShape instanceof ItemWindow)) {
+            ((ItemWindow) swkShape).windowName = newValue;
         }
     }
 }

@@ -23,7 +23,7 @@
  *
  */
 /*
- * SwkPolygon.java
+ * SwkGPath.java
  *
  * Created on February 19, 2000, 3:14 PM
  */
@@ -47,7 +47,7 @@ import java.lang.*;
 import java.util.*;
 
 
-public class SwkPolygon extends SwkShape {
+public class ItemSegments extends SwkShape {
     static CanvasParameter[] parameters = {
         new DashParameter(), new DashPhaseParameter(), new WidthParameter(),
         new FillParameter(), new OutlineParameter(), new RotateParameter(),
@@ -60,10 +60,10 @@ public class SwkPolygon extends SwkShape {
         initializeParameters(parameters, parameterMap);
     }
 
-    boolean closePath = true;
+    boolean closePath = false;
     GeneralPath gPath = null;
 
-    SwkPolygon(Shape shape, SwkImageCanvas canvas) {
+    ItemSegments(Shape shape, SwkImageCanvas canvas) {
         super(shape, canvas);
         gPath = (GeneralPath) shape;
         fill = null;
@@ -77,9 +77,9 @@ public class SwkPolygon extends SwkShape {
                 coords.length);
         }
 
-        if ((coords.length % 2) != 0) {
+        if ((coords.length % 4) != 0) {
             throw new SwkException(
-                "wrong # coordinates: expected even number, got " +
+                "wrong # coordinates: expected multiple of 4, got " +
                 coords.length);
         }
 
@@ -94,16 +94,9 @@ public class SwkPolygon extends SwkShape {
     public void applyCoordinates() {
         gPath.reset();
 
-        for (int i = 0; i < storeCoords.length; i += 2) {
-            if (i == 0) {
-                gPath.moveTo((float) storeCoords[i], (float) storeCoords[i + 1]);
-            } else {
-                gPath.lineTo((float) storeCoords[i], (float) storeCoords[i + 1]);
-            }
-        }
-
-        if (closePath) {
-            gPath.closePath();
+        for (int i = 0; i < storeCoords.length; i += 4) {
+            gPath.moveTo((float) storeCoords[i], (float) storeCoords[i + 1]);
+            gPath.lineTo((float) storeCoords[i + 2], (float) storeCoords[i + 3]);
         }
 
         AffineTransform aT = new AffineTransform();
@@ -125,6 +118,6 @@ public class SwkPolygon extends SwkShape {
     }
 
     public String getType() {
-        return "polygon";
+        return "segments";
     }
 }
