@@ -79,7 +79,6 @@ public abstract class SwkShape implements SwkShapeConfig {
     String[] tagNames = null;
     SwkImageCanvas canvas = null;
     boolean xorMode = false;
-    Composite composite = null;
     boolean selected = false;
 
     public SwkShape() {
@@ -182,6 +181,9 @@ public abstract class SwkShape implements SwkShapeConfig {
     public void setOutline(Color color) {
         outline = color;
     }
+    public void setXOrMode(boolean value) {
+        xorMode = value;
+    }
 
     public BasicStroke getStroke() {
         return stroke;
@@ -192,37 +194,50 @@ public abstract class SwkShape implements SwkShapeConfig {
     }
 
     public int getCap() {
-        return strokePar.cap;
+        return strokePar.getCap();
     }
 
     public void setCap(int newValue) {
-        strokePar.cap = newValue;
+        strokePar  = StrokeParameters.setCap(strokePar,newValue);
     }
 
-    public void setXOrMode(boolean value) {
-        xorMode = value;
-    }
 
     public int getJoin() {
-        return strokePar.join;
+        return strokePar.getJoin();
     }
 
     public void setJoin(int newValue) {
-        strokePar.join = newValue;
+        strokePar  = StrokeParameters.setJoin(strokePar,newValue);
     }
 
     public float getMiterLimit() {
-        return strokePar.miterLimit;
+        return strokePar.getMiterLimit();
     }
 
     public float[] getDash() {
-        return strokePar.dash;
+        return strokePar.getDash();
     }
-
+    public void setDash(float[] newDash) {
+        strokePar  = StrokeParameters.setDash(strokePar,newDash);
+    }
     public float getDashPhase() {
-        return strokePar.dashPhase;
+        return strokePar.getDashPhase();
     }
-
+    public void setDashPhase(float newPhase) {
+        strokePar  = StrokeParameters.setDashPhase(strokePar,newPhase);
+    }
+    public boolean getDashIntPattern() {
+        return strokePar.isDashIntPattern();
+    }
+    public void setDashIntPattern(boolean newPar) {
+        strokePar  = StrokeParameters.setDashIntPattern(strokePar,newPar);
+    }
+    public String getDashString() {
+        return strokePar.getDashString();
+    }
+    public void setDashString(String newString) {
+        strokePar  = StrokeParameters.setDashString(strokePar,newString);
+    }
     public float getRotate() {
         return rotate;
     }

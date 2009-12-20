@@ -34,7 +34,7 @@ public class DashParameter extends CanvasParameter {
             throw new TclException(interp, "shape doesn't exist");
         }
 
-        return TclString.newInstance(swkShape.dashString);
+        return TclString.newInstance(swkShape.getDashString());
     }
 
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
@@ -45,10 +45,10 @@ public class DashParameter extends CanvasParameter {
     }
 
     public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
-        swkShape.dashString = dashString;
-        swkShape.dashIntPattern = dashIntPattern;
+        swkShape.setDashString(dashString);
+        swkShape.setDashIntPattern(dashIntPattern);
 
-        swkShape.dash = dash;
+        swkShape.setDash(dash);
         swkShape.newStroke = true;
     }
 }
