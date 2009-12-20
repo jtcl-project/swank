@@ -78,7 +78,6 @@ public abstract class SwkShape implements SwkShapeConfig {
     Map tags = new LinkedHashMap();
     String[] tagNames = null;
     SwkImageCanvas canvas = null;
-    boolean xorMode = false;
     boolean selected = false;
 
     public SwkShape() {
@@ -180,9 +179,6 @@ public abstract class SwkShape implements SwkShapeConfig {
 
     public void setOutline(Color color) {
         outline = color;
-    }
-    public void setXOrMode(boolean value) {
-        xorMode = value;
     }
 
     public BasicStroke getStroke() {

@@ -969,12 +969,6 @@ public class SwkImageCanvas implements SwkCanvasType {
                 continue;
             }
 
-            if (swkShape.xorMode) {
-                g.setXORMode(getBackground());
-            } else {
-                g.setPaintMode();
-            }
-
             swkShape.paintShape(g2);
             if (swkShape.isSelected()) {
                 swkShape.drawHandles(g2);
