@@ -443,7 +443,7 @@ public class SwkCanvasWidgetCmd implements Command {
                 swkShape = new ItemEllipse(ellipse2D, swkcanvas);
             } else if (argv[2].toString().equals("text")) {
                 swkShape = new ItemText(null, swkcanvas);
-            } else if (argv[2].toString().equals("htext")) {
+            } else if (argv[2].toString().equals("html")) {
                   Rectangle2D rect2D = new Rectangle2D.Double();
               swkShape = new ItemHTML(rect2D, swkcanvas);
             } else if (argv[2].toString().equals("image")) {
@@ -455,6 +455,9 @@ public class SwkCanvasWidgetCmd implements Command {
             } else if (argv[2].toString().equals("line")) {
                 GeneralPath gPath = new GeneralPath();
                 swkShape = new ItemLine(gPath, swkcanvas);
+            } else if (argv[2].toString().equals("connector")) {
+                GeneralPath gPath = new GeneralPath();
+                swkShape = new ItemConnector(gPath, swkcanvas);
             } else if (argv[2].toString().startsWith("sym")) {
                 GeneralPath gPath = new GeneralPath();
                 swkShape = new ItemSymbols(gPath, swkcanvas);
