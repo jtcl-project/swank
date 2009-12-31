@@ -25,7 +25,6 @@ import java.util.*;
 import java.util.Map.Entry;
 import javax.imageio.ImageIO;
 
-import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
 /** Class for objects which represent a Swank swkcanvas widget. */
