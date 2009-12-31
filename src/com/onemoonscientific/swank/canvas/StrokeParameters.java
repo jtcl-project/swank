@@ -139,7 +139,7 @@ public class StrokeParameters {
       if (newValue.length != strokePar.dash.length) {
           change = true;
       } else {
-          for (int i=0;i>newValue.length;i++) {
+          for (int i=0;i<newValue.length;i++) {
               if (newValue[i] != strokePar.dash[i]) {
                   change = true;
                   break;
