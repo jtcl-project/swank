@@ -46,8 +46,8 @@ public class ItemConnector extends ItemLine implements TextInterface {
     TextParameters textPar = TextParameters.getDefault();
     static CanvasParameter[] parameters = {
         new FillParameter(), new SmoothParameter(), new DashParameter(),
-        new DashPhaseParameter(), new WidthParameter(), new RotateParameter(),
-        new ShearParameter(), new TagsParameter(), new StateParameter(),
+        new DashPhaseParameter(), new WidthParameter(),
+        new TagsParameter(), new StateParameter(),
         new TransformerParameter(), new CapstyleParameter(),
         new JoinstyleParameter(), new ArrowParameter(), new ArrowShapeParameter(), new EndstyleParameter(), new StartstyleParameter(),
         new TextParameter(), new FontParameter(), new AnchorParameter(), new TextcolorParameter(),};
