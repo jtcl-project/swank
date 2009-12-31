@@ -30,13 +30,11 @@ import tcl.lang.*;
 
 import java.awt.*;
 import java.awt.geom.*;
-import java.awt.image.*;
 
 import java.lang.*;
 
 import java.util.*;
 
-import javax.swing.*;
 
 public abstract class SwkShape implements SwkShapeConfig {
 
