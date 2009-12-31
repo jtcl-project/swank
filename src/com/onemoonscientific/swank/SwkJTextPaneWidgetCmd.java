@@ -1285,8 +1285,10 @@ class SwkJTextPaneWidgetCmd implements Command {
             }
 
             try {
-                swkjtextpane.scrollRectToVisible(swkjtextpane.modelToView(
-                        index1));
+                Rectangle view = swkjtextpane.modelToView(index1);
+                if (view != null) {
+                    swkjtextpane.scrollRectToVisible(view);
+                }
             } catch (BadLocationException badLoc) {
                 interp.backgroundError();
 
