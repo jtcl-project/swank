@@ -58,8 +58,6 @@ public class ItemText extends SwkShape implements TextInterface {
         initializeParameters(parameters, parameterMap);
     }
     TextParameters textPar = TextParameters.getDefault();
-    double x = 0.0;
-    double y = 0.0;
     int[] ends = null;
     Rectangle2D.Float rf2 = new Rectangle2D.Float();
 
@@ -83,7 +81,7 @@ public class ItemText extends SwkShape implements TextInterface {
     }
 
     public void paintShape(Graphics2D g2) {
-        shape = textPar.paint(g2, getCanvas().getFontRenderContext(), this, x, y);
+        shape = textPar.paint(g2, getCanvas().getFontRenderContext(), this, storeCoords[0],storeCoords[1]);
    }
 
     public CanvasParameter[] getParameters() {
