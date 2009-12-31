@@ -263,6 +263,7 @@ public class ItemLine extends SwkShape {
         aT.translate(storeCoords[0], storeCoords[1]);
         aT.shear(xShear, yShear);
         aT.translate(-storeCoords[0], -storeCoords[1]);
+        // should rotation be about average coordinate (could be more than 2 points)
         aT.rotate(rotate, ((storeCoords[0] + storeCoords[2]) / 2.0),
                 ((storeCoords[1] + storeCoords[3]) / 2.0));
         AffineTransform shapeTransform = getTransform();
@@ -276,12 +277,13 @@ public class ItemLine extends SwkShape {
 
         if ((endPointStyle1 != EndPointStyle.NONE) || (endPointStyle2 != EndPointStyle.NONE)) {
             double[] tempCoords = new double[storeCoords.length];
+
             if (shapeTransform != null) {
                 shapeTransform.transform(storeCoords, 0, tempCoords, 0, storeCoords.length / 2);
             } else {
                 System.arraycopy(storeCoords, 0, tempCoords, 0, storeCoords.length);
             }
-
+            aT.transform(tempCoords,0,tempCoords,0,tempCoords.length/2);
             double[] arrowFirstCoords = null;
             double[] arrowLastCoords = null;
             if (endPointStyle1 != EndPointStyle.NONE) {
@@ -306,7 +308,8 @@ public class ItemLine extends SwkShape {
             } else {
                 genSmoothPath(tempCoords);
             }
-            shape = aT.createTransformedShape(gPath);
+            shape = gPath;
+           // shape = aT.createTransformedShape(gPath);
 
             if (endPointStyle1 != EndPointStyle.NONE) {
                 if (endPointStyle1 == EndPointStyle.CIRCLE) {
@@ -314,6 +317,8 @@ public class ItemLine extends SwkShape {
                 } else {
                     addArrowPath(firstArrowPath, arrowFirstCoords);
                 }
+
+
             }
             if (endPointStyle2 != EndPointStyle.NONE) {
                 if (endPointStyle2 == EndPointStyle.CIRCLE) {
