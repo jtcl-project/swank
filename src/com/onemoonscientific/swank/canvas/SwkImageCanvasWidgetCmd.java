@@ -31,9 +31,11 @@ import javax.swing.tree.*;
 
 public class SwkImageCanvasWidgetCmd implements Command {
     static final private String[] validCmds = {
-        "create", "itemconfigure", "coords", "hit", "itemcget", "find", "move",
-        "scale", "delete", "addtag", "raise", "lower", "dtag", "gettags",
-        "index", "newtype", "bbox", "type", "zoom", "transformer", "paint"
+        "create", "itemconfigure",
+        "coords", "hit", "itemcget", "find", "move", "scale", "delete", "addtag",
+        "bind", "raise", "lower", "dtag", "gettags",
+        "index", "newtype", "bbox", "type", "zoom", "transformer","hselect","shapexy","invshapexy",
+        "paint"
     };
     static final private int OPT_CREATE = 0;
     static final private int OPT_ITEMCONFIG = 1;
@@ -55,7 +57,10 @@ public class SwkImageCanvasWidgetCmd implements Command {
     static final private int OPT_TYPE = 17;
     static final private int OPT_ZOOM = 18;
     static final private int OPT_TRANSFORMER = 19;
-    static final private int OPT_PAINT = 20;
+    static final private int OPT_HSELECT = 20;
+    static final private int OPT_SHAPEXY = 21;
+    static final private int OPT_INVSHAPEXY = 22;
+    static final private int OPT_PAINT = 23;
     static boolean gotDefaults = false;
     static SwkImageCanvas swkImageCanvas = null;
     Map newTypes = new HashMap();
@@ -213,8 +218,29 @@ public class SwkImageCanvasWidgetCmd implements Command {
         }
 
         case OPT_TRANSFORMER: {
-            (new TransformerSet()).exec(interp, swkImageCanvas, argv);
+            if (argv.length < 3) {
+                throw new TclNumArgsException(interp, 2, argv, "option");
+            }
+            if (argv[2].toString().equals("set")) {
+                (new TransformerSet()).exec(interp, swkImageCanvas, argv);
+            } else if (argv[2].toString().equals("get")) {
+                (new TransformerGet()).exec(interp, swkImageCanvas, argv);
+            } else {
+                 throw new TclException(interp,"Invalid transformer subcommand \""+argv[2].toString()+"\"");
+            }
 
+            break;
+        }
+        case OPT_HSELECT: {
+            (new HSelect()).exec(interp, swkImageCanvas, argv);
+            break;
+            }
+        case OPT_SHAPEXY: {
+            (new ShapeXY()).exec(interp, swkImageCanvas, argv,false);
+            break;
+        }
+        case OPT_INVSHAPEXY: {
+            (new ShapeXY()).exec(interp, swkImageCanvas, argv,true);
             break;
         }
 
@@ -324,11 +350,17 @@ public class SwkImageCanvasWidgetCmd implements Command {
             } else if (argv[2].toString().startsWith("rect")) {
                 Rectangle2D rect2D = new Rectangle2D.Double();
                 swkShape = new ItemRectangle(rect2D, swkcanvas);
+            } else if (argv[2].toString().startsWith("node")) {
+                Rectangle2D rect2D = new Rectangle2D.Double();
+                swkShape = new ItemNode(rect2D, swkcanvas);
             } else if (argv[2].toString().equals("oval")) {
                 Ellipse2D ellipse2D = new Ellipse2D.Double();
                 swkShape = new ItemEllipse(ellipse2D, swkcanvas);
             } else if (argv[2].toString().equals("text")) {
                 swkShape = new ItemText(null, swkcanvas);
+            } else if (argv[2].toString().equals("html")) {
+                  Rectangle2D rect2D = new Rectangle2D.Double();
+              swkShape = new ItemHTML(rect2D, swkcanvas);
             } else if (argv[2].toString().equals("image")) {
                 swkShape = new ItemImage(null, swkcanvas);
             } else if (argv[2].toString().equals("bitmap")) {
@@ -336,6 +368,9 @@ public class SwkImageCanvasWidgetCmd implements Command {
             } else if (argv[2].toString().equals("line")) {
                 GeneralPath gPath = new GeneralPath();
                 swkShape = new ItemLine(gPath, swkcanvas);
+            } else if (argv[2].toString().equals("connector")) {
+                GeneralPath gPath = new GeneralPath();
+                swkShape = new ItemConnector(gPath, swkcanvas);
             } else if (argv[2].toString().startsWith("sym")) {
                 GeneralPath gPath = new GeneralPath();
                 swkShape = new ItemSymbols(gPath, swkcanvas);
@@ -591,9 +626,9 @@ public class SwkImageCanvasWidgetCmd implements Command {
             }
 
             this.swkcanvas = swkcanvas;
+            tagName = argv[2].toString();
             x = TclDouble.get(interp, argv[3]);
             y = TclDouble.get(interp, argv[4]);
-            tagName = argv[4].toString();
             execOnThread();
             interp.setResult(result);
         }
@@ -783,7 +818,109 @@ public class SwkImageCanvasWidgetCmd implements Command {
 
                 for (int i = 0; i < shapeList.size(); i++) {
                     SwkShape swkShape2 = (SwkShape) shapeList.elementAt(i);
-                    swkShape2.move(dX, dY);
+                    AffineTransform shpTrans = swkShape2.getTransform();
+
+                    if (shpTrans != null) {
+                        double scaleX = shpTrans.getScaleX();
+                        double scaleY = shpTrans.getScaleY();
+                        double shpdX = dX / scaleX;
+                        double shpdY = dY / scaleY;
+                        swkShape2.move(shpdX, shpdY);
+                    } else {
+                        swkShape2.move(dX, dY);
+                    }
+                }
+            } catch (SwkException swkE) {
+            }
+        }
+    }
+   class ShapeXY extends GetValueOnEventThread {
+        SwkImageCanvas swkcanvas = null;
+        double[] xy;
+        String tagName = null;
+        boolean inverted=false;
+        boolean couldNotInvert = false;
+        void exec(Interp interp, SwkImageCanvas swkcanvas, TclObject[] argv,boolean inverted)
+            throws TclException {
+            if (argv.length != 4) {
+                throw new TclNumArgsException(interp, 2, argv, "option");
+            }
+
+            this.swkcanvas = swkcanvas;
+            this.inverted = inverted;
+            tagName = argv[2].toString();
+            TclObject[] coordList = TclList.getElements(interp, argv[3]);
+            int nCoords = coordList.length;
+            if ((nCoords <=0) || ((nCoords % 2) != 0)) {
+                 throw new TclException(interp,"shapexy must have even number of coordinates");
+            }
+            xy = new double[nCoords];
+            for (int i=0;i<nCoords;i++) {
+                xy[i] = TclDouble.get(interp,coordList[i]);
+            }
+            execOnThread();
+            if (couldNotInvert) {
+                 throw new TclException(interp,"Couldn't do inverse transform for shape  \""+tagName+"\"");
+            }
+            if (xy == null) {
+                 throw new TclException(interp,"shape \""+tagName+"\" doesn't exist");
+            }
+            TclObject resultList = TclList.newInstance();
+            for (int i=0;i<xy.length;i++) {
+                 TclList.append(interp,resultList,TclDouble.newInstance(xy[i]));
+            }
+            interp.setResult(resultList);
+        }
+
+        public void run() {
+            try {
+                SwkShape swkShape = (SwkShape) swkcanvas.getShape(tagName);
+                if (swkShape != null) {
+                    AffineTransform shpTrans = swkShape.getTransform();
+                    if (shpTrans != null) {
+                         if (inverted) {
+                             try {
+                                 shpTrans.inverseTransform(xy,0,xy,0,xy.length/2);
+                             } catch (NoninvertibleTransformException niTE) {
+                                 couldNotInvert = true;
+                             }
+                         } else {
+                             shpTrans.transform(xy,0,xy,0,xy.length/2);
+                         }
+                    }
+                } else {
+                    xy = null;
+                }
+            } catch (SwkException swkE) {
+            }
+        }
+    }
+
+    class HSelect extends GetValueOnEventThread {
+        SwkImageCanvas swkcanvas = null;
+        boolean setValue = false;
+        String tagName = null;
+
+        void exec(Interp interp, SwkImageCanvas swkcanvas, TclObject[] argv)
+            throws TclException {
+            if (argv.length != 4) {
+                throw new TclNumArgsException(interp, 2, argv, "option");
+            }
+
+            this.swkcanvas = swkcanvas;
+            tagName = argv[2].toString();
+            setValue = TclBoolean.get(interp, argv[3]);
+            execOnThread();
+            swkcanvas.repaint();
+        }
+
+        public void run() {
+            try {
+                Vector shapeList = swkcanvas.getShapesWithTags(tagName);
+
+                for (int i = 0; i < shapeList.size(); i++) {
+                    SwkShape swkShape2 = (SwkShape) shapeList.elementAt(i);
+                    swkShape2.setSelected(setValue);
                 }
             } catch (SwkException swkE) {
             }
@@ -974,9 +1111,9 @@ public class SwkImageCanvasWidgetCmd implements Command {
 
             this.swkcanvas = swkcanvas;
 
-            double[] values = new double[6];
+            values = new double[6];
 
-            for (int i = 4; i < 10; i++) {
+            for (int i = 4; i < 9; i++) {
                 values[i - 4] = TclDouble.get(interp, argv[i]);
             }
 
@@ -994,6 +1131,41 @@ public class SwkImageCanvasWidgetCmd implements Command {
 
             transformer.getTransform().setTransform(values[0], values[1],
                 values[2], values[3], values[4], values[5]);
+        }
+    }
+   class TransformerGet extends GetValueOnEventThread {
+        SwkImageCanvas swkcanvas = null;
+        double[] values = null;
+        String name = null;
+
+        void exec(Interp interp, SwkImageCanvas swkcanvas, TclObject[] argv)
+            throws TclException {
+            if (argv.length != 4) {
+                throw new TclNumArgsException(interp, 2, argv,
+                    "transformerName");
+            }
+            this.swkcanvas = swkcanvas;
+            name = argv[3].toString();
+            execOnThread();
+            if (values != null) {
+                TclObject transformList = TclList.newInstance();
+                for (int i = 0; i < values.length; i++) {
+                    TclList.append(interp, transformList,
+                        TclDouble.newInstance(values[i]));
+                }
+                interp.setResult(transformList);
+            } else {
+                throw new TclException(interp,"Transform \""+name+"\" doesn't exist");
+            }
+
+        }
+
+        public void run() {
+            Transformer transformer = swkcanvas.getTransformer(name);
+            if (transformer != null) {
+               values = new double[6];
+               transformer.getTransform().getMatrix(values);
+            }
         }
     }
 
@@ -1037,7 +1209,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
         public static final int WITHTAG = 5;
         public static final int CLOSEST = 6;
         SwkImageCanvas swkcanvas = null;
-        int iSearch = 0;
+        String tagName = null;
         SwkShape swkShape = null;
         SwkShape bestShape = null;
         ArrayList shapeList = null;
@@ -1055,8 +1227,6 @@ public class SwkImageCanvasWidgetCmd implements Command {
 
             this.swkcanvas = swkcanvas;
 
-            SwkShape swkShape = null;
-            SwkShape nextShape = null;
             int start = 2;
 
             if (argv.length < (start + 1)) {
@@ -1067,8 +1237,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
                 if (argv.length != (start + 2)) {
                     throw new TclNumArgsException(interp, 1, argv, "option");
                 }
-
-                iSearch = TclInteger.get(interp, argv[start + 1]);
+                tagName = argv[start+1].toString();
                 interp.resetResult();
                 mode = NEXT;
                 execOnThread();
@@ -1093,7 +1262,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
                     throw new TclNumArgsException(interp, 1, argv, "option");
                 }
 
-                iSearch = TclInteger.get(interp, argv[start + 1]);
+                tagName = argv[start+1].toString();
                 interp.resetResult();
                 mode = PREVIOUS;
                 execOnThread();
@@ -1110,7 +1279,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
                 float x1 = (float) TclDouble.get(interp, argv[start + 1]);
                 float y1 = (float) TclDouble.get(interp, argv[start + 2]);
 
-                refTag = "";
+                refTag = null;
 
                 if (argv.length > (start + 3)) {
                     halo = (float) TclDouble.get(interp, argv[start + 3]);
@@ -1214,27 +1383,30 @@ public class SwkImageCanvasWidgetCmd implements Command {
         }
 
         void getOne() throws SwkException {
-            swkShape = (SwkShape) swkcanvas.swkShapes.get(new Integer(iSearch));
-
+            swkShape = (SwkShape) swkcanvas.getShape(tagName);
             if (swkShape != null) {
+                ItemTreeNode node = swkShape.node;
                 if (mode == NEXT) {
-                    swkShape = swkShape.next;
+                    ItemTreeNode nextNode = (ItemTreeNode) node.getNextNode();
+                    if (nextNode != null) {
+                        swkShape = (SwkShape) nextNode.getUserObject();
+                    }
                 } else {
-                    swkShape = swkShape.previous;
+                    ItemTreeNode previousNode = (ItemTreeNode) node.getPreviousNode();
+                    if (previousNode != null) {
+                        swkShape = (SwkShape) previousNode.getUserObject();
+                    }
                 }
+            } else {
             }
         }
 
         void getSome() {
-            SwkShape swkShape = swkcanvas.firstShape;
-            SwkShape nextShape = swkcanvas.firstShape;
-
-            if (swkcanvas.firstShape != null) {
-                shapeList = new ArrayList();
-
-                while (nextShape != null) {
-                    swkShape = nextShape;
-                    nextShape = swkShape.next;
+            shapeList = new ArrayList();
+            for (Enumeration e = swkcanvas.rootNode.depthFirstEnumeration() ; e.hasMoreElements() ;) {
+                ItemTreeNode node = (ItemTreeNode) e.nextElement();
+                SwkShape swkShape = (SwkShape) node.getUserObject();
+                if (swkShape != null) {
                     shapeList.add(new Integer(swkShape.id));
                 }
             }
@@ -1250,83 +1422,91 @@ public class SwkImageCanvasWidgetCmd implements Command {
         }
 
         void getClosest() throws SwkException {
-            SwkShape bestShape = null;
+            bestShape = null;
+
             SwkShape startShape = null;
             Rectangle2D bounds = null;
             double max = Double.MAX_VALUE;
             Line2D line = new Line2D.Double();
-            SwkShape swkShape = swkcanvas.lastShape;
+            double[] tcoords = new double[6];
+            double tx1 = 0.0;
+            double ty1 = 0.0;
+            double tx2 = 0.0;
+            double ty2 = 0.0;
 
-            SwkShape previousShape = swkcanvas.lastShape;
             boolean below = false;
-            Vector shapes = swkcanvas.getShapesWithTags(refTag);
 
-            if (shapes != null) {
-                SwkShape refShape = (SwkShape) shapes.elementAt(0);
+            if (refTag != null) {
+                Vector shapes = swkcanvas.getShapesWithTags(refTag);
 
-                if (refShape != null) {
-                    startShape = refShape.previous;
+                if (shapes != null) {
+                    startShape = (SwkShape) shapes.elementAt(0);
                 }
             }
+            for (Enumeration e = swkcanvas.rootNode.depthFirstEnumeration() ; e.hasMoreElements() ;) {
+                ItemTreeNode node = (ItemTreeNode) e.nextElement();
+                SwkShape swkShape = (SwkShape) node.getUserObject();
+                if (swkShape == null)  {
+                    continue;
+                }
+                if (swkShape == startShape) {
+                    break;
+                }
+                bounds = null;
 
-            while (previousShape != null) {
-                swkShape = previousShape;
-                previousShape = swkShape.previous;
-
-                if (swkShape.shape != null) {
-                    bounds = swkShape.shape.getBounds2D();
-
-                    if (halo != 0.0f) {
-                        bounds.setRect(bounds.getX() - halo,
-                            bounds.getY() - halo, bounds.getWidth() + halo,
-                            bounds.getHeight() + halo);
+                if (swkShape.shape == null) {
+                    if (swkShape.hitShape(pt.getX(), pt.getY())) {
+                        bestShape = swkShape;
+                        max = 0;
                     }
                 } else {
-                    bounds = null;
-                }
+                    if ((swkShape.fill != null) || (swkShape.fillGradient != null) || (swkShape.texturePaint != null)) {
+                        bounds = swkShape.shape.getBounds2D();
 
-                if (bounds != null) {
-                    if (bounds.contains(pt)) {
-                        max = 0;
-                        bestShape = swkShape;
+                        if (halo != 0.0f) {
+                            bounds.setRect(bounds.getX() - halo,
+                                bounds.getY() - halo, bounds.getWidth() + halo,
+                                bounds.getHeight() + halo);
+                        }
 
-                        if (startShape == null) {
-                            break;
-                        } else if (below) {
-                            break;
+                        if (bounds.contains(pt)) {
+                            max = 0;
+                            bestShape = swkShape;
                         }
                     } else {
-                        line.setLine(bounds.getMaxX(), bounds.getMaxY(),
-                            bounds.getMaxX(), bounds.getMinY());
+                        PathIterator pI = swkShape.shape.getPathIterator(null);
+                        boolean intersects = false;
+                        double dis2 = Double.MAX_VALUE;
 
-                        double dis = line.ptLineDist(pt.getX(), pt.getY());
+                        while (!pI.isDone()) {
+                            int type = pI.currentSegment(tcoords);
 
-                        if (dis < max) {
-                            max = dis;
-                            bestShape = swkShape;
+                            if (type == PathIterator.SEG_LINETO) {
+                                tx2 = tcoords[0];
+                                ty2 = tcoords[0];
+                                dis2 = Line2D.ptSegDistSq(tx1, ty1, tx2, ty2,
+                                        pt.getX(), pt.getY());
+                                tx1 = tx2;
+                                ty1 = ty2;
+
+                                if (dis2 <= halo) {
+                                    intersects = true;
+
+                                    break;
+                                }
+                            } else if (type == PathIterator.SEG_MOVETO) {
+                                tx1 = tcoords[0];
+                                ty1 = tcoords[0];
+                            }
+
+                            pI.next();
                         }
 
-                        line.setLine(bounds.getMinX(), bounds.getMaxY(),
-                            bounds.getMinX(), bounds.getMinY());
-                        dis = line.ptLineDist(pt.getX(), pt.getY());
-
-                        if (dis < max) {
-                            max = dis;
-                            bestShape = swkShape;
+                        if (!intersects) {
+                            continue;
                         }
 
-                        line.setLine(bounds.getMinX(), bounds.getMaxY(),
-                            bounds.getMaxX(), bounds.getMaxY());
-                        dis = line.ptLineDist(pt.getX(), pt.getY());
-
-                        if (dis < max) {
-                            max = dis;
-                            bestShape = swkShape;
-                        }
-
-                        line.setLine(bounds.getMinX(), bounds.getMinY(),
-                            bounds.getMaxX(), bounds.getMinY());
-                        dis = line.ptLineDist(pt.getX(), pt.getY());
+                        double dis = Math.sqrt(dis2);
 
                         if (dis < max) {
                             max = dis;
@@ -1334,9 +1514,6 @@ public class SwkImageCanvasWidgetCmd implements Command {
                         }
                     }
 
-                    if (swkShape == startShape) {
-                        below = true;
-                    }
                 }
             }
         }

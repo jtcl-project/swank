@@ -35,7 +35,6 @@ import java.lang.*;
 
 import java.util.*;
 
-
 public abstract class SwkShape implements SwkShapeConfig {
 
     static public final byte ACTIVE = 0;
@@ -47,10 +46,11 @@ public abstract class SwkShape implements SwkShapeConfig {
     StrokeParameters strokePar = StrokeParameters.getDefault();
 
     Shape shape = null;
+    ItemTreeNode node =null;
     int id;
     public double[] storeCoords = null;
-    SwkShape previous = null;
-    SwkShape next = null;
+    //SwkShape previous = null;
+    //SwkShape next = null;
     Color fill = null;
     GradientPaint fillGradient = null;
     Point2D gradPt1 = null;
@@ -101,7 +101,19 @@ public abstract class SwkShape implements SwkShapeConfig {
     public float getYShear() {
         return yShear;
     }
+    public void setNode(String nodeName) {
+        try {
+            SwkShape shapeNode = (SwkShape) canvas.getShape(nodeName);
+            ItemTreeNode newParent = shapeNode.node;
+System.out.println("set node for "+getId()+" to "+nodeName);
+            newParent.add(node);
 
+        } catch (SwkException swkE) {
+        }
+    }
+    public String getNode() {
+        return "";
+    }
     public String getStateString() {
         if (state == ACTIVE) {
             return "normal";
@@ -142,14 +154,14 @@ public abstract class SwkShape implements SwkShapeConfig {
         return canvas;
     }
 
-    public SwkShape getPrevious() {
+/*    public SwkShape getPrevious() {
         return previous;
     }
 
     public SwkShape getNext() {
         return next;
     }
-
+*/
     public int getId() {
         return id;
     }

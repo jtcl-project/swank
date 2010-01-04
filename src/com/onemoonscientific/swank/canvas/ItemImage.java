@@ -53,7 +53,7 @@ import javax.swing.*;
 public class ItemImage extends SwkShape {
     static CanvasParameter[] parameters = {
         new ImageParameter(), new TagsParameter(), new StateParameter(),
-        new TransformerParameter(),
+        new TransformerParameter(),new NodeParameter(),
     };
     static Map parameterMap = new TreeMap();
 

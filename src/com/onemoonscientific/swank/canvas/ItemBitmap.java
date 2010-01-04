@@ -51,7 +51,7 @@ import javax.swing.*;
 public class ItemBitmap extends SwkShape {
 
     static CanvasParameter[] parameters = {
-        new BitmapParameter(), new TagsParameter(), new StateParameter(),
+        new BitmapParameter(), new TagsParameter(), new StateParameter(),new NodeParameter(),
         new TransformerParameter(),};
     static Map parameterMap = new TreeMap();
 

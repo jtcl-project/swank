@@ -48,7 +48,7 @@ public class ItemEllipse extends SwkShape implements TextInterface {
     static CanvasParameter[] parameters = {
         new FillParameter(), new OutlineParameter(), new TextureParameter(),
         new GradientParameter(), new RotateParameter(), new ShearParameter(),
-        new StateParameter(), new TagsParameter(), new WidthParameter(),
+        new StateParameter(), new TagsParameter(), new WidthParameter(),new NodeParameter(),
         new TransformerParameter(),
             new TextParameter(), new FontParameter(), new AnchorParameter(), new TextcolorParameter(),
 };

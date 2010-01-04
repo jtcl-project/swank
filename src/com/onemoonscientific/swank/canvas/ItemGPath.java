@@ -51,7 +51,7 @@ public class ItemGPath extends SwkShape {
     static CanvasParameter[] parameters = {
         new DashParameter(), new DashPhaseParameter(), new WidthParameter(),
         new FillParameter(), new OutlineParameter(), new RotateParameter(),
-        new ShearParameter(), new StateParameter(), new TagsParameter(),
+        new ShearParameter(), new StateParameter(), new TagsParameter(),new NodeParameter(),
         new TransformerParameter(),
     };
     static Map parameterMap = new TreeMap();

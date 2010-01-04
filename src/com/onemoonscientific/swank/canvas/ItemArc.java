@@ -48,7 +48,7 @@ public class ItemArc extends SwkShape {
         new ArcStyleParameter(), new DashParameter(), new DashPhaseParameter(),
         new FillParameter(), new OutlineParameter(), new StateParameter(),
         new RotateParameter(), new ShearParameter(), new TagsParameter(),
-        new TransformerParameter(), new WidthParameter(),
+        new TransformerParameter(), new WidthParameter(),new NodeParameter(),
     };
     static Map parameterMap = new TreeMap();
 

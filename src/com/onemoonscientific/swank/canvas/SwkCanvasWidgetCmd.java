@@ -438,6 +438,9 @@ public class SwkCanvasWidgetCmd implements Command {
             } else if (argv[2].toString().startsWith("rect")) {
                 Rectangle2D rect2D = new Rectangle2D.Double();
                 swkShape = new ItemRectangle(rect2D, swkcanvas);
+            } else if (argv[2].toString().startsWith("node")) {
+                Rectangle2D rect2D = new Rectangle2D.Double();
+                swkShape = new ItemNode(rect2D, swkcanvas);
             } else if (argv[2].toString().equals("oval")) {
                 Ellipse2D ellipse2D = new Ellipse2D.Double();
                 swkShape = new ItemEllipse(ellipse2D, swkcanvas);
@@ -1504,25 +1507,28 @@ public class SwkCanvasWidgetCmd implements Command {
         void getOne() throws SwkException {
             swkShape = (SwkShape) swkcanvas.getShape(tagName);
             if (swkShape != null) {
+                ItemTreeNode node = swkShape.node;
                 if (mode == NEXT) {
-                    swkShape = swkShape.next;
+                    ItemTreeNode nextNode = (ItemTreeNode) node.getNextNode();
+                    if (nextNode != null) {
+                        swkShape = (SwkShape) nextNode.getUserObject();
+                    }
                 } else {
-                    swkShape = swkShape.previous;
+                    ItemTreeNode previousNode = (ItemTreeNode) node.getPreviousNode();
+                    if (previousNode != null) {
+                        swkShape = (SwkShape) previousNode.getUserObject();
+                    }
                 }
             } else {
             }
         }
 
         void getSome() {
-            SwkShape swkShape = swkcanvas.firstShape;
-            SwkShape nextShape = swkcanvas.firstShape;
-
-            if (swkcanvas.firstShape != null) {
-                shapeList = new ArrayList();
-
-                while (nextShape != null) {
-                    swkShape = nextShape;
-                    nextShape = swkShape.next;
+            shapeList = new ArrayList();
+            for (Enumeration e = swkcanvas.rootNode.depthFirstEnumeration() ; e.hasMoreElements() ;) {
+                ItemTreeNode node = (ItemTreeNode) e.nextElement();
+                SwkShape swkShape = (SwkShape) node.getUserObject();
+                if (swkShape != null) {
                     shapeList.add(new Integer(swkShape.id));
                 }
             }
@@ -1544,46 +1550,39 @@ public class SwkCanvasWidgetCmd implements Command {
             Rectangle2D bounds = null;
             double max = Double.MAX_VALUE;
             Line2D line = new Line2D.Double();
-            SwkShape swkShape = swkcanvas.lastShape;
             double[] tcoords = new double[6];
             double tx1 = 0.0;
             double ty1 = 0.0;
             double tx2 = 0.0;
             double ty2 = 0.0;
 
-            SwkShape previousShape = swkcanvas.lastShape;
             boolean below = false;
 
             if (refTag != null) {
                 Vector shapes = swkcanvas.getShapesWithTags(refTag);
 
                 if (shapes != null) {
-                    SwkShape refShape = (SwkShape) shapes.elementAt(0);
-
-                    if (refShape != null) {
-                        startShape = refShape.previous;
-                    }
+                    startShape = (SwkShape) shapes.elementAt(0);
                 }
             }
-
-            while (previousShape != null) {
-                swkShape = previousShape;
-                previousShape = swkShape.previous;
+            for (Enumeration e = swkcanvas.rootNode.depthFirstEnumeration() ; e.hasMoreElements() ;) {
+                ItemTreeNode node = (ItemTreeNode) e.nextElement();
+                SwkShape swkShape = (SwkShape) node.getUserObject();
+                if (swkShape == null)  {
+                    continue;
+                }
+                if (swkShape == startShape) {
+                    break;
+                }
                 bounds = null;
 
                 if (swkShape.shape == null) {
                     if (swkShape.hitShape(pt.getX(), pt.getY())) {
                         bestShape = swkShape;
                         max = 0;
-
-                        if (startShape == null) {
-                            break;
-                        } else if (below) {
-                            break;
-                        }
                     }
                 } else {
-                    if (swkShape.fill != null) {
+                    if ((swkShape.fill != null) || (swkShape.fillGradient != null) || (swkShape.texturePaint != null)) {
                         bounds = swkShape.shape.getBounds2D();
 
                         if (halo != 0.0f) {
@@ -1595,12 +1594,6 @@ public class SwkCanvasWidgetCmd implements Command {
                         if (bounds.contains(pt)) {
                             max = 0;
                             bestShape = swkShape;
-
-                            if (startShape == null) {
-                                break;
-                            } else if (below) {
-                                break;
-                            }
                         }
                     } else {
                         PathIterator pI = swkShape.shape.getPathIterator(null);
@@ -1643,9 +1636,6 @@ public class SwkCanvasWidgetCmd implements Command {
                         }
                     }
 
-                    if (swkShape == startShape) {
-                        below = true;
-                    }
                 }
             }
         }

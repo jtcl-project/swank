@@ -51,7 +51,8 @@ public class ItemText extends SwkShape implements TextInterface {
     static CanvasParameter[] parameters = {
         new TextParameter(), new AnchorParameter(), new FontParameter(),
         new WidthParameter(), new FillParameter(), new TagsParameter(),
-        new TransformerParameter(), new RotateParameter(),};
+        new TransformerParameter(), new RotateParameter(),new NodeParameter(),
+     };
     static Map parameterMap = new TreeMap();
 
     static {
@@ -165,9 +166,9 @@ public class ItemText extends SwkShape implements TextInterface {
         float height1 = (float) (font.getStringBounds(text, fRC).getHeight());
         float width2 = (float) (width1 * getAnchor()[1]);
         float height2 = (float) (height1 * getAnchor()[0]);
-        Rectangle2D.Float rf1 = new Rectangle2D.Float((float) (getX() - width2),
+        Rectangle2D.Double rf1 = new Rectangle2D.Double((float) (getX() - width2),
                 (float) (getY() - height1 + height2), width1, height1);
-        rf1 = (Rectangle2D.Float) aT.createTransformedShape(rf1).getBounds2D();
+        rf1 = (Rectangle2D.Double) aT.createTransformedShape(rf1).getBounds2D();
 
         return rf1;
     }

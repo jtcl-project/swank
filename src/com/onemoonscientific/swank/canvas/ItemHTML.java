@@ -57,7 +57,7 @@ public class ItemHTML extends SwkShape implements TextInterface {
     static CanvasParameter[] parameters = {
         new TextParameter(), new AnchorParameter(), new FontParameter(),
         new WidthParameter(), new FillParameter(), new TagsParameter(),
-        new TransformerParameter(), new OutlineParameter(),new RotateParameter(),
+        new TransformerParameter(), new OutlineParameter(),new RotateParameter(),new NodeParameter(),
     };
     static Map parameterMap = new TreeMap();
 

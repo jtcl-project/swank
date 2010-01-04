@@ -158,7 +158,7 @@ public class ItemLine extends SwkShape {
     static CanvasParameter[] parameters = {
         new FillParameter(), new SmoothParameter(), new DashParameter(),
         new DashPhaseParameter(), new WidthParameter(), new RotateParameter(),
-        new ShearParameter(), new TagsParameter(), new StateParameter(),
+        new ShearParameter(), new TagsParameter(), new StateParameter(),new NodeParameter(),
         new TransformerParameter(), new CapstyleParameter(),
         new JoinstyleParameter(), new ArrowParameter(), new ArrowShapeParameter(), new EndstyleParameter(), new StartstyleParameter()
     };

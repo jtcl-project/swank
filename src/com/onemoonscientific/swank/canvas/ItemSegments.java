@@ -51,7 +51,7 @@ public class ItemSegments extends SwkShape {
     static CanvasParameter[] parameters = {
         new DashParameter(), new DashPhaseParameter(), new WidthParameter(),
         new FillParameter(), new OutlineParameter(), new RotateParameter(),
-        new ShearParameter(), new TagsParameter(), new StateParameter(),
+        new ShearParameter(), new TagsParameter(), new StateParameter(),new NodeParameter(),
         new TransformerParameter(),
     };
     static Map parameterMap = new TreeMap();

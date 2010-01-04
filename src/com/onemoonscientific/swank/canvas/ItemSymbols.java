@@ -50,7 +50,7 @@ import java.util.*;
 public class ItemSymbols extends SwkShape implements SymbolInterface {
     static CanvasParameter[] parameters = {
         new SymbolParameter(), new RadiusParameter(), new RotateParameter(),
-        new ShearParameter(), new TagsParameter(), new StateParameter(),
+        new ShearParameter(), new TagsParameter(), new StateParameter(),new NodeParameter(),
         new TransformerParameter(),
     };
     static Map parameterMap = new TreeMap();
