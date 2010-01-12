@@ -283,9 +283,9 @@ public class WmCmd implements Command {
             throw new TclException(interp,
                 "invalid object type \"" + widgetName + "\"");
         }
-
+// FIXME doesn't work properly for negative locations values
         String geometry = argv[3].toString();
-        String locPattern = "^(\\+)([0-9]*)(\\+)([0-9]*)$";
+        String locPattern = "^([\\+\\-])([0-9]*)(\\+)([0-9]*)$";
         String sizePattern = "^([0-9]*)(x)([0-9]*)$";
         String bothPattern = "^([0-9]*)(x)([0-9]*)(\\+)([0-9]*)(\\+)([0-9]*)$";
 
@@ -312,7 +312,11 @@ public class WmCmd implements Command {
             setSize = true;
         } else if (geometry.matches(locPattern)) {
             int pPos = geometry.lastIndexOf('+');
-            x = Integer.parseInt(geometry.substring(1, pPos));
+            if (geometry.charAt(0) == '-') {
+                x = Integer.parseInt(geometry.substring(0, pPos));
+            } else {
+                x = Integer.parseInt(geometry.substring(1, pPos));
+            }
             y = Integer.parseInt(geometry.substring(pPos + 1));
             setLocation = true;
         } else {
