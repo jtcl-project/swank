@@ -1565,24 +1565,34 @@ public class SwkCanvasWidgetCmd implements Command {
                     startShape = (SwkShape) shapes.elementAt(0);
                 }
             }
-            for (Enumeration e = swkcanvas.rootNode.depthFirstEnumeration() ; e.hasMoreElements() ;) {
+            boolean gotStart = false;
+            double fillHit = 5.0;
+            for (Enumeration e = swkcanvas.rootNode.reverseDepthFirstEnumeration() ; e.hasMoreElements() ;) {
                 ItemTreeNode node = (ItemTreeNode) e.nextElement();
                 SwkShape swkShape = (SwkShape) node.getUserObject();
                 if (swkShape == null)  {
                     continue;
                 }
+                if (!gotStart && (startShape != null)) {
+                   continue;
+                }
                 if (swkShape == startShape) {
-                    break;
+                    gotStart = true;
+                    continue;
                 }
                 bounds = null;
 
                 if (swkShape.shape == null) {
                     if (swkShape.hitShape(pt.getX(), pt.getY())) {
-                        bestShape = swkShape;
-                        max = 0;
+                        double dis = fillHit;
+                        if (dis < max) {
+                            max = dis;
+                            bestShape = swkShape;
+                        }
                     }
                 } else {
                     if ((swkShape.fill != null) || (swkShape.fillGradient != null) || (swkShape.texturePaint != null)) {
+// fixme should use shape.contains for some shapes
                         bounds = swkShape.shape.getBounds2D();
 
                         if (halo != 0.0f) {
@@ -1592,8 +1602,11 @@ public class SwkCanvasWidgetCmd implements Command {
                         }
 
                         if (bounds.contains(pt)) {
-                            max = 0;
-                            bestShape = swkShape;
+                            double dis = fillHit;
+                            if (dis < max) {
+                                max = dis;
+                                bestShape = swkShape;
+                            }
                         }
                     } else {
                         PathIterator pI = swkShape.shape.getPathIterator(null);
@@ -1605,9 +1618,10 @@ public class SwkCanvasWidgetCmd implements Command {
 
                             if (type == PathIterator.SEG_LINETO) {
                                 tx2 = tcoords[0];
-                                ty2 = tcoords[0];
+                                ty2 = tcoords[1];
                                 dis2 = Line2D.ptSegDistSq(tx1, ty1, tx2, ty2,
                                         pt.getX(), pt.getY());
+//System.out.println(dis2+" "+halo+" "+tx1+" "+ty1+" "+tx2+" "+ty2);
                                 tx1 = tx2;
                                 ty1 = ty2;
 
@@ -1618,7 +1632,7 @@ public class SwkCanvasWidgetCmd implements Command {
                                 }
                             } else if (type == PathIterator.SEG_MOVETO) {
                                 tx1 = tcoords[0];
-                                ty1 = tcoords[0];
+                                ty1 = tcoords[1];
                             }
 
                             pI.next();
@@ -1629,7 +1643,7 @@ public class SwkCanvasWidgetCmd implements Command {
                         }
 
                         double dis = Math.sqrt(dis2);
-
+//System.out.println(dis+" "+max);
                         if (dis < max) {
                             max = dis;
                             bestShape = swkShape;
@@ -1637,6 +1651,7 @@ public class SwkCanvasWidgetCmd implements Command {
                     }
 
                 }
+//System.out.println(swkShape.id+" "+max);
             }
         }
 
