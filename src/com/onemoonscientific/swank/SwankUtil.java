@@ -759,6 +759,7 @@ public class SwankUtil {
                 }
 
                 ImageCmd.images.put(imageName, image);
+                image.setDescription(imageName);
             }
 
             return (image);
