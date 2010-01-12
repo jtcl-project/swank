@@ -769,10 +769,13 @@ public class SwkImageCanvas implements SwkCanvasType {
 
         for (int iMode=0;iMode<2;iMode++) {
             handle = -1;
-            for (Enumeration e = rootNode.children() ; e.hasMoreElements() ;) {
+            for (Enumeration e = rootNode.reverseDepthFirstEnumeration() ; e.hasMoreElements() ;) {
                 ItemTreeNode node = (ItemTreeNode) e.nextElement();
                 SwkShape swkShape = (SwkShape) node.getUserObject();
                 if ((swkShape == null) ||  (swkShape.getState() != SwkShape.ACTIVE)) {
+                    continue;
+                }
+                if (swkShape instanceof ItemNode) {
                     continue;
                 }
                 if (iMode == 0) {
@@ -940,9 +943,6 @@ public class SwkImageCanvas implements SwkCanvasType {
             }
             //System.out.println(swkShape.getId());
 
-            if (swkShape.isSelected()) {
-                swkShape.drawHandles(g2);
-            }
             if (swkShape instanceof ItemNode) {
                 Rectangle2D unionRect = new Rectangle2D.Double();
                 boolean firstRect = true;
@@ -968,7 +968,11 @@ public class SwkImageCanvas implements SwkCanvasType {
                 Rectangle2D thisBound = getShapeBounds(swkShape);
                 NodeBounds thisNodeBounds = new NodeBounds(node,thisBound);
                 unionStack.push(thisNodeBounds);
+
                 swkShape.paintShape(g2);
+            if (swkShape.isSelected()) {
+                swkShape.drawHandles(g2);
+            }
            }
         }
         g2.setTransform(storeAT);
