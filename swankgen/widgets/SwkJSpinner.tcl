@@ -23,46 +23,24 @@
 
 append specialVars {
     String textVariable="";
+    SwkJSpinnerListener commandListener=null;
 }
 
 append specialInits {
         SpinnerNumberModel model = new SpinnerNumberModel(1.0,0.0,100.0,1.0);
         setModel(model);
+        commandListener = new SwkJSpinnerListener(interp,this);
+        addChangeListener(commandListener);
+ 
 }
-append specialListeners { ,VarTrace,SwkTextVariable }
+append specialListeners {}
   
 append specialMethods {
            public void setTextVariable(Interp interp, String name) throws TclException {
-                 String text =  SwankUtil.setupTrace(interp,this, textVariable, name);
-                 textVariable = name;
-                 if (text != null) {
-                    (new Setter((SwkWidget) this,OPT_TEXT)).exec(text);
-                 }
+                 commandListener.setVarName(interp,name);
            }
-            public void setSwkText(String value)  {
-                if ((value != null) && (textVariable != null) && !textVariable.equals ("")) {
-                     BindEvent bEvent = new BindEvent(interp,textVariable,null,value);
-                     interp.getNotifier().queueEvent(bEvent,TCL.QUEUE_TAIL);
-                }
-                super.setValue(value);
-            }
-            public String getSwkText()  {
-                return(super.getText());
-            }
-
             public String getTextVariable() {
-                return(textVariable);
-            }
-
-            public void traceProc(Interp interp, String string1, String string2, int flags) throws TclException
-            {
-                TclObject tObj = interp.getVar(textVariable,TCL.GLOBAL_ONLY);
-                final String s = tObj.toString();
-                SwingUtilities.invokeLater(new Runnable() {
-                      public void run()  {
-                           setValue(s);
-                      }
-                });
+                return(commandListener.getVarName());
             }
 
 
@@ -144,18 +122,18 @@ append specialMethods {
         }
      }
      public void setCommand(String name) {
-         changeListener.setCommand(name);
+         commandListener.setCommand(name);
      }
      public String getCommand() {
-         return(changeListener.getCommand());
+         return(commandListener.getCommand());
      }
 
 }
 set closeMethod {
     public void close() throws TclException {
-        if ((textVariable != null) && (textVariable.length() != 0)) {
-            interp.untraceVar(textVariable,this,TCL.TRACE_WRITES| TCL.GLOBAL_ONLY);
-        }
+        if ((getTextVariable() != null) && (getTextVariable().length() != 0)) {
+             interp.untraceVar(getTextVariable(),commandListener,TCL.TRACE_WRITES| TCL.GLOBAL_ONLY);
+         }
     }
 }
 
