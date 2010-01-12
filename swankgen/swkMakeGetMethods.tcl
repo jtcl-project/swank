@@ -50,7 +50,12 @@ foreach method $methods  {
 }
 
 set getMethods [concat $specialGets $getMethods]
-set excludes "-locale -page -styleddocument -color"
+set excludes "-locale -page -styleddocument -color -actioncommand -armed -autocreatecolumnsfrommodel -borderpainted -borderpaintedflat
+-columns -defaultcloseoperation -delay -displayedmnemonicindex -dragenabled -editingcolumn -editingrow -focuspainted
+-horizontalscrollbarpolicy -lastdividerlocation -layer -popupmenuvisible -popupvisible -scrolloffset
+-wantsinput -alignmentx -alignmenty -bounds -classname -debuggraphicsoptions -doublebuffered -horizontalalignment -ignorerepaint
+-inheritspopupmenu -location -margin -maximumsize -minimumsize -name -preferredsize -size -verticalalignment
+"
 set excludeTypes "java.util.Locale java.lang.String {} int"
 
 set dashOptions ""
