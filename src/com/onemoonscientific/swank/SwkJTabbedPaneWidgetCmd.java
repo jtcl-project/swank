@@ -10,6 +10,7 @@ package com.onemoonscientific.swank;
 import tcl.lang.*;
 
 import java.awt.EventQueue;
+import java.awt.Color;
 
 import javax.swing.*;
 
@@ -175,7 +176,7 @@ class SwkJTabbedPaneWidgetCmd implements Command {
         }
 
         int index = TclInteger.get(interp, argv[2]);
-        (new TabConfigure()).exec(swkjtabbedpane, index, argv);
+        (new TabConfigure()).exec(swkjtabbedpane, index, 3, argv);
     }
 
     void tabCGet(final Interp interp, final SwkJTabbedPane swkjtabbedpane,
@@ -262,32 +263,90 @@ class SwkJTabbedPaneWidgetCmd implements Command {
         SwkJTabbedPane swkjtabbedpane = null;
         int index = -1;
         TclObject[] argv = null;
+        Color foreground = null;
+        Color background = null;
+        String title=null;
+        String toolTipText=null;
+        ImageIcon icon = null;
+        String iconName = null;
+        Integer underline = null; 
+        String state = null;
 
-        void exec(final SwkJTabbedPane swkjtabbedpane, final int index,
-            final TclObject[] argv) {
+        void exec(final SwkJTabbedPane swkjtabbedpane, final int index, final int start,
+            final TclObject[] argv) throws TclException {
             this.swkjtabbedpane = swkjtabbedpane;
             this.index = index;
             this.argv = new TclObject[argv.length];
+            if (((argv.length - start) % 2) != 0) {
+                throw new TclNumArgsException(interp, 0, argv,
+                    "-option value ? -option value? ...");
+            }
 
-            for (int i = 0; i < argv.length; i++) {
-                this.argv[i] = argv[i].duplicate();
+            for (int i = start; i < argv.length; i += 2) {
+                if (argv[i].toString().equals("-foreground")) {
+                    foreground = SwankUtil.getColor(interp, argv[i + 1]);
+                } else if (argv[i].toString().equals("-background")) {
+                    background = SwankUtil.getColor(interp, argv[i + 1]);
+                } else if (argv[i].toString().startsWith("-text")) {
+                    title =  argv[i + 1].toString();
+                } else if (argv[i].toString().startsWith("-tooltiptext")) {
+                    toolTipText =  argv[i + 1].toString();
+                } else if (argv[i].toString().startsWith("-state")) {
+                    state =  argv[i + 1].toString();
+                    if (!state.equals("normal") && !state.equals("disabled")) {
+                        throw new TclException(interp,"state must be \"normal\" or \"disabled\"");
+                    }
+                } else if (argv[i].toString().startsWith("-underline")) {
+                    underline =  TclInteger.get(interp,argv[i + 1]);
+                } else if (argv[i].toString().startsWith("-image")) {
+                    iconName = argv[i + 1].toString();
+                    icon = SwankUtil.getImageIcon(interp, argv[i + 1]);
+                }
             }
 
             execOnThread();
         }
 
         public void run() {
-            try {
-                swkjtabbedpane.tabConfigure(interp, index, argv, 3);
-            } catch (TclException tclE) {
-                //FIXME
-                return;
-            } finally {
-                for (int i = 0; i < argv.length; i++) {
-                    argv[i].release();
+            if (background != null) {
+                swkjtabbedpane.setBackgroundAt(index, background);
+            }
+            if (foreground != null) {
+                swkjtabbedpane.setForegroundAt(index, foreground);
+            }
+            if (title != null) {
+                if (title.trim().equals("")) {
+                    swkjtabbedpane.setTitleAt(index, null);
+                } else {
+                    swkjtabbedpane.setTitleAt(index, title);
                 }
             }
+            if (toolTipText != null) {
+                if (toolTipText.trim().equals("")) {
+                    swkjtabbedpane.setToolTipTextAt(index, null);
+                } else {
+                    swkjtabbedpane.setToolTipTextAt(index, toolTipText);
+                }
+            }
+            if (iconName != null) {
+                if (iconName.trim().equals("")) {
+                    swkjtabbedpane.setIconAt(index, null);
+                } else {
+                    swkjtabbedpane.setIconAt(index, icon);
+                }
+            }
+            if (underline != null) {
+                swkjtabbedpane.setDisplayedMnemonicIndexAt(index, underline.intValue());
+            }
+            if (state != null) {
+                 if (state.equals("normal")) {
+                      swkjtabbedpane.setEnabledAt(index, true);
+                 } else {
+                      swkjtabbedpane.setEnabledAt(index, false);
+                 }
+                      
         }
+    }
     }
 
     class TabCGet extends GetValueOnEventThread {
