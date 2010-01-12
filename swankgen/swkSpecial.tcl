@@ -87,7 +87,7 @@ proc defpar {par widget default} {
 }
 
 proc swkMakeSpecial {widget widgetVar} {
-    global specialCmds specialInits specialVars specialMethods specialGets specialSuper
+    global specialCmds specialInits specialVars specialMethods specialGets specialSuper specialVisible
     global specialVCmds specialOpts specialListeners specialConfig specialImports specialWidgetTypeCmds specialPrints
     
     set specialCmds ""
@@ -95,6 +95,7 @@ proc swkMakeSpecial {widget widgetVar} {
     set specialOpts ""
     set specialInits ""
     set specialSuper ""
+    set specialVisible ""
     set specialVars ""
     set specialMethods " "
     set closeMethod {
@@ -1569,7 +1570,6 @@ proc swkMakeSpecial {widget widgetVar} {
             this.setSize(swkwidth,swkheight);
             this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             this.setTitle(name);
-            this.setVisible(true);
             SwkComponentListener compList = new SwkComponentListener (interp, (Component) this);
             ((Component) this).addComponentListener (compList);
             this.setComponentListener (compList);
@@ -1583,6 +1583,7 @@ proc swkMakeSpecial {widget widgetVar} {
             String closeCommand="";
         }
         append specialInits {
+            this.setVisible(false);
         addWindowListener(new WindowAdapter () {
             public void windowClosing(WindowEvent wEvent) {
                 if (closeCommand.equals("")) {
@@ -1612,6 +1613,26 @@ proc swkMakeSpecial {widget widgetVar} {
                  closeCommand = command;
              }
         }
+        set specialVisible {
+       boolean visible = true;
+        for (int iArg=2;iArg<argv.length;iArg += 2) {
+            if (argv[iArg].toString().equals("-visible") && (iArg < (argv.length-1))) {
+               visible = TclBoolean.get(interp,argv[iArg+1]);
+            }
+        }
+        if (visible) {
+                final SwkJFrame swkjframe2 = swkjframe;
+                try {
+                      SwingUtilities.invokeAndWait(new Runnable() {
+                            public void run() {
+                                  swkjframe2.setVisible(true);
+                            }
+                      });
+                 } catch (InterruptedException iE) {
+                 } catch (Exception  e) {
+                 }
+        }
+    }
     }
     
     set widgets "JFileChooser"

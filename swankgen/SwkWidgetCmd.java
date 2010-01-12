@@ -100,7 +100,7 @@ public class ${widgetType}Cmd implements Command {
                     throw new TclException(interp,e.toString());
                 }
       	 ${widgetType} ${widgetVar} = cmdProc.getwidget();
- 
+         $specialVisible 
         if (Widgets.exists(interp,argv[1].toString())) {
             ${widgetVar} = (${widgetType}) Widgets.get(interp, argv[1].toString());
 
