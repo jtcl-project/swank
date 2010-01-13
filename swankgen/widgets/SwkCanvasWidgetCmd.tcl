@@ -190,6 +190,7 @@ SwkImageCanvas swkImageCanvas = null;
        BufferedImage bufOffscreen=null;
         Graphics2D g2Offscreen = null;
 boolean changed = false;
+Cursor previousCursor = null;
 
 }
 
@@ -214,29 +215,9 @@ append specialMethods {
         if ((w <= 0) || (h <= 0)) {
             return;
         }
-
-        if ((bufOffscreen == null) || (w != bufOffscreen.getWidth()) || (h != bufOffscreen.getHeight())) {
-            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            GraphicsDevice gs = ge.getDefaultScreenDevice();
-            GraphicsConfiguration gc = gs.getDefaultConfiguration();
-            if (g2Offscreen != null) {
-                g2Offscreen.dispose();
-                g2Offscreen = null;
-            }
-             bufOffscreen = gc.createCompatibleImage(w, h);
-             g2Offscreen = bufOffscreen.createGraphics();
-             changed = true;
-        }
-         if (changed) {
-             swkImageCanvas.setSize(getSize());
-             swkImageCanvas.paintComponent(g2Offscreen,bufOffscreen);
-             changed=false;
-             repaint();
-        } else {
-            g.drawImage(bufOffscreen,0,0,null);
-            Toolkit.getDefaultToolkit().sync();
-        }
-
+        swkImageCanvas.setSize(getSize());
+        swkImageCanvas.paintComponent(g,bufOffscreen);
+        changed=false;
     }
     public BufferStrategy getBufferStrategy() {
         BufferStrategy bufferStrategy = null;
@@ -300,7 +281,16 @@ append specialMethods {
     public boolean getScrollableTracksViewportHeight() {
         return (false);
     }
-
+    public void setHandleCursor(Cursor cursor) {
+         if (previousCursor == null) {
+             previousCursor = getCursor();
+         }
+         super.setCursor(cursor);
+    }
+    public void setCursor(Cursor cursor) {
+       previousCursor = cursor;
+       super.setCursor(cursor);
+    }
     void processMouseMotion(MouseEvent mEvent) {
         previousTags = currentTags;
 
@@ -328,9 +318,11 @@ append specialMethods {
             checkForMouseExit(mEvent);
             hitShape = new HitShape(swkImageCanvas.getLastShapeScanned(), swkImageCanvas.getHandle());
             if ((hitShape != null) && (hitShape.handle >= 0) && (hitShape.swkShape != null)) {
-                      setCursor(hitShape.swkShape.getHandleCursor(hitShape.handle));
+                      setHandleCursor(hitShape.swkShape.getHandleCursor(hitShape.handle));
             } else {
-                 setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                 if (previousCursor != null) {
+                     setHandleCursor(previousCursor);
+                 }
             }
             checkForMouseEnter(mEvent);
         }
@@ -546,31 +538,31 @@ append specialMethods {
             }
         }
     }
-ArrayList<SwkBinding> getBindings(String currentTag, int type, int subtype) {
+ArrayList<SwkBinding> getBindings(String checkTag, int type, int subtype) {
            ArrayList<SwkBinding> bindings = null;
         if (type == SwkBinding.FOCUS) {
-            if ((currentTag != null) && (focusHash != null)) {
-                bindings = (ArrayList<SwkBinding>) focusHash.get(currentTag);
+            if ((checkTag != null) && (focusHash != null)) {
+                bindings = (ArrayList<SwkBinding>) focusHash.get(checkTag);
             }
         } else if (type == SwkBinding.MOUSE) {
             if (subtype == SwkBinding.EXIT) {
-                if ((previousTag != null) && (mouseHash != null)) {
-                    bindings = (ArrayList<SwkBinding>) mouseHash.get(previousTag);
+                if ((checkTag != null) && (mouseHash != null)) {
+                    bindings = (ArrayList<SwkBinding>) mouseHash.get(checkTag);
                 }
             } else {
-                if ((currentTag != null) && (mouseHash != null)) {
-                    bindings = (ArrayList<SwkBinding>) mouseHash.get(currentTag);
+                if ((checkTag != null) && (mouseHash != null)) {
+                    bindings = (ArrayList<SwkBinding>) mouseHash.get(checkTag);
                 }
             }
 
          } else if (type == SwkBinding.MOUSEMOTION) {
-            if ((currentTag != null) && (mouseMotionHash != null)) {
-                bindings = (ArrayList<SwkBinding>) mouseMotionHash.get(currentTag);
+            if ((checkTag != null) && (mouseMotionHash != null)) {
+                bindings = (ArrayList<SwkBinding>) mouseMotionHash.get(checkTag);
             }
 
          } else if (type == SwkBinding.KEY) {
-            if ((currentTag != null) && (keyHash != null)) {
-                bindings = (ArrayList<SwkBinding>) keyHash.get(currentTag);
+            if ((checkTag != null) && (keyHash != null)) {
+                bindings = (ArrayList<SwkBinding>) keyHash.get(checkTag);
             }
        }
         return bindings;
@@ -589,7 +581,12 @@ ArrayList<SwkBinding> getBindings(String currentTag, int type, int subtype) {
 
         // System.out.println("processE "+type+" "+subtype+" C "+currentTag+" P "+previousTag);
 
-               ArrayList<SwkBinding> bindings = getBindings(currentTag,type,subtype);
+        ArrayList<SwkBinding> bindings = null;
+        if (subtype == SwkBinding.EXIT) {
+               bindings = getBindings(previousTag,type,subtype);
+        } else {
+               bindings = getBindings(currentTag,type,subtype);
+        }
 
             if (bindings == null) {
                 return;
