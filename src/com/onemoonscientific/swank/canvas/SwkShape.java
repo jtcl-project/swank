@@ -521,6 +521,8 @@ System.out.println("set node for "+getId()+" to "+nodeName);
         }
     }
 
+    public void dispose() {
+    }
     public void coords(SwkImageCanvas canvas, double[] coordArray)
             throws SwkException {
     }
