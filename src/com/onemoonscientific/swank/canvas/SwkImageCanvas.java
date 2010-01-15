@@ -131,6 +131,10 @@ public class SwkImageCanvas implements SwkCanvasType {
     double zoom = 1.0;
     AffineTransform canvasTransform = new AffineTransform();
     Hashtable transformerHash = new Hashtable();
+    Transformer fracTransformer = null;
+    Transformer pfTransformer = null;
+    Transformer fpTransformer = null;
+
     Point2D transMouse = new Point2D.Double();
     Point2D origMouse = new Point2D.Double();
     FontRenderContext fRC = null;
@@ -166,6 +170,15 @@ public class SwkImageCanvas implements SwkCanvasType {
         tagList.add("swank");
         tagList.add("all");
         treeModel.addTreeModelListener(new MyTreeModelListener());
+
+        fracTransformer = new Transformer("frac");
+        transformerHash.put("frac", fracTransformer);
+
+        pfTransformer = new Transformer("pf");
+        transformerHash.put("pf", pfTransformer);
+
+        fpTransformer = new Transformer("fp");
+        transformerHash.put("fp", fpTransformer);
     }
  class MyTreeModelListener implements TreeModelListener {
         public void treeNodesChanged(TreeModelEvent e) {
@@ -445,6 +458,7 @@ public class SwkImageCanvas implements SwkCanvasType {
 
         for (int i = 0; i < shapes.size(); i++) {
             swkShape = (SwkShape) shapes.elementAt(i);
+            swkShape.dispose();
             swkShapes.remove(new Integer(swkShape.id));
 
             for (Object o:swkShape.tags.entrySet()) {
@@ -517,15 +531,7 @@ public class SwkImageCanvas implements SwkCanvasType {
                 continue;
             }
 
-            Rectangle2D thisBound = null;
-
-            if (swkShape.shape == null) {
-                if (swkShape instanceof ItemText) {
-                    thisBound = ((ItemText) swkShape).getBounds();
-                }
-            } else {
-                thisBound = swkShape.shape.getBounds2D();
-            }
+            Rectangle2D thisBound = getShapeBounds(swkShape);
 
             if (thisBound == null) {
                 continue;
@@ -553,7 +559,12 @@ public class SwkImageCanvas implements SwkCanvasType {
                 thisBound = ((ItemText) swkShape).getBounds();
             }
         } else {
-            thisBound = swkShape.shape.getBounds2D();
+            AffineTransform shapeTransform = swkShape.getTransform();
+            if (shapeTransform != null) {
+                thisBound = shapeTransform.createTransformedShape(swkShape.shape).getBounds2D();
+            } else {
+                thisBound = swkShape.shape.getBounds2D();
+            }
         }
         return thisBound;
     }
@@ -935,6 +946,13 @@ public class SwkImageCanvas implements SwkCanvasType {
         g2.transform(canvasTransform);
         boolean resetUnion = true;
         Stack<NodeBounds> unionStack = new Stack<NodeBounds>();
+        AffineTransform fracAT = fracTransformer.getTransform();
+        fracAT.setToScale(d.getWidth(),d.getHeight());
+        AffineTransform fpAT = fpTransformer.getTransform();
+        fpAT.setToScale(d.getWidth(), 1.0);
+        AffineTransform pfAT = pfTransformer.getTransform();
+        pfAT.setToScale(d.getWidth(), 1.0);
+
         for (Enumeration e = rootNode.depthFirstEnumeration() ; e.hasMoreElements() ;) {
             ItemTreeNode node = (ItemTreeNode) e.nextElement();
             SwkShape swkShape = (SwkShape) node.getUserObject();
