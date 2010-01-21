@@ -41,10 +41,12 @@ public class SmoothParameter extends CanvasParameter {
         throws TclException {
         boolean doSmooth = false;
 
-        if (arg.toString().equals("bezier")) {
-            doSmooth = true;
-        } else {
-            doSmooth = TclBoolean.get(interp, arg);
+        if (!arg.toString().equals("")) {
+            if (arg.toString().equals("bezier")) {
+                doSmooth = true;
+            } else {
+                doSmooth = TclBoolean.get(interp, arg);
+            }
         }
 
         if (!doSmooth) {
