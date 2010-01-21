@@ -450,6 +450,10 @@ public class SwkImageCanvas implements SwkCanvasType {
     }
 
 
+    void deleteAll() throws SwkException {
+       String[] tags = {"all"};
+       delete(tags);
+    }
     void delete(final String[] tags) throws SwkException {
         Vector shapes = getShapesWithTags(tags);
         SwkShape swkShape = null;
@@ -555,15 +559,16 @@ public class SwkImageCanvas implements SwkCanvasType {
     Rectangle2D getShapeBounds(SwkShape swkShape) {
         Rectangle2D thisBound = null;
         if (swkShape.shape == null) {
+        } else {
             if (swkShape instanceof ItemText) {
                 thisBound = ((ItemText) swkShape).getBounds();
-            }
-        } else {
-            AffineTransform shapeTransform = swkShape.getTransform();
-            if (shapeTransform != null) {
-                thisBound = shapeTransform.createTransformedShape(swkShape.shape).getBounds2D();
             } else {
-                thisBound = swkShape.shape.getBounds2D();
+                AffineTransform shapeTransform = swkShape.getTransform();
+                if (shapeTransform != null) {
+                    thisBound = shapeTransform.createTransformedShape(swkShape.shape).getBounds2D();
+                } else {
+                    thisBound = swkShape.shape.getBounds2D();
+                }
             }
         }
         return thisBound;
@@ -603,9 +608,10 @@ public class SwkImageCanvas implements SwkCanvasType {
                 while (e.hasMoreElements()) {
                     shape = (SwkShape) e.nextElement();
                     if (shape.isSelected()) {
-                        shapeHash.put(shape, shape);
+                        shapeList.add(shape);
                     }
                 }
+                return (shapeList);
             }
         }
 
@@ -1005,6 +1011,10 @@ public class SwkImageCanvas implements SwkCanvasType {
     }
 
     public void close() throws TclException {
+        try {
+           deleteAll();
+        } catch (Exception e) {
+        }
     }
 
     class Tag {
