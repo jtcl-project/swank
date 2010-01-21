@@ -721,7 +721,7 @@ System.out.println("set node for "+getId()+" to "+nodeName);
     }
 
     public void genGradient(AffineTransform aT) {
-        if ((gradPt1 != null) && (gradPt2 != null)) {
+        if ((fillGradient != null) && (gradPt1 != null) && (gradPt2 != null)) {
             Color c1 = fillGradient.getColor1();
             Color c2 = fillGradient.getColor2();
             boolean cyclic = fillGradient.isCyclic();
