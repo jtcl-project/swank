@@ -2052,6 +2052,11 @@ Dimension dSize = new Dimension(scrollRegion[1][0]-scrollRegion[0][0],scrollRegi
                 return(size.width);
             }
         }
+        set closeMethod {
+            public void close() throws TclException {
+                 swkImageCanvas.close();
+            }
+        }
     }
     if {[lsearch "JFrame" $widget] >= 0} {
         append specialVars {
