@@ -868,11 +868,12 @@ public class SwankUtil {
         throws TclException {
         TclObject[] argv = TclList.getElements(interp, tclObject);
 
+        String name;
         if (argv.length == 0) {
-            throw new TclException(interp, "font \"\" doesn't exist");
+            name = "SansSerif";
+        } else {
+            name = argv[0].toString();
         }
-
-        String name = argv[0].toString();
         int pointSize = 12;
 
         if (argv.length > 1) {
