@@ -9,6 +9,7 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.text.BreakIterator;
 
@@ -213,7 +214,15 @@ public class TextParameters {
         int nLines = getLineBreaks(fRC, paintFont, text, swkShape.width);
         String textLine = text;
         float width2 = 0;
+        Point2D point2D = new Point2D.Double(x, y);
+        Rectangle2D unionRect = new Rectangle2D.Double();
+        AffineTransform shapeTransform = swkShape.getTransform();
 
+        if (shapeTransform != null) {
+            point2D = shapeTransform.transform(point2D, point2D);
+        }
+        x = (int) point2D.getX();
+        y = (int) point2D.getY();
         for (int i = 0; i < nLines; i++) {
             if (nLines > 1) {
                 textLine = text.substring(ends[i], ends[i + 1]).trim();
@@ -221,29 +230,28 @@ public class TextParameters {
 
             float width1 = (float) (paintFont.getStringBounds(textLine, fRC).getWidth());
             float height1 = (float) (paintFont.getStringBounds(textLine, fRC).getHeight());
-
             if (i == 0) {
                 width2 = (float) (width1 * this.getAnchor()[1]);
             }
 
             float height2 = (float) (height1 * this.getAnchor()[0]);
-            AffineTransform aT = new AffineTransform();
-            AffineTransform shapeTransform = swkShape.getTransform();
-
-            if (shapeTransform != null) {
-                aT.setTransform(shapeTransform);
-            }
+           AffineTransform aT = new AffineTransform();
 
             aT.rotate(swkShape.rotate, x, y);
-
+            
             Rectangle2D.Double rf2 = new Rectangle2D.Double((x
                     - width2), (y + height2), 0.0, 0.0);
             Rectangle2D rf2D = aT.createTransformedShape(rf2).getBounds2D();
 
             Rectangle2D.Double rf1 = new Rectangle2D.Double((float) (x
                     - width2), (float) (y - height1 + height2), width1, height1);
-
             rf1d = aT.createTransformedShape(rf1).getBounds2D();
+
+            if (i == 0) {
+                unionRect.setRect(rf1d);
+            } else {
+                Rectangle2D.union(rf1d, unionRect, unionRect);
+            }
 
             if (swkShape.rotate != 0.0) {
                 g2.rotate(swkShape.rotate, rf2D.getX(), rf2D.getY());
@@ -259,6 +267,6 @@ public class TextParameters {
 
             y += height1;
         }
-        return rf1d;
+        return unionRect;
     }
 }
