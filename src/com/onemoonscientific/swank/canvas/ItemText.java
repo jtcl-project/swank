@@ -145,9 +145,16 @@ public class ItemText extends SwkShape implements TextInterface {
         textPar = TextParameters.setTextColor(textPar, newValue);
     }
 
+    public boolean hitShape(double x1, double y1) {
+       return shape.contains(x1,y1);
+    }
 
     // FIXME getting bounds of multiline text not correct
     public Rectangle2D getBounds() {
+        if (shape != null) {
+            return shape.getBounds2D();
+        } else {
+        
         String text = getText();
 
         if (text == null) {
@@ -171,6 +178,58 @@ public class ItemText extends SwkShape implements TextInterface {
         rf1 =  aT.createTransformedShape(rf1).getBounds2D();
 
         return rf1;
+        }
+         
+    }
+
+
+    public void drawHandles(Graphics2D g2) {
+        if (shape != null) {
+            Rectangle2D bounds = shape.getBounds2D();
+            double x1 =  bounds.getMinX();
+            double y1 =  bounds.getMinY();
+            double x2 =  bounds.getMaxX();
+            double y2 =  bounds.getMaxY();
+            double xm = (x1 + x2) / 2;
+            double ym = (y1 + y2) / 2;
+            double[] xy = {x2, ym};
+            for (int i = 0; i < xy.length; i += 2) {
+                drawHandle(g2, (int) xy[i], (int) xy[i + 1]);
+            }
+        }
+    }
+
+    public int hitHandles(double testX, double testY) {
+        int hitIndex = -1;
+        if (shape != null) {
+            Rectangle2D bounds = shape.getBounds2D();
+            double x1 =  bounds.getMinX();
+            double y1 =  bounds.getMinY();
+            double x2 =  bounds.getMaxX();
+            double y2 =  bounds.getMaxY();
+            double xm = (x1 + x2) / 2;
+            double ym = (y1 + y2) / 2;
+            double[] xy = {x2, ym};
+
+            for (int i = 0; i < xy.length; i += 2) {
+                if (hitHandle((int) xy[i], (int) xy[i + 1], testX, testY)) {
+                    hitIndex = i/2;
+                    break;
+                }
+            }
+        }
+        return hitIndex;
+    }
+   public Cursor getHandleCursor(int handle) {
+        final Cursor cursor;
+        switch (handle) {
+            case 0:
+                cursor = Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR);
+                break;
+            default:
+                cursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR);
+        }
+        return cursor;
     }
 
 }
