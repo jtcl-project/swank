@@ -78,7 +78,7 @@ public class ItemHTML extends SwkShape implements TextInterface {
         width = 0;
         storeCoords = new double[4];
         setFont(new Font("Courier", Font.PLAIN, 12));
-        fill = Color.BLACK;
+        fill = Color.WHITE;
         jLabel.setVerticalAlignment(SwingConstants.TOP);
     }
     public void coords(SwkImageCanvas canvas, double[] coords)
