@@ -446,7 +446,7 @@ public class SwkCanvasWidgetCmd implements Command {
                 swkShape = new ItemEllipse(ellipse2D, swkcanvas);
             } else if (argv[2].toString().equals("text")) {
                 swkShape = new ItemText(null, swkcanvas);
-            } else if (argv[2].toString().equals("html")) {
+            } else if (argv[2].toString().equals("htext")) {
                   Rectangle2D rect2D = new Rectangle2D.Double();
               swkShape = new ItemHTML(rect2D, swkcanvas);
             } else if (argv[2].toString().equals("image")) {
