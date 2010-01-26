@@ -34,7 +34,7 @@ public class SwkCanvasWidgetCmd implements Command {
         "cget", "configure", "object", "jadd", "create", "itemconfigure",
         "coords", "hit", "itemcget", "find", "move", "scale", "delete", "addtag",
         "bind", "raise", "lower", "dtag", "gettags", "canvasx", "canvasy",
-        "copy", "index", "newtype", "bbox", "type", "zoom", "transformer","hselect","shapexy","invshapexy"
+        "copy", "index", "newtype", "bbox", "type", "zoom", "transformer","hselect","shapexy","invshapexy","save"
     };
     static final private int OPT_CGET = 0;
     static final private int OPT_CONFIGURE = 1;
@@ -67,6 +67,7 @@ public class SwkCanvasWidgetCmd implements Command {
     static final private int OPT_HSELECT = 28;
     static final private int OPT_SHAPEXY = 29;
     static final private int OPT_INVSHAPEXY = 30;
+    static final private int OPT_SAVE = 31;
     static boolean gotDefaults = false;
     Map newTypes = new HashMap();
     Interp interp = null;
@@ -325,6 +326,47 @@ public class SwkCanvasWidgetCmd implements Command {
             (new ShapeXY()).exec(interp, swkImageCanvas, argv,true);
             break;
         }
+       case OPT_SAVE: {
+            if (argv.length < 3) {
+                throw new TclNumArgsException(interp, 2, argv,
+                    "fileName ?owidth oheight?");
+            }
+            int owidth = 0;
+            int oheight = 0;
+            if (argv.length > 3) {
+                owidth = TclInteger.get(interp, argv[3]);
+            } 
+            if (argv.length > 4) {
+                oheight = TclInteger.get(interp, argv[4]);
+            }
+            OutputStream oStream = null;
+            Object object = null;
+            try {
+               object = ReflectObject.get(interp, argv[2]);
+            } catch (TclException tclE) {
+            }
+            if ((object != null)) {
+                 oStream = (OutputStream) object;
+            } else {
+                String fileName = argv[2].toString();
+                File file = new File(fileName);
+                try {
+                    oStream = new FileOutputStream(file);
+                } catch (FileNotFoundException fE) {
+                    throw new TclException(interp,fE.getMessage());
+                }
+            }
+            if (oStream != null) {
+                (new Save()).exec(interp,swkImageCanvas, owidth, oheight,oStream);
+            } else {
+                                System.out.println("null");
+
+                throw new TclException(interp,"Not an output stream or fle");
+            }
+
+            break;
+        }
+
 
         default:
             throw new TclRuntimeError("TclIndex.get() error");
@@ -718,6 +760,7 @@ public class SwkCanvasWidgetCmd implements Command {
         }
     }
 
+
     class Hit extends GetValueOnEventThread {
         SwkImageCanvas swkcanvas = null;
         double x = 0;
@@ -748,6 +791,26 @@ public class SwkCanvasWidgetCmd implements Command {
                 }
             } catch (SwkException swkE) {
             }
+        }
+    }
+   class Save extends GetValueOnEventThread {
+        SwkImageCanvas swkImageCanvas = null;
+        int width = 0;
+        int height = 0;
+        OutputStream oStream = null;
+
+        void exec(Interp interp, SwkImageCanvas swkImageCanvas, int width, int height, OutputStream oStream)
+            throws TclException {
+            this.swkImageCanvas = swkImageCanvas;
+            this.width = width;
+            this.height = height;
+            this.oStream = oStream;
+            execOnThread();
+        }
+
+        public void run() {
+     
+            swkImageCanvas.save(width,height,oStream);
         }
     }
 

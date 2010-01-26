@@ -18,6 +18,8 @@ import java.awt.geom.*;
 import java.awt.image.BufferedImage;
 
 import java.io.File;
+import java.io.OutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import java.util.*;
@@ -902,27 +904,34 @@ public class SwkImageCanvas implements SwkCanvasType {
         });
     }
 
-    public void paint(int width, int height, String fileName) {
-        swkwidth = width;
-        swkheight = height;
-
-        BufferedImage bufferedImage = new BufferedImage(swkwidth, swkheight,
-                BufferedImage.TYPE_INT_RGB);
-        Graphics offgraphics = bufferedImage.getGraphics();
-        paintComponent(offgraphics,null);
-        offgraphics.dispose();
-
-        if (fileName != null) {
-            writeImage(bufferedImage, fileName);
+    public void save(int oWidth, int oHeight,OutputStream oStream) {
+        Dimension size = getSize();
+        if (oStream != null) {
+            BufferedImage bufferedImage = new BufferedImage((int) size.getWidth(), (int) size.getHeight(), BufferedImage.TYPE_INT_RGB);
+            Graphics offgraphics = bufferedImage.getGraphics();
+            paintComponent(offgraphics,null);
+            offgraphics.dispose();
+            if (oWidth > 0) {
+                if (oHeight <= 0) {
+                    oHeight = (int) (oWidth * (double) size.getHeight()/size.getWidth());
+                }
+                BufferedImage thumbNailImage = new BufferedImage(oWidth,oHeight,BufferedImage.TYPE_INT_RGB);
+                Graphics2D g2Thumb = thumbNailImage.createGraphics();
+                g2Thumb.setRenderingHint(RenderingHints.KEY_INTERPOLATION,RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+                g2Thumb.drawImage(bufferedImage,0,0,oWidth,oHeight,null);
+                g2Thumb.dispose();
+                writeImage(thumbNailImage, oStream);
+            } else {
+                writeImage(bufferedImage, oStream);
+            }
         }
     }
 
-    public void writeImage(BufferedImage rendImage, String fileName) {
+    public void writeImage(BufferedImage rendImage, OutputStream oStream) {
         // Write generated image to a file
         try {
             // Save as PNG
-            File file = new File(fileName);
-            ImageIO.write(rendImage, "png", file);
+            ImageIO.write(rendImage, "png", oStream);
         } catch (IOException e) {
         }
     }
