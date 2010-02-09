@@ -35,7 +35,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
         "coords", "hit", "itemcget", "find", "move", "scale", "delete", "addtag",
         "bind", "raise", "lower", "dtag", "gettags",
         "index", "newtype", "bbox", "type", "zoom", "transformer","hselect","shapexy","invshapexy",
-        "paint"
+        "save"
     };
     static final private int OPT_CREATE = 0;
     static final private int OPT_ITEMCONFIG = 1;
@@ -60,7 +60,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
     static final private int OPT_HSELECT = 20;
     static final private int OPT_SHAPEXY = 21;
     static final private int OPT_INVSHAPEXY = 22;
-    static final private int OPT_PAINT = 23;
+    static final private int OPT_SAVE = 23;
     static boolean gotDefaults = false;
     static SwkImageCanvas swkImageCanvas = null;
     Map newTypes = new HashMap();
@@ -244,16 +244,41 @@ public class SwkImageCanvasWidgetCmd implements Command {
             break;
         }
 
-        case OPT_PAINT: {
-            if (argv.length != 5) {
+        case OPT_SAVE: {
+           if (argv.length < 3) {
                 throw new TclNumArgsException(interp, 2, argv,
-                    "width height fileName");
+                    "fileName ?owidth oheight?");
             }
-
-            int width = TclInteger.get(interp, argv[2]);
-            int height = TclInteger.get(interp, argv[3]);
-            String fileName = argv[4].toString();
-            swkImageCanvas.paint(width, height, fileName);
+            int owidth = 256;
+            int oheight = 256;
+            if (argv.length > 3) {
+                owidth = TclInteger.get(interp, argv[3]);
+            }
+            if (argv.length > 4) {
+                oheight = TclInteger.get(interp, argv[4]);
+            }
+            OutputStream oStream = null;
+            Object object = null;
+            try {
+               object = ReflectObject.get(interp, argv[2]);
+            } catch (TclException tclE) {
+            }
+            if ((object != null)) {
+                 oStream = (OutputStream) object;
+            } else {
+                String fileName = argv[2].toString();
+                File file = new File(fileName);
+                try {
+                    oStream = new FileOutputStream(file);
+                } catch (FileNotFoundException fE) {
+                    throw new TclException(interp,fE.getMessage());
+                }
+            }
+            if (oStream != null) {
+                swkImageCanvas.save(owidth, oheight, oStream);
+            } else {
+                throw new TclException(interp,"Not an output stream or fle");
+            }
 
             break;
         }
