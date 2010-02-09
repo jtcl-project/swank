@@ -146,7 +146,11 @@ public class ItemText extends SwkShape implements TextInterface {
     }
 
     public boolean hitShape(double x1, double y1) {
-       return shape.contains(x1,y1);
+       boolean result = false;
+       if (shape != null) {
+          result = shape.contains(x1,y1);
+       }
+       return result;
     }
 
     // FIXME getting bounds of multiline text not correct
