@@ -137,7 +137,7 @@ public class PlaceCmd implements Command {
 
         if (result == null) {
             throw new TclException(interp,
-                "window \"" + argv[2].toString() + "\" isn't Placeed");
+                "window \"" + argv[2].toString() + "\" isn't Placed");
         }
 
         interp.setResult(result);
@@ -307,45 +307,37 @@ public class PlaceCmd implements Command {
         String result = null;
         String item = null;
         SwkWidget window = null;
+        String parentName = null;
+        Container parent = null;
 
         String exec(SwkWidget window, String item) {
             this.item = item;
             this.window = window;
+            try {
+                parentName = Widgets.parent(interp, item);
+                parent = Widgets.getContainer(interp, parentName);
+            } catch (TclException tclE) {
+                return null;
+            }
             execOnThread();
 
             return result;
         }
 
         public void run() {
-            String parentName = null;
-            Container parent = null;
+           if (parent != null) {
+                LayoutManager layoutManager = parent.getLayout();
 
-            try {
-                parentName = Widgets.parent(interp, item);
-                parent = Widgets.getContainer(interp, parentName);
-            } catch (TclException tclE) {
-                interp.backgroundError();
+                if (!(layoutManager instanceof PlacerLayout)) {
+                    return;
+                }
 
-                return;
+                PlacerLayout placer = (PlacerLayout) layoutManager;
 
-                //FIXME
-            }
-
-            LayoutManager layoutManager = parent.getLayout();
-
-            if (!(layoutManager instanceof PlacerLayout)) {
-                //throw new TclException(interp,"window \"" + item + "\" isn't Placeed");
-                //FIXME
-                interp.backgroundError();
-
-                return;
-            }
-
-            PlacerLayout placer = (PlacerLayout) layoutManager;
-
-            Object settings = placer.getComponentSettings((Component) window);
-
-            result = settings.toString() + " -in " + parentName;
+                Object settings = placer.getComponentSettings((Component) window);
+    
+                result = settings.toString() + " -in " + parentName;
+           }
         }
     }
 
