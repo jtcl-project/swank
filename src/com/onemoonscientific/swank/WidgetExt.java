@@ -48,7 +48,7 @@ public class WidgetExt extends Extension {
         "jprogressbar", "jscrollpane", "jsplitpane", "jtabbedpane", "jtable",
         "jtree", "jwindow", "label", "labelframe", "listbox", "menu",
         "menubutton", "message", "panedwindow", "radiobutton", "scale",
-        "scrollbar", "text","filedialog","spinbox"
+        "scrollbar", "text","filedialog","spinbox","jtoolbar"
     };
 
     public static String[] getWidgets() {
@@ -102,6 +102,8 @@ public class WidgetExt extends Extension {
             "com.onemoonscientific.swank.SwkJSpinnerCmd");
         Extension.loadOnDemand(interp, "jtabbedpane",
             "com.onemoonscientific.swank.SwkJTabbedPaneCmd");
+        Extension.loadOnDemand(interp, "jtoolbar",
+            "com.onemoonscientific.swank.SwkJToolBarCmd");
         Extension.loadOnDemand(interp, "joptionpane",
             "com.onemoonscientific.swank.SwkJOptionPaneCmd");
         Extension.loadOnDemand(interp, "jtable",
