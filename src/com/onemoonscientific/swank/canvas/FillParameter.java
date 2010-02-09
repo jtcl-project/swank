@@ -38,6 +38,8 @@ public class FillParameter extends CanvasParameter {
 
         if (swkShape instanceof ItemLine) {
             colorVal = swkShape.outline;
+        } else if (swkShape instanceof ItemText) {
+            colorVal = ((ItemText) swkShape).getTextColor();
         } else {
             colorVal = swkShape.fill;
         }
@@ -54,6 +56,8 @@ public class FillParameter extends CanvasParameter {
         if (swkShape != null) {
             if (swkShape instanceof ItemLine) {
                 swkShape.outline = newValue;
+            } else if (swkShape instanceof ItemText) {
+                ((ItemText) swkShape).setTextColor(newValue);
             } else {
                 swkShape.fill = newValue;
             }
