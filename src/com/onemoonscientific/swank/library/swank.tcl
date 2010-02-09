@@ -114,6 +114,7 @@ proc tk_getSaveFile {args} {
     set currentDir [::swank::getLastDir]
     destroy .sk_filebox
     set dialogMode $::swank::defaultFileMode
+    set defaultExtension ""
     set title "Choose File to Save"
     set parent ""
     if {![catch {focus} fWin] && ($fWin ne "")} {
@@ -132,6 +133,9 @@ proc tk_getSaveFile {args} {
             }
             -initialdir {
                  set currentDir $argVal
+            }
+            -defaultextension {
+                 set defaultExtension $argVal
             }
             -title {
                  set title $argVal
@@ -164,6 +168,9 @@ proc tk_getSaveFile {args} {
          }
     }
     set result [.sk_filebox save]
+    if {([file extension $result] eq "") && ($defaultExtension ne "")} {
+       set result ${result}$defaultExtension
+    }
     destroy .sk_filebox
     if {$result != ""} {
         ::swank::setLastDir [file dirname $result]
