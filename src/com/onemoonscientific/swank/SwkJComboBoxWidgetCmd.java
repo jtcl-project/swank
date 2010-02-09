@@ -10,6 +10,7 @@ package com.onemoonscientific.swank;
 import tcl.lang.*;
 
 import java.awt.*;
+import java.awt.image.*;
 
 import java.io.*;
 
@@ -290,6 +291,15 @@ class SwkJComboBoxWidgetCmd implements Command {
                     } else {
                         itemObjects[i] = itemStrings[i];
                     }
+                } else if (itemStrings[i].startsWith("image:") && (itemStrings[i].length() > 7)) {
+                   Object imageObject =  ImageCmd.getImage(itemStrings[i].substring(6));
+                   if ((imageObject != null) && (imageObject instanceof BufferedImage)) {
+                       itemObjects[i] = (BufferedImage) imageObject;
+                   } else if ((imageObject != null) && (imageObject instanceof ImageIcon)) {
+                       itemObjects[i] = (ImageIcon) imageObject;
+                   } else {
+                       itemObjects[i] = itemStrings[i];
+                   }
                 } else {
                     itemObjects[i] = itemStrings[i];
                 }
@@ -302,6 +312,10 @@ class SwkJComboBoxWidgetCmd implements Command {
             for (int i = 0; i < itemObjects.length; i++) {
                 if (itemObjects[i] instanceof SwkWidget) {
                     swkjcombobox.addItem((SwkWidget) itemObjects[i]);
+                } else if (itemObjects[i] instanceof BufferedImage) {
+                    swkjcombobox.addItem(itemObjects[i]);
+                } else if (itemObjects[i] instanceof ImageIcon) {
+                    swkjcombobox.addItem(itemObjects[i]);
                 } else {
                     swkjcombobox.addItem((String) itemObjects[i]);
                 }
