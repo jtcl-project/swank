@@ -307,6 +307,8 @@ public class SwkCanvasWidgetCmd implements Command {
                 (new TransformerSet()).exec(interp, swkImageCanvas, argv);
             } else if (argv[2].toString().equals("get")) {
                 (new TransformerGet()).exec(interp, swkImageCanvas, argv);
+            } else if (argv[2].toString().equals("switch")) {
+                (new TransformerSwitch()).exec(interp, swkImageCanvas, argv);
             } else {
                  throw new TclException(interp,"Invalid transformer subcommand \""+argv[2].toString()+"\"");
             }
@@ -1064,6 +1066,52 @@ public class SwkCanvasWidgetCmd implements Command {
             }
         }
     }
+    class TransformerSwitch extends UpdateOnEventThread {
+        SwkImageCanvas swkcanvas = null;
+        String tagName = null;
+        String transformName = null;
+        boolean couldNotInvert = false;
+
+        void exec(Interp interp, SwkImageCanvas swkcanvas, TclObject[] argv)
+            throws TclException {
+            if (argv.length != 5) {
+                throw new TclNumArgsException(interp, 2, argv, "tag transform");
+            }
+            tagName = argv[3].toString();
+            transformName = argv[4].toString();
+            this.swkcanvas = swkcanvas;
+            execOnThread();
+            if (couldNotInvert) {
+                 throw new TclException(interp,"Couldn't do inverse transform for shape  \""+tagName+"\"");
+            }
+            swkcanvas.repaint();
+        }
+
+        public void run() {
+               try {
+               SwkShape swkShape = (SwkShape) swkcanvas.getShape(tagName);
+               if (swkShape != null) {
+                    AffineTransform shpTrans = swkShape.getTransform();
+                    double[] coords = swkShape.coords();
+                    if (shpTrans != null) {
+                        shpTrans.transform(coords,0,coords,0,coords.length/2);
+                    }
+                    swkcanvas.setTransformer(transformName, swkShape);
+                    shpTrans = swkShape.getTransform();
+                    if (shpTrans != null) {
+                             try {
+                                 shpTrans.inverseTransform(coords,0,coords,0,coords.length/2);
+                             } catch (NoninvertibleTransformException niTE) {
+                                 couldNotInvert = true;
+                             }
+                    }
+                    swkShape.coords(swkcanvas, coords);
+
+                }
+            } catch (SwkException swkE) {
+            }
+            }
+    }
 
     class HSelect extends GetValueOnEventThread {
         SwkImageCanvas swkcanvas = null;
@@ -1719,18 +1767,11 @@ public class SwkCanvasWidgetCmd implements Command {
         }
 
         void getRectShapes() {
-            Rectangle2D bounds = null;
             Enumeration e = swkcanvas.swkShapes.elements();
 
             while (e.hasMoreElements()) {
                 swkShape = (SwkShape) e.nextElement();
-
-                if (swkShape.shape != null) {
-                    bounds = swkShape.shape.getBounds2D();
-                } else {
-                    bounds = null;
-                }
-
+                Rectangle2D bounds =  swkcanvas.getShapeBounds(swkShape);
                 if (bounds != null) {
                     if (((mode == ENCLOSED) && rect.contains(bounds)) ||
                             ((mode == OVERLAPPING) && rect.intersects(bounds))) {
