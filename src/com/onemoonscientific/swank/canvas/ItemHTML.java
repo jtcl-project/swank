@@ -56,7 +56,7 @@ import javax.swing.*;
 public class ItemHTML extends SwkShape implements TextInterface {
     static CanvasParameter[] parameters = {
         new TextParameter(), new AnchorParameter(), new FontParameter(),
-        new WidthParameter(), new FillParameter(), new TagsParameter(),
+        new WidthParameter(), new FillParameter(), new GradientParameter(), new TagsParameter(),
         new TransformerParameter(), new OutlineParameter(),new RotateParameter(),new NodeParameter(),
     };
     static Map parameterMap = new TreeMap();
@@ -97,6 +97,16 @@ public class ItemHTML extends SwkShape implements TextInterface {
     }
    public void applyCoordinates() {
         checkCoordinates(storeCoords);
+        AffineTransform aT = new AffineTransform();
+        /*
+aT.translate(storeCoords[0], storeCoords[1]);
+        aT.shear(xShear, yShear);
+        aT.translate(-storeCoords[0], -storeCoords[1]);
+        aT.rotate(rotate, ((storeCoords[0] + storeCoords[2]) / 2.0),
+            ((storeCoords[1] + storeCoords[3]) / 2.0));
+*/
+        aT.translate(-storeCoords[0], -storeCoords[1]);
+        genGradient(aT);
         rect2D.setFrame(storeCoords[0], storeCoords[1],
                 storeCoords[2] - storeCoords[0], storeCoords[3] - storeCoords[1]);
     }
@@ -185,6 +195,14 @@ public class ItemHTML extends SwkShape implements TextInterface {
     public void setTextColor(Color newValue) {
         textPar = TextParameters.setTextColor(textPar, newValue);
     }
+    public boolean hitShape(double x1, double y1) {
+       boolean result = false;
+       if (shape != null) {
+          result = shape.contains(x1,y1);
+       }
+       return result;
+    }
+
     public void paint(Graphics2D g2, FontRenderContext fRC) {
         if (this.getFont() != null) {
             g2.setFont(this.getFont());
@@ -201,8 +219,14 @@ public class ItemHTML extends SwkShape implements TextInterface {
         jLabel.setSize((int) rect2D.getWidth(),(int) rect2D.getHeight());
         g2.translate((int) rect2D.getX(), (int) rect2D.getY());
 
-        if (fill != null) {
-            g2.setColor(fill);
+        if (getTexturePaint() != null) {
+            g2.setPaint(getTexturePaint());
+            g2.fillRect(0,0,(int) rect2D.getWidth(),(int) rect2D.getHeight());
+        } else if (getFillGradient() != null) {
+            g2.setPaint(getFillGradient());
+            g2.fillRect(0,0,(int) rect2D.getWidth(),(int) rect2D.getHeight());
+        } else if (getFill() != null) {
+            g2.setPaint(getFill());
             g2.fillRect(0,0,(int) rect2D.getWidth(),(int) rect2D.getHeight());
         }
 
