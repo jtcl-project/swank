@@ -44,9 +44,7 @@ public class GradientParameter extends CanvasParameter {
             throw new TclException(interp, "shape doesn't exist");
         }
 
-        // FIXME  need parseGradient
-        // return (TclString.newInstance(SwankUtil.parseGradient(interp, swkShape.fillGradient)));
-        return (TclString.newInstance(""));
+        return (TclString.newInstance(SwankUtil.parseGradient(swkShape.fillGradient)));
     }
 
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
