@@ -12,6 +12,7 @@ dist
 nbproject
 mysync2
 configs
+bric
 src/com/onemoonscientific/swank/SwkFileDialog.java
 src/com/onemoonscientific/swank/SwkFileDialogCmd.java
 src/com/onemoonscientific/swank/SwkJButton.java
