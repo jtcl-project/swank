@@ -302,6 +302,15 @@ public class ItemLine extends SwkShape {
             } else {
                 lastArrowPath = null;
             }
+            if (shapeTransform != null) {
+                // we need to put the now shortened coordinates back into the original transform
+                // if we can't generate the inverse transform, we just use the original, unshortened coordinates
+                try {
+                    shapeTransform.inverseTransform(tempCoords, 0, tempCoords, 0, tempCoords.length / 2);
+                } catch (java.awt.geom.NoninvertibleTransformException niTE) {
+                    System.arraycopy(storeCoords, 0, tempCoords, 0, storeCoords.length);
+                }
+            }
 
             if ((smooth == null) || smooth.equals("")) {
                 genPath(tempCoords);
@@ -566,25 +575,27 @@ public class ItemLine extends SwkShape {
 
     public void drawHandles(Graphics2D g2) {
         if (shape != null) {
-            int x1 = (int) storeCoords[0];
-            int y1 = (int) storeCoords[1];
-            int x2 = (int) storeCoords[2];
-            int y2 = (int) storeCoords[3];
-            drawHandle(g2, x1, y1);
-            drawHandle(g2, x2, y2);
+            double[] xy = {storeCoords[0],storeCoords[1],storeCoords[2],storeCoords[3]};
+            AffineTransform shapeTransform = getTransform();
+            if (shapeTransform != null) {
+                shapeTransform.transform(xy,0,xy,0,xy.length/2);
+            }
+            drawHandle(g2, (int) xy[0],(int) xy[1]);
+            drawHandle(g2, (int) xy[2],(int) xy[3]);
         }
     }
 
     public int hitHandles(double testX, double testY) {
         int hitIndex = -1;
         if (shape != null) {
-            int x1 = (int) storeCoords[0];
-            int y1 = (int) storeCoords[1];
-            int x2 = (int) storeCoords[2];
-            int y2 = (int) storeCoords[3];
-            if (hitHandle(x1, y1, testX, testY)) {
+            double[] xy = {storeCoords[0],storeCoords[1],storeCoords[2],storeCoords[3]};
+            AffineTransform shapeTransform = getTransform();
+            if (shapeTransform != null) {
+                shapeTransform.transform(xy,0,xy,0,xy.length/2);
+            }
+            if (hitHandle((int) xy[0],(int) xy[1], testX, testY)) {
                 hitIndex = 0;
-            } else if (hitHandle(x2, y2, testX, testY)) {
+            } else if (hitHandle((int) xy[2],(int) xy[3], testX, testY)) {
                 hitIndex = 1;
             }
         }
