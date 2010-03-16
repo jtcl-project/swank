@@ -61,6 +61,9 @@ public class SwkBinding implements Comparable {
     public static final int MOVED = 14;
     public static final int STATECHANGED = 15;
     public static final int SELECTIONCHANGED = 16;
+    public static final int ACTIVATION = 17;
+    public static final int ACTIVATED = 18;
+    public static final int DEACTIVATED = 19;
     public boolean virtual = false;
     public int type = 0;
     public int subtype = 0;
