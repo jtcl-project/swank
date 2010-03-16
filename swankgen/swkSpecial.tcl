@@ -1581,6 +1581,7 @@ proc swkMakeSpecial {widget widgetVar} {
     if {[lsearch $widgets $widget] >= 0} {
         append specialVars {
             String closeCommand="";
+            SwkWindowListener swkWindowListener;
         }
         append specialInits {
             this.setVisible(false);
@@ -1611,6 +1612,12 @@ proc swkMakeSpecial {widget widgetVar} {
         append specialMethods {
              public void setCloseCommand(String command) {
                  closeCommand = command;
+             }
+             public void setWindowListener(final SwkWindowListener windowListener) {
+                 this.swkWindowListener = windowListener;
+             }
+             public SwkWindowListener getWindowListener() {
+                 return swkWindowListener;
              }
         }
         set specialVisible {
