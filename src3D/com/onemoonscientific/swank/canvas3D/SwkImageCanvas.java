@@ -197,12 +197,11 @@ public class SwkImageCanvas implements SwkCanvasType {
 
         Material material = new Material();
 
-        /* material.setAmbientColor(.0f,1.0f,0.0f);
-        material.setEmissiveColor(0.0f,0.0f,0.0f);
-        material.setDiffuseColor(0.0f, 0.0f, 0.0f);
-        material.setSpecularColor(0.0f,0.0f,0.0f);
-        material.setShininess(30.0f);
-         */
+        material.setAmbientColor(.0f,1.0f,0.0f);
+        material.setEmissiveColor(0.0f,1.0f,0.0f);
+        material.setDiffuseColor(0.0f, 1.0f, 0.0f);
+        material.setSpecularColor(0.0f,1.0f,0.0f);
+        material.setShininess(100.0f);
         defaultAppearance.setMaterial(material);
 
         //ColoringAttributes colorAttr = new ColoringAttributes(0.0f,0.0f,1.0f,ColoringAttributes.NICEST);
@@ -416,6 +415,7 @@ public class SwkImageCanvas implements SwkCanvasType {
         if (shape.tagNames != null) {
             setTags(shape.tagNames, shape);
         }
+        addChild(shape.bG);
     }
 
     public SwkShape getShape(String arg) throws SwkException {

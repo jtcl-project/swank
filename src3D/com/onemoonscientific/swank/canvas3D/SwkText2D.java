@@ -18,7 +18,7 @@ public class SwkText2D extends SwkShape {
     String text = "duck";
     Point3d a = new Point3d();
 
-    SwkText2D(SwkCanvas canvas) {
+    SwkText2D(SwkImageCanvas canvas) {
         super(canvas);
     }
 
@@ -38,7 +38,7 @@ public class SwkText2D extends SwkShape {
         interp.setResult(list);
     }
 
-    public void coords(Interp interp, SwkCanvas canvas, TclObject[] argv,
+    public void coords(Interp interp, SwkImageCanvas canvas, TclObject[] argv,
         int start) throws TclException {
         a.x = TclDouble.get(interp, argv[start]);
         a.y = TclDouble.get(interp, argv[start + 1]);
@@ -48,11 +48,10 @@ public class SwkText2D extends SwkShape {
     void genShape() {
         Transform3D t3D = new Transform3D();
         t3D.setTranslation(new Vector3d(a.x, a.y, a.z));
-
         TransformGroup tG = new TransformGroup(t3D);
-        System.out.println("create text2d");
+        System.out.println("create text2d "+a.x+" "+a.y+" "+a.z);
         Shape3D shape = new Text2D(text, new Color3f(0.1f, 0.95f, 0.1f), "SansSerif",
-                240, 0);
+                540, 0);
         System.out.println("created text2d " + shape.toString());
         tG.addChild(shape);
         bG.removeAllChildren();
@@ -77,7 +76,6 @@ public class SwkText2D extends SwkShape {
             } else if (argv[i].toString().startsWith("-tag")) {
              // fixme   canvas.setTags(interp, argv[i + 1], (SwkShape) this);
             }
-
             doGen = true;
         }
     }

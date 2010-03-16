@@ -53,7 +53,7 @@ public class SwkSphere extends SwkShape {
     float radius = 1.0f;
     Point3d a = new Point3d();
 
-    SwkSphere(SwkCanvas canvas) {
+    SwkSphere(SwkImageCanvas canvas) {
         super(canvas);
     }
 
@@ -73,20 +73,21 @@ public class SwkSphere extends SwkShape {
         interp.setResult(list);
     }
 
-    public void coords(Interp interp, SwkCanvas canvas, TclObject[] argv,
+    public void coords(Interp interp, SwkImageCanvas canvas, TclObject[] argv,
         int start) throws TclException {
         a.x = TclDouble.get(interp, argv[start]);
         a.y = TclDouble.get(interp, argv[start + 1]);
         a.z = TclDouble.get(interp, argv[start + 2]);
     }
-
+    void makePrimitive() {
+        primitive = new Sphere(radius, Primitive.GENERATE_NORMALS, nDivisions,appearance);
+    }
     void genShape() {
         Transform3D t3D = new Transform3D();
         t3D.setTranslation(new Vector3d(a.x, a.y, a.z));
 
         TransformGroup tG = new TransformGroup(t3D);
-        primitive = new Sphere(radius, Primitive.GENERATE_NORMALS, nDivisions,
-                appearance);
+        makePrimitive();
         tG.addChild(primitive);
         bG.removeAllChildren();
         bG.addChild(tG);
@@ -113,8 +114,9 @@ public class SwkSphere extends SwkShape {
             } else if (argv[i].toString().startsWith("-tag")) {
               // fixme  canvas.setTags(interp, argv[i + 1], (SwkShape) this);
             }
-
-            doGen = true;
+            if (doGen) {
+                makePrimitive();
+            }
         }
     }
 

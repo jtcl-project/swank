@@ -387,9 +387,67 @@ public class SwkCanvasWidgetCmd implements Command {
             (new CoordsSet()).exec(interp, swkcanvas, argv);
         }
     }
+    void create(final Interp interp, final SwkImageCanvas swkcanvas, final TclObject[] argv) throws TclException {
+        final SwkShape swkShape;
+           if (argv[2].toString().equals("sphere")) {
+                if (argv.length < 6) {
+                    throw new TclNumArgsException(interp, 3, argv, "option");
+                }
 
-    void create(final Interp interp, final SwkImageCanvas swkcanvas,
-            final TclObject[] argv) throws TclException {
+                if (((argv.length - 6) % 2) != 0) {
+                    throw new TclNumArgsException(interp, 3, argv, "option");
+                }
+
+                SwkSphere swkSphere = new SwkSphere(swkcanvas);
+                swkSphere.coords(interp, swkcanvas, argv, 3);
+                swkSphere.config(interp, argv, 6);
+                swkSphere.genShape();
+                addShape(swkcanvas,swkSphere);
+                swkcanvas.repaint();
+                interp.setResult(swkSphere.id);
+            } else if ("cylinder".startsWith(argv[2].toString())) {
+                if (argv.length < 9) {
+                    throw new TclNumArgsException(interp, 3, argv, "option");
+                }
+
+                if (((argv.length - 9) % 2) != 0) {
+                    throw new TclNumArgsException(interp, 3, argv, "option");
+                }
+
+                SwkCylinder swkCylinder = new SwkCylinder(swkcanvas);
+                swkCylinder.coords(interp, swkcanvas, argv, 3);
+                swkCylinder.config(interp, argv, 9);
+                swkCylinder.genShape();
+                addShape(swkcanvas,swkCylinder);
+                swkcanvas.repaint();
+                interp.setResult(swkCylinder.id);
+           } else if ("text2d".startsWith(argv[2].toString())) {
+                if (argv.length < 6) {
+                    throw new TclNumArgsException(interp, 3, argv, "option");
+                }
+
+                if (((argv.length - 6) % 2) != 0) {
+                    throw new TclNumArgsException(interp, 3, argv, "option");
+                }
+
+                System.out.println("create swkText2D");
+
+                SwkText2D swkText2D = new SwkText2D(swkcanvas);
+                System.out.println("created swkText2D " + swkText2D.toString());
+                swkText2D.coords(interp, swkcanvas, argv, 3);
+                System.out.println("coords");
+                swkText2D.config(interp, argv, 6);
+                System.out.println("configed");
+                swkText2D.genShape();
+                System.out.println("gened");
+                addShape(swkcanvas,swkText2D);
+                swkcanvas.repaint();
+                interp.setResult(swkText2D.id);
+
+            }
+    }
+
+    void createOld(final Interp interp, final SwkImageCanvas swkcanvas, final TclObject[] argv) throws TclException {
         final SwkShape swkShape;
         Vector shapeList = null;
 
@@ -421,6 +479,7 @@ public class SwkCanvasWidgetCmd implements Command {
         }
 
         int id = swkcanvas.addSpheres(coords, colors, radii);
+        id = swkcanvas.addLines2(coords, colors, 0,n*3);
 
         if (id >= 0) {
             interp.setResult(id);

@@ -54,7 +54,7 @@ public class SwkCylinder extends SwkShape {
     Point3d a = new Point3d(0.0, 0.0, 0.0);
     Point3d b = new Point3d(0.0, 1.0, 0.0);
 
-    SwkCylinder(SwkCanvas canvas) {
+    SwkCylinder(SwkImageCanvas canvas) {
         super(canvas);
     }
 
@@ -74,7 +74,7 @@ public class SwkCylinder extends SwkShape {
         interp.setResult(list);
     }
 
-    public void coords(Interp interp, SwkCanvas canvas, TclObject[] argv,
+    public void coords(Interp interp, SwkImageCanvas canvas, TclObject[] argv,
         int start) throws TclException {
         if ((argv.length - start) >= 6) {
             System.out.println("get coords");
@@ -86,14 +86,16 @@ public class SwkCylinder extends SwkShape {
             b.z = TclDouble.get(interp, argv[start + 5]);
         }
     }
+    void makePrimitive() {
+        float length = (float) a.distance(b);
+        primitive = new Cylinder(radius, length, Primitive.GENERATE_NORMALS, xDivisions, 1, appearance);
+   }
 
     void genShape() {
         TransformGroup tG = makeTransform(a, b);
-        float length = (float) a.distance(b);
 
         // primitive = new Cylinder(radius,length,0,xDivisions,1,canvas.defaultAppearance);
-        primitive = new Cylinder(radius, length, Primitive.GENERATE_NORMALS,
-                xDivisions, 1, appearance);
+        makePrimitive();
         tG.addChild(primitive);
         bG.removeAllChildren();
         bG.addChild(tG);
@@ -120,8 +122,10 @@ public class SwkCylinder extends SwkShape {
             } else if (argv[i].toString().startsWith("-tag")) {
                // fixme canvas.setTags(interp, argv[i + 1], (SwkShape) this);
             }
+            if (doGen) {
+                 makePrimitive();
+            }
 
-            doGen = true;
         }
     }
 

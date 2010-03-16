@@ -47,7 +47,7 @@ public abstract class SwkShape implements SwkShape3DConfig {
     NvBranchGroup bG = null;
     SwkShape previous = null;
     SwkShape next = null;
-    SwkCanvas canvas = null;
+    SwkImageCanvas canvas = null;
     Appearance appearance = null;
     Hashtable tags = new Hashtable();
     String[] tagNames = null;
@@ -58,20 +58,20 @@ public abstract class SwkShape implements SwkShape3DConfig {
         bG = new NvBranchGroup();
     }
 
-    public SwkShape(Primitive primitive, SwkCanvas canvas) {
+    public SwkShape(Primitive primitive, SwkImageCanvas canvas) {
         this.primitive = primitive;
         this.canvas = canvas;
         appearance = canvas.defaultAppearance;
         bG = new NvBranchGroup();
     }
 
-    public SwkShape(SwkCanvas canvas) {
+    public SwkShape(SwkImageCanvas canvas) {
         this.canvas = canvas;
         appearance = canvas.defaultAppearance;
         bG = new NvBranchGroup();
     }
 
-    public void setCanvas(SwkCanvas canvas) {
+    public void setCanvas(SwkImageCanvas canvas) {
         this.canvas = canvas;
         appearance = this.canvas.defaultAppearance;
     }
@@ -88,7 +88,7 @@ public abstract class SwkShape implements SwkShape3DConfig {
         throws TclException {
     }
 
-    public void coords(Interp interp, SwkCanvas canvas, TclObject[] argv,
+    public void coords(Interp interp, SwkImageCanvas canvas, TclObject[] argv,
         int start) throws TclException {
     }
 

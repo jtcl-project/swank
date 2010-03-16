@@ -33,6 +33,6 @@ public interface SwkShape3DConfig {
     public void config(Interp interp, TclObject[] argv, int start)
         throws TclException;
 
-    public void coords(Interp interp, SwkCanvas canvas, TclObject[] argv,
+    public void coords(Interp interp, SwkImageCanvas canvas, TclObject[] argv,
         int start) throws TclException;
 }
