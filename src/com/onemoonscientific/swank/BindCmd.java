@@ -50,6 +50,9 @@ public class BindCmd implements Command {
     // This Hashtable stores class level configure bindings.
     public static Hashtable configureTable = new Hashtable();
 
+    // This Hashtable stores class level activation bindings.
+    public static Hashtable activationTable = new Hashtable();
+
     // This Hashtable stores class level key bindings.
     public static Hashtable keyTable = new Hashtable();
 
@@ -113,6 +116,8 @@ public class BindCmd implements Command {
                 currentTable = focusTable;
             } else if (binding.type == SwkBinding.COMPONENT) {
                 currentTable = configureTable;
+            } else if (binding.type == SwkBinding.ACTIVATION) {
+                currentTable = activationTable;
             } else if (binding.type == SwkBinding.KEY) {
                 currentTable = keyTable;
             } else if (binding.type == SwkBinding.MOUSE) {
@@ -179,6 +184,11 @@ public class BindCmd implements Command {
 
         return bindingVector;
     }
+    public static ArrayList<SwkBinding> getActivationBindings(String tag) {
+        ArrayList<SwkBinding> bindingVector = (ArrayList<SwkBinding>) activationTable.get(tag);
+
+        return bindingVector;
+    }
 
     public static ArrayList<SwkBinding> getVirtualBindings(String tag) {
         ArrayList<SwkBinding> bindingVector = (ArrayList<SwkBinding>) virtualTable.get(tag);
@@ -199,6 +209,17 @@ public class BindCmd implements Command {
                     (Component) swkWidget);
             ((Component) swkWidget).addComponentListener(componentListener);
             swkWidget.setComponentListener(componentListener);
+        }
+// fix me, Java only uses activation on toplevel windows, but Tk/Swank should support propagating activation event to 
+// all contained widgets
+        if (swkWidget instanceof SwkJFrame) {
+            if (((SwkJFrame) swkWidget).getWindowListener() == null) {
+                SwkWindowListener windowListener = new SwkWindowListener(interp,
+                    (SwkJFrame) swkWidget);
+                ((SwkJFrame) swkWidget).addWindowStateListener(windowListener);
+                ((SwkJFrame) swkWidget).addWindowListener(windowListener);
+                ((SwkJFrame) swkWidget).setWindowListener(windowListener);
+            }
         }
 
         if (swkWidget.getMouseListener() == null) {
@@ -297,6 +318,22 @@ public class BindCmd implements Command {
 
                 swkWidget.getComponentListener().setBinding(binding);
             }
+       } else if (binding.type == SwkBinding.ACTIVATION) {
+            if (swkWidget == null) {
+                setClassBinding(bindingVector,binding);
+            } else {
+                if (swkWidget instanceof SwkJFrame) {
+                     if (((SwkJFrame) swkWidget).getWindowListener() == null) {
+                         SwkWindowListener windowListener = new SwkWindowListener(interp,
+                             (SwkJFrame) swkWidget);
+                         ((SwkJFrame) swkWidget).addWindowStateListener(windowListener);
+                         ((SwkJFrame) swkWidget).addWindowListener(windowListener);
+                         ((SwkJFrame) swkWidget).setWindowListener(windowListener);
+                     }
+                     ((SwkJFrame) swkWidget).getWindowListener().setBinding(binding);
+                 }
+            }
+ 
         } else if (binding.type == SwkBinding.STATECHANGED) {
             if (swkWidget == null) {
                 setClassBinding(bindingVector,binding);
@@ -413,7 +450,6 @@ public class BindCmd implements Command {
     public static void applyBindings(Interp interp, SwkWidget swkWidget,
         String className) throws TclException {
         int i;
-
         if (swkWidget == null) {
             throw new TclException(interp, "bad window path name ");
         }
@@ -453,6 +489,16 @@ public class BindCmd implements Command {
                     swkWidget, bindingVector);
             }
         }
+       bindingVector = (ArrayList<SwkBinding>) BindCmd.activationTable.get(className);
+
+        if (bindingVector != null) {
+            for (i = 0; i < bindingVector.size(); i++) {
+
+                setupBinding(interp, (SwkBinding) bindingVector.get(i),
+                    swkWidget, bindingVector);
+            }
+        }
+
     }
 
     /** Substitutes values into event fields and then executes command.
