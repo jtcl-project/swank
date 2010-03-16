@@ -42,16 +42,18 @@ import tcl.lang.*;
 import java.util.*;
 
 
-public abstract class XYData implements XYDataset, IntervalXYDataset, TableXYDataset  {
+public abstract class XYData implements XYDataset, IntervalXYDataset {
     static HashMap datasetMap = new HashMap();
     static int id=0;
     String name = "";
     DatasetGroup dGroup = new DatasetGroup();
-    ArrayList<Double> xValues = null;
+    ArrayList xSeries = new ArrayList();
     ArrayList ySeries = new ArrayList();
     ArrayList ySeriesNames = new ArrayList();
-    double deltaX = 0.9;
-    double deltaY = 0.15;
+//    double deltaX = 0.9;
+ //   double deltaY = 0.15;
+    double deltaX = 0.0;
+    double deltaY = 0.0;
     public XYData() {
          name  = "xyData"+id;
          datasetMap.put(name,this);
@@ -71,8 +73,17 @@ public abstract class XYData implements XYDataset, IntervalXYDataset, TableXYDat
          return name;
     }
 
+    public void setXValues(ArrayList<Double> xValues,int series) {
+        for (int i=xSeries.size();i<=series;i++) {
+             xSeries.add(null);
+        }
+        xSeries.set(series,xValues);
+    }
+
+
     public void setXValues(ArrayList<Double> xValues) {
-        this.xValues = xValues;
+        xSeries.clear();
+        xSeries.add(xValues);
     }
 
     public void setYValues(ArrayList<Double> yValues,int series,String seriesName) {

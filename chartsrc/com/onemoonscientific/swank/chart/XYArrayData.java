@@ -46,9 +46,6 @@ public class XYArrayData extends XYData   {
     static int id=0;
     String name = "";
     DatasetGroup dGroup = new DatasetGroup();
-    ArrayList<Double> xValues = null;
-    ArrayList ySeries = new ArrayList();
-    ArrayList ySeriesNames = new ArrayList();
     double deltaX = 0.9;
     double deltaY = 0.15;
     public XYArrayData() {
@@ -70,26 +67,6 @@ public class XYArrayData extends XYData   {
          return name;
     }
 
-    public void setXValues(ArrayList<Double> xValues) {
-        this.xValues = xValues;
-    }
-
-    public void setYValues(ArrayList<Double> yValues,int series,String seriesName) {
-        for (int i=ySeries.size();i<=series;i++) {
-             ySeries.add(null);
-             ySeriesNames.add("");
-        }
-        ySeries.set(series,yValues);
-        ySeriesNames.set(series,seriesName);
-    }
-
-    public void setYValues(ArrayList<Double> yValues) {
-        ySeries.clear();
-        ySeries.add(yValues);
-        ySeriesNames.clear();
-        ySeriesNames.add("");
-    }
-    
 
     /**
      * Returns the dataset group.
@@ -206,30 +183,18 @@ public class XYArrayData extends XYData   {
      * @return the x-value.
      */
     public double getXValue(int series, int item) {
-        ArrayList<Double> yData = (ArrayList<Double>) ySeries.get(series);
-        if (yData != null)  {
-            double x = 0.0;
-            if (xValues == null) {
-                  x = item;
-            } else {
-                 x = xValues.get(item);
-            }
-            return x;
+        ArrayList<Double> xData = (ArrayList<Double>) xSeries.get(series);
+        if (xData != null)  {
+            return xData.get(item);
         } else {
             return 0.0;
         }
     }
 
     public Number getX(int series, int item) {
-        ArrayList<Double> yData = (ArrayList<Double>) ySeries.get(series);
-        if (yData != null)  {
-            double x = 0.0;
-            if (xValues == null) {
-                  x = item;
-            } else {
-                 x = xValues.get(item);
-            }
-            return new Double(x);
+        ArrayList<Double> xData = (ArrayList<Double>) xSeries.get(series);
+        if (xData != null)  {
+            return new Double(xData.get(item));
         } else {
             return null;
         }
