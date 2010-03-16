@@ -44,7 +44,7 @@ import java.util.*;
 import java.awt.EventQueue;
 
 
-public class XYTableGroupData extends XYData {
+public class XYTableGroupData extends XYData implements TableXYDataset{
     int xColumn = -1;
     int gColumn = -1;
     int yColumn = -1;

@@ -44,7 +44,7 @@ import tcl.lang.*;
 import java.util.*;
 
 
-public class XYTableData extends XYData {
+public class XYTableData extends XYData  implements TableXYDataset {
     int xColumn = -1;
     int[] yColumns = new int[0];;
     SwkTableModel tableModel = null;
