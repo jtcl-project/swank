@@ -32,7 +32,6 @@ import tcl.lang.*;
 public interface SwkShape3DConfig {
     public void config(Interp interp, TclObject[] argv, int start)
         throws TclException;
-
-    public void coords(Interp interp, SwkImageCanvas canvas, TclObject[] argv,
-        int start) throws TclException;
+    public void coords(SwkImageCanvas canvas, double[] coords)
+        throws SwkException;
 }

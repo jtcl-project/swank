@@ -8,10 +8,10 @@ import tcl.lang.*;
 
 import java.lang.*;
 
-
 import javax.media.j3d.*;
 
 import javax.vecmath.*;
+import com.onemoonscientific.swank.*;
 
 
 public class SwkText2D extends SwkShape {
@@ -22,29 +22,13 @@ public class SwkText2D extends SwkShape {
         super(canvas);
     }
 
-    public void coords(Interp interp) throws TclException {
-        TclObject list = TclList.newInstance();
-
-        /*
-        double x1 = ((Arc2D) shape).getX();
-        double y1 = ((Arc2D) shape).getY();
-        double width = ((Arc2D) shape).getWidth();
-        double height = ((Arc2D) shape).getHeight();
-        TclList.append(interp, list, TclDouble.newInstance(x1));
-        TclList.append(interp, list, TclDouble.newInstance(y1));
-        TclList.append(interp, list, TclDouble.newInstance(x1 + width));
-        TclList.append(interp, list, TclDouble.newInstance(y1 + height));
-         */
-        interp.setResult(list);
+   public void coords(SwkImageCanvas canvas, double[] coords)
+            throws SwkException {
+        a.x = coords[0];
+        a.y = coords[1];
+        a.z = coords[2];
+        genShape();
     }
-
-    public void coords(Interp interp, SwkImageCanvas canvas, TclObject[] argv,
-        int start) throws TclException {
-        a.x = TclDouble.get(interp, argv[start]);
-        a.y = TclDouble.get(interp, argv[start + 1]);
-        a.z = TclDouble.get(interp, argv[start + 2]);
-    }
-
     void genShape() {
         Transform3D t3D = new Transform3D();
         t3D.setTranslation(new Vector3d(a.x, a.y, a.z));

@@ -38,6 +38,8 @@ import java.util.*;
 
 import javax.media.j3d.*;
 
+import com.onemoonscientific.swank.SwkException;
+
 
 
 
@@ -88,11 +90,7 @@ public abstract class SwkShape implements SwkShape3DConfig {
         throws TclException {
     }
 
-    public void coords(Interp interp, SwkImageCanvas canvas, TclObject[] argv,
-        int start) throws TclException {
-    }
-
-    public void coords(Interp interp) throws TclException {
+    public void coords(SwkImageCanvas canvas, double[] coords) throws SwkException {
     }
 
     public TclObject itemGet(Interp interp, TclObject argv)
@@ -179,6 +177,55 @@ public abstract class SwkShape implements SwkShape3DConfig {
     public String getType() {
        return "";
     }
+   public void configShape(Interp interp, SwkImageCanvas swkCanvas,
+            TclObject[] argv, int start) throws TclException {
+        Map parameterMap = getParameterMap();
+        CanvasParameter[] setPars = new CanvasParameter[(argv.length - start) / 2];
+
+        boolean gotPar = false;
+
+        for (int i = start, j = 0; i < argv.length; i += 2, j++) {
+            CanvasParameter cPar = null;
+
+            cPar = getPar(argv[i].toString());
+
+            if (cPar == null) {
+                String parName = "com.onemoonscientific.swank.canvas3D." +
+                        argv[i].toString().substring(1, 2).toUpperCase() +
+                        argv[i].toString().substring(2).toLowerCase() +
+                        "Parameter";
+                Class newClass = null;
+
+                try {
+                    newClass = Class.forName(parName);
+                } catch (ClassNotFoundException cnfE) {
+                    //  throw new TclException(interp, "class "+parName+" doesn't exist "+cnfE.toString());
+                    continue;
+                }
+
+                try {
+                    cPar = (CanvasParameter) newClass.newInstance();
+                } catch (InstantiationException iE) {
+                    throw new TclException(interp,
+                            "can't instantiate " + parName);
+                } catch (IllegalAccessException iaE) {
+                    throw new TclException(interp,
+                            "can't instantiate " + parName);
+                }
+            }
+
+            if (cPar != null) {
+                setPars[j] = (CanvasParameter) cPar.clone();
+                setPars[j].setValue(interp, swkCanvas, argv[i + 1]);
+                gotPar = true;
+            }
+        }
+
+        if (gotPar) {
+            (new SwkShapeRunnable(swkCanvas, this, setPars)).exec();
+        }
+    }
+
    public static void config(Interp interp, SwkImageCanvas swkCanvas,
         TclObject[] argv, int start) throws TclException {
         // Map parameterMap = getParameterMap();
@@ -194,7 +241,7 @@ public abstract class SwkShape implements SwkShape3DConfig {
            //  Mostly not used as custom pars are added automatically to stdPars
 
             if (cPar == null) {
-                String parName = "com.onemoonscientific.swank.canvas." +
+                String parName = "com.onemoonscientific.swank.canvas3D." +
                     argv[i].toString().substring(1, 2).toUpperCase() +
                     argv[i].toString().substring(2) + "Parameter";
                 Class newClass = null;

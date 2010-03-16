@@ -58,34 +58,18 @@ public class SwkCylinder extends SwkShape {
         super(canvas);
     }
 
-    public void coords(Interp interp) throws TclException {
-        TclObject list = TclList.newInstance();
-
-        /*
-        double x1 = ((Arc2D) shape).getX();
-        double y1 = ((Arc2D) shape).getY();
-        double width = ((Arc2D) shape).getWidth();
-        double height = ((Arc2D) shape).getHeight();
-        TclList.append(interp, list, TclDouble.newInstance(x1));
-        TclList.append(interp, list, TclDouble.newInstance(y1));
-        TclList.append(interp, list, TclDouble.newInstance(x1 + width));
-        TclList.append(interp, list, TclDouble.newInstance(y1 + height));
-         */
-        interp.setResult(list);
+   public void coords(SwkImageCanvas canvas, double[] coords)
+            throws SwkException {
+        a.x = coords[0];
+        a.y = coords[1];
+        a.z = coords[2];
+        b.x = coords[3];
+        b.y = coords[4];
+        b.z = coords[5];
+        genShape();
     }
 
-    public void coords(Interp interp, SwkImageCanvas canvas, TclObject[] argv,
-        int start) throws TclException {
-        if ((argv.length - start) >= 6) {
-            System.out.println("get coords");
-            a.x = TclDouble.get(interp, argv[start]);
-            a.y = TclDouble.get(interp, argv[start + 1]);
-            a.z = TclDouble.get(interp, argv[start + 2]);
-            b.x = TclDouble.get(interp, argv[start + 3]);
-            b.y = TclDouble.get(interp, argv[start + 4]);
-            b.z = TclDouble.get(interp, argv[start + 5]);
-        }
-    }
+
     void makePrimitive() {
         float length = (float) a.distance(b);
         primitive = new Cylinder(radius, length, Primitive.GENERATE_NORMALS, xDivisions, 1, appearance);

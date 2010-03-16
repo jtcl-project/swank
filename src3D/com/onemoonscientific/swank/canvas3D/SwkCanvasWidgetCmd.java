@@ -389,7 +389,22 @@ public class SwkCanvasWidgetCmd implements Command {
     }
     void create(final Interp interp, final SwkImageCanvas swkcanvas, final TclObject[] argv) throws TclException {
         final SwkShape swkShape;
-           if (argv[2].toString().equals("sphere")) {
+        Vector shapeList = null;
+
+        if (argv.length < 3) {
+            throw new TclNumArgsException(interp, 2, argv,
+                "type coords ?arg arg ...?");
+        }
+
+        if (argv.length < 4) {
+            throw new TclNumArgsException(interp, 3, argv,
+                "coords ?arg arg ...?");
+        }
+
+        int lastCoord = findCoords(interp, argv, 3);
+        double[] coordArray = getCoords(interp, swkcanvas, argv, 3, lastCoord);
+         try {
+		 if (argv[2].toString().equals("sphere")) {
                 if (argv.length < 6) {
                     throw new TclNumArgsException(interp, 3, argv, "option");
                 }
@@ -399,12 +414,7 @@ public class SwkCanvasWidgetCmd implements Command {
                 }
 
                 SwkSphere swkSphere = new SwkSphere(swkcanvas);
-                swkSphere.coords(interp, swkcanvas, argv, 3);
-                swkSphere.config(interp, argv, 6);
-                swkSphere.genShape();
-                addShape(swkcanvas,swkSphere);
-                swkcanvas.repaint();
-                interp.setResult(swkSphere.id);
+		swkShape = swkSphere;
             } else if ("cylinder".startsWith(argv[2].toString())) {
                 if (argv.length < 9) {
                     throw new TclNumArgsException(interp, 3, argv, "option");
@@ -415,12 +425,7 @@ public class SwkCanvasWidgetCmd implements Command {
                 }
 
                 SwkCylinder swkCylinder = new SwkCylinder(swkcanvas);
-                swkCylinder.coords(interp, swkcanvas, argv, 3);
-                swkCylinder.config(interp, argv, 9);
-                swkCylinder.genShape();
-                addShape(swkcanvas,swkCylinder);
-                swkcanvas.repaint();
-                interp.setResult(swkCylinder.id);
+		swkShape = swkCylinder;
            } else if ("text2d".startsWith(argv[2].toString())) {
                 if (argv.length < 6) {
                     throw new TclNumArgsException(interp, 3, argv, "option");
@@ -430,22 +435,65 @@ public class SwkCanvasWidgetCmd implements Command {
                     throw new TclNumArgsException(interp, 3, argv, "option");
                 }
 
-                System.out.println("create swkText2D");
-
                 SwkText2D swkText2D = new SwkText2D(swkcanvas);
-                System.out.println("created swkText2D " + swkText2D.toString());
-                swkText2D.coords(interp, swkcanvas, argv, 3);
-                System.out.println("coords");
-                swkText2D.config(interp, argv, 6);
-                System.out.println("configed");
-                swkText2D.genShape();
-                System.out.println("gened");
-                addShape(swkcanvas,swkText2D);
-                swkcanvas.repaint();
-                interp.setResult(swkText2D.id);
+		swkShape = swkText2D;
+            } else {
+		CanvasType canvasType = (CanvasType) newTypes.get(argv[2].toString());
 
+                if (canvasType == null) {
+                    throw new TclException(interp,
+                        "canvas type \"" + argv[2].toString() +
+                        "\" doesn't exist");
+                }
+
+                Object newObject = null;
+
+                try {
+                    newObject = canvasType.myTypeClass.newInstance();
+                } catch (InstantiationException iE) {
+                    throw new TclException(interp,
+                        "class " + argv[2].toString() +
+                        " can't be instantiated");
+                } catch (IllegalAccessException iaE) {
+                    throw new TclException(interp,
+                        "illegal access to class for object \"" +
+                        argv[2].toString() + "\"");
+                }
+
+                if (!(newObject instanceof SwkShape)) {
+                    throw new TclException(interp,
+                        "class for object \"" + argv[2].toString() +
+                        "\" is not instance of SwkShape");
+                }
+
+                if (coordArray.length < canvasType.myNCoords) {
+                    throw new TclException(interp,
+                        "wrong # coordinates: expected at least 4, got " +
+                        coordArray.length);
+                }
+
+                if ((coordArray.length % 2) != 0) {
+                    throw new TclException(interp,
+                        "wrong # coordinates: expected an even number, got " +
+                        coordArray.length);
+                }
+
+                swkShape = (SwkShape) newObject;
+                swkShape.setCanvas(swkcanvas);
+
+	    }
+             if (swkShape != null) {
+                swkShape.coords(swkcanvas, coordArray);
+                swkShape.configShape(interp, swkcanvas, argv, lastCoord + 1);
+                addShape(swkcanvas, swkShape); //swkcanvas.repaint();
+                interp.setResult(swkShape.id);
             }
-    }
+         } catch (SwkException swkE) {
+            throw new TclException(interp, swkE.getMessage());
+        }
+
+        swkcanvas.repaint(50);
+ }
 
     void createOld(final Interp interp, final SwkImageCanvas swkcanvas, final TclObject[] argv) throws TclException {
         final SwkShape swkShape;

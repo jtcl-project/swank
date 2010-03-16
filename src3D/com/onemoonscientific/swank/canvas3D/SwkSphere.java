@@ -56,21 +56,11 @@ public class SwkSphere extends SwkShape {
     SwkSphere(SwkImageCanvas canvas) {
         super(canvas);
     }
-
-    public void coords(Interp interp) throws TclException {
-        TclObject list = TclList.newInstance();
-
-        /*
-        double x1 = ((Arc2D) shape).getX();
-        double y1 = ((Arc2D) shape).getY();
-        double width = ((Arc2D) shape).getWidth();
-        double height = ((Arc2D) shape).getHeight();
-        TclList.append(interp, list, TclDouble.newInstance(x1));
-        TclList.append(interp, list, TclDouble.newInstance(y1));
-        TclList.append(interp, list, TclDouble.newInstance(x1 + width));
-        TclList.append(interp, list, TclDouble.newInstance(y1 + height));
-         */
-        interp.setResult(list);
+   public void coords(SwkImageCanvas canvas, double[] coords)
+            throws SwkException {
+        a.x = coords[0];
+        a.y = coords[1];
+        a.z = coords[2];
     }
 
     public void coords(Interp interp, SwkImageCanvas canvas, TclObject[] argv,
@@ -78,6 +68,7 @@ public class SwkSphere extends SwkShape {
         a.x = TclDouble.get(interp, argv[start]);
         a.y = TclDouble.get(interp, argv[start + 1]);
         a.z = TclDouble.get(interp, argv[start + 2]);
+        genShape();
     }
     void makePrimitive() {
         primitive = new Sphere(radius, Primitive.GENERATE_NORMALS, nDivisions,appearance);
