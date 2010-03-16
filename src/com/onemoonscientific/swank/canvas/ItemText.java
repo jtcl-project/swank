@@ -50,7 +50,7 @@ public class ItemText extends SwkShape implements TextInterface {
     static BreakIterator wordIterator = BreakIterator.getWordInstance();
     static CanvasParameter[] parameters = {
         new TextParameter(), new AnchorParameter(), new FontParameter(),
-        new WidthParameter(), new FillParameter(), new TagsParameter(),
+        new WidthParameter(), new FillParameter(), new TagsParameter(), new StateParameter(),
         new TransformerParameter(), new RotateParameter(),new NodeParameter(),
      };
     static Map parameterMap = new TreeMap();
