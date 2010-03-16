@@ -66,6 +66,8 @@ public class SwkEventType {
         new SwkEventType("Configure", SwkBinding.COMPONENT, SwkBinding.COMPONENT),
         new SwkEventType("AppOut", SwkBinding.APP, SwkBinding.OUT),
         new SwkEventType("AppIn", SwkBinding.APP, SwkBinding.IN),
+        new SwkEventType("Activate", SwkBinding.ACTIVATION, SwkBinding.ACTIVATED),
+        new SwkEventType("Deactivate", SwkBinding.ACTIVATION, SwkBinding.DEACTIVATED),
         new SwkEventType("<<StateChanged>>", SwkBinding.STATECHANGED,
             SwkBinding.STATECHANGED),
         new SwkEventType("<<SelectionChanged>>", SwkBinding.SELECTIONCHANGED,
