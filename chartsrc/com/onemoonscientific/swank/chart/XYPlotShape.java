@@ -81,7 +81,6 @@ public class XYPlotShape extends SwkShape {
     String plotType = "lineandshape";
     XYItemRenderer renderer = null;
     Rectangle2D rect2D = null;
-
     public XYPlotShape() {
         rect2D = new Rectangle2D.Double();
         setRenderer();
@@ -101,6 +100,10 @@ public class XYPlotShape extends SwkShape {
     public void setDataset(String name) {
         XYData xyData = XYData.get(name);
         plot.setDataset(xyData);
+    }
+    public void setDataset(int index, String name) {
+        XYData xyData = XYData.get(name);
+        plot.setDataset(index,xyData);
     }
     public void setDataset(XYData xyData) {
         plot.setDataset(xyData);
@@ -128,7 +131,7 @@ public class XYPlotShape extends SwkShape {
     public double getRadius() {
         return radius;
     }
-    public String hitIt(double x, double y) { 
+    public String hit(double x, double y) { 
         String result = "";
         if (state != null) {
             EntityCollection entities = state.getOwner().getEntityCollection();
@@ -244,8 +247,9 @@ public class XYPlotShape extends SwkShape {
     }
 
 
-    static class DatasetParameter extends StringParameter {
+    static class DatasetParameter extends CanvasParameter {
         private static String name = "dataset";
+        String[] datasetNames = new String[0];
 
         DatasetParameter() {
             CanvasParameter.addParameter(this);
@@ -254,16 +258,40 @@ public class XYPlotShape extends SwkShape {
         public String getName() {
             return name;
         }
-
-        public String getValue(SwkShape swkShape) {
-             XYData xyData = (XYData) ((XYPlotShape) swkShape).plot.getDataset();
-             return xyData.getName();
+        public TclObject getValue(Interp interp, SwkShape swkShape)
+             throws TclException {
+             if ((swkShape == null) || !(swkShape instanceof XYPlotShape)) {
+                 throw new TclException(interp, "xyplot shape doesn't exist");
+            }
+            int nDatasets = ((XYPlotShape) swkShape).plot.getDatasetCount();
+            TclObject list = TclList.newInstance();
+            for (int i=0;i<nDatasets;i++) {
+                 XYData xyData = (XYData) ((XYPlotShape) swkShape).plot.getDataset(i);
+                 TclList.append(interp,list,TclString.newInstance(xyData.getName()));
+            }
+            return list;
         }
 
-        public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
-            String datasetName = getNewValue();
-            ((XYPlotShape) swkShape).setDataset(datasetName);
-        }
+        public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
+             throws TclException {
+             TclObject[] datasetNameList = TclList.getElements(interp, arg);
+
+             if (datasetNameList.length == 0) {
+                 throw new TclException(interp,
+                     "bad dataset value, must be \"dataset1 dataset2 ...\"");
+             }
+             String datasetNamesTmp[] = new String[datasetNameList.length];
+             for (int i=0;i<datasetNameList.length;i++) {
+                 datasetNamesTmp[i] =  datasetNameList[i].toString();
+             }
+             datasetNames = datasetNamesTmp;
+         }
+
+         public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
+              for (int i=0;i<datasetNames.length;i++) {
+                 ((XYPlotShape) swkShape).setDataset(i,datasetNames[i]);
+              }
+         }
     }
 
     static class DomainaxisParameter extends StringParameter {
