@@ -52,6 +52,7 @@ import java.text.DecimalFormat;
 
 
 public class XYLineAndShapeComplete extends XYPlotShape {
+    static XYToolTipGenerator generator = new DCXYToolTipGenerator("{0} {1} {2} {3}", new DecimalFormat("0.000"), new DecimalFormat("0.000") ); 
     static CanvasParameter[] parameters = {
         new TagsParameter(),  new DatasetParameter(), new ShapesvisibleParameter(),
          new PaintParameter(), new LinesvisibleParameter(), new SplineParameter(),
@@ -84,14 +85,64 @@ public class XYLineAndShapeComplete extends XYPlotShape {
     public  void setRenderer() {
         renderer = new XYLineAndShapeRenderer();
         plot.setRenderer(renderer);
-        XYToolTipGenerator generator = new DCXYToolTipGenerator("{0} {1} {2} {3}", new DecimalFormat("0.000"), new DecimalFormat("0.000") ); 
         renderer.setToolTipGenerator(generator); 
     }
     public  void setRenderer(XYItemRenderer newRenderer) {
         renderer = newRenderer;
         plot.setRenderer(renderer);
-        XYToolTipGenerator generator = new DCXYToolTipGenerator("{0} {1} {2} {3}", new DecimalFormat("0.000"), new DecimalFormat("0.000") ); 
         renderer.setToolTipGenerator(generator); 
+    }
+   static class DatasetParameter extends CanvasParameter {
+        private static String name = "dataset";
+        String[] datasetNames = new String[0];
+
+        DatasetParameter() {
+            CanvasParameter.addParameter(this);
+        }
+
+        public String getName() {
+            return name;
+        }
+        public TclObject getValue(Interp interp, SwkShape swkShape)
+             throws TclException {
+             if ((swkShape == null) || !(swkShape instanceof XYPlotShape)) {
+                 throw new TclException(interp, "xyplot shape doesn't exist");
+            }
+            int nDatasets = ((XYPlotShape) swkShape).plot.getDatasetCount();
+            TclObject list = TclList.newInstance();
+            for (int i=0;i<nDatasets;i++) {
+                 XYData xyData = (XYData) ((XYPlotShape) swkShape).plot.getDataset(i);
+                 TclList.append(interp,list,TclString.newInstance(xyData.getName()));
+            }
+            return list;
+        }
+
+        public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
+             throws TclException {
+             TclObject[] datasetNameList = TclList.getElements(interp, arg);
+
+             if (datasetNameList.length == 0) {
+                 throw new TclException(interp,
+                     "bad dataset value, must be \"dataset1 dataset2 ...\"");
+             }
+             String datasetNamesTmp[] = new String[datasetNameList.length];
+             for (int i=0;i<datasetNameList.length;i++) {
+                 datasetNamesTmp[i] =  datasetNameList[i].toString();
+             }
+             datasetNames = datasetNamesTmp;
+         }
+
+         public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
+              int nDatasets = ((XYPlotShape) swkShape).plot.getDatasetCount();
+              for (int i=0;i<datasetNames.length;i++) {
+               ((XYPlotShape) swkShape).setDataset(i,datasetNames[i]);
+               if (i >= nDatasets) {
+                     XYLineAndShapeRenderer newRenderer = new XYLineAndShapeRenderer();
+                     newRenderer.setToolTipGenerator(generator); 
+                    ((XYPlotShape) swkShape).plot.setRenderer(i,newRenderer);
+               }
+              }
+         }
     }
     static class LinesvisibleParameter extends StringParameter {
         private static String name = "linesvisible";
@@ -105,43 +156,60 @@ public class XYLineAndShapeComplete extends XYPlotShape {
         }
 
         public String getValue(SwkShape swkShape) {
-            XYItemRenderer renderer = ((XYPlotShape) swkShape).renderer;
-            if (renderer instanceof XYLineAndShapeRenderer) {
-                XYPlot plot = ((XYPlotShape) swkShape).plot;
-                XYData data = (XYData) plot.getDataset();
-                int nSeries = data.getSeriesCount();
-                StringBuffer sBuf = new StringBuffer();
-                for (int i=0;i<nSeries;i++) {
-                    boolean bValue = (((XYLineAndShapeRenderer) renderer).getSeriesLinesVisible(i)).booleanValue();
-                    if (i > 0) {
-                       sBuf.append(' ');
-                    }
-                    if (bValue) {
-                       sBuf.append('1');
-                    } else {
-                       sBuf.append('0');
-                    }
+            XYPlot plot = ((XYPlotShape) swkShape).plot;
+            StringBuffer sBuf = new StringBuffer();
+            int nDatasets = plot.getDatasetCount();
+            int j = 0;
+            for (int iData=0;iData<nDatasets;iData++) {
+                XYItemRenderer renderer = ((XYPlotShape) swkShape).plot.getRenderer(iData);
+                if (renderer == null) {
+                     renderer = ((XYPlotShape) swkShape).plot.getRenderer();
                 }
-                return sBuf.toString();
-            } else {
-                return "0";
+                if (renderer instanceof XYLineAndShapeRenderer) {
+                    XYData data = (XYData) plot.getDataset(iData);
+                    int nSeries = data.getSeriesCount();
+
+                    for (int i=0;i<nSeries;i++) {
+                        boolean bValue = (((XYLineAndShapeRenderer) renderer).getSeriesLinesVisible(i)).booleanValue();
+                        if (i > 0) {
+                           sBuf.append(' ');
+                        }
+                        if (bValue) {
+                           sBuf.append('1');
+                        } else {
+                           sBuf.append('0');
+                        }
+                          j++;
+                  }
+                } else {
+                    sBuf.append('0');
+                }
             }
+            return sBuf.toString();
         }
 
         public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
-            XYItemRenderer renderer = ((XYPlotShape) swkShape).renderer;
-            if (renderer instanceof XYLineAndShapeRenderer) {
-                XYPlot plot = ((XYPlotShape) swkShape).plot;
-                String newValue = getNewValue();
-                String[] values = newValue.split(" ");
-                XYData data = (XYData) plot.getDataset();
-                int nSeries = data.getSeriesCount();
-                for (int i=0;i<nSeries;i++) {
-                    boolean bValue = true;
-                    if (values.length > i) {
-                         bValue = values[i].charAt(0) == '1';
-                    }
-                    ((XYLineAndShapeRenderer) renderer).setSeriesLinesVisible(i,bValue);
+            XYPlot plot = ((XYPlotShape) swkShape).plot;
+            String newValue = getNewValue();
+            String[] values = newValue.split(" ");
+            int nDatasets = plot.getDatasetCount();
+            int j = 0;
+            for (int iData=0;iData<nDatasets;iData++) {
+                XYItemRenderer renderer = ((XYPlotShape) swkShape).plot.getRenderer(iData);
+                if (renderer == null) {
+                     renderer = ((XYPlotShape) swkShape).plot.getRenderer();
+                }
+                if (renderer instanceof XYLineAndShapeRenderer) {
+                    XYData data = (XYData) plot.getDataset(iData);
+                    int nSeries = data.getSeriesCount();
+                    for (int i=0;i<nSeries;i++) {
+                        boolean bValue = true;
+                        if (values.length > j) {
+                             bValue = values[j].charAt(0) == '1';
+                        }
+                        ((XYLineAndShapeRenderer) renderer).setSeriesLinesVisible(i,bValue);
+                           j++;
+                 }
                 }
             }
         }
@@ -158,52 +226,66 @@ public class XYLineAndShapeComplete extends XYPlotShape {
             return name;
         }
 
-        public String getValue(SwkShape swkShape) {
-            XYItemRenderer renderer = ((XYPlotShape) swkShape).renderer;
-            if (renderer instanceof XYLineAndShapeRenderer) {
-                XYPlot plot = ((XYPlotShape) swkShape).plot;
-                XYData data = (XYData) plot.getDataset();
-                int nSeries = data.getSeriesCount();
-                StringBuffer sBuf = new StringBuffer();
-                for (int i=0;i<nSeries;i++) {
-                    Boolean visible = (((XYLineAndShapeRenderer) renderer).getSeriesShapesVisible(i));
-                    boolean bValue = false;
-                    if (visible != null) {
-                        bValue = visible.booleanValue();
-                    }
-                    if (i > 0) {
-                       sBuf.append(' ');
-                    }
-                    if (bValue) {
-                       sBuf.append('1');
-                    } else {
-                       sBuf.append('0');
-                    }
+            public String getValue(SwkShape swkShape) {
+            XYPlot plot = ((XYPlotShape) swkShape).plot;
+            StringBuffer sBuf = new StringBuffer();
+            int nDatasets = plot.getDatasetCount();
+            int j = 0;
+            for (int iData=0;iData<nDatasets;iData++) {
+                XYItemRenderer renderer = ((XYPlotShape) swkShape).plot.getRenderer(iData);
+                if (renderer == null) {
+                     renderer = ((XYPlotShape) swkShape).plot.getRenderer();
                 }
-                return sBuf.toString();
-            } else {
-                return "0";
+                if (renderer instanceof XYLineAndShapeRenderer) {
+                    XYData data = (XYData) plot.getDataset(iData);
+                    int nSeries = data.getSeriesCount();
+
+                    for (int i=0;i<nSeries;i++) {
+                        boolean bValue = (((XYLineAndShapeRenderer) renderer).getSeriesShapesVisible(i)).booleanValue();
+                        if (i > 0) {
+                           sBuf.append(' ');
+                        }
+                        if (bValue) {
+                           sBuf.append('1');
+                        } else {
+                           sBuf.append('0');
+                        }
+                          j++;
+                  }
+                } else {
+                    sBuf.append('0');
+                }
             }
+            return sBuf.toString();
         }
 
         public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
-            XYItemRenderer renderer = ((XYPlotShape) swkShape).renderer;
-            if (renderer instanceof XYLineAndShapeRenderer) {
-                XYPlot plot = ((XYPlotShape) swkShape).plot;
-                String newValue = getNewValue();
-                String[] values = newValue.split(" ");
-                XYData data = (XYData) plot.getDataset();
-                int nSeries = data.getSeriesCount();
-                for (int i=0;i<nSeries;i++) {
-                    boolean bValue = true;
-                    if (values.length > i) {
-                         bValue = values[i].charAt(0) == '1';
+            XYPlot plot = ((XYPlotShape) swkShape).plot;
+            String newValue = getNewValue();
+            String[] values = newValue.split(" ");
+            int nDatasets = plot.getDatasetCount();
+            int j = 0;
+            for (int iData=0;iData<nDatasets;iData++) {
+                XYItemRenderer renderer = ((XYPlotShape) swkShape).plot.getRenderer(iData);
+                if (renderer == null) {
+                     renderer = ((XYPlotShape) swkShape).plot.getRenderer();
+                }
+                if (renderer instanceof XYLineAndShapeRenderer) {
+                    XYData data = (XYData) plot.getDataset(iData);
+                    int nSeries = data.getSeriesCount();
+                    for (int i=0;i<nSeries;i++) {
+                        boolean bValue = true;
+                        if (values.length > j) {
+                             bValue = values[j].charAt(0) == '1';
+                        }
+                        ((XYLineAndShapeRenderer) renderer).setSeriesShapesVisible(i,bValue);
+                        j++;
+
                     }
-                    ((XYLineAndShapeRenderer) renderer).setSeriesShapesVisible(i,bValue);
                 }
             }
         }
-    }
+   }
     static class PaintParameter extends StringParameter {
         private static String name = "paint";
 
@@ -215,51 +297,71 @@ public class XYLineAndShapeComplete extends XYPlotShape {
             return name;
         }
 
-        public String getValue(SwkShape swkShape) {
-            XYItemRenderer renderer = ((XYPlotShape) swkShape).renderer;
-            if (renderer instanceof XYLineAndShapeRenderer) {
-                XYPlot plot = ((XYPlotShape) swkShape).plot;
-                XYData data = (XYData) plot.getDataset();
-                int nSeries = data.getSeriesCount();
-                StringBuffer sBuf = new StringBuffer();
-                for (int i=0;i<nSeries;i++) {
-                    Color color = (Color) (((XYLineAndShapeRenderer) renderer).getSeriesPaint(i));
-                    if (i > 0) {
-                       sBuf.append(' ');
-                    }
-                    sBuf.append(SwankUtil.parseColor(color));
+
+               public String getValue(SwkShape swkShape) {
+            XYPlot plot = ((XYPlotShape) swkShape).plot;
+            StringBuffer sBuf = new StringBuffer();
+            int nDatasets = plot.getDatasetCount();
+            int j = 0;
+            for (int iData=0;iData<nDatasets;iData++) {
+                XYItemRenderer renderer = ((XYPlotShape) swkShape).plot.getRenderer(iData);
+                if (renderer == null) {
+                     renderer = ((XYPlotShape) swkShape).plot.getRenderer();
                 }
-                return sBuf.toString();
-            } else {
-                return "0";
+                if (renderer instanceof XYLineAndShapeRenderer) {
+                    XYData data = (XYData) plot.getDataset(iData);
+                    int nSeries = data.getSeriesCount();
+
+                    for (int i=0;i<nSeries;i++) {
+                       Color color = (Color) (((XYLineAndShapeRenderer) renderer).getSeriesPaint(i));
+                        if (j > 0) {
+                           sBuf.append(' ');
+                        }
+                        sBuf.append(SwankUtil.parseColor(color));
+                        j++;
+                  }
+                } else {
+                    sBuf.append('0');
+                }
             }
+            return sBuf.toString();
         }
 
         public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
-            XYItemRenderer renderer = ((XYPlotShape) swkShape).renderer;
-            if (renderer instanceof XYLineAndShapeRenderer) {
-                XYPlot plot = ((XYPlotShape) swkShape).plot;
-                String newValue = getNewValue();
-                String[] values = newValue.split(" ");
-                XYData data = (XYData) plot.getDataset();
-                int nSeries = data.getSeriesCount();
-                Color color = Color.ORANGE;
-                //((XYLineAndShapeRenderer) renderer).setPaint(color);
-                for (int i=0;i<nSeries;i++) {
-                    if (values.length > i) {
+            XYPlot plot = ((XYPlotShape) swkShape).plot;
+            String newValue = getNewValue();
+            String[] values = newValue.split(" ");
+            Color color = Color.BLACK;
+            int nDatasets = plot.getDatasetCount();
+            int j = 0;
+            for (int iData=0;iData<nDatasets;iData++) {
+                XYItemRenderer renderer = ((XYPlotShape) swkShape).plot.getRenderer(iData);
+                if (renderer == null) {
+                     renderer = ((XYPlotShape) swkShape).plot.getRenderer();
+                }
+                if (renderer instanceof XYLineAndShapeRenderer) {
+                    XYData data = (XYData) plot.getDataset(iData);
+                    int nSeries = data.getSeriesCount();
+                    for (int i=0;i<nSeries;i++) {
+                       color = Color.BLACK;
+                      if (values.length > j) {
                          try {
-                            color = SwankUtil.getColor(values[i]);
+                            color = SwankUtil.getColor(values[j]);
                          } catch (Exception e) {
                                System.out.println("ex "+e.getMessage());
                          }
+                         }
+                         ((XYLineAndShapeRenderer) renderer).setSeriesPaint(i,color);
+                         ((XYLineAndShapeRenderer) renderer).setSeriesFillPaint(i,color); 
+                         ((XYLineAndShapeRenderer) renderer).setSeriesOutlinePaint(i,color);
+                      
+                      j++;
+
                     }
-                    ((XYLineAndShapeRenderer) renderer).setSeriesPaint(i,color);
-                    ((XYLineAndShapeRenderer) renderer).setSeriesFillPaint(i,color);
-                    ((XYLineAndShapeRenderer) renderer).setSeriesOutlinePaint(i,color);
                 }
             }
         }
-    }
+   }
    static class SplineParameter extends IntegerParameter {
         private static String name = "spline";
 
@@ -286,8 +388,10 @@ public class XYLineAndShapeComplete extends XYPlotShape {
             int newValue = getNewValue();
             if (newValue <= 0) {
                 if (renderer instanceof XYSplineRenderer) {
-                    XYPlotShape plotShape = (XYPlotShape) swkShape;
-                    plotShape.setRenderer(new XYLineAndShapeRenderer());
+                     XYPlotShape plotShape = (XYPlotShape) swkShape;
+                     XYLineAndShapeRenderer newRenderer = new XYLineAndShapeRenderer();
+                     newRenderer.setToolTipGenerator(generator); 
+                     plotShape.setRenderer(newRenderer);
                 }
             } else
                 if (renderer instanceof XYSplineRenderer) {
@@ -295,7 +399,9 @@ public class XYLineAndShapeComplete extends XYPlotShape {
                      splineRenderer.setPrecision(newValue);
                 } else {
                     XYPlotShape plotShape = (XYPlotShape) swkShape;
-                    plotShape.setRenderer(new XYSplineRenderer(newValue));
+                    XYLineAndShapeRenderer newRenderer = new XYLineAndShapeRenderer();
+                    newRenderer.setToolTipGenerator(generator); 
+                    plotShape.setRenderer(newRenderer);
                 }
             }
         }
