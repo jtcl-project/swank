@@ -406,7 +406,7 @@ public class SwkImageCanvas implements SwkCanvasType {
             if (eventCurrentShape != null) {
                 swkShape = eventCurrentShape.swkShape;
             } else {
-                throw new SwkException("tag doesn't exist");
+                throw new SwkException("tag \""+arg+"\"doesn't exist");
             }
         }
 
@@ -432,10 +432,10 @@ public class SwkImageCanvas implements SwkCanvasType {
         }
 
         if (swkShape == null) {
-            Tag tag = (Tag) tagHash.get(arg.toString());
+            Tag tag = (Tag) tagHash.get(arg);
 
             if (tag == null) {
-                throw new SwkException("tag doesn't exist");
+                throw new SwkException("tag \""+arg+"\"doesn't exist");
             } else if (tag.tagShapes.size() != 1) {
                 throw new SwkException("more than one shape for this tag");
             } else {
