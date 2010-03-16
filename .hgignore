@@ -11,6 +11,7 @@ sandbox
 dist
 nbproject
 mysync2
+mysync
 configs
 bric
 src/com/onemoonscientific/swank/SwkFileDialog.java
