@@ -502,6 +502,9 @@ public class SwkCanvasWidgetCmd implements Command {
             } else if (argv[2].toString().equals("line")) {
                 GeneralPath gPath = new GeneralPath();
                 swkShape = new ItemLine(gPath, swkcanvas);
+            } else if (argv[2].toString().equals("annotation")) {
+                GeneralPath gPath = new GeneralPath();
+                swkShape = new ItemAnnotation(gPath, swkcanvas);
             } else if (argv[2].toString().equals("connector")) {
                 GeneralPath gPath = new GeneralPath();
                 swkShape = new ItemConnector(gPath, swkcanvas);

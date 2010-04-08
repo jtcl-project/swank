@@ -72,13 +72,14 @@ public class SwkShapeRunnable implements Runnable {
     }
 
     public void configShape(SwkShape swkShape) {
-
+System.out.println("configshape");
         for (int j = 0; j < parameters.length; j++) {
             if (parameters[j] != null) {
+System.out.println("configshape");
                 parameters[j].exec(swkCanvas, swkShape);
             }
         }
-
+        swkShape.updateShape();
         //swkShape.updateStroke();
         //swkShape.applyCoordinates();
     }

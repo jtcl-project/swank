@@ -15,6 +15,8 @@ import java.awt.*;
 import java.awt.datatransfer.*;
 import java.awt.font.*;
 import java.awt.geom.*;
+import javax.media.j3d.Transform3D;
+import javax.media.j3d.TransformGroup;
 
 import java.io.*;
 
@@ -34,7 +36,8 @@ public class SwkCanvasWidgetCmd implements Command {
         "cget", "configure", "object", "jadd", "create", "itemconfigure",
         "coords", "hit", "itemcget", "find", "move", "scale", "delete", "addtag",
         "bind", "raise", "lower", "dtag", "gettags", "canvasx", "canvasy",
-        "copy", "index", "newtype", "bbox", "type", "zoom", "transformer"
+        "copy", "index", "newtype", "bbox", "type", "zoom", "transformer", 
+        "view", "center", "transform"
     };
     static final private int OPT_CGET = 0;
     static final private int OPT_CONFIGURE = 1;
@@ -64,7 +67,10 @@ public class SwkCanvasWidgetCmd implements Command {
     static final private int OPT_TYPE = 25;
     static final private int OPT_ZOOM = 26;
     static final private int OPT_TRANSFORMER = 27;
-    static boolean gotDefaults = false;
+    static final private int OPT_VIEW = 28;
+    static final private int OPT_CENTER = 29;
+    static final private int OPT_TRANSFORM = 30;
+   static boolean gotDefaults = false;
     Map newTypes = new HashMap();
     Interp interp = null;
 
@@ -300,6 +306,68 @@ public class SwkCanvasWidgetCmd implements Command {
 
                 break;
             }
+        case OPT_VIEW: {
+            if ((argv.length != 2) && (argv.length != 6)) {
+                throw new TclNumArgsException(interp, 2, argv, "option");
+            }
+
+            if (argv.length == 6) {
+                if (argv[2].toString().equals("eye")) {
+                    float x = (float) TclDouble.get(interp, argv[3]);
+                    float y = (float) TclDouble.get(interp, argv[4]);
+                    float z = (float) TclDouble.get(interp, argv[5]);
+                    swkImageCanvas.setEyePosition(x, y, z);
+                } else if (argv[2].toString().equals("center")) {
+                    float x = (float) TclDouble.get(interp, argv[3]);
+                    float y = (float) TclDouble.get(interp, argv[4]);
+                    float z = (float) TclDouble.get(interp, argv[5]);
+                    swkImageCanvas.setViewCenter(x, y, z);
+                } else if (argv[2].toString().equals("up")) {
+                    float x = (float) TclDouble.get(interp, argv[3]);
+                    float y = (float) TclDouble.get(interp, argv[4]);
+                    float z = (float) TclDouble.get(interp, argv[5]);
+                    swkImageCanvas.setUpDirection(x, y, z);
+                }
+            } else {
+                Transform3D t3 = new Transform3D();
+                TransformGroup tG = swkImageCanvas.universe.getViewingPlatform()
+                                                      .getViewPlatformTransform();
+                tG.getTransform(t3);
+                interp.setResult(t3.toString());
+            }
+
+            break;
+        }
+
+        case OPT_CENTER: {
+            if ((argv.length != 2) && (argv.length != 5)) {
+                throw new TclNumArgsException(interp, 2, argv, "option");
+            }
+
+            if (argv.length == 5) {
+                double x = TclDouble.get(interp, argv[2]);
+                double y = TclDouble.get(interp, argv[3]);
+                double z = TclDouble.get(interp, argv[4]);
+                swkImageCanvas.setCenter((float) x, (float) y, (float) z);
+            } else {
+                interp.setResult(TclDouble.get(interp, argv[2]));
+            }
+
+            break;
+        }
+
+        case OPT_TRANSFORM: {
+            if ((argv.length != 3) && (argv.length != 6)) {
+                throw new TclNumArgsException(interp, 2, argv, "option");
+            }
+
+            if (argv[2].toString().equals("reset")) {
+                swkImageCanvas.resetTransform();
+            }
+
+            break;
+        }
+
 
             default:
                 throw new TclRuntimeError("TclIndex.get() error");
@@ -426,6 +494,17 @@ public class SwkCanvasWidgetCmd implements Command {
 
                 SwkCylinder swkCylinder = new SwkCylinder(swkcanvas);
 		swkShape = swkCylinder;
+            } else if ("cone".startsWith(argv[2].toString())) {
+                if (argv.length < 9) {
+                    throw new TclNumArgsException(interp, 3, argv, "option");
+                }
+
+                if (((argv.length - 9) % 2) != 0) {
+                    throw new TclNumArgsException(interp, 3, argv, "option");
+                }
+
+                SwkCone swkCone = new SwkCone(swkcanvas);
+		swkShape = swkCone;
            } else if ("text2d".startsWith(argv[2].toString())) {
                 if (argv.length < 6) {
                     throw new TclNumArgsException(interp, 3, argv, "option");

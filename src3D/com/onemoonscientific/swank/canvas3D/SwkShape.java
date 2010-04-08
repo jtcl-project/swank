@@ -45,7 +45,7 @@ import com.onemoonscientific.swank.SwkException;
 
 public abstract class SwkShape implements SwkShape3DConfig {
     Shape3D shape = null;
-    Primitive primitive = null;
+    Node objectNode = null;
     NvBranchGroup bG = null;
     SwkShape previous = null;
     SwkShape next = null;
@@ -57,13 +57,6 @@ public abstract class SwkShape implements SwkShape3DConfig {
     int id;
 
     public SwkShape() {
-        bG = new NvBranchGroup();
-    }
-
-    public SwkShape(Primitive primitive, SwkImageCanvas canvas) {
-        this.primitive = primitive;
-        this.canvas = canvas;
-        appearance = canvas.defaultAppearance;
         bG = new NvBranchGroup();
     }
 
@@ -81,6 +74,13 @@ public abstract class SwkShape implements SwkShape3DConfig {
     public void setShape(Shape3D shape) {
         this.shape = shape;
     }
+    public Map getTags() {
+        return tags;
+    }
+
+    public void setTags(String[] tags) {
+        tagNames = tags;
+    }
 
     // public abstract void config(Interp interp, TclObject argv[],int start);
     public void paintShape(Graphics2D g2) {
@@ -92,7 +92,6 @@ public abstract class SwkShape implements SwkShape3DConfig {
 
     public void coords(SwkImageCanvas canvas, double[] coords) throws SwkException {
     }
-
     public TclObject itemGet(Interp interp, TclObject argv)
         throws TclException {
         return (TclString.newInstance(""));
@@ -183,12 +182,13 @@ public abstract class SwkShape implements SwkShape3DConfig {
         CanvasParameter[] setPars = new CanvasParameter[(argv.length - start) / 2];
 
         boolean gotPar = false;
-
+System.out.println("config");
         for (int i = start, j = 0; i < argv.length; i += 2, j++) {
             CanvasParameter cPar = null;
 
             cPar = getPar(argv[i].toString());
 
+System.out.println("config "+cPar);
             if (cPar == null) {
                 String parName = "com.onemoonscientific.swank.canvas3D." +
                         argv[i].toString().substring(1, 2).toUpperCase() +
@@ -222,6 +222,7 @@ public abstract class SwkShape implements SwkShape3DConfig {
         }
 
         if (gotPar) {
+System.out.println("gotpar");
             (new SwkShapeRunnable(swkCanvas, this, setPars)).exec();
         }
     }
@@ -232,6 +233,7 @@ public abstract class SwkShape implements SwkShape3DConfig {
         CanvasParameter[] setPars = new CanvasParameter[(argv.length - start) / 2];
         boolean gotPar = false;
 
+System.out.println("config2");
         // this is more difficult than it should be because we want to check validity of parameter name
         // before we've figured out which shape were configuring
         for (int i = start, j = 0; i < argv.length; i += 2, j++) {
@@ -275,16 +277,27 @@ public abstract class SwkShape implements SwkShape3DConfig {
         }
 
         if (gotPar) {
-         // fixme   (new SwkShapeRunnable(swkCanvas, argv[start - 1].toString(), setPars)).exec();
+            (new SwkShapeRunnable(swkCanvas, argv[start - 1].toString(), setPars)).exec();
         }
     }
     public  CanvasParameter[] getParameters() {
         // fixme 
         return null;
     }
-   public Map getParameterMap() {
+    public Map getParameterMap() {
         return null;
     }
+
+    public static void initializeParameters(CanvasParameter[] params, Map map) {
+        for (int i = 0; i < params.length; i++) {
+            map.put(((CanvasParameter) params[i]).getName(), params[i]);
+            CanvasParameter cPar = CanvasParameter.getStdPar(params[i].getName());
+            if (cPar == null) {
+                CanvasParameter.addParameter(params[i]);
+            }
+        }
+    }
+
     public CanvasParameter getPar(String argString) {
         Map map = getParameterMap();
 
@@ -295,6 +308,41 @@ public abstract class SwkShape implements SwkShape3DConfig {
         CanvasParameter par = CanvasParameter.getPar(map, argString);
 
         return par;
+    }
+    abstract void makeObjectNode() ;
+    abstract TransformGroup  makeTransform();
+    void genShape() {
+        TransformGroup tG = makeTransform();
+        makeObjectNode();
+        tG.addChild(objectNode);
+        try {
+            bG.removeAllChildren();
+        } catch (Exception bgE) {
+        }
+        BranchGroup bG2 = new BranchGroup();
+        bG.addChild(bG2);
+        bG2.addChild(tG);
+        bG.setCapability(NvBranchGroup.ALLOW_DETACH);
+        bG2.setCapability(NvBranchGroup.ALLOW_DETACH);
+        bG.setCapability(NvBranchGroup.ALLOW_CHILDREN_EXTEND);
+        bG2.setCapability(NvBranchGroup.ALLOW_CHILDREN_EXTEND);
+
+        bG.compile();
+    }
+    void updateShape() {
+        try {
+            TransformGroup tG = makeTransform();
+            makeObjectNode();
+            tG.addChild(objectNode);
+            BranchGroup bG2 = new BranchGroup();
+            bG2.addChild(tG);
+            bG2.setCapability(NvBranchGroup.ALLOW_DETACH);
+            bG2.setCapability(NvBranchGroup.ALLOW_CHILDREN_EXTEND);
+            bG.removeAllChildren();
+            bG.addChild(bG2);
+        } catch (Exception bgE) {
+            System.out.println(bgE.getMessage());
+        }
     }
 
 

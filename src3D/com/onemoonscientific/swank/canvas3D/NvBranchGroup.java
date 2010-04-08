@@ -29,6 +29,8 @@ public class NvBranchGroup extends BranchGroup {
             groupTable.put(Integer.toString(id),this);
             tags.addElement(Integer.toString(id));
          */
+         setCapability(ALLOW_CHILDREN_READ);
+         setCapability(ALLOW_CHILDREN_WRITE);
     }
 
     /*

@@ -48,42 +48,57 @@ import javax.media.j3d.*;
 import javax.vecmath.*;
 
 
-public class SwkSphere extends SwkShape {
+public class SwkSphere extends SwkShape implements RadiusInterface {
     int nDivisions = 15;
     float radius = 1.0f;
     Point3d a = new Point3d();
+    static CanvasParameter[] parameters = {
+        new RadiusParameter(),
+    };
+   static Map parameterMap = new TreeMap();
+
+    static {
+        initializeParameters(parameters, parameterMap);
+    }
+
+
 
     SwkSphere(SwkImageCanvas canvas) {
         super(canvas);
     }
+
+    public CanvasParameter[] getParameters() {
+        return parameters;
+    }
+
+    public Map getParameterMap() {
+        return parameterMap;
+    }
+
+
+
+
    public void coords(SwkImageCanvas canvas, double[] coords)
             throws SwkException {
         a.x = coords[0];
         a.y = coords[1];
         a.z = coords[2];
-    }
-
-    public void coords(Interp interp, SwkImageCanvas canvas, TclObject[] argv,
-        int start) throws TclException {
-        a.x = TclDouble.get(interp, argv[start]);
-        a.y = TclDouble.get(interp, argv[start + 1]);
-        a.z = TclDouble.get(interp, argv[start + 2]);
         genShape();
     }
-    void makePrimitive() {
-        primitive = new Sphere(radius, Primitive.GENERATE_NORMALS, nDivisions,appearance);
+    public double getRadius() {
+        return radius;
     }
-    void genShape() {
+    public void setRadius(double radius) {
+        this.radius = (float) radius;
+    }
+    void makeObjectNode() {
+        objectNode = new Sphere(radius, Primitive.GENERATE_NORMALS, nDivisions,appearance);
+    }
+    TransformGroup makeTransform() {
         Transform3D t3D = new Transform3D();
         t3D.setTranslation(new Vector3d(a.x, a.y, a.z));
-
         TransformGroup tG = new TransformGroup(t3D);
-        makePrimitive();
-        tG.addChild(primitive);
-        bG.removeAllChildren();
-        bG.addChild(tG);
-        bG.setCapability(NvBranchGroup.ALLOW_DETACH);
-        bG.compile();
+        return tG;
     }
 
     public void config(Interp interp, TclObject[] argv, int start)
@@ -106,7 +121,7 @@ public class SwkSphere extends SwkShape {
               // fixme  canvas.setTags(interp, argv[i + 1], (SwkShape) this);
             }
             if (doGen) {
-                makePrimitive();
+                makeObjectNode();
             }
         }
     }

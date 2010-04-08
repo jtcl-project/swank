@@ -48,7 +48,7 @@ import javax.media.j3d.*;
 import javax.vecmath.*;
 
 
-public class SwkCylinder extends SwkShape implements RadiusInterface {
+public class SwkCone extends SwkShape implements RadiusInterface {
     int xDivisions = 15;
     float radius = 1.0f;
     Point3d a = new Point3d(0.0, 0.0, 0.0);
@@ -63,7 +63,7 @@ public class SwkCylinder extends SwkShape implements RadiusInterface {
     }
 
 
-    SwkCylinder(SwkImageCanvas canvas) {
+    SwkCone(SwkImageCanvas canvas) {
         super(canvas);
     }
 
@@ -81,7 +81,7 @@ public class SwkCylinder extends SwkShape implements RadiusInterface {
 
     void makeObjectNode() {
         float length = (float) a.distance(b);
-        objectNode = new Cylinder(radius, length, Primitive.GENERATE_NORMALS, xDivisions, 1, appearance);
+        objectNode = new Cone(radius, length, Primitive.GENERATE_NORMALS, xDivisions, 1, appearance);
    }
     public double getRadius() {
         return radius;
@@ -151,7 +151,7 @@ public class SwkCylinder extends SwkShape implements RadiusInterface {
     }
 //
 
-// Code for following transform from CylinderCreateor.java @ http://teresi.us/html/main/programming.html
+// Code for following transform from ConeCreateor.java @ http://teresi.us/html/main/programming.html
 //        Scott Teresi, www.teresi.us
 
 

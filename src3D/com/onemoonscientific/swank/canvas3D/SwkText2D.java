@@ -29,19 +29,14 @@ public class SwkText2D extends SwkShape {
         a.z = coords[2];
         genShape();
     }
-    void genShape() {
+    void makeObjectNode() {
+        objectNode = new Text2D(text, new Color3f(0.1f, 0.95f, 0.1f), "SansSerif", 540, 0);
+    }
+    TransformGroup makeTransform() {
         Transform3D t3D = new Transform3D();
         t3D.setTranslation(new Vector3d(a.x, a.y, a.z));
         TransformGroup tG = new TransformGroup(t3D);
-        System.out.println("create text2d "+a.x+" "+a.y+" "+a.z);
-        Shape3D shape = new Text2D(text, new Color3f(0.1f, 0.95f, 0.1f), "SansSerif",
-                540, 0);
-        System.out.println("created text2d " + shape.toString());
-        tG.addChild(shape);
-        bG.removeAllChildren();
-        bG.addChild(tG);
-        bG.setCapability(NvBranchGroup.ALLOW_DETACH);
-        bG.compile();
+        return tG;
     }
 
     public void config(Interp interp, TclObject[] argv, int start)

@@ -527,7 +527,7 @@ public class SwkImageCanvas implements SwkCanvasType {
                 tag = (Tag) e.nextElement();
                 tag.tagShapes.remove(swkShape);
             }
-
+            removeChild(swkShape.bG.iChild);
             unlinkShape(swkShape);
         }
     }
