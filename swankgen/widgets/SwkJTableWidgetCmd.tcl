@@ -69,7 +69,7 @@ append specialMethods {
 
         if (nRows != rows) {
             swkTableModel.setNRows(rows);
-            swkTableModel.fireTableStructureChanged();
+            swkTableModel.fireTableDataChanged();
         }
     }
 
