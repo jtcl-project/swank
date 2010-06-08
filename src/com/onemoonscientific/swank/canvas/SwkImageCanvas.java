@@ -395,6 +395,9 @@ public class SwkImageCanvas implements SwkCanvasType {
         node.setUserObject(shape);
         shape.node = node;
         rootNode.add(node);
+        if (g1 != null) {
+            shape.paintShape((Graphics2D) g1);
+        }
         //treeModel.nodeStructureChanged(rootNode);
     }
 
@@ -890,15 +893,14 @@ public class SwkImageCanvas implements SwkCanvasType {
     public void repaint(int delay) {
         final Component component2 = component;
         final int delay2 = delay;
-
         SwingUtilities.invokeLater(new Runnable() {
 
             public void run() {
                 if (component2 != null) {
                      if (component2 instanceof SwkCanvas) {
-                        ((SwkCanvas) component2).changed = true;
+                         ((SwkCanvas) component2).changed = true;
                     }
-                   component2.repaint(delay2);
+                    component2.repaint(delay2);
                 }
             }
         });
@@ -967,7 +969,6 @@ public class SwkImageCanvas implements SwkCanvasType {
         fpAT.setToScale(d.getWidth(), 1.0);
         AffineTransform pfAT = pfTransformer.getTransform();
         pfAT.setToScale(d.getWidth(), 1.0);
-
         for (Enumeration e = rootNode.depthFirstEnumeration() ; e.hasMoreElements() ;) {
             ItemTreeNode node = (ItemTreeNode) e.nextElement();
             SwkShape swkShape = (SwkShape) node.getUserObject();
@@ -1009,6 +1010,9 @@ public class SwkImageCanvas implements SwkCanvasType {
            }
         }
         g2.setTransform(storeAT);
+        if (component instanceof SwkCanvas) {
+            ((SwkCanvas) component).changed = false;
+         }
     }
 
     public void setClassName(String className) {
