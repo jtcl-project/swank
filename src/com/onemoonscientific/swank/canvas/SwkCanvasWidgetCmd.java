@@ -571,8 +571,6 @@ public class SwkCanvasWidgetCmd implements Command {
         } catch (SwkException swkE) {
             throw new TclException(interp, swkE.getMessage());
         }
-
-        swkcanvas.repaint(50);
     }
 
     void addShape(final SwkImageCanvas swkcanvas, final SwkShape swkShape) {
@@ -1432,7 +1430,6 @@ public class SwkCanvasWidgetCmd implements Command {
                 System.out.println("error adding shape " + swkE.getMessage());
             }
 
-            swkcanvas.repaint();
         }
     }
 
