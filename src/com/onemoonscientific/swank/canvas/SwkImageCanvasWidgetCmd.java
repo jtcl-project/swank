@@ -459,8 +459,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
         } catch (SwkException swkE) {
             throw new TclException(interp, swkE.getMessage());
         }
-
-        swkcanvas.repaint(50);
+        swkcanvas.repaint();
     }
 
     void addShape(final SwkImageCanvas swkcanvas, final SwkShape swkShape) {
