@@ -218,8 +218,8 @@ public class XYTableCategoryData extends AbstractDataset
      *
      * @return The index.
      */
-    public int indexOf(Comparable seriesKey) {
-        return -1;
+   public int indexOf(Comparable seriesKey) {
+        return ySeriesNames.indexOf(seriesKey);
     }
 
     /**

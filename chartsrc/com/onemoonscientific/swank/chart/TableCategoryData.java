@@ -219,8 +219,8 @@ public class TableCategoryData extends AbstractDataset
      *
      * @return The index.
      */
-    public int indexOf(Comparable seriesKey) {
-        return -1;
+   public int indexOf(Comparable seriesKey) {
+        return ySeriesNames.indexOf(seriesKey);
     }
 
     /**

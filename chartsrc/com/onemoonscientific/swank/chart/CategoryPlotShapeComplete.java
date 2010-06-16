@@ -51,9 +51,11 @@ import java.lang.*;
 import java.util.*;
 
 
-public class BoxPlotShape extends SwkShape {
+public class CategoryPlotShapeComplete extends SwkShape implements DatasetShape, NumberRange, PlotInterface  {
     static CanvasParameter[] parameters = {
-       new TagsParameter(), new FontParameter(), new RangeaxisParameter(), new DomainaxisParameter(), new DatasetParameter(), new FillParameter()
+       new TagsParameter(), new DatasetParameter(), new FillParameter(), new LegendStateParameter(), new LegendLocParameter(),
+       new RLabelParameter(), new RMinParameter(), new RMaxParameter(), new RAutoParameter(),
+       new TransformerParameter()
     };
     static Map parameterMap = new TreeMap();
 
@@ -67,39 +69,44 @@ public class BoxPlotShape extends SwkShape {
     boolean drawLine = false;
     boolean closePath = false;
     CategoryPlot plot = new CategoryPlot();
+    PlotLegend plotLegend = new PlotLegend(plot);
     ChartRenderingInfo chartInfo = new ChartRenderingInfo();
     PlotRenderingInfo state = new PlotRenderingInfo(chartInfo);
     Rectangle2D.Double plotArea = null;
     double cursor = 0.0;
-    CategoryAxis domainAxis = null;
-    String domainAxisTag = "";
-    ValueAxis rangeAxis = null;
-    String rangeAxisTag = "";
     RectangleEdge edge = RectangleEdge.BOTTOM;
     String edgeString = "bottom";
     String plotType = "lineandshape";
-    BoxAndWhiskerRenderer renderer = null;
+    CategoryItemRenderer renderer = null;
+    String legendLoc = "s.n";
+    boolean legendState = false;
 
-    public BoxPlotShape() {
-        plot.setDataset(new BoxAndWhiskerTableData());
+    public CategoryPlotShapeComplete() {
+        plot.setDataset(new DefaultCategoryData());
+        plot.setDomainAxis(new CategoryAxis());
+        plot.setRangeAxis(new NumberAxis());
         setRenderer("render");
         setShape(null);
-        System.out.println("new shape");
     }
     public CategoryPlot getPlot() {
         return plot;
     } 
     public  void setRenderer(String renderName) {
-        renderer = new BoxAndWhiskerRenderer();
+        renderer = new BarRenderer();
         plot.setRenderer(renderer);
     }
     public void setDataset(String name) {
-        System.out.println("setdataset");
-        BoxAndWhiskerTableData categoryData = BoxAndWhiskerTableData.get(name);
+        DefaultCategoryData categoryData = DefaultCategoryData.get(name);
         //HighLowData categoryData = HighLowData.get(name);
         plot.setDataset(categoryData);
     }
-    public void setDrawline(boolean newValue) {
+    public void setDataset(int index, String name) {
+        DefaultCategoryData categoryData = DefaultCategoryData.get(name);
+        //HighLowData categoryData = HighLowData.get(name);
+        plot.setDataset(index,categoryData);
+    }
+
+   public void setDrawline(boolean newValue) {
         drawLine = newValue;
     }
 
@@ -121,6 +128,18 @@ public class BoxPlotShape extends SwkShape {
 
     public double getRadius() {
         return radius;
+    }
+    public String getLegendLoc() {
+        return legendLoc;
+    }
+    public void setLegendLoc(String loc) {
+        legendLoc = loc;
+    }
+    public boolean getLegendState() {
+        return legendState;
+    }
+    public void setLegendState(boolean state) {
+        legendState = state;
     }
 
     public void coords(SwkImageCanvas canvas, double[] coords)
@@ -163,103 +182,61 @@ public class BoxPlotShape extends SwkShape {
     }
 
     public String getType() {
-        return "vector";
+        return "bar";
     }
 
     public void paintShape(Graphics2D g2) {
         Point2D anchor = new Point2D.Double();
         applyCoordinates();
-        plot.draw(g2, plotArea, anchor, null, state);
+        Rectangle2D plotAreaNow = (Rectangle2D) plotArea.clone();;
+                AffineTransform shapeTransform = getTransform();
+                if (shapeTransform != null) {
+                        plotAreaNow = shapeTransform.createTransformedShape(plotAreaNow).getBounds2D();
+                }
+
+        if (legendState) {
+            Rectangle2D  legendArea = plotLegend.arrangeLegend(g2, plotAreaNow);
+            plot.draw(g2, plotAreaNow, anchor, null, state);
+            plotLegend.drawLegend(g2,legendArea);
+        } else {
+            plot.draw(g2, plotAreaNow, anchor, null, state);
+        }
     }
 
     public void addSymbol(float x1, float y1, float radius) {
     }
-
-
-    static class DatasetParameter extends StringParameter {
-        private static String name = "dataset";
-
-        DatasetParameter() {
-            CanvasParameter.addParameter(this);
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getValue(SwkShape swkShape) {
-             BoxAndWhiskerTableData categoryData = (BoxAndWhiskerTableData) ((BoxPlotShape) swkShape).plot.getDataset();
-             return categoryData.getName();
-        }
-
-        public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
-            String datasetName = getNewValue();
-            ((BoxPlotShape) swkShape).setDataset(datasetName);
-        }
-    }
-
-    static class DomainaxisParameter extends StringParameter {
-        private static String name = "domainaxis";
-
-        DomainaxisParameter() {
-            CanvasParameter.addParameter(this);
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getValue(SwkShape swkShape) {
-            return ((BoxPlotShape) swkShape).domainAxisTag;
-        }
-
-        public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
-            String domainAxisTag = getNewValue();
-            ((BoxPlotShape) swkShape).domainAxisTag = domainAxisTag;
-
-            try {
-                SwkShape axisShape = swkCanvas.getShape(domainAxisTag);
-
-                if (axisShape instanceof CategoryAxisShape) {
-                    CategoryAxis domainAxis = (CategoryAxis) ((CategoryAxisShape) axisShape).axis;
-                    ((BoxPlotShape) swkShape).domainAxis = domainAxis;
-                    ((BoxPlotShape) swkShape).plot.setDomainAxis(domainAxis);
+    public TclObject getDatasets(Interp interp) throws TclException {
+                int nDatasets = plot.getDatasetCount();
+                TclObject list = TclList.newInstance();
+                for (int i = 0; i < nDatasets; i++) {
+                        DefaultCategoryData catData = (DefaultCategoryData) plot.getDataset(i);
+                        TclList.append(interp, list, TclString.newInstance(catData.getName()));
                 }
-            } catch (SwkException swkE) {
-            }
-        }
+                return list;
+}
+public void updateDatasets(String[] datasetNames) {
+		int nDatasets = plot.getDatasetCount();
+		for (int i = 0; i < datasetNames.length; i++) {
+			setDataset(i, datasetNames[i]);
+			if (i >= nDatasets) {
+				BarRenderer newRenderer = new BarRenderer();
+				//newRenderer.setToolTipGenerator(XYLineAndShapeComplete.generator);
+				plot.setRenderer(i, newRenderer);
+			}
+		}
+	}
+     public TclObject getColors(Interp interp) throws TclException {
+	                    TclObject list = TclList.newInstance();
+			    return list;
+
+     }
+      public void updateColors(Color[] colors) {
+       }
+
+   public CategoryAxis getDomainAxis () {
+	    return (CategoryAxis) plot.getDomainAxis();
     }
-
-    static class RangeaxisParameter extends StringParameter {
-        private static String name = "rangeaxis";
-
-        RangeaxisParameter() {
-            CanvasParameter.addParameter(this);
-        }
-
-        public String getName() {
-            return name;
-        }
-
-       public  String getValue(SwkShape swkShape) {
-            return ((BoxPlotShape) swkShape).rangeAxisTag;
-        }
-
-        public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
-            String rangeAxisTag = getNewValue();
-            ((BoxPlotShape) swkShape).rangeAxisTag = rangeAxisTag;
-
-            try {
-                SwkShape axisShape = swkCanvas.getShape(rangeAxisTag);
-                System.out.println("set range axis");
-                if (axisShape instanceof NumberAxisShape) {
-                    System.out.println("set range axis2");
-                    ValueAxis rangeAxis = (NumberAxis) ((NumberAxisShape) axisShape).axis;
-                    ((BoxPlotShape) swkShape).rangeAxis = rangeAxis;
-                    ((BoxPlotShape) swkShape).plot.setRangeAxis(rangeAxis);
-                }
-            } catch (SwkException swkE) {
-            }
-        }
+  public NumberAxis getRangeAxis () {
+	    return (NumberAxis) plot.getRangeAxis();
     }
 }

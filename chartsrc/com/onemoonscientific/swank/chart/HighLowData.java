@@ -57,6 +57,7 @@ public class HighLowData implements OHLCDataset {
     }
 
     public HighLowData(String name) {
+        this.name = name;
         datasetMap.put(name,this);
     }
     public void remove(String name) {
@@ -188,8 +189,8 @@ public class HighLowData implements OHLCDataset {
      *
      * @return The index.
      */
-    public int indexOf(Comparable seriesKey) {
-        return -1;
+   public int indexOf(Comparable seriesKey) {
+        return 0;
     }
 
     /**

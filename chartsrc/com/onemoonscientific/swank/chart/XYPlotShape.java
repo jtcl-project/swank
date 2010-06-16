@@ -52,9 +52,9 @@ import java.lang.*;
 import java.util.*;
 
 
-public class XYPlotShape extends SwkShape {
+public class XYPlotShape extends SwkShape implements DatasetShape, NumberDomain,NumberRange,PlotInterface {
     static CanvasParameter[] parameters = {
-       new TagsParameter(), new FontParameter(), new RangeaxisParameter(), new DomainaxisParameter(), new DatasetParameter(), new FillParameter()
+       new TagsParameter(), new DatasetParameter(), new FillParameter()
     };
     static Map parameterMap = new TreeMap();
 
@@ -68,6 +68,7 @@ public class XYPlotShape extends SwkShape {
     boolean drawLine = false;
     boolean closePath = false;
     XYPlot plot = new XYPlot();
+    PlotLegend plotLegend = new PlotLegend(plot);
     ChartRenderingInfo chartInfo = new ChartRenderingInfo();
     PlotRenderingInfo state = new PlotRenderingInfo(chartInfo);
     Rectangle2D.Double plotArea = null;
@@ -81,6 +82,8 @@ public class XYPlotShape extends SwkShape {
     String plotType = "lineandshape";
     XYItemRenderer renderer = null;
     Rectangle2D rect2D = null;
+    String legendLoc = "s.n";
+    boolean legendState = false;
     public XYPlotShape() {
         rect2D = new Rectangle2D.Double();
         setRenderer();
@@ -131,6 +134,18 @@ public class XYPlotShape extends SwkShape {
     public double getRadius() {
         return radius;
     }
+    public String getLegendLoc() {
+        return legendLoc;
+    }
+    public void setLegendLoc(String loc) {
+        legendLoc = loc;
+    }
+    public boolean getLegendState() {
+        return legendState;
+    }
+    public void setLegendState(boolean state) {
+        legendState = state;
+    }
     public String hit(double x, double y) { 
         String result = "";
         if (state != null) {
@@ -146,7 +161,17 @@ public class XYPlotShape extends SwkShape {
          return result;
     }
     public boolean hitShape(double x, double y) {
-        return rect2D.contains(x, y);
+           boolean hit = false;
+           Shape checkShape = getShape();
+            AffineTransform shapeTransform = getTransform();
+            if (shapeTransform != null) {
+                checkShape = shapeTransform.createTransformedShape(checkShape);
+            }
+            Rectangle bounds = checkShape.getBounds();
+            if (bounds.contains(x, y)) {
+                hit = true;
+            }
+            return hit;
     }
 
     public void coords(SwkImageCanvas canvas, double[] coords)
@@ -212,13 +237,26 @@ public class XYPlotShape extends SwkShape {
     }
 
     public String getType() {
-        return "vector";
+        return "plot";
     }
 
     public void paintShape(Graphics2D g2) {
         Point2D anchor = new Point2D.Double();
         applyCoordinates();
-        plot.draw(g2, plotArea, anchor, null, state);
+        Rectangle2D plotAreaNow = (Rectangle2D) plotArea.clone();;
+        AffineTransform shapeTransform = getTransform();
+        if (shapeTransform != null) {
+                plotAreaNow = shapeTransform.createTransformedShape(plotAreaNow).getBounds2D();
+        }
+
+        if (legendState) {
+            Rectangle2D  legendArea = plotLegend.arrangeLegend(g2, plotAreaNow);
+            plot.draw(g2, plotAreaNow, anchor, null, state);
+            plotLegend.drawLegend(g2,legendArea);
+        } else {
+            plot.draw(g2, plotAreaNow, anchor, null, state);
+        }
+
         ValueAxis dAxis = plot.getDomainAxis();
         double lowerBoundX = dAxis.getLowerBound();
         double upperBoundX = dAxis.getUpperBound();
@@ -245,115 +283,78 @@ public class XYPlotShape extends SwkShape {
 
     public void addSymbol(float x1, float y1, float radius) {
     }
-
-
-    static class DatasetParameter extends CanvasParameter {
-        private static String name = "dataset";
-        String[] datasetNames = new String[0];
-
-        DatasetParameter() {
-            CanvasParameter.addParameter(this);
-        }
-
-        public String getName() {
-            return name;
-        }
-        public TclObject getValue(Interp interp, SwkShape swkShape)
-             throws TclException {
-             if ((swkShape == null) || !(swkShape instanceof XYPlotShape)) {
-                 throw new TclException(interp, "xyplot shape doesn't exist");
-            }
-            int nDatasets = ((XYPlotShape) swkShape).plot.getDatasetCount();
-            TclObject list = TclList.newInstance();
-            for (int i=0;i<nDatasets;i++) {
-                 XYData xyData = (XYData) ((XYPlotShape) swkShape).plot.getDataset(i);
-                 TclList.append(interp,list,TclString.newInstance(xyData.getName()));
-            }
-            return list;
-        }
-
-        public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
-             throws TclException {
-             TclObject[] datasetNameList = TclList.getElements(interp, arg);
-
-             if (datasetNameList.length == 0) {
-                 throw new TclException(interp,
-                     "bad dataset value, must be \"dataset1 dataset2 ...\"");
-             }
-             String datasetNamesTmp[] = new String[datasetNameList.length];
-             for (int i=0;i<datasetNameList.length;i++) {
-                 datasetNamesTmp[i] =  datasetNameList[i].toString();
-             }
-             datasetNames = datasetNamesTmp;
-         }
-
-         public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
-              for (int i=0;i<datasetNames.length;i++) {
-                 ((XYPlotShape) swkShape).setDataset(i,datasetNames[i]);
-              }
-         }
-    }
-
-    static class DomainaxisParameter extends StringParameter {
-        private static String name = "domainaxis";
-
-        DomainaxisParameter() {
-            CanvasParameter.addParameter(this);
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getValue(SwkShape swkShape) {
-            return ((XYPlotShape) swkShape).domainAxisTag;
-        }
-
-        public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
-            String domainAxisTag = getNewValue();
-            ((XYPlotShape) swkShape).domainAxisTag = domainAxisTag;
-
-            try {
-                SwkShape axisShape = swkCanvas.getShape(domainAxisTag);
-
-                if (axisShape instanceof NumberAxisShape) {
-                    ValueAxis domainAxis = (NumberAxis) ((NumberAxisShape) axisShape).axis;
-                    ((XYPlotShape) swkShape).domainAxis = domainAxis;
-                    ((XYPlotShape) swkShape).plot.setDomainAxis(domainAxis);
+    public TclObject getDatasets(Interp interp) throws TclException {
+                int nDatasets = plot.getDatasetCount();
+                TclObject list = TclList.newInstance();
+                for (int i = 0; i < nDatasets; i++) {
+                        XYData xyData = (XYData) plot.getDataset(i);
+                        TclList.append(interp, list, TclString.newInstance(xyData.getName()));
                 }
-            } catch (SwkException swkE) {
-            }
-        }
+                return list;
     }
-
-    static class RangeaxisParameter extends StringParameter {
-        private static String name = "rangeaxis";
-
-        RangeaxisParameter() {
-            CanvasParameter.addParameter(this);
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getValue(SwkShape swkShape) {
-            return ((XYPlotShape) swkShape).rangeAxisTag;
-        }
-
-        public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
-            String rangeAxisTag = getNewValue();
-            ((XYPlotShape) swkShape).rangeAxisTag = rangeAxisTag;
-
-            try {
-                SwkShape axisShape = swkCanvas.getShape(rangeAxisTag);
-                if (axisShape instanceof NumberAxisShape) {
-                    ValueAxis rangeAxis = (NumberAxis) ((NumberAxisShape) axisShape).axis;
-                    ((XYPlotShape) swkShape).rangeAxis = rangeAxis;
-                    ((XYPlotShape) swkShape).plot.setRangeAxis(rangeAxis);
+    public void updateDatasets(String[] datasetNames) {
+                int nDatasets = plot.getDatasetCount();
+                for (int i = 0; i < datasetNames.length; i++) {
+                        setDataset(i, datasetNames[i]);
+                        if (i >= nDatasets) {
+                                XYLineAndShapeRenderer newRenderer = new XYLineAndShapeRenderer();
+                                newRenderer.setToolTipGenerator(XYLineAndShapeComplete.generator);
+                                plot.setRenderer(i, newRenderer);
+                        }
                 }
-            } catch (SwkException swkE) {
-            }
         }
+       public TclObject getColors(Interp interp) throws TclException {
+                int nDatasets = plot.getDatasetCount();
+                TclObject list = TclList.newInstance();
+                for (int iData = 0; iData < nDatasets; iData++) {
+                        XYItemRenderer renderer = plot.getRenderer(iData);
+                        if (renderer == null) {
+                                renderer = plot.getRenderer();
+                        }
+                        if (renderer instanceof XYLineAndShapeRenderer) {
+                                XYData data = (XYData) plot.getDataset(iData);
+                                int nSeries = data.getSeriesCount();
+                                for (int i = 0; i < nSeries; i++) {
+                                        Color color = (Color) (((XYLineAndShapeRenderer) renderer).getSeriesPaint(i));
+                                        TclList.append(interp, list, TclString.newInstance(SwankUtil.parseColor(color)));
+                                }
+                        } else {
+                                TclList.append(interp, list, TclString.newInstance(""));
+                        }
+                }
+                return list;
+        }
+
+     public void updateColors(Color[] colors) {
+                Color color = Color.BLACK;
+                int nDatasets = plot.getDatasetCount();
+                int j = 0;
+                for (int iData = 0; iData < nDatasets; iData++) {
+                        XYItemRenderer renderer = plot.getRenderer(iData);
+                        if (renderer == null) {
+                                renderer = plot.getRenderer();
+                        }
+                        if (renderer instanceof XYLineAndShapeRenderer) {
+                                XYData data = (XYData) plot.getDataset(iData);
+                                int nSeries = data.getSeriesCount();
+                                for (int i = 0; i < nSeries; i++) {
+                                        color = Color.BLACK;
+                                        if (colors.length > j) {
+                                                color = colors[j];
+                                        }
+                                        ((XYLineAndShapeRenderer) renderer).setSeriesPaint(i, color);
+                                        ((XYLineAndShapeRenderer) renderer).setSeriesFillPaint(i, color);
+                                        ((XYLineAndShapeRenderer) renderer).setSeriesOutlinePaint(i, color);
+                                        j++;
+                                }
+                        }
+                }
     }
-}
+    public NumberAxis getDomainAxis () {
+	    return (NumberAxis) plot.getDomainAxis();
+    }
+  public NumberAxis getRangeAxis () {
+	    return (NumberAxis) plot.getRangeAxis();
+    }
+
+ }

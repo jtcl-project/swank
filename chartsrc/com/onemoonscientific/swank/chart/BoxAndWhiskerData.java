@@ -22,7 +22,6 @@
  *
  *
  */
-
 /**
  *
  * @author  JOHNBRUC
@@ -30,30 +29,36 @@
  */
 package com.onemoonscientific.swank.chart;
 
-import com.onemoonscientific.swank.*;
-import com.onemoonscientific.swank.canvas.*;
-
-import org.jfree.chart.ChartRenderingInfo;
-import org.jfree.chart.axis.*;
-import org.jfree.chart.plot.PlotRenderingInfo;
-
-import org.jfree.ui.RectangleEdge;
-
-import tcl.lang.*;
-
-import java.awt.*;
-import java.awt.geom.*;
-
-import java.lang.*;
-
+import org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset;
 import java.util.*;
 
+public class BoxAndWhiskerData extends DefaultBoxAndWhiskerCategoryDataset {
 
-public class LogarithmicAxisShape extends NumberAxisShape {
-    public LogarithmicAxisShape() {
-        setShape(null);
-        System.out.println("new log axis");
-        axis = (Axis) new LogarithmicAxis("");
+    static HashMap datasetMap = new HashMap();
+    static int id = 0;
+    String name = "";
+
+    public BoxAndWhiskerData() {
+        name = "xyData" + id;
+        datasetMap.put(name, (Object) this);
+        id++;
     }
 
+    public BoxAndWhiskerData(String name) {
+        this.name = name;
+        datasetMap.put(name, (Object) this);
+    }
+
+    public void remove(String name) {
+        datasetMap.remove(name);
+    }
+
+    public static BoxAndWhiskerTableData get(String name) {
+        return (BoxAndWhiskerTableData) datasetMap.get(name);
+    }
+
+    public String getName() {
+        return name;
+    }
 }
+

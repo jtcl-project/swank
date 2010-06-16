@@ -36,7 +36,9 @@ import org.jfree.chart.ChartRenderingInfo;
 import org.jfree.chart.axis.*;
 import org.jfree.chart.plot.*;
 import org.jfree.chart.renderer.category.*;
+import org.jfree.data.category.*;
 
+import org.jfree.ui.RectangleEdge;
 
 import tcl.lang.*;
 
@@ -46,15 +48,13 @@ import java.awt.geom.*;
 import java.lang.*;
 
 import java.util.*;
-import org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset;
 
-public class BoxPlotShapeComplete extends SwkShape implements NumberRange, PlotInterface, DatasetShape {
+public class StatisticalCategoryPlotShapeComplete extends SwkShape implements DatasetShape, NumberRange, PlotInterface {
 
 	static CanvasParameter[] parameters = {
-		new TagsParameter(), new DatasetParameter(), new LegendStateParameter(), new LegendLocParameter(),
-                new PaintParameter(),
+		new TagsParameter(), new DatasetParameter(), new FillParameter(), new LegendStateParameter(), new LegendLocParameter(),
 		new RLabelParameter(), new RMinParameter(), new RMaxParameter(), new RAutoParameter(),
-                new TransformerParameter()};
+		new TransformerParameter()};
 	static Map parameterMap = new TreeMap();
 
 	static {
@@ -71,17 +71,18 @@ public class BoxPlotShapeComplete extends SwkShape implements NumberRange, PlotI
 	PlotRenderingInfo state = new PlotRenderingInfo(chartInfo);
 	Rectangle2D.Double plotArea = null;
 	double cursor = 0.0;
-	String plotType = "boxandwhisker";
-	BoxAndWhiskerRenderer renderer = null;
+	RectangleEdge edge = RectangleEdge.BOTTOM;
+	String edgeString = "bottom";
+	String plotType = "barstat";
+	CategoryItemRenderer renderer = null;
 	String legendLoc = "s.n";
-	boolean legendState = true;
+	boolean legendState = false;
 
-	public BoxPlotShapeComplete() {
-		plot.setDataset(new BoxAndWhiskerData());
+	public StatisticalCategoryPlotShapeComplete() {
+		plot.setDataset(new DefaultStatisticalCategoryData());
 		plot.setDomainAxis(new CategoryAxis());
 		plot.setRangeAxis(new NumberAxis());
 		setRenderer("render");
-		setFill(Color.gray);
 		setShape(null);
 	}
 
@@ -90,14 +91,20 @@ public class BoxPlotShapeComplete extends SwkShape implements NumberRange, PlotI
 	}
 
 	public void setRenderer(String renderName) {
-		renderer = new BoxAndWhiskerRenderer();
+		renderer = new StatisticalBarRenderer();
 		plot.setRenderer(renderer);
 	}
 
 	public void setDataset(String name) {
-		BoxAndWhiskerData categoryData = BoxAndWhiskerData.get(name);
+		DefaultStatisticalCategoryData categoryData = DefaultStatisticalCategoryData.get(name);
 		//HighLowData categoryData = HighLowData.get(name);
 		plot.setDataset(categoryData);
+	}
+
+	public void setDataset(int index, String name) {
+		DefaultStatisticalCategoryData categoryData = DefaultStatisticalCategoryData.get(name);
+		//HighLowData categoryData = HighLowData.get(name);
+		plot.setDataset(index, categoryData);
 	}
 
 	public void setDrawline(boolean newValue) {
@@ -180,18 +187,18 @@ public class BoxPlotShapeComplete extends SwkShape implements NumberRange, PlotI
 	}
 
 	public String getType() {
-		return "boxplot";
+		return "barstat";
 	}
 
 	public void paintShape(Graphics2D g2) {
 		Point2D anchor = new Point2D.Double();
 		applyCoordinates();
 		Rectangle2D plotAreaNow = (Rectangle2D) plotArea.clone();
-		renderer.setArtifactPaint(getFill());
-                AffineTransform shapeTransform = getTransform();
-                if (shapeTransform != null) {
-                        plotAreaNow = shapeTransform.createTransformedShape(plotAreaNow).getBounds2D();
-                }
+
+		AffineTransform shapeTransform = getTransform();
+		if (shapeTransform != null) {
+			plotAreaNow = shapeTransform.createTransformedShape(plotAreaNow).getBounds2D();
+		}
 
 		if (legendState) {
 			Rectangle2D legendArea = plotLegend.arrangeLegend(g2, plotAreaNow);
@@ -200,47 +207,40 @@ public class BoxPlotShapeComplete extends SwkShape implements NumberRange, PlotI
 		} else {
 			plot.draw(g2, plotAreaNow, anchor, null, state);
 		}
-
 	}
 
 	public void addSymbol(float x1, float y1, float radius) {
 	}
 
 	public TclObject getDatasets(Interp interp) throws TclException {
-		BoxAndWhiskerData boxData = (BoxAndWhiskerData) plot.getDataset();
+		int nDatasets = plot.getDatasetCount();
 		TclObject list = TclList.newInstance();
-		TclList.append(interp, list, TclString.newInstance(boxData.getName()));
+		for (int i = 0; i < nDatasets; i++) {
+			DefaultStatisticalCategoryData catData = (DefaultStatisticalCategoryData) plot.getDataset(i);
+			TclList.append(interp, list, TclString.newInstance(catData.getName()));
+		}
 		return list;
 	}
 
 	public void updateDatasets(String[] datasetNames) {
-		if (datasetNames.length == 1) {
-			setDataset(datasetNames[0]);
+		int nDatasets = plot.getDatasetCount();
+		for (int i = 0; i < datasetNames.length; i++) {
+			setDataset(i, datasetNames[i]);
+			if (i >= nDatasets) {
+				StatisticalBarRenderer newRenderer = new StatisticalBarRenderer();
+				//newRenderer.setToolTipGenerator(XYLineAndShapeComplete.generator);
+				plot.setRenderer(i, newRenderer);
+			}
 		}
 	}
-        public TclObject getColors(Interp interp) throws TclException {
-                BoxAndWhiskerData boxData = (BoxAndWhiskerData) plot.getDataset();
-                int nRows = boxData.getRowCount();
-                TclObject list = TclList.newInstance();
-		for (int i = 0; i < nRows; i++) {
-                     Color color = (Color) renderer.getSeriesPaint(i);
-                     TclList.append(interp, list, TclString.newInstance(SwankUtil.parseColor(color)));
-                }
-                return list;
-        }
+
+	public TclObject getColors(Interp interp) throws TclException {
+		TclObject list = TclList.newInstance();
+		return list;
+
+	}
 
 	public void updateColors(Color[] colors) {
-		BoxAndWhiskerData boxData = (BoxAndWhiskerData) plot.getDataset();
-        int nRows = boxData.getRowCount();
-		for (int i = 0; i < nRows; i++) {
-			Color color = Color.BLACK;
-			if (colors.length > i) {
-				color = colors[i];
-			}
-			renderer.setSeriesPaint(i, color);
-			renderer.setSeriesFillPaint(i, color);
-			renderer.setSeriesOutlinePaint(i, color);
-		}
 	}
 
 	public CategoryAxis getDomainAxis() {

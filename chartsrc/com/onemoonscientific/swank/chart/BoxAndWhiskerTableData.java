@@ -22,132 +22,143 @@
  *
  *
  */
-
 /**
  *
  * @author  JOHNBRUC
  * @version
  */
 package com.onemoonscientific.swank.chart;
+
 import com.onemoonscientific.swank.SwkTableModel;
 import com.onemoonscientific.swank.GetValueOnEventThread;
-import org.jfree.data.DomainOrder;
-import org.jfree.data.general.DatasetChangeListener;
-import org.jfree.data.general.DatasetGroup;
-import org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset;
-import org.jfree.data.statistics.BoxAndWhiskerCategoryDataset;
 
 import tcl.lang.*;
 
 import java.util.*;
 import java.awt.EventQueue;
 
+public class BoxAndWhiskerTableData extends BoxAndWhiskerData {
 
-public class BoxAndWhiskerTableData extends DefaultBoxAndWhiskerCategoryDataset {
-    static HashMap datasetMap = new HashMap();
-    static int id = 0;
     int xColumn = -1;
     int gColumn = -1;
     int yColumn = -1;
+    int[] yColumns = new int[0];
+
+    ;
     SwkTableModel tableModel = null;
     Map seriesMap = new TreeMap();
     List seriesNames = new ArrayList();
     List seriesLists = new ArrayList();
-    String name = "";
+
     public BoxAndWhiskerTableData() {
-         name  = "xyData"+id;
-         datasetMap.put(name,(Object) this);
-         id++;
+        name = "xyData" + id;
+        datasetMap.put(name, (Object) this);
+        id++;
     }
 
     public BoxAndWhiskerTableData(String name) {
-        datasetMap.put(name,(Object) this);
+        this.name = name;
+        datasetMap.put(name, (Object) this);
     }
+
     public void setTableModel(SwkTableModel model) {
         if (EventQueue.isDispatchThread()) {
-             setTableModelOnEventThread(model);
-         } else {
-           (new SetModel()).exec(model);
-         }
+            setTableModelOnEventThread(model);
+        } else {
+            (new SetModel()).exec(model);
+        }
     }
+
     class SetModel extends GetValueOnEventThread {
+
         SwkTableModel model;
-        void  exec(SwkTableModel model) {
+
+        void exec(SwkTableModel model) {
             this.model = model;
             execOnThread();
         }
+
         public void run() {
-             setTableModelOnEventThread(model);
+            setTableModelOnEventThread(model);
         }
     }
 
-    public void remove(String name) {
-          datasetMap.remove(name);
-    }    
-    public static BoxAndWhiskerTableData get(String name) {
-        return (BoxAndWhiskerTableData) datasetMap.get(name);
-    }
-    public String getName() {
-         return name;
-    }
-
     public void setTableModelOnEventThread(SwkTableModel model) {
-         tableModel = model;
-         xColumn = -1;
-         gColumn = -1;
-         yColumn = -1;
-    } 
+        tableModel = model;
+        xColumn = -1;
+        gColumn = -1;
+        yColumns = new int[1];
+        yColumns[0] = -1;
+    }
 
     public void setXColumn(int column) {
-          xColumn = column;
+        xColumn = column;
     }
 
     public void setGColumn(int column) {
-          gColumn = column;
+        gColumn = column;
     }
 
     public void setYColumn(int column) {
-          yColumn = column;
+        yColumns = new int[1];
+        yColumns[0] = -1;
     }
-    public void getSeries() { 
-          seriesMap.clear();
-          seriesLists.clear();
-          seriesNames.clear();
-          int nRows = tableModel.getNRows();
-          int nSeries = 0;
-          for (int i=0;i<nRows;i++) {
-              Object gObject = tableModel.getValueAt(i, gColumn);
-              System.out.println(gColumn+" "+gObject.toString());
-              Number y = null;
-              if ((yColumn >= 0) && (yColumn < tableModel.getNCols()))  {
-                  Object yObject = tableModel.getValueAt(i, yColumn);
-                  if (yObject instanceof Number) {
-                       y = (Number) yObject;
-                  }
-              }
 
-              Integer seriesIndex = (Integer) seriesMap.get(gObject);
-              ArrayList arrayList = null;
-              if (seriesIndex == null) {
-                    System.out.println("add  "+gObject.toString());
-                    seriesNames.add(gObject);
-                    seriesMap.put(gObject,new Integer(nSeries));
-                    arrayList = new ArrayList();
-                    seriesLists.add(arrayList);
-                    nSeries++;
-              } else {
-                   int index = seriesIndex.intValue();
-                   arrayList = (ArrayList) seriesLists.get(index);
-              }
-              if (y != null) {
-                  arrayList.add(y);
-              }
-          }
-          for (int i = 0;i<nSeries;i++) {
-              ArrayList arrayList = (ArrayList) seriesLists.get(i);
-              Object seriesName  =  seriesNames.get(i);
-              add(arrayList,(Comparable) seriesName,(Comparable) new Integer(0));
-          } 
-          
+    public void setYColumns(Interp interp, TclObject columnArgs) throws TclException {
+        TclObject[] columnObjects = TclList.getElements(interp, columnArgs);
+        yColumns = new int[columnObjects.length];
+        for (int i = 0; i < columnObjects.length; i++) {
+            int column = TclInteger.get(interp, columnObjects[i]);
+            yColumns[i] = column;
+        }
+    }
+
+    public void setYColumns(int[] columns) {
+        yColumns = columns;
+    }
+
+    public void getSeries() {
+        int nRows = tableModel.getNRows();
+        String yColumnName = "Data";
+        for (int j = 0; j < yColumns.length; j++) {
+            seriesMap.clear();
+            seriesLists.clear();
+            seriesNames.clear();
+            int yColumn = yColumns[j];
+            int nSeries = 0;
+            if ((yColumn >= 0) && (yColumn < tableModel.getNCols())) {
+                yColumnName = tableModel.getColumnName(yColumn);
+                for (int i = 0; i < nRows; i++) {
+                    Object gObject = tableModel.getValueAt(i, gColumn);
+                    Number y = null;
+                    Object yObject = tableModel.getValueAt(i, yColumn);
+                    if (yObject instanceof Number) {
+                        y = (Number) yObject;
+                    }
+
+                    Integer seriesIndex = (Integer) seriesMap.get(gObject);
+                    ArrayList arrayList = null;
+                    if (seriesIndex == null) {
+                        seriesNames.add(gObject);
+                        seriesMap.put(gObject, new Integer(nSeries));
+                        arrayList = new ArrayList();
+                        seriesLists.add(arrayList);
+                        nSeries++;
+                    } else {
+                        int index = seriesIndex.intValue();
+                        arrayList = (ArrayList) seriesLists.get(index);
+                    }
+                    if (y != null) {
+                        arrayList.add(y);
+                    }
+                }
+            }
+            for (int i = 0; i < nSeries; i++) {
+                ArrayList arrayList = (ArrayList) seriesLists.get(i);
+                Object seriesName = seriesNames.get(i);
+                add(arrayList, (Comparable) seriesName, (Comparable) yColumnName);
+            }
+        }
     }
 }
+

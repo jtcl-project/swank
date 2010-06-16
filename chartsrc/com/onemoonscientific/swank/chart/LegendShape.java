@@ -60,7 +60,7 @@ public class LegendShape extends SwkShape {
         initializeParameters(parameters, parameterMap);
     }
     XYPlotShape xyPlotShape = null;
-    BoxPlotShape boxPlotShape = null;
+    BoxPlotShapeComplete boxPlotShape = null;
     String plotTag = "";
     LegendTitle legend = null;
     
@@ -81,8 +81,8 @@ public class LegendShape extends SwkShape {
                 SwkShape plotShape = canvas.getShape(plotTag);
                 if (plotShape instanceof XYPlotShape) {
                     xyPlotShape = (XYPlotShape)  plotShape;
-                } else if (plotShape instanceof BoxPlotShape) {
-                    boxPlotShape = (BoxPlotShape)  plotShape;
+                } else if (plotShape instanceof BoxPlotShapeComplete) {
+                    boxPlotShape = (BoxPlotShapeComplete)  plotShape;
                 }
             } catch (SwkException swkE) {
             }

@@ -49,10 +49,10 @@ import java.awt.geom.*;
 import java.util.*;
 import java.text.DecimalFormat;
 
-public class XYStep extends XYLineAndShape {
+public class XYStepShapeComplete extends XYLineAndShapeComplete {
     String plotType = "step";
 
-    public XYStep() {
+    public XYStepShapeComplete() {
         setRenderer();
         setShape(null);
     }

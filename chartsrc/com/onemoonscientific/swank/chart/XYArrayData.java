@@ -55,6 +55,7 @@ public class XYArrayData extends XYData   {
     }
 
     public XYArrayData(String name) {
+        this.name = name;
         datasetMap.put(name,this);
     }
     public void remove(String name) {

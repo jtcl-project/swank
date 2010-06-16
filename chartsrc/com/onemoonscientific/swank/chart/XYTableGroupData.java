@@ -59,6 +59,7 @@ public class XYTableGroupData extends XYData implements TableXYDataset{
     }
 
     public XYTableGroupData(String name) {
+        this.name = name;
         datasetMap.put(name,this);
     }
     public void setTableModel(SwkTableModel model) {
@@ -208,8 +209,16 @@ public class XYTableGroupData extends XYData implements TableXYDataset{
      *
      * @return The index.
      */
-    public int indexOf(Comparable seriesKey) {
-        return -1;
+   public int indexOf(Comparable seriesKey) {
+	int index = -1;
+	int nSeries = getSeriesCount();
+	for (int i=0;i<nSeries;i++) {
+		if (getSeriesName(i).equals(seriesKey.toString())) {
+			index = i;
+			break;
+		}
+	}
+        return index;
     }
 
     /**

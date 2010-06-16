@@ -55,6 +55,7 @@ public class XYTableData extends XYData  implements TableXYDataset {
     }
 
     public XYTableData(String name) {
+        this.name = name;
         datasetMap.put(name,this);
     }
 
@@ -180,8 +181,15 @@ public class XYTableData extends XYData  implements TableXYDataset {
      *
      * @return The index.
      */
-    public int indexOf(Comparable seriesKey) {
-        return -1;
+   public int indexOf(Comparable seriesKey) {
+	int index = -1;
+	for (int i=0;i<yColumns.length;i++) {
+		if (getSeriesName(i).equals(seriesKey.toString())) {
+			index = i;
+			break;
+		}
+	}
+        return index;
     }
     Number getNumber(Object obj) {
         Number result = null;

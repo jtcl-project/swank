@@ -61,6 +61,7 @@ public abstract class XYData implements XYDataset, IntervalXYDataset {
     }
 
     public XYData(String name) {
+        this.name=name;
         datasetMap.put(name,this);
     }
     public void remove(String name) {
@@ -216,7 +217,7 @@ public abstract class XYData implements XYDataset, IntervalXYDataset {
      * @return The index.
      */
     public int indexOf(Comparable seriesKey) {
-        return -1;
+        return ySeriesNames.indexOf(seriesKey);
     }
 
     public double getEndYValue(int series, int item) {

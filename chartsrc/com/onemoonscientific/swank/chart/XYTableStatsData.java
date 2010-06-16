@@ -56,6 +56,7 @@ public class XYTableStatsData extends XYData {
     }
 
     public XYTableStatsData(String name) {
+        this.name = name;
         datasetMap.put(name,this);
     }
     public void setTableModel(SwkTableModel model) {
@@ -177,7 +178,7 @@ public class XYTableStatsData extends XYData {
      * @return The index.
      */
     public int indexOf(Comparable seriesKey) {
-        return -1;
+        return ySeriesNames.indexOf(seriesKey);
     }
     Number getNumber(Object obj) {
         Number result = null;

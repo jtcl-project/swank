@@ -39,9 +39,8 @@ import org.jfree.chart.plot.*;
 import org.jfree.data.general.*;
 import org.jfree.data.xy.*;
 import org.jfree.chart.renderer.xy.*;
-
-import org.jfree.ui.RectangleEdge;
 import org.jfree.chart.labels.XYToolTipGenerator;
+import org.jfree.ui.RectangleEdge;
 
 import tcl.lang.*;
 
@@ -52,31 +51,39 @@ import java.util.*;
 import java.text.DecimalFormat;
 
 
-public class XYStatShape extends XYPlotShape {
-    static CanvasParameter[] parameters = {
-        new FontParameter(), new RangeaxisParameter(), new DomainaxisParameter(), new DatasetParameter(), 
-         new FillParameter() };
+public class XYBarShapeComplete extends XYPlotShape {
+    static CanvasParameter[] parameters = { new LegendStateParameter(), new LegendLocParameter(),
+        new DatasetParameter(), new FillParameter(),
+        new TransformerParameter() };
     static Map parameterMap = new TreeMap();
 
     static {
         initializeParameters(parameters, parameterMap);
     }
 
-    String plotType = "stat";
+    String plotType = "xybar";
 
-    public XYStatShape() {
+    public XYBarShapeComplete() {
+        rect2D = new Rectangle2D.Double();
         setRenderer();
-        setShape(null);
+        plot.setRangeAxis(new NumberAxis());
+        plot.setDomainAxis(new NumberAxis());
+        setShape(rect2D);
     }
     public  void setRenderer() {
-        renderer = new StatisticalXYBarRenderer();
+        renderer = new XYBarRenderer();
         plot.setRenderer(renderer);
         XYToolTipGenerator generator = new DCXYToolTipGenerator("{0} {1} {2} {3}", new DecimalFormat("0.000"), new DecimalFormat("0.000") );  
         renderer.setToolTipGenerator(generator);
+
     }
     public void setDataset(Dataset dataset) {
-        if (dataset instanceof XYTableStatsData) {
-            plot.setDataset((XYTableStatsData) dataset);
+        if (dataset instanceof IntervalXYDataset) {
+            plot.setDataset((IntervalXYDataset) dataset);
         }
     }
+   public String getType() {
+        return "xybar";
+    }
+
 }

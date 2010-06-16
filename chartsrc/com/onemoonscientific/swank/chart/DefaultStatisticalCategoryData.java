@@ -30,35 +30,32 @@
  */
 package com.onemoonscientific.swank.chart;
 
-import org.jfree.data.DomainOrder;
 import org.jfree.data.general.DatasetChangeListener;
-import org.jfree.data.general.DatasetGroup;
-import org.jfree.data.category.DefaultCategoryDataset;
 
-import tcl.lang.*;
 
 import java.util.*;
+import org.jfree.data.statistics.DefaultStatisticalCategoryDataset;
 
 
-public class DefaultCategoryData extends DefaultCategoryDataset {
+public class DefaultStatisticalCategoryData extends DefaultStatisticalCategoryDataset {
     static HashMap datasetMap = new HashMap();
     static int id=0;
     String name = "";
-    public DefaultCategoryData() {
+    public DefaultStatisticalCategoryData() {
          name  = "categoryData"+id;
          datasetMap.put(name,this);
          id++;
     }
 
-    public DefaultCategoryData(String name) {
+    public DefaultStatisticalCategoryData(String name) {
         this.name = name;
         datasetMap.put(name,this);
     }
     public void remove(String name) {
           datasetMap.remove(name);
     }
-    public static DefaultCategoryData get(String name) {
-        return (DefaultCategoryData) datasetMap.get(name);
+    public static DefaultStatisticalCategoryData get(String name) {
+        return (DefaultStatisticalCategoryData) datasetMap.get(name);
     }
     public String getName() {
          return name;
