@@ -74,10 +74,13 @@ public class SwkShapeRunnable implements Runnable {
     public void configShape(SwkShape swkShape) {
         swkShape.newStroke = false;
         swkShape.newTransform = false;
-
         for (int j = 0; j < parameters.length; j++) {
             if (parameters[j] != null) {
+                try {
                 parameters[j].exec(swkCanvas, swkShape);
+                } catch (Exception e) {
+                   e.printStackTrace();
+                }
             }
         }
 
