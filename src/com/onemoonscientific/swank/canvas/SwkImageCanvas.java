@@ -398,6 +398,7 @@ public class SwkImageCanvas implements SwkCanvasType {
         if (g1 != null) {
             shape.paintShape((Graphics2D) g1);
         }
+	repaint(50);
         //treeModel.nodeStructureChanged(rootNode);
     }
 
@@ -882,9 +883,8 @@ public class SwkImageCanvas implements SwkCanvasType {
             public void run() {
                 if (component2 != null) {
                     if (component2 instanceof SwkCanvas) {
-                        ((SwkCanvas) component2).changed = true;
+                        ((SwkCanvas) component2).repaint();
                     }
-                    component2.repaint();
                 }
             }
         });
@@ -898,9 +898,9 @@ public class SwkImageCanvas implements SwkCanvasType {
             public void run() {
                 if (component2 != null) {
                      if (component2 instanceof SwkCanvas) {
-                         ((SwkCanvas) component2).changed = true;
+                        ((SwkCanvas) component2).changed = true;
+                        ((SwkCanvas) component2).startTimer();
                     }
-                    component2.repaint(delay2);
                 }
             }
         });
@@ -1010,9 +1010,6 @@ public class SwkImageCanvas implements SwkCanvasType {
            }
         }
         g2.setTransform(storeAT);
-        if (component instanceof SwkCanvas) {
-            ((SwkCanvas) component).changed = false;
-         }
     }
 
     public void setClassName(String className) {
