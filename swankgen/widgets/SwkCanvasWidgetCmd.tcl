@@ -29,6 +29,22 @@ append specialVars {
     Hashtable transformerHash = new Hashtable();
     Point2D transMouse = new Point2D.Double();
     Point2D origMouse = new Point2D.Double();
+    static ScheduledThreadPoolExecutor schedExecutor = new ScheduledThreadPoolExecutor(10);
+    ScheduledFuture futureUpdate = null;
+    class UpdateTask implements Runnable {
+
+         public void run() {
+                   repaint();
+         }
+    }
+
+ synchronized void startTimer() {
+        if ((futureUpdate == null) || futureUpdate.isDone()) {
+            UpdateTask updateTask = new UpdateTask();
+            futureUpdate = schedExecutor.schedule(updateTask, 300, TimeUnit.MILLISECONDS);
+        }
+
+    }
 
 }
 
@@ -201,6 +217,9 @@ import java.awt.datatransfer.*;
 import com.onemoonscientific.swank.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 "
 	
 append specialMethods {
