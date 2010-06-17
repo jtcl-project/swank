@@ -49,6 +49,10 @@ public class SwkFocusListener implements FocusListener, SwkListener {
         this.component = component;
         bindings = new ArrayList<SwkBinding>();
     }
+    public ArrayList<SwkBinding> getBindings() {
+        return bindings;
+    }
+
 
     public void setCommand(String name) {
         command = name;
@@ -88,28 +92,52 @@ public class SwkFocusListener implements FocusListener, SwkListener {
         interp.getNotifier().queueEvent(bEvent, TCL.QUEUE_TAIL);
     }
 
-    public void processEvent(EventObject eventObject, Object obj, int subtype) {
+  public void processEvent(EventObject eventObject, Object obj, int subtype) {
         FocusEvent e = (FocusEvent) eventObject;
+        ArrayList<SwkBinding> bindings = null;
+        Vector tagList = ((SwkWidget) component).getTagList();
 
         SwkBinding binding;
-        int buttonMaswk;
-        int i;
+      for (int j = 0; j < tagList.size(); j++) {
+            bindings = null;
 
-        for (i = 0; i < bindings.size(); i++) {
-            binding = bindings.get(i);
+            String tag = (String) tagList.elementAt(j);
+            if (tag.equals(((SwkWidget) component).getName())) {
+                bindings = this.bindings;
+            } else if (tag.startsWith(".")) {
+                try {
+                    bindings = ((SwkJFrame) Widgets.get(interp, tag)).getFocusListener().getBindings();
+                } catch (TclException tclE) {
+                }
+            } else {
+                bindings = BindCmd.getFocusBindings(tag);
+            }
 
+            if (bindings == null) {
+                continue;
+            }
+
+        for (int i = 0; i < bindings.size(); i++) {
+            binding = (SwkBinding) bindings.get(i);
             if (binding.subtype != subtype) {
                 continue;
             }
 
+
             if ((binding.command != null) && (binding.command.length() != 0)) {
                 try {
-                    interp.eval(binding.command);
+                    BindCmd.doCmd(interp, binding, component, e);
                 } catch (TclException tclE) {
-                    interp.addErrorInfo("\n    (\"binding\" script)");
-                    interp.backgroundError();
+                    if (tclE.getCompletionCode() == TCL.BREAK) {
+                        return;
+                    } else {
+                        interp.addErrorInfo("\n    (\"binding\" script)");
+                        interp.backgroundError();
+                    }
                 }
             }
         }
     }
+    }
+
 }
