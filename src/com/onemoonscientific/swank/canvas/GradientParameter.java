@@ -43,8 +43,44 @@ public class GradientParameter extends CanvasParameter {
         if (swkShape == null) {
             throw new TclException(interp, "shape doesn't exist");
         }
+        GradientPaint gradientPaint = swkShape.fillGradient;
+         String result = "";
+          if (gradientPaint != null) {
+                StringBuilder sBuild = new StringBuilder();
+                Point2D pt1 = swkShape.getGradPt1();
+                Color color1 = gradientPaint.getColor1();
+                Point2D pt2 = swkShape.getGradPt2();
+                Color color2 = gradientPaint.getColor2();
+                sBuild.append(pt1.getX());
+                sBuild.append(" ");
+                sBuild.append(pt1.getY());
+                sBuild.append(" ");
+                String colorName = SwankUtil.parseColor(color1);
+                if (colorName.indexOf(' ') != -1) {
+                    sBuild.append('{');
+                }
+                sBuild.append(colorName);
+                if (colorName.indexOf(' ') != -1) {
+                    sBuild.append('}');
+                }
+                sBuild.append(" ");
+                sBuild.append(pt2.getX());
+                sBuild.append(" ");
+                sBuild.append(pt2.getY());
+                sBuild.append(" ");
+                colorName = SwankUtil.parseColor(color2);
+                if (colorName.indexOf(' ') != -1) {
+                    sBuild.append('{');
+                }
+                sBuild.append(colorName);
+                if (colorName.indexOf(' ') != -1) {
+                    sBuild.append('}');
+                }
+                result = sBuild.toString();
+          }
 
-        return (TclString.newInstance(SwankUtil.parseGradient(swkShape.fillGradient)));
+
+        return (TclString.newInstance(result));
     }
 
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
