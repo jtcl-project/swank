@@ -36,7 +36,6 @@ import org.jfree.chart.ChartRenderingInfo;
 import org.jfree.chart.axis.*;
 import org.jfree.chart.plot.*;
 import org.jfree.chart.renderer.category.*;
-import org.jfree.data.category.*;
 
 import org.jfree.ui.RectangleEdge;
 
@@ -45,7 +44,6 @@ import tcl.lang.*;
 import java.awt.*;
 import java.awt.geom.*;
 
-import java.lang.*;
 
 import java.util.*;
 
