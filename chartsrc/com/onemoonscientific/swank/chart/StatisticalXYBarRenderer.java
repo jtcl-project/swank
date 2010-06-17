@@ -214,6 +214,8 @@ public class StatisticalXYBarRenderer extends XYBarRenderer
             }
         }
         if (drawStatLine) {
+            Stroke itemStroke = getItemStroke(series, item);
+            g2.setStroke(itemStroke);
             g2.setPaint(Color.BLACK);
             if (orientation == PlotOrientation.HORIZONTAL) {
                 g2.draw(new Line2D.Double(translatedLineY1, translatedLineX, translatedLineY2, translatedLineX));
