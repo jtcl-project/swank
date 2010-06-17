@@ -59,7 +59,7 @@ public class XYStatShapeComplete extends XYPlotShape {
          new PaintParameter(), new LinesvisibleParameter(), new SplineParameter(),
          new DLabelParameter(), new DMinParameter(), new DMaxParameter(), new DAutoParameter(),
          new RLabelParameter(), new RMinParameter(), new RMaxParameter(), new RAutoParameter(),
-         new TransformerParameter()
+         new TransformerParameter(),new WidthParameter(), new FillParameter(), new GradientParameter()
  };
     static Map parameterMap = new TreeMap();
 
@@ -67,7 +67,7 @@ public class XYStatShapeComplete extends XYPlotShape {
         initializeParameters(parameters, parameterMap);
     }
 
-    String plotType = "stat";
+    String plotType = "xystat";
 
     public XYStatShapeComplete() {
         rect2D = new Rectangle2D.Double();
@@ -75,6 +75,18 @@ public class XYStatShapeComplete extends XYPlotShape {
         plot.setRangeAxis(new NumberAxis());
         plot.setDomainAxis(new NumberAxis());
         setShape(rect2D);
+ 	setFill(Color.gray);
+	setWidth(0.95);
+   }
+    public void paintShape(Graphics2D g2) {
+		if (getFillGradient() != null) {
+			renderer.setSeriesPaint(0, getFillGradient());
+		} else {
+                    renderer.setSeriesPaint(0, getFill());
+		}
+		XYData data = (XYData) plot.getDataset();
+	        data.setDeltaX(getWidth());
+	    super.paintShape(g2);
     }
     public  void setRenderer() {
         renderer = new StatisticalXYBarRenderer();
@@ -91,6 +103,10 @@ public class XYStatShapeComplete extends XYPlotShape {
     public CanvasParameter[] getParameters() {
         return parameters;
     }
+    	public Map getParameterMap() {
+		return parameterMap;
+	}
+
    public String getType() {
         return "xystat";
     }
