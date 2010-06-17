@@ -48,6 +48,12 @@ public class FocusCmd implements Command {
             } else {
                 interp.resetResult();
             }
+        } else {
+           String windowName = argv[argv.length-1].toString();
+           Component comp = (Component) Widgets.get(interp,windowName);
+           if (comp != null) {
+                comp.requestFocusInWindow();
+           }
         }
     }
 
