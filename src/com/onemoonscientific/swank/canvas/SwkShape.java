@@ -197,6 +197,9 @@ System.out.println("set node for "+getId()+" to "+nodeName);
     public float getWidth() {
         return width;
     }
+    public void setWidth(double value) {
+	    width = (float) value;
+    }
 
     public int getCap() {
         return strokePar.getCap();
