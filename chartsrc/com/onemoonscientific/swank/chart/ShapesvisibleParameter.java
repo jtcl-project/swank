@@ -34,7 +34,11 @@ class ShapesvisibleParameter extends StringParameter {
 				XYData data = (XYData) plot.getDataset(iData);
 				int nSeries = data.getSeriesCount();
 				for (int i = 0; i < nSeries; i++) {
-					boolean bValue = (((XYLineAndShapeRenderer) renderer).getSeriesShapesVisible(i)).booleanValue();
+					Boolean sVisible = ((XYLineAndShapeRenderer) renderer).getSeriesShapesVisible(i);
+					boolean bValue = false;
+					if (sVisible != null) {
+						bValue = sVisible.booleanValue();
+					}
 					if (i > 0) {
 						sBuf.append(' ');
 					}

@@ -288,7 +288,9 @@ public class XYPlotShape extends SwkShape implements DatasetShape, NumberDomain,
                 TclObject list = TclList.newInstance();
                 for (int i = 0; i < nDatasets; i++) {
                         XYData xyData = (XYData) plot.getDataset(i);
-                        TclList.append(interp, list, TclString.newInstance(xyData.getName()));
+			if (xyData != null) {
+                            TclList.append(interp, list, TclString.newInstance(xyData.getName()));
+			}
                 }
                 return list;
     }
