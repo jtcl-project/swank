@@ -50,10 +50,10 @@ public abstract class XYData implements XYDataset, IntervalXYDataset {
     ArrayList xSeries = new ArrayList();
     ArrayList ySeries = new ArrayList();
     ArrayList ySeriesNames = new ArrayList();
-//    double deltaX = 0.9;
- //   double deltaY = 0.15;
-    double deltaX = 0.0;
-    double deltaY = 0.0;
+    double deltaX = 0.9;
+    double deltaY = 0.15;
+//    double deltaX = 0.0;
+ //   double deltaY = 0.0;
     public XYData() {
          name  = "xyData"+id;
          datasetMap.put(name,this);
@@ -73,7 +73,9 @@ public abstract class XYData implements XYDataset, IntervalXYDataset {
     public String getName() {
          return name;
     }
-
+    public void setDeltaX(double value) {
+	    deltaX = value;
+    }
     public void setXValues(ArrayList<Double> xValues,int series) {
         for (int i=xSeries.size();i<=series;i++) {
              xSeries.add(null);
