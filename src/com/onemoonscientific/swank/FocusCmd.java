@@ -28,9 +28,7 @@ import tcl.lang.*;
 
 import java.awt.*;
 
-import java.io.*;
 
-import java.util.*;
 
 import javax.swing.*;
 
@@ -49,11 +47,16 @@ public class FocusCmd implements Command {
                 interp.resetResult();
             }
         } else {
-           String windowName = argv[argv.length-1].toString();
-           Component comp = (Component) Widgets.get(interp,windowName);
-           if (comp != null) {
-                comp.requestFocusInWindow();
-           }
+            String windowName = argv[argv.length - 1].toString();
+            final Component comp = (Component) Widgets.get(interp, windowName);
+            if (comp != null) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        comp.requestFocusInWindow();
+
+                    }
+                });
+            }
         }
     }
 
