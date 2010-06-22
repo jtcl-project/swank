@@ -73,21 +73,26 @@ public class CategoryPlotShapeComplete extends SwkShape implements DatasetShape,
     ChartRenderingInfo chartInfo = new ChartRenderingInfo();
     PlotRenderingInfo state = new PlotRenderingInfo(chartInfo);
     Rectangle2D.Double plotArea = null;
+    Rectangle2D rect2D = null;
     double cursor = 0.0;
     RectangleEdge edge = RectangleEdge.BOTTOM;
     String edgeString = "bottom";
-    String plotType = "lineandshape";
+    String plotType = "barplot";
     CategoryItemRenderer renderer = null;
     String legendLoc = "s.n";
     boolean legendState = false;
 
     public CategoryPlotShapeComplete() {
+        rect2D = new Rectangle2D.Double();
         plot.setDataset(new DefaultCategoryData());
         plot.setDomainAxis(new CategoryAxis());
         plot.setRangeAxis(new NumberAxis());
         setRenderer("render");
-        setShape(null);
+        setShape(rect2D);
     }
+        public String getType() {
+            return plotType;
+        }
     public CategoryPlot getPlot() {
         return plot;
     } 
@@ -160,6 +165,10 @@ public class CategoryPlotShapeComplete extends SwkShape implements DatasetShape,
     }
 
     public void applyCoordinates() {
+        checkCoordinates(storeCoords);
+       rect2D.setFrame(storeCoords[0], storeCoords[1],
+                storeCoords[2] - storeCoords[0], storeCoords[3] - storeCoords[1]);
+
         AffineTransform aT = new AffineTransform();
         aT.translate(storeCoords[0], storeCoords[1]);
         aT.shear(getXShear(), getYShear());
@@ -172,6 +181,25 @@ public class CategoryPlotShapeComplete extends SwkShape implements DatasetShape,
 
         //shape = aT.createTransformedShape(gPath);
     }
+    public void checkCoordinates(double[] coords) {
+        double hold;
+
+        if ((coords == null) || (coords.length != 4)) {
+            return;
+        }
+
+        if (coords[0] > coords[2]) {
+            hold = coords[0];
+            coords[0] = coords[2];
+            coords[2] = hold;
+        }
+
+        if (coords[1] > coords[3]) {
+            hold = coords[1];
+            coords[1] = coords[3];
+            coords[3] = hold;
+        }
+    }
 
     public CanvasParameter[] getParameters() {
         return parameters;
@@ -181,9 +209,6 @@ public class CategoryPlotShapeComplete extends SwkShape implements DatasetShape,
         return parameterMap;
     }
 
-    public String getType() {
-        return "bar";
-    }
 
     public void paintShape(Graphics2D g2) {
         Point2D anchor = new Point2D.Double();
@@ -201,6 +226,19 @@ public class CategoryPlotShapeComplete extends SwkShape implements DatasetShape,
         } else {
             plot.draw(g2, plotAreaNow, anchor, null, state);
         }
+    }
+   public boolean hitShape(double x, double y) {
+           boolean hit = false;
+           Shape checkShape = getShape();
+            AffineTransform shapeTransform = getTransform();
+            if (shapeTransform != null) {
+                checkShape = shapeTransform.createTransformedShape(checkShape);
+            }
+            Rectangle bounds = checkShape.getBounds();
+            if (bounds.contains(x, y)) {
+                hit = true;
+            }
+            return hit;
     }
 
     public void addSymbol(float x1, float y1, float radius) {
