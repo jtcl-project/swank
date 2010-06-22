@@ -61,6 +61,7 @@ public class BoxPlotShapeComplete extends SwkShape implements NumberRange, PlotI
 		initializeParameters(parameters, parameterMap);
 	}
 	GeneralPath gPath = new GeneralPath();
+	String plotType = "boxplot";
 	float radius = 2.0f;
 	int symbolType = 3;
 	boolean drawLine = false;
@@ -71,7 +72,6 @@ public class BoxPlotShapeComplete extends SwkShape implements NumberRange, PlotI
 	PlotRenderingInfo state = new PlotRenderingInfo(chartInfo);
 	Rectangle2D.Double plotArea = null;
 	double cursor = 0.0;
-	String plotType = "boxandwhisker";
 	BoxAndWhiskerRenderer renderer = null;
 	String legendLoc = "s.n";
 	boolean legendState = true;
@@ -84,7 +84,9 @@ public class BoxPlotShapeComplete extends SwkShape implements NumberRange, PlotI
 		setFill(Color.gray);
 		setShape(null);
 	}
-
+        public String getType() {
+            return plotType;
+        }
 	public CategoryPlot getPlot() {
 		return plot;
 	}
@@ -179,9 +181,6 @@ public class BoxPlotShapeComplete extends SwkShape implements NumberRange, PlotI
 		return parameterMap;
 	}
 
-	public String getType() {
-		return "boxplot";
-	}
 
 	public void paintShape(Graphics2D g2) {
 		Point2D anchor = new Point2D.Double();
@@ -202,6 +201,20 @@ public class BoxPlotShapeComplete extends SwkShape implements NumberRange, PlotI
 		}
 
 	}
+      public boolean hitShape(double x, double y) {
+           boolean hit = false;
+           Shape checkShape = getShape();
+            AffineTransform shapeTransform = getTransform();
+            if (shapeTransform != null) {
+                checkShape = shapeTransform.createTransformedShape(checkShape);
+            }
+            Rectangle bounds = checkShape.getBounds();
+            if (bounds.contains(x, y)) {
+                hit = true;
+            }
+            return hit;
+    }
+
 
 	public void addSymbol(float x1, float y1, float radius) {
 	}
