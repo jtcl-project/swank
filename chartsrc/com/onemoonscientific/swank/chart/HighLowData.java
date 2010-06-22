@@ -60,7 +60,10 @@ public class HighLowData implements OHLCDataset {
         this.name = name;
         datasetMap.put(name,this);
     }
-    public void remove(String name) {
+    public static void remove(String name) {
+          datasetMap.remove(name);
+    }
+    void remove() {
           datasetMap.remove(name);
     }
     public static HighLowData get(String name) {

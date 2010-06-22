@@ -64,7 +64,10 @@ public abstract class XYData implements XYDataset, IntervalXYDataset {
         this.name=name;
         datasetMap.put(name,this);
     }
-    public void remove(String name) {
+    public static void remove(final String name) {
+          datasetMap.remove(name);
+    }
+    void remove() {
           datasetMap.remove(name);
     }
     public static XYData get(String name) {

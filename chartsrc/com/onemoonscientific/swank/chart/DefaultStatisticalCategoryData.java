@@ -51,7 +51,10 @@ public class DefaultStatisticalCategoryData extends DefaultStatisticalCategoryDa
         this.name = name;
         datasetMap.put(name,this);
     }
-    public void remove(String name) {
+    public static void remove(String name) {
+          datasetMap.remove(name);
+    }
+    void remove() {
           datasetMap.remove(name);
     }
     public static DefaultStatisticalCategoryData get(String name) {

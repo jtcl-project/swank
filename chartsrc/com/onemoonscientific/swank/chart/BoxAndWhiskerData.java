@@ -49,7 +49,10 @@ public class BoxAndWhiskerData extends DefaultBoxAndWhiskerCategoryDataset {
         datasetMap.put(name, (Object) this);
     }
 
-    public void remove(String name) {
+    public static void remove(String name) {
+        datasetMap.remove(name);
+    }
+    void remove() {
         datasetMap.remove(name);
     }
 
