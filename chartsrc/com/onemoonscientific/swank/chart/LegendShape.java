@@ -145,7 +145,6 @@ public class LegendShape extends SwkShape {
         if (area == null) {
             throw new IllegalArgumentException("Null 'area' argument.");
         }
-        Rectangle2D legendArea = new Rectangle2D.Double();
         double areaWidth = area.getWidth();
         if (areaWidth <= 0.0) {
             return;
@@ -158,10 +157,9 @@ public class LegendShape extends SwkShape {
                 areaWidth, new Range(0.0, areaWidth), LengthConstraintType.RANGE,
                 areaHeight, new Range(0.0, areaHeight), LengthConstraintType.RANGE
                 );
-        Object retValue = null;
         Size2D size = legend.arrange(g2, constraint);
-        legendArea = createAlignedRectangle2D(size, area, legend.getHorizontalAlignment(), VerticalAlignment.BOTTOM);
-        retValue = legend.draw(g2, legendArea, null);
+        Rectangle2D legendArea = createAlignedRectangle2D(size, area, legend.getHorizontalAlignment(), VerticalAlignment.BOTTOM);
+        legend.draw(g2, legendArea, null);
         area.setRect(area.getX(), area.getY(), area.getWidth(), area.getHeight() - size.height);
         
     }

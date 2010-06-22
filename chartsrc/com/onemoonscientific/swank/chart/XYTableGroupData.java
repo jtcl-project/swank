@@ -111,7 +111,7 @@ public class XYTableGroupData extends XYData implements TableXYDataset{
               ArrayList arrayList = null;
               if (seriesIndex == null) {
                     seriesNames.add(gObject);
-                    seriesMap.put(gObject,new Integer(nSeries));
+                    seriesMap.put(gObject,Integer.valueOf(nSeries));
                     arrayList = new ArrayList();
                     seriesLists.add(arrayList);
                     nSeries++;
@@ -119,7 +119,7 @@ public class XYTableGroupData extends XYData implements TableXYDataset{
                    int index = seriesIndex.intValue();
                    arrayList = (ArrayList) seriesLists.get(index);
               }
-              arrayList.add(new Integer(i));
+              arrayList.add(Integer.valueOf(i));
           }
     }
     public int getTableRow(int series, int index) {
@@ -250,7 +250,7 @@ public class XYTableGroupData extends XYData implements TableXYDataset{
         Number x = null;
         int rowIndex = getTableRow(series,item);
         if ((xColumn < 0) || (xColumn >= tableModel.getNCols()))  {
-              x = new Integer(rowIndex);
+              x = Integer.valueOf(rowIndex);
         } else {
             Object xObject = tableModel.getValueAt(rowIndex, xColumn);
             if (xObject instanceof Number) {

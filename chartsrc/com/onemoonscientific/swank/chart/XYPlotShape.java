@@ -254,7 +254,6 @@ public class XYPlotShape extends SwkShape implements DatasetShape, NumberDomain,
         ValueAxis rAxis = plot.getRangeAxis();
         double lowerBoundY = rAxis.getLowerBound();
         double upperBoundY= rAxis.getUpperBound();
-        double plotX = plot.getAxisOffset().getLeft();
          Rectangle2D dataArea = state.getDataArea();
         double x1 = dataArea.getMinX();
         double x2 = dataArea.getMaxX();

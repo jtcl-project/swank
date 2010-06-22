@@ -140,7 +140,7 @@ public class BoxAndWhiskerTableData extends BoxAndWhiskerData {
                     ArrayList arrayList = null;
                     if (seriesIndex == null) {
                         seriesNames.add(gObject);
-                        seriesMap.put(gObject, new Integer(nSeries));
+                        seriesMap.put(gObject, Integer.valueOf(nSeries));
                         arrayList = new ArrayList();
                         seriesLists.add(arrayList);
                         nSeries++;

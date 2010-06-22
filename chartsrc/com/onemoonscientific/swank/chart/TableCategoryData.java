@@ -234,7 +234,7 @@ public class TableCategoryData extends AbstractDataset
     public Number getValue(int row, int column) {
         Number x = null;
         if ((column < 0) || (column >= tableModel.getNCols()))  {
-              x = new Integer(row);
+              x = Integer.valueOf(row);
         } else {
             Object xObject = tableModel.getValueAt(row, column);
             if (xObject instanceof Number) {

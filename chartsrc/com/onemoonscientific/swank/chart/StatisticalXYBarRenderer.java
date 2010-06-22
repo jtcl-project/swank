@@ -426,7 +426,6 @@ public class StatisticalXYBarRenderer extends XYBarRenderer
         if (!(obj instanceof StatisticalXYBarRenderer)) {
             return false;
         }
-        StatisticalXYBarRenderer that = (StatisticalXYBarRenderer) obj;
         if (!super.equals(obj)) {
             return false;
         }

@@ -73,7 +73,6 @@ import org.jfree.ui.VerticalAlignment;
         if (area == null) {
             throw new IllegalArgumentException("Null 'area' argument.");
         }
-        Rectangle2D legendArea = new Rectangle2D.Double();
         double areaWidth = area.getWidth();
         if (areaWidth <= 0.0) {
             return null;
@@ -88,7 +87,7 @@ import org.jfree.ui.VerticalAlignment;
                 );
         Object retValue = null;
         Size2D size = legend.arrange(g2, constraint);
-        legendArea = createAlignedRectangle2D(size, area, legend.getHorizontalAlignment(), VerticalAlignment.BOTTOM);
+        Rectangle2D legendArea = createAlignedRectangle2D(size, area, legend.getHorizontalAlignment(), VerticalAlignment.BOTTOM);
         area.setRect(area.getX(), area.getY(), area.getWidth(), area.getHeight() - size.height);
         return legendArea;
     }

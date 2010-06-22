@@ -222,7 +222,6 @@ public class XYTableData extends XYData  implements TableXYDataset {
               x = item;
         } else {
             Object xObject = tableModel.getValueAt(item, xColumn);
-            Number xNum = getNumber(xObject);
             if (xObject instanceof Number) {
                  x = ((Number) xObject).doubleValue();
             }
@@ -233,7 +232,7 @@ public class XYTableData extends XYData  implements TableXYDataset {
     public Number getX(int series, int item) {
         Number x = null;
         if ((xColumn < 0) || (xColumn >= tableModel.getNCols()))  {
-              x = new Integer(item);
+              x = Integer.valueOf(item);
         } else {
             Object xObject = tableModel.getValueAt(item, xColumn);
             x = getNumber(xObject);
@@ -256,7 +255,6 @@ public class XYTableData extends XYData  implements TableXYDataset {
               y = item;
         } else {
             Object yObject = tableModel.getValueAt(item, yColumn);
-            Number yNum = getNumber(yObject);
             if (yObject instanceof Number) {
                  y = ((Number) yObject).doubleValue();
             }

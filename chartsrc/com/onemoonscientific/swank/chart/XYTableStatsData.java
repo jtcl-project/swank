@@ -211,7 +211,6 @@ public class XYTableStatsData extends XYData {
               x = item;
         } else {
             Object xObject = tableModel.getValueAt(item, xColumn);
-            Number xNum = getNumber(xObject);
             if (xObject instanceof Number) {
                  x = ((Number) xObject).doubleValue();
             } else if (xObject instanceof String) {
@@ -227,7 +226,7 @@ public class XYTableStatsData extends XYData {
     public Number getX(int series, int item) {
         Number x = null;
         if ((xColumn < 0) || (xColumn >= tableModel.getNCols()))  {
-              x = new Integer(item);
+              x = Integer.valueOf(item);
         } else {
             Object xObject = tableModel.getValueAt(item, xColumn);
             x = getNumber(xObject);
@@ -264,7 +263,6 @@ public class XYTableStatsData extends XYData {
               y = item;
         } else {
             Object yObject = tableModel.getValueAt(item, meanColumn);
-            Number yNum = getNumber(yObject);
             if (yObject instanceof Number) {
                  y = ((Number) yObject).doubleValue();
             }
@@ -295,7 +293,6 @@ public class XYTableStatsData extends XYData {
               y = item;
         } else {
             Object yObject = tableModel.getValueAt(item, sDevColumn);
-            Number yNum = getNumber(yObject);
             if (yObject instanceof Number) {
                  y = ((Number) yObject).doubleValue();
             }

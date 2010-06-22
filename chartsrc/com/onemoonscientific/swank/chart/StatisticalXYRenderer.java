@@ -281,7 +281,6 @@ public class StatisticalXYRenderer extends AbstractXYItemRenderer
         if (!(obj instanceof StatisticalXYRenderer)) {
             return false;
         }
-        StatisticalXYRenderer that = (StatisticalXYRenderer) obj;
         if (!super.equals(obj)) {
             return false;
         }
