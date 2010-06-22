@@ -315,10 +315,12 @@ public class XYPlotShape extends SwkShape implements DatasetShape, NumberDomain,
                         }
                         if (renderer instanceof XYLineAndShapeRenderer) {
                                 XYData data = (XYData) plot.getDataset(iData);
+                                if (data != null) {
                                 int nSeries = data.getSeriesCount();
                                 for (int i = 0; i < nSeries; i++) {
                                         Color color = (Color) (((XYLineAndShapeRenderer) renderer).getSeriesPaint(i));
                                         TclList.append(interp, list, TclString.newInstance(SwankUtil.parseColor(color)));
+                                }
                                 }
                         } else {
                                 TclList.append(interp, list, TclString.newInstance(""));
@@ -338,8 +340,9 @@ public class XYPlotShape extends SwkShape implements DatasetShape, NumberDomain,
                         }
                         if (renderer instanceof XYLineAndShapeRenderer) {
                                 XYData data = (XYData) plot.getDataset(iData);
-                                int nSeries = data.getSeriesCount();
-                                for (int i = 0; i < nSeries; i++) {
+                                if (data != null) {
+                                    int nSeries = data.getSeriesCount();
+                                    for (int i = 0; i < nSeries; i++) {
                                         color = Color.BLACK;
                                         if (colors.length > j) {
                                                 color = colors[j];
@@ -348,6 +351,7 @@ public class XYPlotShape extends SwkShape implements DatasetShape, NumberDomain,
                                         ((XYLineAndShapeRenderer) renderer).setSeriesFillPaint(i, color);
                                         ((XYLineAndShapeRenderer) renderer).setSeriesOutlinePaint(i, color);
                                         j++;
+                                    }
                                 }
                         }
                 }
