@@ -61,4 +61,7 @@ public class XYDot extends XYPlotShape {
         renderer = new XYDotRenderer();
         plot.setRenderer(renderer);
     }
+    public String getType() {
+	    return plotType;
+    }
 }

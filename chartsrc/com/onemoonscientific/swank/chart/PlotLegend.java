@@ -50,10 +50,7 @@ import org.jfree.ui.VerticalAlignment;
 
 
     class PlotLegend  {
-    LegendItemSource legendSource = null;
     LegendTitle legend = null;
-    Rectangle2D.Double plotArea = null;
-    RectangleEdge edge = RectangleEdge.BOTTOM;
     
     PlotLegend(LegendItemSource legendSource) {
         initLegend(legendSource);

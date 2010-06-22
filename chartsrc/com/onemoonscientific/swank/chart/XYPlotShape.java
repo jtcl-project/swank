@@ -66,19 +66,11 @@ public class XYPlotShape extends SwkShape implements DatasetShape, NumberDomain,
     float radius = 2.0f;
     int symbolType = 3;
     boolean drawLine = false;
-    boolean closePath = false;
     XYPlot plot = new XYPlot();
     PlotLegend plotLegend = new PlotLegend(plot);
     ChartRenderingInfo chartInfo = new ChartRenderingInfo();
     PlotRenderingInfo state = new PlotRenderingInfo(chartInfo);
     Rectangle2D.Double plotArea = null;
-    double cursor = 0.0;
-    ValueAxis domainAxis = null;
-    String domainAxisTag = "";
-    ValueAxis rangeAxis = null;
-    String rangeAxisTag = "";
-    RectangleEdge edge = RectangleEdge.BOTTOM;
-    String edgeString = "bottom";
     String plotType = "lineandshape";
     XYItemRenderer renderer = null;
     Rectangle2D rect2D = null;
@@ -91,7 +83,10 @@ public class XYPlotShape extends SwkShape implements DatasetShape, NumberDomain,
     }
     public XYPlot getPlot() {
         return plot;
-    } 
+    }
+    public String getType() {
+	    return plotType;
+    }
     public  void setRenderer() {
         renderer = new XYLineAndShapeRenderer();
         plot.setRenderer(renderer);
@@ -234,10 +229,6 @@ public class XYPlotShape extends SwkShape implements DatasetShape, NumberDomain,
 
     public Map getParameterMap() {
         return parameterMap;
-    }
-
-    public String getType() {
-        return "plot";
     }
 
     public void paintShape(Graphics2D g2) {

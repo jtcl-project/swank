@@ -46,8 +46,6 @@ public class XYArrayData extends XYData   {
     static int id=0;
     String name = "";
     DatasetGroup dGroup = new DatasetGroup();
-    double deltaX = 0.9;
-    double deltaY = 0.15;
     public XYArrayData() {
          name  = "xyData"+id;
          datasetMap.put(name,this);

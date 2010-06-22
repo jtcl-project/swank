@@ -67,16 +67,13 @@ public class CategoryPlotShapeComplete extends SwkShape implements DatasetShape,
     float radius = 2.0f;
     int symbolType = 3;
     boolean drawLine = false;
-    boolean closePath = false;
     CategoryPlot plot = new CategoryPlot();
     PlotLegend plotLegend = new PlotLegend(plot);
     ChartRenderingInfo chartInfo = new ChartRenderingInfo();
     PlotRenderingInfo state = new PlotRenderingInfo(chartInfo);
     Rectangle2D.Double plotArea = null;
     Rectangle2D rect2D = null;
-    double cursor = 0.0;
     RectangleEdge edge = RectangleEdge.BOTTOM;
-    String edgeString = "bottom";
     String plotType = "barplot";
     CategoryItemRenderer renderer = null;
     String legendLoc = "s.n";

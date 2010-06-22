@@ -65,13 +65,11 @@ public class BoxPlotShapeComplete extends SwkShape implements NumberRange, PlotI
 	float radius = 2.0f;
 	int symbolType = 3;
 	boolean drawLine = false;
-	boolean closePath = false;
 	CategoryPlot plot = new CategoryPlot();
 	PlotLegend plotLegend = new PlotLegend(plot);
 	ChartRenderingInfo chartInfo = new ChartRenderingInfo();
 	PlotRenderingInfo state = new PlotRenderingInfo(chartInfo);
 	Rectangle2D.Double plotArea = null;
-	double cursor = 0.0;
 	BoxAndWhiskerRenderer renderer = null;
 	String legendLoc = "s.n";
 	boolean legendState = true;

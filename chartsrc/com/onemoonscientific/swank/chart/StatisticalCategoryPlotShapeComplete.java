@@ -62,18 +62,13 @@ public class StatisticalCategoryPlotShapeComplete extends SwkShape implements Da
 	float radius = 2.0f;
 	int symbolType = 3;
 	boolean drawLine = false;
-	boolean closePath = false;
 	CategoryPlot plot = new CategoryPlot();
 	PlotLegend plotLegend = new PlotLegend(plot);
 	ChartRenderingInfo chartInfo = new ChartRenderingInfo();
 	PlotRenderingInfo state = new PlotRenderingInfo(chartInfo);
 	Rectangle2D.Double plotArea = null;
 	Rectangle2D rect2D= null;
-	double cursor = 0.0;
-	RectangleEdge edge = RectangleEdge.BOTTOM;
-	String edgeString = "bottom";
 	String plotType = "statplot";
-	CategoryItemRenderer renderer = null;
 	String legendLoc = "s.n";
 	boolean legendState = false;
 
@@ -94,8 +89,7 @@ public class StatisticalCategoryPlotShapeComplete extends SwkShape implements Da
 	}
 
 	public void setRenderer(String renderName) {
-		renderer = new StatisticalBarRenderer();
-		plot.setRenderer(renderer);
+		plot.setRenderer(new StatisticalBarRenderer());
 	}
 
 	public void setDataset(String name) {

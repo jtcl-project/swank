@@ -65,10 +65,8 @@ public class LegendShape extends SwkShape {
     LegendTitle legend = null;
     
     Rectangle2D.Double plotArea = null;
-    double cursor = 0.0;
     RectangleEdge edge = RectangleEdge.BOTTOM;
     String edgeString = "bottom";
-    String label = "";
     
     public LegendShape() {
         setShape(null);
