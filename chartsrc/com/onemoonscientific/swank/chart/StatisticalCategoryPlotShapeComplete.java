@@ -68,22 +68,27 @@ public class StatisticalCategoryPlotShapeComplete extends SwkShape implements Da
 	ChartRenderingInfo chartInfo = new ChartRenderingInfo();
 	PlotRenderingInfo state = new PlotRenderingInfo(chartInfo);
 	Rectangle2D.Double plotArea = null;
+	Rectangle2D rect2D= null;
 	double cursor = 0.0;
 	RectangleEdge edge = RectangleEdge.BOTTOM;
 	String edgeString = "bottom";
-	String plotType = "barstat";
+	String plotType = "statplot";
 	CategoryItemRenderer renderer = null;
 	String legendLoc = "s.n";
 	boolean legendState = false;
 
 	public StatisticalCategoryPlotShapeComplete() {
+		rect2D = new Rectangle2D.Double();
 		plot.setDataset(new DefaultStatisticalCategoryData());
 		plot.setDomainAxis(new CategoryAxis());
 		plot.setRangeAxis(new NumberAxis());
 		setRenderer("render");
-		setShape(null);
+		setShape(rect2D);
 	}
 
+        public String getType() {
+            return plotType;
+        }
 	public CategoryPlot getPlot() {
 		return plot;
 	}
@@ -163,6 +168,9 @@ public class StatisticalCategoryPlotShapeComplete extends SwkShape implements Da
 	}
 
 	public void applyCoordinates() {
+                rect2D.setFrame(storeCoords[0], storeCoords[1],
+                         storeCoords[2] - storeCoords[0], storeCoords[3] - storeCoords[1]);
+
 		AffineTransform aT = new AffineTransform();
 		aT.translate(storeCoords[0], storeCoords[1]);
 		aT.shear(getXShear(), getYShear());
@@ -184,9 +192,6 @@ public class StatisticalCategoryPlotShapeComplete extends SwkShape implements Da
 		return parameterMap;
 	}
 
-	public String getType() {
-		return "barstat";
-	}
 
 	public void paintShape(Graphics2D g2) {
 		Point2D anchor = new Point2D.Double();
@@ -206,6 +211,20 @@ public class StatisticalCategoryPlotShapeComplete extends SwkShape implements Da
 			plot.draw(g2, plotAreaNow, anchor, null, state);
 		}
 	}
+   public boolean hitShape(double x, double y) {
+           boolean hit = false;
+           Shape checkShape = getShape();
+            AffineTransform shapeTransform = getTransform();
+            if (shapeTransform != null) {
+                checkShape = shapeTransform.createTransformedShape(checkShape);
+            }
+            Rectangle bounds = checkShape.getBounds();
+            if (bounds.contains(x, y)) {
+                hit = true;
+            }
+            return hit;
+    }
+
 
 	public void addSymbol(float x1, float y1, float radius) {
 	}
