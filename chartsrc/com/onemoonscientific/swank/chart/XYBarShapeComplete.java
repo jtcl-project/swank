@@ -61,7 +61,7 @@ public class XYBarShapeComplete extends XYPlotShape {
         initializeParameters(parameters, parameterMap);
     }
 
-    String plotType = "xybar";
+    String plotType = "xybarplot";
 
     public XYBarShapeComplete() {
         rect2D = new Rectangle2D.Double();
@@ -70,6 +70,9 @@ public class XYBarShapeComplete extends XYPlotShape {
         plot.setDomainAxis(new NumberAxis());
         setShape(rect2D);
     }
+        public String getType() {
+            return plotType;
+        }
     public  void setRenderer() {
         renderer = new XYBarRenderer();
         plot.setRenderer(renderer);
@@ -82,8 +85,4 @@ public class XYBarShapeComplete extends XYPlotShape {
             plot.setDataset((IntervalXYDataset) dataset);
         }
     }
-   public String getType() {
-        return "xybar";
-    }
-
 }

@@ -50,12 +50,15 @@ import java.util.*;
 import java.text.DecimalFormat;
 
 public class XYStepShapeComplete extends XYLineAndShapeComplete {
-    String plotType = "step";
+    String plotType = "xystepplot";
 
     public XYStepShapeComplete() {
         setRenderer();
         setShape(null);
     }
+        public String getType() {
+            return plotType;
+        }
     public  void setRenderer() {
         renderer = new XYStepRenderer();
         plot.setRenderer(renderer);
@@ -63,4 +66,5 @@ public class XYStepShapeComplete extends XYLineAndShapeComplete {
         renderer.setToolTipGenerator(generator);
 
     }
+
 }

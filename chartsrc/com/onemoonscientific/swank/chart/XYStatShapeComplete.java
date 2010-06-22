@@ -55,8 +55,8 @@ import java.text.DecimalFormat;
 
 public class XYStatShapeComplete extends XYPlotShape {
     static CanvasParameter[] parameters = {
-        new TagsParameter(),  new DatasetParameter(), new ShapesvisibleParameter(), new LegendStateParameter(), new LegendLocParameter(),
-         new PaintParameter(), new LinesvisibleParameter(), new SplineParameter(),
+        new TagsParameter(),  new DatasetParameter(), new LegendStateParameter(), new LegendLocParameter(),
+         new PaintParameter(), new SplineParameter(),
          new DLabelParameter(), new DMinParameter(), new DMaxParameter(), new DAutoParameter(),
          new RLabelParameter(), new RMinParameter(), new RMaxParameter(), new RAutoParameter(),
          new TransformerParameter(),new WidthParameter(), new FillParameter(), new GradientParameter()
@@ -67,7 +67,7 @@ public class XYStatShapeComplete extends XYPlotShape {
         initializeParameters(parameters, parameterMap);
     }
 
-    String plotType = "xystat";
+    String plotType = "xystatplot";
 
     public XYStatShapeComplete() {
         rect2D = new Rectangle2D.Double();
@@ -78,6 +78,9 @@ public class XYStatShapeComplete extends XYPlotShape {
  	setFill(Color.gray);
 	setWidth(0.95);
    }
+        public String getType() {
+            return plotType;
+        }
     public void paintShape(Graphics2D g2) {
 		if (getFillGradient() != null) {
 			renderer.setSeriesPaint(0, getFillGradient());
@@ -107,9 +110,6 @@ public class XYStatShapeComplete extends XYPlotShape {
 		return parameterMap;
 	}
 
-   public String getType() {
-        return "xystat";
-    }
 
 }
 
