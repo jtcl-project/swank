@@ -246,8 +246,25 @@ proc tk_optionMenu {nm var args} {
 
 proc tk_chooseColor {args} {
     global tk_colorChooser
+    global env
     set initialColor black
     set title "Choose Color"
+    set mode colorpicker
+    if {![info exists ::swank::useColorPicker]} {
+        set ::swank::useColorPicker 0
+        if {[string match *ColorPicker.jar* $env(CLASSPATH)]} {
+        catch { 
+            java::try {
+                 java::info fields com.bric.swing.ColorPicker
+                 set ::swank::useColorPicker 1
+            } catch {Exception e} {
+            } finally {}
+        }
+     }
+     }
+    if {$::swank::useColorPicker} {
+        return [eval [linsert $args 0 colorpicker]]
+    } else {
      foreach "argType argVal" $args {
         switch -- $argType {
              -initialcolor {
@@ -264,6 +281,7 @@ proc tk_chooseColor {args} {
     }
     set color [.sk_color choose $title $initialColor]
     return $color
+    }
 }
 
 

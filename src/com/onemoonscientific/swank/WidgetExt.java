@@ -178,6 +178,8 @@ public class WidgetExt extends Extension {
             "com.onemoonscientific.swank.EventRecorderCmd");
         Extension.loadOnDemand(interp, "tk_messageBox",
             "com.onemoonscientific.swank.TkMessageBox");
+        Extension.loadOnDemand(interp, "colorpicker",
+            "com.onemoonscientific.swank.SwkColorPicker");
         Extension.loadOnDemand(interp, "embed",
             "com.onemoonscientific.swank.EmbedCmd");
         Extension.loadOnDemand(interp, "password",
