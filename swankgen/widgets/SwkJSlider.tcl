@@ -224,7 +224,8 @@ append specialInits {
                                 labels = new Hashtable();
                                 int incr = jslider.getMajorTickSpacing();
                                 for (int i=jslider.getMinimum();i<=jslider.getMaximum();i += incr) {
-                                        labels.put(new Integer(i),new JLabel(String.valueOf(convertValue(i))));
+					String labelValue = nf.format(convertValue(i));
+                                        labels.put(new Integer(i),new JLabel(labelValue));
                                 }
                                 jslider.setLabelTable(labels);
                                 }
@@ -234,6 +235,7 @@ append specialInits {
 
 			public void setTo(double value) {
 				to = value;
+                                updateRange();
 			}
 			
 			public double getTo() {
@@ -241,6 +243,7 @@ append specialInits {
 			}
 			public void setFrom(double value) {
 				from = value;
+                                updateRange();
 			}
 			
 			public double getFrom() {
@@ -391,6 +394,7 @@ append specialInits {
 	append specialMethods {
 			public void setResolution(double value) {
 				resolution = value;
+                                updateRange();
 			}
 			
 			public double getResolution() {
@@ -522,6 +526,7 @@ append specialInits {
                                 } else {
                                         this.tickInterval = Math.round(tickInterval);
                                 }
+                                updateRange();
  
 			}
 			public double getTickInterval() {
