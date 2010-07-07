@@ -876,6 +876,8 @@ public class SwkImageCanvas implements SwkCanvasType {
     }
 
     public void repaint() {
+        repaint(20);
+        /*
         final Component component2 = component;
 
         SwingUtilities.invokeLater(new Runnable() {
@@ -888,18 +890,18 @@ public class SwkImageCanvas implements SwkCanvasType {
                 }
             }
         });
+        */
     }
 
-    public void repaint(int delay) {
+    public void repaint(final int delay) {
         final Component component2 = component;
-        final int delay2 = delay;
         SwingUtilities.invokeLater(new Runnable() {
 
             public void run() {
                 if (component2 != null) {
                      if (component2 instanceof SwkCanvas) {
                         ((SwkCanvas) component2).changed = true;
-                        ((SwkCanvas) component2).startTimer();
+                        ((SwkCanvas) component2).startTimer(delay);
                     }
                 }
             }
