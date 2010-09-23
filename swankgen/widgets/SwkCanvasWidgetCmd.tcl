@@ -38,10 +38,10 @@ append specialVars {
          }
     }
 
- synchronized void startTimer() {
+ synchronized void startTimer(final int delay) {
         if ((futureUpdate == null) || futureUpdate.isDone()) {
             UpdateTask updateTask = new UpdateTask();
-            futureUpdate = schedExecutor.schedule(updateTask, 300, TimeUnit.MILLISECONDS);
+            futureUpdate = schedExecutor.schedule(updateTask, delay, TimeUnit.MILLISECONDS);
         }
 
     }
