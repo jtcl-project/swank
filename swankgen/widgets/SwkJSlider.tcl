@@ -196,6 +196,9 @@ append specialInits {
                         }
 
                        public void updateRange() {
+                                if (to <= from) {
+                                    return;
+                                }
                                 Hashtable labels = new Hashtable();
                                 labels.put(new Integer(0),new JLabel("0"));
                                 jslider.setLabelTable(labels);
