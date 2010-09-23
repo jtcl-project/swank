@@ -94,11 +94,14 @@ public class SwankUtil {
                     return (color);
                 }
             }
-	} else if (argv.length == 2) {
-                Color color = (Color) colorTable.get(argv[0].toString()
-                                                            .toLowerCase());
-
-                if (color == null) {
+	} else if (argv.length > 1) {
+            Color color = (Color) colorTable.get(tclObject.toString() .toLowerCase());
+            if (color != null) {
+                 return color;
+            } else {
+	        if (argv.length == 2) {
+                    color = (Color) colorTable.get(argv[0].toString() .toLowerCase());
+                    if (color == null) {
                     throw new TclException(interp,
                         "unknown color name \"" + argv[0].toString() + "\"");
                 } else {
@@ -111,21 +114,25 @@ public class SwankUtil {
                     return (color);
                 }
 
-        } else if (argv.length == 3) {
-            int red = TclInteger.get(interp, argv[0]);
-            int green = TclInteger.get(interp, argv[1]);
-            int blue = TclInteger.get(interp, argv[2]);
+            } else if (argv.length == 3) {
+                int red = TclInteger.get(interp, argv[0]);
+                int green = TclInteger.get(interp, argv[1]);
+                int blue = TclInteger.get(interp, argv[2]);
 
-            return (new Color(red, green, blue));
-        } else if (argv.length == 4) {
-            int red = TclInteger.get(interp, argv[0]);
-            int green = TclInteger.get(interp, argv[1]);
-            int blue = TclInteger.get(interp, argv[2]);
-            int alpha = TclInteger.get(interp, argv[3]);
+                return (new Color(red, green, blue));
+            } else if (argv.length == 4) {
+                int red = TclInteger.get(interp, argv[0]);
+                int green = TclInteger.get(interp, argv[1]);
+                int blue = TclInteger.get(interp, argv[2]);
+                int alpha = TclInteger.get(interp, argv[3]);
 
-            return (new Color(red, green, blue, alpha));
+                return (new Color(red, green, blue, alpha));
+            } else {
+                return (null);
+            }
+            }
         } else {
-            return (null);
+                return (null);
         }
     }
 
