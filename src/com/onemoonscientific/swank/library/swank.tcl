@@ -168,7 +168,7 @@ proc tk_getSaveFile {args} {
          }
     }
     set result [.sk_filebox save]
-    if {([file extension $result] eq "") && ($defaultExtension ne "")} {
+    if {($result ne "") && ([file extension $result] eq "") && ($defaultExtension ne "")} {
        set result ${result}$defaultExtension
     }
     destroy .sk_filebox
