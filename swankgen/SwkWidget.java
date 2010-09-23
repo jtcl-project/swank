@@ -65,6 +65,7 @@ public class ${widgetType} extends ${widget} implements SwkWidget, Printable$spe
         $specialInits
 
         tagList.add(name);
+        tagList.add(className);
         tagList.add("swank");
         tagList.add("all");
     }
