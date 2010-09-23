@@ -95,6 +95,13 @@ public class XYPlotShape extends SwkShape implements DatasetShape, NumberDomain,
         renderer = newRenderer;
         plot.setRenderer(renderer);
     }
+    public void setSplineRenderer(final int precision) {
+        XYSplineRenderer splineRenderer = new XYSplineRenderer();
+        splineRenderer.setPrecision(precision);
+        renderer = splineRenderer;
+        plot.setRenderer(renderer);
+    }
+
     public void setDataset(String name) {
         XYData xyData = XYData.get(name);
         plot.setDataset(xyData);

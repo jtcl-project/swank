@@ -53,7 +53,7 @@ public class XYLineAndShapeComplete extends XYPlotShape {
 
     static XYToolTipGenerator generator = new DCXYToolTipGenerator("{0} {1} {2} {3}", new DecimalFormat("0.000"), new DecimalFormat("0.000"));
     static CanvasParameter[] parameters = {
-        new TagsParameter(), new DatasetParameter(), new ShapesvisibleParameter(), new LegendStateParameter(), new LegendLocParameter(),
+        new TagsParameter(), new StateParameter(), new DatasetParameter(), new ShapesvisibleParameter(), new LegendStateParameter(), new LegendLocParameter(),
         new PaintParameter(), new LinesvisibleParameter(), new SplineParameter(),
         new DLabelParameter(), new DMinParameter(), new DMaxParameter(), new DAutoParameter(),
         new RLabelParameter(), new RMinParameter(), new RMaxParameter(), new RAutoParameter(),
@@ -88,6 +88,15 @@ public class XYLineAndShapeComplete extends XYPlotShape {
     public void setRenderer() {
         renderer = new XYLineAndShapeRenderer();
         plot.setRenderer(renderer);
+        plot.setDrawingSupplier(new DefaultDrawingSupplier());
+        renderer.setToolTipGenerator(generator);
+    }
+    public void setSplineRenderer(final int precision) {
+        XYSplineRenderer splineRenderer = new XYSplineRenderer();
+        splineRenderer.setPrecision(precision);
+        renderer = splineRenderer;
+        plot.setRenderer(renderer);
+        plot.setDrawingSupplier(new DefaultDrawingSupplier());
         renderer.setToolTipGenerator(generator);
     }
 

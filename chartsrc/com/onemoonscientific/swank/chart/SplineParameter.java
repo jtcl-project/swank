@@ -36,18 +36,14 @@ class SplineParameter extends IntegerParameter {
 		if (newValue <= 0) {
 			if (renderer instanceof XYSplineRenderer) {
 				XYPlotShape plotShape = (XYPlotShape) swkShape;
-				XYLineAndShapeRenderer newRenderer = new XYLineAndShapeRenderer();
-				newRenderer.setToolTipGenerator(XYLineAndShapeComplete.generator);
-				plotShape.setRenderer(newRenderer);
+                                plotShape.setRenderer();
 			}
 		} else if (renderer instanceof XYSplineRenderer) {
 			XYSplineRenderer splineRenderer = (XYSplineRenderer) renderer;
 			splineRenderer.setPrecision(newValue);
 		} else {
-			XYPlotShape plotShape = (XYPlotShape) swkShape;
-			XYLineAndShapeRenderer newRenderer = new XYLineAndShapeRenderer();
-			newRenderer.setToolTipGenerator(XYLineAndShapeComplete.generator);
-			plotShape.setRenderer(newRenderer);
+ 		       XYPlotShape plotShape = (XYPlotShape) swkShape;
+                       plotShape.setSplineRenderer(newValue);
 		}
 	}
 }
