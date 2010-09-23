@@ -307,4 +307,29 @@ public class SwkBind {
             swkBinding.command = argv[firstArg + 1].toString();
         }
     }
+
+    public static void setBinding(ArrayList<SwkBinding> bindings, SwkBinding newBinding) {
+        int index = -1;
+        for (int i = 0; i < bindings.size(); i++) {
+            SwkBinding binding = (SwkBinding) bindings.get(i);
+            if (binding.equals(newBinding)) {
+                index = i;
+                break;
+            }
+       }
+        if (newBinding.add) {
+           if (index != -1) {
+              SwkBinding binding = bindings.get(index);
+              binding.command =  binding.command + '\n' + newBinding.command;
+           } else {
+               bindings.add(newBinding);
+           }
+        } else {
+           if (index != -1) {
+                bindings.set(index,newBinding);
+           } else {
+                bindings.add(newBinding);
+           }
+        }
+    }
 }

@@ -67,7 +67,7 @@ public class SwkWindowListener extends WindowAdapter implements SwkListener {
                 binding = (SwkBinding) bindings.get(i);
 
                 if (binding.equals(newBinding)) {
-                    bindings.add(i,newBinding);
+                    bindings.set(i,newBinding);
 
                     return;
                 }

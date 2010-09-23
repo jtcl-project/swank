@@ -54,23 +54,12 @@ public class SwkMouseMotionListener implements MouseMotionListener, SwkListener 
     public void setCommand(String name) {
         command = name.intern();
     }
+    public ArrayList<SwkBinding> getBindings() {
+        return bindings;
+    }
 
     public void setBinding(SwkBinding newBinding) {
-        SwkBinding binding = null;
-
-        if (!newBinding.add) {
-            for (int i = 0; i < bindings.size(); i++) {
-                binding = (SwkBinding) bindings.get(i);
-
-                if (binding.equals(newBinding)) {
-                    bindings.add(i,newBinding);
-
-                    return;
-                }
-            }
-        }
-
-        bindings.add(newBinding);
+        SwkBind.setBinding(bindings,newBinding);
     }
 
     public String getCommand() {

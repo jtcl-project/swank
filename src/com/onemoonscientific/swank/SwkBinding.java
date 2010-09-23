@@ -77,10 +77,19 @@ public class SwkBinding implements Comparable {
     public String command = null;
     public String string = null;
 
-    public String toString() {
-        return SwkEventType.getStringRep(type, subtype, detail)+" "+command;
+    public String getEvent() {
+        return SwkEventType.getStringRep(type, subtype, count, mod,detail,keyStroke);
     }
-
+    public String toString() {
+        return SwkEventType.getStringRep(type, subtype, count, mod,detail,keyStroke)+" "+command;
+    }
+    public String getCommand() {
+       String result = "";
+       if (command != null) {
+          result = command;
+       }
+       return result;
+    }
     public boolean equals(SwkBinding testBinding) {
         if (type != testBinding.type) {
             return false;

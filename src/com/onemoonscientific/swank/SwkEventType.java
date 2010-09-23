@@ -516,10 +516,10 @@ public class SwkEventType {
         }
     }
 
-    static public String getStringRep(int type, int subtype, int detail) {
+    static public String getStringRep(int type, int subtype, int count, int mod,int detail,KeyStroke keyStroke) {
         String detailString = "";
         SwkEventType eventType = null;
-
+        StringBuilder sBuild = new StringBuilder();
         for (int i = 0; i < eventTypes.length; i++) {
             eventType = eventTypes[i];
 
@@ -546,6 +546,9 @@ public class SwkEventType {
                 break;
             }
         } else if (type == SwkBinding.KEY) {
+            if (keyStroke == null) {
+                detailString = Character.toString((char) detail);
+            } else {
             detailString = "";
 
             for (int j = 0; j < detailTypes.length; j++) {
@@ -555,8 +558,24 @@ public class SwkEventType {
                     detailString = detailType.name;
                 }
             }
+            }
         }
-
-        return eventType.name + "-" + detailString;
+        for (SwkEventType eventModType:modTypes) {
+            if ((mod & eventModType.type) != 0)  {
+                if ((type == SwkBinding.MOUSE) && (eventModType.name.startsWith("B"))) {
+                    continue;
+                }
+                sBuild.append(eventModType.name+"-");
+            }
+        }
+        if (count == 2) {
+           sBuild.append("Double-");
+        } else if (count == 3) {
+           sBuild.append("Triple-");
+        }
+        sBuild.append(eventType.name);
+        sBuild.append('-');
+        sBuild.append(detailString);
+        return sBuild.toString();
     }
 }

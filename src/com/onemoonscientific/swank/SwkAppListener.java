@@ -59,21 +59,7 @@ public class SwkAppListener implements PropertyChangeListener, SwkListener {
     }
 
     public void setBinding(SwkBinding newBinding) {
-        SwkBinding binding = null;
-
-        if (!newBinding.add) {
-            for (int i = 0; i < bindings.size(); i++) {
-                binding = bindings.get(i);
-
-                if (binding.equals(newBinding)) {
-                    bindings.add(i,newBinding);
-
-                    return;
-                }
-            }
-        }
-
-        bindings.add(newBinding);
+        SwkBind.setBinding(bindings,newBinding);
     }
 
     public void processEvent(EventObject eventObject, Object obj, int subtype) {

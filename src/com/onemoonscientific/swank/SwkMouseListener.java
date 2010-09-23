@@ -56,20 +56,7 @@ public class SwkMouseListener implements MouseListener, SwkListener {
     }
 
     public void setBinding(SwkBinding newBinding) {
-        SwkBinding binding = null;
-
-        if (!newBinding.add) {
-            for (int i = 0; i < bindings.size(); i++) {
-                binding = (SwkBinding) bindings.get(i);
-
-                if (binding.equals(newBinding)) {
-                    bindings.add(i,newBinding);
-                    Collections.sort(bindings);
-                    return;
-                }
-            }
-        }
-        bindings.add(newBinding);
+        SwkBind.setBinding(bindings,newBinding);
         Collections.sort(bindings);
     }
 
