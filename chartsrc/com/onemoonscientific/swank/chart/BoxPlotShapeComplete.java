@@ -202,13 +202,15 @@ public class BoxPlotShapeComplete extends SwkShape implements NumberRange, PlotI
       public boolean hitShape(double x, double y) {
            boolean hit = false;
            Shape checkShape = getShape();
-            AffineTransform shapeTransform = getTransform();
-            if (shapeTransform != null) {
-                checkShape = shapeTransform.createTransformedShape(checkShape);
-            }
-            Rectangle bounds = checkShape.getBounds();
-            if (bounds.contains(x, y)) {
-                hit = true;
+           if (checkShape != null) {
+               AffineTransform shapeTransform = getTransform();
+               if (shapeTransform != null) {
+                   checkShape = shapeTransform.createTransformedShape(checkShape);
+               }
+               Rectangle bounds = checkShape.getBounds();
+               if (bounds.contains(x, y)) {
+                   hit = true;
+               }
             }
             return hit;
     }
