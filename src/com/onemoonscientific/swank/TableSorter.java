@@ -835,6 +835,7 @@ public class TableSorter extends AbstractTableModel {
 
     private class MouseHandler extends MouseAdapter {
         public void mouseClicked(MouseEvent e) {
+            if (e.getButton() == MouseEvent.BUTTON1) {
             JTableHeader h = (JTableHeader) e.getSource();
             TableColumnModel columnModel = h.getColumnModel();
             int viewColumn = columnModel.getColumnIndexAtX(e.getX());
@@ -852,6 +853,7 @@ public class TableSorter extends AbstractTableModel {
                 status = status + (e.isShiftDown() ? (-1) : 1);
                 status = ((status + 4) % 3) - 1; // signed mod, returning {-1, 0, 1}
                 setSortingStatus(column, status);
+            }
             }
         }
     }
