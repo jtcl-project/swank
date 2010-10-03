@@ -204,12 +204,14 @@ class SwkJTreeWidgetCmd implements Command {
             } else {
                 DefaultMutableTreeNode refNode = (DefaultMutableTreeNode) model.getRoot();
 
+ 	    if (iNodes[0] >= 0) {
                 for (int i = 0; i < iNodes.length; i++) {
-                    refNode = (DefaultMutableTreeNode) refNode.getChildAt(iNodes[i]);
+                   refNode = (DefaultMutableTreeNode) refNode.getChildAt(iNodes[i]);
                 }
+             }
 
-                refNode.add(node);
-            }
+             refNode.add(node);
+          }
         }
     }
 
