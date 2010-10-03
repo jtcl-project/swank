@@ -26,10 +26,11 @@ import javax.swing.tree.*;
 
 class SwkJDialogWidgetCmd implements Command {
     static final private String[] validCmds = {
-        "cget", "configure",
+        "cget", "configure","add"
     };
     static final private int OPT_CGET = 0;
     static final private int OPT_CONFIGURE = 1;
+    static final private int OPT_ADD = 2;
     static boolean gotDefaults = false;
 
     public static String[] getValidCmds() {
@@ -98,9 +99,44 @@ class SwkJDialogWidgetCmd implements Command {
             }
 
             break;
+       case OPT_ADD:
+            add(interp, swkjdialog, argv);
+
+            break;
 
         default:
             throw new TclRuntimeError("TclIndex.get() error");
+        }
+    }
+    void add(final Interp interp, final SwkJDialog swkjdialog,
+        final TclObject[] argv) throws TclException {
+        if (argv.length != 3) {
+            throw new TclNumArgsException(interp, 2, argv, "option");
+        }
+
+        final TclObject tObj2 = (TclObject) Widgets.getWidget(interp,argv[2].toString());
+
+        if (tObj2 == null) {
+            throw new TclException(interp,
+                "bad window path name \"" + argv[2].toString() + "\"");
+        }
+
+        final JComponent jcomp = (JComponent) ReflectObject.get(interp, tObj2);
+        (new Add()).exec(swkjdialog, jcomp);
+    }
+
+    class Add extends UpdateOnEventThread {
+        SwkJDialog swkjdialog = null;
+        JComponent jcomp = null;
+
+        void exec(final SwkJDialog swkjdialog, JComponent jcomp) {
+            this.jcomp = jcomp;
+            this.swkjdialog = swkjdialog;
+            execOnThread();
+        }
+
+        public void run() {
+            swkjdialog.add(jcomp);
         }
     }
 }
