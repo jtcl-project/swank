@@ -55,7 +55,7 @@ import javax.swing.*;
 
 public class ItemHTML extends SwkShape implements TextInterface {
     static CanvasParameter[] parameters = {
-        new TextParameter(), new AnchorParameter(), new FontParameter(),
+        new TextParameter(), new AnchorParameter(), new FontParameter(), new StateParameter(),
         new WidthParameter(), new FillParameter(), new GradientParameter(), new TagsParameter(),
         new TransformerParameter(), new OutlineParameter(),new RotateParameter(),new NodeParameter(),
     };
@@ -198,7 +198,12 @@ aT.translate(storeCoords[0], storeCoords[1]);
     public boolean hitShape(double x1, double y1) {
        boolean result = false;
        if (shape != null) {
-          result = shape.contains(x1,y1);
+           Shape shape2 = shape;
+           AffineTransform shapeTransform = this.getTransform();
+           if (shapeTransform != null) {
+               shape2 = shapeTransform.createTransformedShape(shape);
+               result = shape2.contains(x1,y1);
+           }
        }
        return result;
     }
@@ -215,19 +220,30 @@ aT.translate(storeCoords[0], storeCoords[1]);
         if (shapeTransform != null) {
             aT.setTransform(shapeTransform);
         }
+
+        Shape shape2 = shape;
+        if (shapeTransform != null) {
+            shape2 = shapeTransform.createTransformedShape(shape);
+        }
+        Rectangle2D rectBounds = shape2.getBounds();
+
+
+
+
+
         jLabel.setVisible(true);
-        jLabel.setSize((int) rect2D.getWidth(),(int) rect2D.getHeight());
-        g2.translate((int) rect2D.getX(), (int) rect2D.getY());
+        jLabel.setSize((int) rectBounds.getWidth(),(int) rectBounds.getHeight());
+        g2.translate((int) rectBounds.getX(), (int) rectBounds.getY());
 
         if (getTexturePaint() != null) {
             g2.setPaint(getTexturePaint());
-            g2.fillRect(0,0,(int) rect2D.getWidth(),(int) rect2D.getHeight());
+            g2.fillRect(0,0,(int) rectBounds.getWidth(),(int) rectBounds.getHeight());
         } else if (getFillGradient() != null) {
             g2.setPaint(getFillGradient());
-            g2.fillRect(0,0,(int) rect2D.getWidth(),(int) rect2D.getHeight());
+            g2.fillRect(0,0,(int) rectBounds.getWidth(),(int) rectBounds.getHeight());
         } else if (getFill() != null) {
             g2.setPaint(getFill());
-            g2.fillRect(0,0,(int) rect2D.getWidth(),(int) rect2D.getHeight());
+            g2.fillRect(0,0,(int) rectBounds.getWidth(),(int) rectBounds.getHeight());
         }
 
         jLabel.setForeground(getTextColor());
@@ -236,6 +252,6 @@ aT.translate(storeCoords[0], storeCoords[1]);
         //jLabel.setText("hello");
         jLabel.paint((Graphics) g2);
         
-        g2.translate(-(int) rect2D.getX(), -(int) rect2D.getY());
+        g2.translate(-(int) rectBounds.getX(), -(int) rectBounds.getY());
     }
 }
