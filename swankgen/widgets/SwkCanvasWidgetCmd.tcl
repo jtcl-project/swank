@@ -442,7 +442,9 @@ append specialMethods {
 
     public void processKeyEvent(KeyEvent e, int type, int subtype,
             String currentTag, String previousTag, HitShape eventCurrentShape) {
-        //System.out.println("key event "+e.toString());
+
+        //System.out.println("key event "+e.toString()); 
+        SwkBinding binding;
         int buttonMask;
         boolean debug = false;
         int mods = e.getModifiersEx();
@@ -466,14 +468,11 @@ append specialMethods {
             keyChar = (char) (keyChar + 64);
         }
 
-
         KeyStroke keyStroke = KeyStroke.getKeyStrokeForEvent(e);
         boolean nativeProcessEvent = true;
         boolean breakOut = false;
 
-
-
-        if (e.isConsumed()) {
+       if (e.isConsumed()) {
             return;
         }
 
@@ -487,7 +486,10 @@ append specialMethods {
             return;
         }
 
-        SwkBinding binding;
+        boolean consumeNextType = true;
+        if (subtype == SwkBinding.PRESS) {
+            consumeNextType = false;
+        }
 
 
         //    System.out.println("event "+e);
@@ -502,61 +504,75 @@ append specialMethods {
                 continue;
             }
 
-            if (!((binding.subtype == SwkBinding.PRESS) &&
-                    (binding.detail == 0))) {
-                if (!((binding.subtype == SwkBinding.RELEASE) &&
+                if (!((binding.subtype == SwkBinding.PRESS) &&
                         (binding.detail == 0))) {
-                    if (!((binding.subtype == SwkBinding.TYPE) &&
+                    if (!((binding.subtype == SwkBinding.RELEASE) &&
                             (binding.detail == 0))) {
-                        //System.out.println("event mods "+mods+" binding mods "+binding.mod);
-                        if (binding.keyStroke == null) {
-                            //System.out.println("chars "+(keyChar+0)+" "+binding.detail);
-                            if (binding.detail != keyChar) {
-                                continue;
-                            }
+                        if (!((binding.subtype == SwkBinding.TYPE) &&
+                                (binding.detail == 0))) {
+                            //System.out.println("event mods "+mods+" binding mods "+binding.mod);
+                            if (binding.keyStroke == null) {
+                                //System.out.println("chars "+(keyChar+0)+" "+binding.detail);
+                                if (binding.detail != keyChar) {
+                                    continue;
+                                }
 
-                            if (binding.mod != mods) {
-                                if ((binding.mod |
-                                        InputEvent.SHIFT_DOWN_MASK) != mods) {
+                                if (binding.mod != mods) {
+                                    if ((binding.mod |
+                                            InputEvent.SHIFT_DOWN_MASK) != mods) {
+                                        continue;
+                                    }
+                                }
+                            } else {
+                                //System.out.println(binding.detail+" <<>> "+keyCode);
+                                if (binding.detail != keyCode) {
+                                    //System.out.println("keyCodes not equal");
+                                    continue;
+                                }
+
+                                if (binding.mod != mods) {
                                     continue;
                                 }
                             }
-                        } else {
-                            //System.out.println(binding.detail+" <<>> "+keyCode);
-                            if (binding.detail != keyCode) {
-                                //System.out.println("keyCodes not equal");
-                                continue;
-                            }
-
-                            if (binding.mod != mods) {
-                                continue;
-                            }
                         }
-                    }
 
-                    // second accounts for possibility of Caps-lock on
-                    // if matched above at detail == keyChar then the case was
-                    // right
+                        // second accounts for possibility of Caps-lock on
+                        // if matched above at detail == keyChar then the case was
+                        // right
                     }
+                }
 
-                if ((binding.command != null) && (binding.command.length() != 0)) {
+                if ((binding.command != null) &&
+                        (binding.command.length() != 0)) {
                     try {
                         BindCmd.doCmd(interp, binding.command, e,eventCurrentShape);
                     } catch (TclException tclE) {
                         if (tclE.getCompletionCode() == TCL.BREAK) {
+                            nativeProcessEvent = false;
+
+                            //System.out.println("break");
                             e.consume();
 
-                            return;
+                            if (subtype == SwkBinding.PRESS) {
+                                //System.out.println("consume next");
+                                consumeNextType = true;
+                            }
+
+                            breakOut = true;
+
+                            break;
                         } else {
                             interp.addErrorInfo("\n    (\"binding\" script)");
                             interp.backgroundError();
                         }
                     }
                 }
-                lastBinding = binding;
+
+            if (breakOut) {
+                break;
             }
-        }
-    }
+            }
+ }
 ArrayList<SwkBinding> getBindings(String checkTag, int type, int subtype) {
            ArrayList<SwkBinding> bindings = null;
         if (type == SwkBinding.FOCUS) {
