@@ -6,6 +6,8 @@
 package com.onemoonscientific.swank;
 
 import tcl.lang.*;
+import tcl.pkg.java.ReflectObject;
+
 
 import java.awt.Component;
 import javax.swing.*;

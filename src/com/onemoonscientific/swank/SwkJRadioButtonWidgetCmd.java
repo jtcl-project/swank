@@ -8,6 +8,7 @@
 package com.onemoonscientific.swank;
 
 import tcl.lang.*;
+import tcl.pkg.java.ReflectObject;
 
 
 class SwkJRadioButtonWidgetCmd implements Command {

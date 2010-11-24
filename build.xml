@@ -44,19 +44,19 @@
   </target>
 
   <path id="jacl.classpath">
-     <pathelement  path="${dir.libs}/jacl.jar:${dir.libs}/tcljava.jar"/>
+     <pathelement  path="${dir.libs}/jtcl2_0.jar"/>
   </path>
   <path id="swank.classpath">
-     <pathelement  path="${dir.build}:${dir.libs}/jacl.jar:${dir.libs}/tcljava.jar:${dir.libs}/itcl.jar:${dir.libs}/janino.jar:${dir.libs}/tjc.jar:${dir.libs}/jh.jar"/>
+     <pathelement  path="${dir.build}:${dir.libs}/jtcl2_0.jar:${dir.libs}/jh.jar"/>
   </path>
   <path id="help.classpath">
-     <pathelement  path="${dir.build}:${dir.libs}/jacl.jar:${dir.libs}/tcljava.jar:${dir.libs}/itcl.jar:${dir.libs}/janino.jar:${dir.libs}/tjc.jar:${dir.libs}/jh.jar:${dir.dist}/lib/swank.jar"/>
+     <pathelement  path="${dir.build}:${dir.libs}/jtcl2_0.jar:${dir.libs}/jh.jar:${dir.dist}/lib/swank3.jar"/>
   </path>
   <path id="chart.classpath">
-     <pathelement  path="${dir.build}:${dir.libs}/jacl.jar:${dir.libs}/tcljava.jar:${dir.libs}/itcl.jar:${dir.libs}/janino.jar:${dir.libs}/tjc.jar:${dir.libs}/jcommon.jar:${dir.libs}/jfreechart.jar:${dir.dist}/lib/swank.jar"/>
+     <pathelement  path="${dir.build}:${dir.libs}/jtcl2_0.jar:${dir.libs}/jcommon.jar:${dir.libs}/jfreechart.jar:${dir.dist}/lib/swank3.jar"/>
   </path>
   <path id="canvas3d.classpath">
-     <pathelement  path="${dir.build}:${dir.libs}/jacl.jar:${dir.libs}/tcljava.jar:${dir.libs}/itcl.jar:${dir.libs}/janino.jar:${dir.libs}/tjc.jar:${dir.dist}/lib/swank.jar"/>
+     <pathelement  path="${dir.build}:${dir.libs}/jtcl2_0.jar:${dir.dist}/lib/swank3.jar"/>
   </path>
 
   <target depends="prepare" description="compile the source " name="compile_swank">
@@ -106,14 +106,14 @@
     <fileset file="LICENSE"/>
     </copy>
     <!-- Put everything in ${dir.build} into the MyProject-${DSTAMP}.jar file -->
-    <jar basedir="${dir.build}" jarfile="${dir.dist}/lib/swank.jar"/>
+    <jar basedir="${dir.build}" jarfile="${dir.dist}/lib/swank3.jar"/>
   </target>
   <target depends="compile_help" description="generate the distribution" name="hdist">
     <!-- Create the distribution directory -->
     <mkdir dir="${dir.dist}/lib"/>
 
     <!-- Put everything in ${dir.hbuild} into the MyProject-${DSTAMP}.jar file -->
-    <jar basedir="${dir.hbuild}" jarfile="${dir.dist}/lib/swankjh.jar"/>
+    <jar basedir="${dir.hbuild}" jarfile="${dir.dist}/lib/swankjh3.jar"/>
   </target>
   <target depends="compile_chart" description="generate the distribution" name="cdist">
     <!-- Create the distribution directory -->
@@ -122,15 +122,15 @@
     <fileset dir="${dir.chartsrc}/com/onemoonscientific/swank/chart/library"/>
     </copy>
 
-    <!-- Put everything in ${dir.chartbuild} into the MyProject-${DSTAMP}.jar file -->
-    <jar basedir="${dir.chartbuild}" jarfile="${dir.dist}/lib/swankchart.jar"/>
+    <!-- Put everything in ${dir.chartbuild} into the MyProject-${DSTAMP}3.jar file -->
+    <jar basedir="${dir.chartbuild}" jarfile="${dir.dist}/lib/swankchart3.jar"/>
   </target>
   <target depends="compile_3d" description="generate the distribution" name="3ddist">
     <!-- Create the distribution directory -->
     <mkdir dir="${dir.dist}/lib"/>
 
     <!-- Put everything in ${dir.3dbuild} into the MyProject-${DSTAMP}.jar file -->
-    <jar basedir="${dir.3dbuild}" jarfile="${dir.dist}/lib/swank3d.jar"/>
+    <jar basedir="${dir.3dbuild}" jarfile="${dir.dist}/lib/swank3d3.jar"/>
   </target>
 
   <target  depends="prepare" description="build the source " name="gensrc">

@@ -8,6 +8,7 @@
 package com.onemoonscientific.swank;
 
 import tcl.lang.*;
+import tcl.pkg.java.ReflectObject;
 
 import javax.swing.SwingUtilities;
 import javax.swing.tree.*;
@@ -204,7 +205,7 @@ class SwkJTreeWidgetCmd implements Command {
             } else {
                 DefaultMutableTreeNode refNode = (DefaultMutableTreeNode) model.getRoot();
 
- 	    if (iNodes[0] >= 0) {
+            if ((iNodes.length > 0) && (iNodes[0] >= 0)) {
                 for (int i = 0; i < iNodes.length; i++) {
                    refNode = (DefaultMutableTreeNode) refNode.getChildAt(iNodes[i]);
                 }

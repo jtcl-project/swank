@@ -3,6 +3,7 @@ package com.onemoonscientific.swank.print;
 import com.onemoonscientific.swank.*;
 
 import tcl.lang.*;
+import tcl.pkg.java.ReflectObject;
 
 import java.awt.*;
 import java.awt.print.*;

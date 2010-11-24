@@ -113,6 +113,7 @@ public class ItemAnnotation extends ItemLine implements TextInterface {
         AffineTransform shapeTransform = getTransform();
 
         g2.setPaint(outline);
+        double[] xy = {storeCoords[0],storeCoords[1],storeCoords[2],storeCoords[3]};
         if ((endPointStyle1 == EndPointStyle.NONE) && (endPointStyle2 == EndPointStyle.NONE)) {
             if (shapeTransform != null) {
                 g2.draw(shapeTransform.createTransformedShape(shape));
@@ -125,6 +126,7 @@ public class ItemAnnotation extends ItemLine implements TextInterface {
             // draw line
             if (shapeTransform != null) {
                 g2.draw(shapeTransform.createTransformedShape(shape));
+                shapeTransform.transform(xy,0,xy,0,xy.length/2);
             } else {
                 g2.draw(shape);
             }
@@ -144,7 +146,7 @@ public class ItemAnnotation extends ItemLine implements TextInterface {
         }
         float[]  anchor = new float[2];
         anchor[1] = 0.5f;
-        if (storeCoords[1] > storeCoords[3]) {
+        if (xy[1] > xy[3]) {
             anchor[0] = 1.0f;
         } else {
             anchor[0] = 0.0f;

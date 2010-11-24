@@ -10,6 +10,7 @@
 package com.onemoonscientific.swank.jhelp;
 
 import tcl.lang.*;
+import tcl.pkg.java.ReflectObject;
 
 import java.awt.*;
 import java.net.URL;

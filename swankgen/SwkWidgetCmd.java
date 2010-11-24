@@ -8,6 +8,7 @@ set body {/*
 package com.onemoonscientific.swank$subdir;
 
 import tcl.lang.*;
+import tcl.pkg.java.ReflectObject;
 
 import java.awt.*;
 import java.awt.print.*;

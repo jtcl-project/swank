@@ -27,6 +27,7 @@ package com.onemoonscientific.swank.canvas;
 import com.onemoonscientific.swank.*;
 
 import tcl.lang.*;
+import tcl.pkg.java.ReflectObject;
 
 import java.awt.*;
 

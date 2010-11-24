@@ -202,8 +202,8 @@ aT.translate(storeCoords[0], storeCoords[1]);
            AffineTransform shapeTransform = this.getTransform();
            if (shapeTransform != null) {
                shape2 = shapeTransform.createTransformedShape(shape);
-               result = shape2.contains(x1,y1);
            }
+           result = shape2.contains(x1,y1);
        }
        return result;
     }
