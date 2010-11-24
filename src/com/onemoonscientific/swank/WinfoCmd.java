@@ -25,6 +25,7 @@
 package com.onemoonscientific.swank;
 
 import tcl.lang.*;
+import tcl.pkg.java.ReflectObject;
 
 import java.awt.*;
 
@@ -108,7 +109,6 @@ public class WinfoCmd implements Command {
 
         switch (opt) {
         case OPT_CHILDREN:
-
             String widgetName = argv[2].toString();
             getChildrenByName(interp, widgetName);
 
@@ -360,45 +360,64 @@ public class WinfoCmd implements Command {
         throws TclException {
         Vector children = Widgets.children(interp, parentName);
         TclObject list = TclList.newInstance();
-
         for (int i = 0; i < children.size(); i++) {
             String childName = (String) children.elementAt(i);
             TclList.append(interp, list, TclString.newInstance(childName));
         }
-
         interp.setResult(list);
     }
 
-    static void getChildren(Interp interp, Component component, TclObject list)
+    final void getChildren(final Interp interp, final Component component, final TclObject list)
         throws TclException {
-        Container master = null;
+        final ArrayList<String> childList = (new GetChildren()).exec(component);
+        for (String compName:childList) {
+            TclList.append(interp, list, TclString.newInstance(compName));
+        }
+    }
 
-        if (component instanceof JFrame) {
-            master = ((JFrame) component).getContentPane();
-        } else if (component instanceof JWindow) {
-            master = ((JWindow) component).getContentPane();
-        } else if (component instanceof JInternalFrame) {
-            master = ((JInternalFrame) component).getContentPane();
-        } else if (component instanceof Container) {
-            master = (Container) component;
-        } else {
-            return;
+  class GetChildren extends GetValueOnEventThread {
+        Component comp = null;
+        ArrayList<String> childList = new ArrayList<String>();
+
+        ArrayList<String> exec(final Component comp)
+            throws TclException {
+            this.comp = comp;
+            execOnThread();
+            return childList;
         }
 
-        String compName = null;
-
-        Component[] comps = master.getComponents();
-
-        for (int i = 0; i < comps.length; i++) {
-            compName = comps[i].getName();
-
-            if ((compName != null) && (compName.length() != 0)) {
-                TclList.append(interp, list, TclString.newInstance(compName));
+        public void run() {
+            getChildren(comp);
+        }
+        void getChildren(Component component) {
+            Container master = null;
+            if (component instanceof JFrame) {
+                master = ((JFrame) component).getContentPane();
+            } else if (component instanceof JWindow) {
+                master = ((JWindow) component).getContentPane();
+            } else if (component instanceof JInternalFrame) {
+                master = ((JInternalFrame) component).getContentPane();
+            } else if (component instanceof Container) {
+                master = (Container) component;
+            } else {
+                return;
             }
-        }
 
-        for (int i = 0; i < comps.length; i++) {
-            getChildren(interp, comps[i], list);
+            String compName = null;
+
+            Component[] comps = master.getComponents();
+
+            for (int i = 0; i < comps.length; i++) {
+                compName = comps[i].getName();
+
+                if ((compName != null) && (compName.length() != 0)) {
+                    childList.add(compName);
+                }
+            }
+
+            for (int i = 0; i < comps.length; i++) {
+                getChildren(comps[i]);
+            }
         }
     }
 

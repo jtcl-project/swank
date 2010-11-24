@@ -25,6 +25,8 @@
 package com.onemoonscientific.swank;
 
 import tcl.lang.*;
+import tcl.pkg.java.ReflectObject;
+
 
 import java.awt.*;
 
@@ -38,7 +40,7 @@ import javax.swing.*;
 public class Widgets {
     
 
-    static Hashtable getWidgetMap(Interp interp) {
+    private static Hashtable getWidgetMap(Interp interp) {
     
          WidgetsMap widgetsMap = (WidgetsMap) interp.getAssocData("Widgets");
          if (widgetsMap == null) {
@@ -81,7 +83,7 @@ public class Widgets {
                 children = parent.getChildrenList();
             }
 
-            children.add(widgetObject);
+            children.add(widgetName);
         }
 
         getWidgetMap(interp).put(widgetName, widgetObject);
@@ -109,7 +111,7 @@ public class Widgets {
             return;
         }
 
-        children.remove(tObj);
+        children.remove(widgetName);
     }
 
     public static Vector children(Interp interp, String parentName)
@@ -125,9 +127,7 @@ public class Widgets {
         ListIterator list = children.listIterator(0);
 
         while (list.hasNext()) {
-            TclObject tObj = (TclObject) list.next();
-            SwkWidget swkWidget = (SwkWidget) ReflectObject.get(interp, tObj);
-            String widgetName = swkWidget.getName();
+            String widgetName = (String) list.next();
             childrenNames.add(widgetName);
         }
 
