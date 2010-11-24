@@ -42,7 +42,7 @@ proc tk_getOpenFile {args} {
     set multipleSelection 0
     set title "Choose File to Open"
     set parent ""
-    if {![catch {focus} fWin] && ($fWin ne "")} {
+    if {![catch {focus} fWin] && ($fWin ne "") && [winfo exists $fWin] && [winfo viewable $fWin]} {
         set fTWin [winfo toplevel $fWin]
         if {[winfo exists $fTWin] && [winfo viewable $fTWin]} {
             set parent $fTWin
@@ -117,7 +117,7 @@ proc tk_getSaveFile {args} {
     set defaultExtension ""
     set title "Choose File to Save"
     set parent ""
-    if {![catch {focus} fWin] && ($fWin ne "")} {
+    if {![catch {focus} fWin] && ($fWin ne "") && [winfo exists $fWin] && [winfo viewable $fWin]} {
         set fTWin [winfo toplevel $fWin]
         if {[winfo exists $fTWin] && [winfo viewable $fTWin]} {
             set parent $fTWin
@@ -187,7 +187,7 @@ proc tk_chooseDirectory {args} {
     set dialogMode $::swank::defaultFileMode
     set title "Choose File to Open"
     set parent ""
-    if {![catch {focus} fWin] && ($fWin ne "")} {
+    if {![catch {focus} fWin] && ($fWin ne "") && [winfo exists $fWin] && [winfo viewable $fWin]} {
         set fTWin [winfo toplevel $fWin]
         if {[winfo exists $fTWin] && [winfo viewable $fTWin]} {
             set parent $fTWin
