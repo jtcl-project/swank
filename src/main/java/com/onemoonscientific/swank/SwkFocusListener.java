@@ -67,15 +67,19 @@ public class SwkFocusListener implements FocusListener, SwkListener {
     }
 
     public void focusGained(FocusEvent e) {
-        BindEvent bEvent = new BindEvent(interp, (SwkListener) this,
+        if (interp != null) {
+            BindEvent bEvent = new BindEvent(interp, (SwkListener) this,
                 (EventObject) e, SwkBinding.IN);
-        interp.getNotifier().queueEvent(bEvent, TCL.QUEUE_TAIL);
+            interp.getNotifier().queueEvent(bEvent, TCL.QUEUE_TAIL);
+        }
     }
 
     public void focusLost(FocusEvent e) {
-        BindEvent bEvent = new BindEvent(interp, (SwkListener) this,
+        if (interp != null) {
+            BindEvent bEvent = new BindEvent(interp, (SwkListener) this,
                 (EventObject) e, SwkBinding.OUT);
-        interp.getNotifier().queueEvent(bEvent, TCL.QUEUE_TAIL);
+            interp.getNotifier().queueEvent(bEvent, TCL.QUEUE_TAIL);
+        }
     }
 
   public void processEvent(EventObject eventObject, Object obj, int subtype) {
