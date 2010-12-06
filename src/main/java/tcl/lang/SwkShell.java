@@ -110,6 +110,12 @@ public class SwkShell extends Shell {
                 } else {
                     interp.evalFile(fileName);
                 }
+                Notifier notifier = interp.getNotifier();
+
+                while (true) {
+                // process events until "exit" is called.
+                    notifier.doOneEvent(TCL.ALL_EVENTS);
+                }
             } catch (TclException e) {
                 int code = e.getCompletionCode();
 
@@ -143,12 +149,16 @@ public class SwkShell extends Shell {
         }
 
         if (fileName == null) {
+            try {
+                interp.eval("::swank::cmdLineArgs");
+            } catch (TclException e) {
+                System.out.println("error "+e.getMessage());
+            }
             // We are running in interactive mode. Start the ConsoleThread
             // that loops, grabbing stdin and passing it to the interp.
             ConsoleThread consoleThread = new ConsoleThread(interp);
             consoleThread.setDaemon(true);
             consoleThread.start();
-
             // Loop forever to handle user input events in the command line.
             Notifier notifier = interp.getNotifier();
 
