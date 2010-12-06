@@ -1,193 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project basedir="." default="dist" name="Swank">
-  <!-- set global properties for this build -->
-  <property name="dir.src" value="src"/>
-  <property name="dir.hsrc" value="hsrc"/>
-  <property name="dir.chartsrc" value="chartsrc"/>
-  <property name="dir.src3d" value="src3d"/>
-  <property name="dir.gensrc" value="gensrc"/>
-  <property name="dir.build" value="build"/>
-  <property name="dir.hbuild" value="hbuild"/>
-  <property name="dir.3dbuild" value="3dbuild"/>
-  <property name="dir.chartbuild" value="chartbuild"/>
-  <property name="dir.dist" value="dist"/>
-  <property name="dir.libs" value="../../libs"/>
-  <property name="srclvl" value="1.5"/>
-  <property name="trgtlvl" value="1.5"/>
-  <taskdef classname="de.hunsicker.jalopy.plugin.ant.AntPlugin" name="jalopy">
-  <classpath>
-    <fileset dir="/usr/local/jalopy/lib">
-      <include name="*.jar"/>
-    </fileset>
-  </classpath>
-</taskdef>
 
-  <target name="prepare">
-    <!-- Create the time stamp -->
-    <tstamp/>
-    <!-- Create the build directory structure used by compile -->
-    <mkdir dir="${dir.build}"/>
-    <mkdir dir="${dir.build}/com"/>
-    <mkdir dir="${dir.build}/com/onemoonscientific"/>
-    <mkdir dir="${dir.build}/com/onemoonscientific/swank"/>
-    <mkdir dir="${dir.build}/com/onemoonscientific/swank/jhelp"/>    
-    <mkdir dir="${dir.build}/tcl"/>
-    <mkdir dir="${dir.gensrc}"/>
-    <mkdir dir="${dir.gensrc}/com"/>
-    <mkdir dir="${dir.gensrc}/com/onemoonscientific"/>
-    <mkdir dir="${dir.gensrc}/com/onemoonscientific/swank"/>
-    <mkdir dir="${dir.gensrc}/com/onemoonscientific/swank/jhelp"/>
-    <mkdir dir="${dir.gensrc}/com/onemoonscientific/swank/canvas"/>
-    <mkdir dir="${dir.hbuild}"/>
-    <mkdir dir="${dir.chartbuild}"/>
-    <mkdir dir="${dir.3dbuild}"/>
-  </target>
+<!-- ====================================================================== -->
+<!-- Ant build file (http://ant.apache.org/) for Ant 1.6.2 or above.        -->
+<!-- ====================================================================== -->
 
-  <path id="jacl.classpath">
-     <pathelement  path="${dir.libs}/jtcl2_0.jar"/>
-  </path>
-  <path id="swank.classpath">
-     <pathelement  path="${dir.build}:${dir.libs}/jtcl2_0.jar:${dir.libs}/jh.jar"/>
-  </path>
-  <path id="help.classpath">
-     <pathelement  path="${dir.build}:${dir.libs}/jtcl2_0.jar:${dir.libs}/jh.jar:${dir.dist}/lib/swank3.jar"/>
-  </path>
-  <path id="chart.classpath">
-     <pathelement  path="${dir.build}:${dir.libs}/jtcl2_0.jar:${dir.libs}/jcommon.jar:${dir.libs}/jfreechart.jar:${dir.dist}/lib/swank3.jar"/>
-  </path>
-  <path id="canvas3d.classpath">
-     <pathelement  path="${dir.build}:${dir.libs}/jtcl2_0.jar:${dir.dist}/lib/swank3.jar"/>
-  </path>
+<project name="swank3" default="package" basedir=".">
 
-  <target depends="prepare" description="compile the source " name="compile_swank">
-    <!-- Compile the java code from ${dir.src} into ${dir.build} -->
-    <javac fork="yes" target="${trgtlvl}" source="${srclvl}" debug="true" destdir="${dir.build}" srcdir="${dir.src}:${dir.gensrc}">
-         <classpath refid="jacl.classpath"/>
-    <exclude name="**/swank/canvas/SwankUtil.java"/>
-     </javac>
+  <!-- ====================================================================== -->
+  <!-- Import maven-build.xml into the current project                        -->
+  <!-- ====================================================================== -->
 
-  </target>
+  <import file="maven-build.xml"/>
   
-  <target description="compile the source help " depends="prepare" name="compile_help">
-    <!-- Compile the java code from ${dir.hsrc} into ${dir.build} -->
-    <javac fork="yes" target="${trgtlvl}" source="${srclvl}" debug="true" destdir="${dir.hbuild}" srcdir="${dir.hsrc}">
-         <classpath refid="help.classpath"/>
-    </javac>
+  <!-- ====================================================================== -->
+  <!-- Help target                                                            -->
+  <!-- ====================================================================== -->
+
+  <target name="help">
+    <echo message="Please run: $ant -projecthelp"/>
   </target>
 
-  <target depends="prepare" description="compile the chart files" name="compile_chart">
-    <!-- Compile the java code from ${dir.chartsrc} into ${dir.chartbuild} -->
-    <javac fork="yes" target="${trgtlvl}" source="${srclvl}" debug="true" destdir="${dir.chartbuild}" srcdir="${dir.chartsrc}">
-         <classpath refid="chart.classpath"/>
-    </javac>
-  </target>
-
-  <target depends="prepare" description="compile the 3d files" name="compile_3d">
-    <!-- Compile the java code from ${dir.src3d} into ${dir.3dbuild} -->
-    <javac fork="yes" target="${trgtlvl}" source="${srclvl}" debug="true" destdir="${dir.3dbuild}" srcdir="${dir.src3d}">
-         <classpath refid="canvas3d.classpath"/>
-    </javac>
-  </target>
-
-  <target depends="compile_swank" name="compile">
-  </target>
- <target depends="dist,hdist,cdist,3ddist" name="alldist">
-  </target>
-
-  <target depends="compile" description="generate the distribution" name="dist">
-    <!-- Create the distribution directory -->
-    <mkdir dir="${dir.dist}/lib"/>
-    <!-- Copy the library directory -->
-    <copy todir="${dir.build}/com/onemoonscientific/swank/library">
-    <fileset dir="${dir.src}/com/onemoonscientific/swank/library"/>
-    </copy>
-    <!-- Copy the license file-->
-    <copy todir="${dir.build}/swank">
-    <fileset file="LICENSE"/>
-    </copy>
-    <!-- Put everything in ${dir.build} into the MyProject-${DSTAMP}.jar file -->
-    <jar basedir="${dir.build}" jarfile="${dir.dist}/lib/swank3.jar"/>
-  </target>
-  <target depends="compile_help" description="generate the distribution" name="hdist">
-    <!-- Create the distribution directory -->
-    <mkdir dir="${dir.dist}/lib"/>
-
-    <!-- Put everything in ${dir.hbuild} into the MyProject-${DSTAMP}.jar file -->
-    <jar basedir="${dir.hbuild}" jarfile="${dir.dist}/lib/swankjh3.jar"/>
-  </target>
-  <target depends="compile_chart" description="generate the distribution" name="cdist">
-    <!-- Create the distribution directory -->
-    <mkdir dir="${dir.dist}/lib"/>
-    <copy todir="${dir.chartbuild}/com/onemoonscientific/swank/chart/library">
-    <fileset dir="${dir.chartsrc}/com/onemoonscientific/swank/chart/library"/>
-    </copy>
-
-    <!-- Put everything in ${dir.chartbuild} into the MyProject-${DSTAMP}3.jar file -->
-    <jar basedir="${dir.chartbuild}" jarfile="${dir.dist}/lib/swankchart3.jar"/>
-  </target>
-  <target depends="compile_3d" description="generate the distribution" name="3ddist">
-    <!-- Create the distribution directory -->
-    <mkdir dir="${dir.dist}/lib"/>
-
-    <!-- Put everything in ${dir.3dbuild} into the MyProject-${DSTAMP}.jar file -->
-    <jar basedir="${dir.3dbuild}" jarfile="${dir.dist}/lib/swank3d3.jar"/>
-  </target>
-
-  <target  depends="prepare" description="build the source " name="gensrc">
-    <java fork="yes" classname="tcl.lang.Shell">
-         <classpath refid="jacl.classpath"/>
-         <arg value="swankgen/build.tcl"/>
-    </java>
-  </target>
-
-  <target  depends="dist" description="build the source " name="wisk">
-    <java fork="yes" classname="tcl.lang.SwkShell">
-         <classpath refid="swank.classpath"/>
-    </java>
-  </target>
-
-  <target  depends="dist" description="build the source " name="wiskcon">
-    <java fork="yes" classname="tcl.lang.SwkShell">
-         <classpath refid="swank.classpath"/>
-         <arg value="resource:/com/onemoonscientific/swank/library/startconsole.tcl"/>
-    </java>
-  </target>
-
-  <target description="clean up" name="clean">
-    <!-- Delete the ${dir.build} and ${dir.dist} directory trees -->
-    <delete dir="${dir.build}"/>
-    <delete dir="${dir.hbuild}"/>
-    <delete dir="${dir.chartbuild}"/>
-    <delete dir="${dir.3dbuild}"/>
-
-    <delete dir="${dir.dist}"/>
-    <delete dir="${dir.gensrc}"/>
-  </target>
-<target  name="format">
-
-    <!--
-
-      Invokes Jalopy as follows:
-
-      - All formatted files will have unix fileformat (\n)
-      - Load your code convention from the given url
-      - Override the convention to use the file history feature
-      - Override the convention to use alder32 checksums of files for history testing
-      - Override the convention to use loglevel "info"
-      - Override the convention to use 2 threads
-      - The import optimization feature will work (if enabled in the active
-        convention), because a classpath reference is specified
-
-        Don't forget to setup an include pattern as Jalopy truly expects
-        valid Java source files as input!
-            convention="http://www.foo.com/myConvention.xml"
-            classpathref="project.classpath">
-
-      -->
-    <jalopy fileformat="unix" history="file" historymethod="adler32" loglevel="info" threads="2">
-      <fileset dir="${dir.src}">
-        <include name="**/*.java"/>
-      </fileset>
-    </jalopy>
-  </target>
 </project>
