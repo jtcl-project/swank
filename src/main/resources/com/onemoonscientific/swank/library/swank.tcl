@@ -1,6 +1,6 @@
-package provide Tk 8.3
-set tk_version 8.3
-set tk_patchLevel 8.3.0
+package provide Tk 8.4
+set tk_version 8.4
+set tk_patchLevel 8.4.0
 set tk_strictMotif 0
 proc tkwait {args} {
    if {[llength $args] != 2} {
@@ -333,6 +333,28 @@ namespace eval ::swank {
     variable defaultFileMode 0
     proc setLastDir {dir} {
          set ::swank::lastDir $dir
+    }
+    proc cmdLineArgs {} {
+       global argv
+       if {[llength $argv] > 0} {
+           set firstArg [lindex $argv 0]
+           switch -- $firstArg {
+               -demo {
+                     uplevel #0 {
+                         source  resource:/com/onemoonscientific/swank/library/demos/widget
+                     }
+                }
+               -swkcon {
+                     uplevel #0 {
+                         source  resource:/com/onemoonscientific/swank/library/swkcon.tcl
+                     ::tkcon::Init -rows 6
+                     }
+                }
+               -console {
+                    console show
+                }
+           }
+       }
     }
     proc getLastDir {} {
         set currentDir ""
