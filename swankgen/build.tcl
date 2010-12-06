@@ -9,7 +9,7 @@ source [file join swankgen setter.tcl]
 
 set tkcomps {
 }
-set swkRoot [file join src com onemoonscientific swank]
+set swkRoot [file join src main java com onemoonscientific swank]
 set specialImports ""
 set specialVars ""
 set widgets { JButton {SMenuButton JButton} JLabel JCheckBox JCheckBoxMenuItem 
