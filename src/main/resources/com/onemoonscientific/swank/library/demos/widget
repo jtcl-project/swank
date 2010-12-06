@@ -207,7 +207,7 @@ set lastLine ""
 
 pack  .textFrame -expand yes -fill both
 .t configure
-focus .s
+focus .t
 
 # positionWindow --
 # This procedure is invoked by most of the demos to position a
