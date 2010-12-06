@@ -2,6 +2,7 @@
 (^|/)\.hg($|/)
 (^|/)\.hgtags($|/)
 (.*)\.tar\.gz
+(.*).jar
 wisk
 gensrc/main/java
 build
@@ -14,6 +15,7 @@ mysync2
 mysync
 configs
 bric
+target
 src/main/java/com/onemoonscientific/swank/SwkFileDialog.java
 src/main/java/com/onemoonscientific/swank/SwkFileDialogCmd.java
 src/main/java/com/onemoonscientific/swank/SwkJButton.java
