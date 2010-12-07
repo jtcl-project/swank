@@ -3,36 +3,36 @@ set tk_version 8.4
 set tk_patchLevel 8.4.0
 set tk_strictMotif 0
 proc tkwait {args} {
-   if {[llength $args] != 2} {
-	error {wrong # args: should be "tkwait variable|visibility|window name"}
-   }
-   set mode [lindex $args 0]
+    if {[llength $args] != 2} {
+        error {wrong # args: should be "tkwait variable|visibility|window name"}
+    }
+    set mode [lindex $args 0]
     switch $mode {
-	variable {
-	        update
-		vwait [lindex $args 1]
-	}
-	visibility {
-           puts "tkwait $args"
+        variable {
+            update
+            vwait [lindex $args 1]
         }
-	window  {
-           puts "tkwait $args"
+        visibility {
+            puts "tkwait $args"
         }
-	default {
-          error "bad option \"$mode\": must be variable, visibility, or window"
-	}
-   }
+        window  {
+            puts "tkwait $args"
+        }
+        default {
+            error "bad option \"$mode\": must be variable, visibility, or window"
+        }
+    }
 }
 
 proc tk {args } {
-	if {$args == "appname"} {
-		return Wisk
-        }
+    if {$args == "appname"} {
+        return Wisk
+    }
 }
 
 
 proc tk_getOpenFile {args} {
-    global env 
+    global env
     if { [expr [llength $args] % 2] != 0} {
         error "args not multiple of two"
     }
@@ -48,7 +48,7 @@ proc tk_getOpenFile {args} {
             set parent $fTWin
         }
     }
-
+    
     set dialogMode $::swank::defaultFileMode
     foreach "argType argVal" $args {
         switch -- $argType {
@@ -59,24 +59,24 @@ proc tk_getOpenFile {args} {
                 set filters [lindex $argVal 0]
             }
             -initialdir {
-                 set currentDir $argVal
+                set currentDir $argVal
             }
             -title {
-                 set title $argVal
+                set title $argVal
             }
             -multiple {
-                 set multipleSelection $argVal
+                set multipleSelection $argVal
             }
             -parent {
-                 set parent $argVal
+                set parent $argVal
             }
             default {
-                 error "Invalid option type \"$argType\""
+                error "Invalid option type \"$argType\""
             }
         }
     }
     if {$multipleSelection} {
-         set dialogMode 0
+        set dialogMode 0
     }
     
     if {!$dialogMode} {
@@ -85,17 +85,17 @@ proc tk_getOpenFile {args} {
         .sk_filebox configure -multiselectionenabled $multipleSelection
         .sk_filebox configure -dialogtitle $title
         .sk_filebox configure -dialogparent $parent
-         if {[info exists filters]} {
+        if {[info exists filters]} {
             .sk_filebox filter [lindex $filters 1] [lindex $filters 0]
-         }
+        }
         .sk_filebox configure -visible true
     } else {
         filedialog .sk_filebox
         .sk_filebox configure -directory $currentDir
         .sk_filebox configure -title $title
-         if {[info exists filters]} {
+        if {[info exists filters]} {
             .sk_filebox filter [lindex $filters 1] [lindex $filters 0]
-         }
+        }
     }
     set result [.sk_filebox open]
     destroy .sk_filebox
@@ -107,7 +107,7 @@ proc tk_getOpenFile {args} {
 
 
 proc tk_getSaveFile {args} {
-    global env 
+    global env
     if { [expr [llength $args] % 2] != 0} {
         error "args not multiple of two"
     }
@@ -132,44 +132,44 @@ proc tk_getSaveFile {args} {
                 set filters [lindex $argVal 0]
             }
             -initialdir {
-                 set currentDir $argVal
+                set currentDir $argVal
             }
             -defaultextension {
-                 set defaultExtension $argVal
+                set defaultExtension $argVal
             }
             -title {
-                 set title $argVal
+                set title $argVal
             }
             -parent {
-                 set parent $argVal
+                set parent $argVal
             }
             default {
-                 error "Invalid option type \"$argType\""
+                error "Invalid option type \"$argType\""
             }
         }
     }
-
+    
     
     if {!$dialogMode} {
         jfilechooser .sk_filebox
         .sk_filebox configure -currentdirectory $currentDir
         .sk_filebox configure -dialogtitle $title
         .sk_filebox configure -dialogparent $parent
-         if {[info exists filters]} {
+        if {[info exists filters]} {
             .sk_filebox filter [lindex $filters 1] [lindex $filters 0]
-         }
+        }
         .sk_filebox configure -visible true
     } else {
         filedialog .sk_filebox
         .sk_filebox configure -directory $currentDir
         .sk_filebox configure -title $title
-         if {[info exists filters]} {
+        if {[info exists filters]} {
             .sk_filebox filter [lindex $filters 1] [lindex $filters 0]
-         }
+        }
     }
     set result [.sk_filebox save]
     if {($result ne "") && ([file extension $result] eq "") && ($defaultExtension ne "")} {
-       set result ${result}$defaultExtension
+        set result ${result}$defaultExtension
     }
     destroy .sk_filebox
     if {$result != ""} {
@@ -178,7 +178,7 @@ proc tk_getSaveFile {args} {
     return $result
 }
 proc tk_chooseDirectory {args} {
-    global env 
+    global env
     if { [expr [llength $args] % 2] != 0} {
         error "args not multiple of two"
     }
@@ -199,16 +199,16 @@ proc tk_chooseDirectory {args} {
                 set dialogMode $argVal
             }
             -initialdir {
-                 set currentDir $argVal
+                set currentDir $argVal
             }
             -title {
-                 set title $argVal
+                set title $argVal
             }
             -parent {
-                 set parent $argVal
+                set parent $argVal
             }
             default {
-                 error "Invalid option type \"$argType\""
+                error "Invalid option type \"$argType\""
             }
         }
     }
@@ -253,34 +253,34 @@ proc tk_chooseColor {args} {
     if {![info exists ::swank::useColorPicker]} {
         set ::swank::useColorPicker 0
         if {[string match *ColorPicker.jar* $env(CLASSPATH)]} {
-        catch { 
-            java::try {
-                 java::info fields com.bric.swing.ColorPicker
-                 set ::swank::useColorPicker 1
-            } catch {Exception e} {
-            } finally {}
+            catch {
+                java::try {
+                    java::info fields com.bric.swing.ColorPicker
+                    set ::swank::useColorPicker 1
+                } catch {Exception e} {
+                } finally {}
+            }
         }
-     }
-     }
+    }
     if {$::swank::useColorPicker} {
         return [eval [linsert $args 0 colorpicker]]
     } else {
-     foreach "argType argVal" $args {
-        switch -- $argType {
-             -initialcolor {
-    		set initialColor $argVal
-            }
-            -title {
-    		set title $argVal
+        foreach "argType argVal" $args {
+            switch -- $argType {
+                -initialcolor {
+                    set initialColor $argVal
+                }
+                -title {
+                    set title $argVal
+                }
             }
         }
-    }
-
-    if {![winfo exists .sk_color]} {
-        jcolorchooser .sk_color
-    }
-    set color [.sk_color choose $title $initialColor]
-    return $color
+        
+        if {![winfo exists .sk_color]} {
+            jcolorchooser .sk_color
+        }
+        set color [.sk_color choose $title $initialColor]
+        return $color
     }
 }
 
@@ -295,15 +295,15 @@ proc getColumnCount {} {
 }
 
 proc swank_source {args} {
-	if {[llength $args] == 2} {
-		uplevel #0 jacl_source [lindex $args 0] [lindex $args 1]
-	} else {
-		if {[string match resource:* $args]} {
-			uplevel #0 jacl_source -url $args
-		} else {
-			uplevel #0 jacl_source $args
-		}
-	}
+    if {[llength $args] == 2} {
+        uplevel #0 jacl_source [lindex $args 0] [lindex $args 1]
+    } else {
+        if {[string match resource:* $args]} {
+            uplevel #0 jacl_source -url $args
+        } else {
+            uplevel #0 jacl_source $args
+        }
+    }
 }
 
 
@@ -328,38 +328,38 @@ proc console {mode args} {
 }
 
 namespace eval ::swank {
-    global env 
+    global env
     variable lastDir $env(HOME)
     variable defaultFileMode 0
     proc setLastDir {dir} {
-         set ::swank::lastDir $dir
+        set ::swank::lastDir $dir
     }
     proc cmdLineArgs {} {
-       global argv
-       if {[llength $argv] > 0} {
-           set firstArg [lindex $argv 0]
-           switch -- $firstArg {
-               -demo {
-                     uplevel #0 {
-                         source  resource:/com/onemoonscientific/swank/library/demos/widget
-                     }
+        global argv
+        if {[llength $argv] > 0} {
+            set firstArg [lindex $argv 0]
+            switch -- $firstArg {
+                -demo {
+                    uplevel #0 {
+                        source  resource:/com/onemoonscientific/swank/library/demos/widget
+                    }
                 }
-               -swkcon {
-                     uplevel #0 {
-                         source  resource:/com/onemoonscientific/swank/library/swkcon.tcl
-                     ::tkcon::Init -rows 6
-                     }
+                -swkcon {
+                    uplevel #0 {
+                        source  resource:/com/onemoonscientific/swank/library/swkcon.tcl
+                        ::tkcon::Init -rows 6
+                    }
                 }
-               -console {
+                -console {
                     console show
                 }
-           }
-       }
+            }
+        }
     }
     proc getLastDir {} {
         set currentDir ""
         if {[info exists ::swank::lastDir]} {
-             set currentDir $::swank::lastDir
+            set currentDir $::swank::lastDir
         }
         if {$currentDir == ""} {
             set currentDir $env(HOME)
@@ -379,105 +379,106 @@ namespace eval ::swank {
         }
     }
     namespace eval ::swank::events {
-    variable robot ""
-    proc save {fileName} {
-         eventrecorder stop
-         set f1 [open $fileName w]
-         set events [eventrecorder list]
-         foreach event $events {
-            puts $f1 $event
-         }
-         close $f1
-      }
-
-      proc execFile {fileName} {
-         variable robot
-         if {$robot == ""} {
-             set robot [java::new java.awt.Robot]
-         }
-         set f1 [open $fileName r]
-         set first 1
-         set lastTime 0
-         set x [winfo x .]
-         set y [winfo y .]
-         set width [winfo width .]
-         set height [winfo height .]
-         set rect [java::new java.awt.Rectangle $x $y $width $height]
-         set i 0
-         set eventTime 20
-         set deltaTime 0
-         while {[gets $f1 s] != -1} {
-              set waitTime [expr {$eventTime-$deltaTime+5}]
-              set etime [lindex $s end]
-              set eventTime [expr {round($etime-$lastTime)}]
-              set lastTime $etime
-            
-	      if {$waitTime <=  0} {
-                   set waitTime 20
-              }
-              after $waitTime
-
-#             set image [$robot createScreenCapture $rect]
-              update
-#              set jfile [java::new java.io.File screencapture$i.png]
-#              java::call javax.imageio.ImageIO write $image png $jfile
-              set startTime [clock clicks]
-              if {[catch "[list execEvent $s]" result]} {
+        variable robot ""
+        proc save {fileName} {
+            eventrecorder stop
+            set f1 [open $fileName w]
+            set events [eventrecorder list]
+            foreach event $events {
+                puts $f1 $event
+            }
+            close $f1
+        }
+        
+        proc execFile {fileName} {
+            variable robot
+            if {$robot == ""} {
+                set robot [java::new java.awt.Robot]
+            }
+            set f1 [open $fileName r]
+            set first 1
+            set lastTime 0
+            set x [winfo x .]
+            set y [winfo y .]
+            set width [winfo width .]
+            set height [winfo height .]
+            set rect [java::new java.awt.Rectangle $x $y $width $height]
+            set i 0
+            set eventTime 20
+            set deltaTime 0
+            while {[gets $f1 s] != -1} {
+                set waitTime [expr {$eventTime-$deltaTime+5}]
+                set etime [lindex $s end]
+                set eventTime [expr {round($etime-$lastTime)}]
+                set lastTime $etime
+                
+                if {$waitTime <=  0} {
+                    set waitTime 20
+                }
+                after $waitTime
+                
+                #             set image [$robot createScreenCapture $rect]
+                update
+                #              set jfile [java::new java.io.File screencapture$i.png]
+                #              java::call javax.imageio.ImageIO write $image png $jfile
+                set startTime [clock clicks]
+                if {[catch "[list execEvent $s]" result]} {
                     puts "error in $s"
                     puts $result
                     break
-              }
-              update
-              set endTime [clock clicks]
-              if {$endTime <= $startTime} {
-                 set deltaTime $eventTime
-              } else {
-                  set deltaTime [expr {round($endTime-$startTime)}]
-              }
-              incr i
-         }
-         close $f1
-      }
-
-      proc execEvent {eventString} {
-         variable robot
-         if {$robot == ""} {
-             set robot [java::new java.awt.Robot]
-         }
-         set event [lindex $eventString 0]
-         if {$event == "mouse"} {
-             foreach "event type mods win x y time" $eventString {}
-             set rootx [winfo rootx $win]
-             set rooty [winfo rooty $win]
-             set x [expr {$x+$rootx}]
-             set y [expr {$y+$rooty}]
-             switch $type {
-                 motion {
-                     $robot mouseMove $x $y 
-                 }
-                 drag {
-                     $robot mouseMove $x $y 
-                 }
-                 press {
-                     $robot mousePress $mods
-                 }
-                 release {
-                     $robot mouseRelease $mods
-                 }
-             }
-         } elseif {$event == "key"} {
-             foreach "event type keyCode time" $eventString {}
-             switch $type {
-                 press {
-                     $robot keyPress $keyCode
-                 }
-                 release {
-                     $robot keyRelease $keyCode
-                 }
-              }
-         }
-      }
+                }
+                update
+                set endTime [clock clicks]
+                if {$endTime <= $startTime} {
+                    set deltaTime $eventTime
+                } else {
+                    set deltaTime [expr {round($endTime-$startTime)}]
+                }
+                incr i
+            }
+            close $f1
+        }
+        
+        proc execEvent {eventString} {
+            variable robot
+            if {$robot == ""} {
+                set robot [java::new java.awt.Robot]
+            }
+            set event [lindex $eventString 0]
+            if {$event == "mouse"} {
+                foreach "event type mods win x y time" $eventString {}
+                set rootx [winfo rootx $win]
+                set rooty [winfo rooty $win]
+                set x [expr {$x+$rootx}]
+                set y [expr {$y+$rooty}]
+                switch $type {
+                    motion {
+                        $robot mouseMove $x $y
+                    }
+                    drag {
+                        $robot mouseMove $x $y
+                    }
+                    press {
+                        $robot mousePress $mods
+                    }
+                    release {
+                        $robot mouseRelease $mods
+                    }
+                }
+            } elseif {$event == "key"} {
+                foreach "event type keyCode time" $eventString {}
+                switch $type {
+                    press {
+                        $robot keyPress $keyCode
+                    }
+                    release {
+                        $robot keyRelease $keyCode
+                    }
+                }
+            }
+        }
     }
 }
 
 set tk_library resource:/com/onemoonscientific/swank/library
+

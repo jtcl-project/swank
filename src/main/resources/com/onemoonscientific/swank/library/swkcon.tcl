@@ -950,10 +950,10 @@ proc ::tkcon::EvalCmd {w cmd} {
                     set PRIV(errorInfo) "Socket-based errorInfo not available"
                 }
             } else {
-               ::tkcon::sayString $cmd
+                ::tkcon::sayString $cmd
                 set code [catch {EvalAttached $cmd} res]
                 if {$code == 1} {
-               ::tkcon::sayString Error
+                    ::tkcon::sayString Error
                     if {[catch {EvalAttached [list set errorInfo]} err]} {
                         set PRIV(errorInfo) "Error getting errorInfo:\n$err"
                     } else {
@@ -961,7 +961,7 @@ proc ::tkcon::EvalCmd {w cmd} {
                     }
                 }
             }
-               ::tkcon::sayString $res
+            ::tkcon::sayString $res
             if {![winfo exists $w]} {
                 # early abort - must be a deleted tab
                 return
@@ -1375,7 +1375,7 @@ proc ::tkcon::InitMenus {w title} {
     foreach m [list File Console Edit Interp Prefs History Help] {
         set l [string tolower $m]
         MenuButton $w $m $l
-       	#$w.pop add cascade -label $m -underline 0 -menu $w.pop.$l
+        #$w.pop add cascade -label $m -underline 0 -menu $w.pop.$l
     }
     
     ## File Menu
@@ -3065,69 +3065,69 @@ proc tkcon {cmd args} {
     }
 }
 proc ::tkcon::setupSpeech {} {
-   variable PRIV
-   set locale [java::field java.util.Locale US]
-   #set modeDesc [java::new javax.speech.synthesis.SynthesizerModeDesc [java::null] "general" $locale [java::null] [java::null]]
-   #set engines [java::call javax.speech.Central availableSynthesizers $modeDesc]
-   set modeDesc [java::new javax.speech.synthesis.SynthesizerModeDesc [java::null] "general" $locale [java::null] [java::null]]
-   set engines [java::call javax.speech.Central availableSynthesizers $modeDesc]
-   puts [$engines size]
-   puts [$modeDesc toString]
-   set syn [java::call javax.speech.Central createSynthesizer $modeDesc]
-   $syn allocate
-   $syn resume
-   set desc [java::cast javax.speech.synthesis.SynthesizerModeDesc [$syn getEngineModeDesc]]
-   set voices [$desc getVoices]
-   set nVoices [$voices length]
-   for {set iVoice 0} {$iVoice < $nVoices} {incr iVoice} {
-       set name [[$voices get $iVoice] getName]
-       if {$name eq "kevin16"} {
-           set voice [$voices get $iVoice]
-           break
-       }
-       puts $name
-   }
-   [$syn getSynthesizerProperties] setVoice $voice
-   set PRIV(syn) $syn
-   set PRIV(voice) [[java::cast com.sun.speech.freetts.jsapi.FreeTTSVoice $voice] getVoice]
+    variable PRIV
+    set locale [java::field java.util.Locale US]
+    #set modeDesc [java::new javax.speech.synthesis.SynthesizerModeDesc [java::null] "general" $locale [java::null] [java::null]]
+    #set engines [java::call javax.speech.Central availableSynthesizers $modeDesc]
+    set modeDesc [java::new javax.speech.synthesis.SynthesizerModeDesc [java::null] "general" $locale [java::null] [java::null]]
+    set engines [java::call javax.speech.Central availableSynthesizers $modeDesc]
+    puts [$engines size]
+    puts [$modeDesc toString]
+    set syn [java::call javax.speech.Central createSynthesizer $modeDesc]
+    $syn allocate
+    $syn resume
+    set desc [java::cast javax.speech.synthesis.SynthesizerModeDesc [$syn getEngineModeDesc]]
+    set voices [$desc getVoices]
+    set nVoices [$voices length]
+    for {set iVoice 0} {$iVoice < $nVoices} {incr iVoice} {
+        set name [[$voices get $iVoice] getName]
+        if {$name eq "kevin16"} {
+            set voice [$voices get $iVoice]
+            break
+        }
+        puts $name
+    }
+    [$syn getSynthesizerProperties] setVoice $voice
+    set PRIV(syn) $syn
+    set PRIV(voice) [[java::cast com.sun.speech.freetts.jsapi.FreeTTSVoice $voice] getVoice]
 }
 proc ::tkcon::sayCmdLine {} {
-   variable PRIV
-   set speak $PRIV(speechOn)
-   if {!$speak} {return}
- 
-   after cancel "::tkcon::sayCmdLineNow"
-   after 500 "::tkcon::sayCmdLineNow"
+    variable PRIV
+    set speak $PRIV(speechOn)
+    if {!$speak} {return}
+    
+    after cancel "::tkcon::sayCmdLineNow"
+    after 500 "::tkcon::sayCmdLineNow"
 }
 proc ::tkcon::sayOutputLine {w delta} {
-   variable PRIV
-   if {![info exists PRIV(sayLine)]} {
-      set PRIV(sayLine) 0
-   }
-   incr PRIV(sayLine) $delta
-   set endLine [lindex [split  [$w index end] "."] 0]
-   if {$PRIV(sayLine) >= $endLine} {
-       set PRIV(sayLine) [expr {$endLine-1}]
-       sayString top
-   } elseif {$PRIV(sayLine) <= 0} {
-       set PRIV(sayLine) 0
-       sayString "bottom"
-   } else {
-       set line [expr {$endLine-$PRIV(sayLine)}]
-       set outLine [$w get $line.0 $line.end]
-       sayString "$PRIV(sayLine), $outLine"
-   }
+    variable PRIV
+    if {![info exists PRIV(sayLine)]} {
+        set PRIV(sayLine) 0
+    }
+    incr PRIV(sayLine) $delta
+    set endLine [lindex [split  [$w index end] "."] 0]
+    if {$PRIV(sayLine) >= $endLine} {
+        set PRIV(sayLine) [expr {$endLine-1}]
+        sayString top
+    } elseif {$PRIV(sayLine) <= 0} {
+        set PRIV(sayLine) 0
+        sayString "bottom"
+    } else {
+        set line [expr {$endLine-$PRIV(sayLine)}]
+        set outLine [$w get $line.0 $line.end]
+        sayString "$PRIV(sayLine), $outLine"
+    }
 }
 
 proc ::tkcon::sayCmdLineNow {} {
-   set w [lindex $::tkcon::PRIV(tabs) $::tkcon::PRIV(slave)]
-   sayString [::tkcon::CmdGet $w]
+    set w [lindex $::tkcon::PRIV(tabs) $::tkcon::PRIV(slave)]
+    sayString [::tkcon::CmdGet $w]
 }
 proc ::tkcon::speech {{rate 150}} {
     variable PRIV
     if {$rate > 50} {
         if {![info exists PRIV(syn)]} {
-            setupSpeech 
+            setupSpeech
         }
         $PRIV(voice) setRate $rate
         set PRIV(speechOn) 1
@@ -3144,8 +3144,8 @@ proc ::tkcon::sayString {s {dest {}}} {
         return
     }
     #after cancel ::tkcon::sayStringNow
-    set PRIV(sayDest) $dest 
-    set PRIV(sayString) $s 
+    set PRIV(sayDest) $dest
+    set PRIV(sayString) $s
     #after 400 ::tkcon::sayStringNow
     sayStringNow
 }
@@ -3157,14 +3157,14 @@ proc ::tkcon::sayStringNow {} {
     set s $PRIV(sayString)
     if {![info exists PRIV(syn)]} {
         setupSpeech
-    } 
+    }
     if {[string trim $s] eq ""} {return}
     set syn $PRIV(syn)
     if {$syn == [java::null]} {return}
     if {$dest ne ""} {
-    #    $syn cancel
-    #    $syn speakPlainText $s [java::null]
-    #    $syn waitEngineState [java::field javax.speech.synthesis.Synthesizer QUEUE_EMPTY]
+        #    $syn cancel
+        #    $syn speakPlainText $s [java::null]
+        #    $syn waitEngineState [java::field javax.speech.synthesis.Synthesizer QUEUE_EMPTY]
     }
     $syn cancel
     $syn speakPlainText $s [java::null]
@@ -4793,7 +4793,7 @@ proc ::tkcon::Bindings {} {
             %W delete insert
             %W see insert
         }
-        sayCmdLine 
+        sayCmdLine
         break
     }
     bind TkConsole <BackSpace> {
@@ -5186,7 +5186,7 @@ proc ::tkcon::Insert {w s} {
     }
     $w insert insert $s
     set PRIV(sayLine) 0
-    sayCmdLine 
+    sayCmdLine
     $w see insert
 }
 
@@ -5243,7 +5243,7 @@ proc ::tkcon::Expand {w {type ""}} {
 proc ::tkcon::ExpandPathname str {
     set pwd [EvalAttached pwd]
     # Cause a string like {C:/Program\ Files/} to become "C:/Program Files/"
-     regsub -all {\\([\]\[ ])} $str {\1} str
+    regsub -all {\\([\]\[ ])} $str {\1} str
     if {[catch {EvalAttached [list cd [file dirname $str]]} err]} {
         return -code error $err
     }
@@ -5903,7 +5903,7 @@ proc ::tkcon::AtSource {argv} {
     
     # the info script assumes we always call this while being sourced
     set PRIV(SCRIPT) [info script]
-puts $PRIV(SCRIPT)
+    puts $PRIV(SCRIPT)
     if {!$PRIV(WWW) && [string length $PRIV(SCRIPT)]} {
         if {0 && ([info tclversion] >= 8.4)} {
             set PRIV(SCRIPT) [file normalize $PRIV(SCRIPT)]
@@ -5944,6 +5944,7 @@ if {![info exists argv]} {
 tkcon::AtSource $argv
 
 package provide tkcon $::tkcon::VERSION
+
 
 
 

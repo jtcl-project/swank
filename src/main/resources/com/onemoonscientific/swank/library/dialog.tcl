@@ -38,8 +38,9 @@ proc tk_dialog {w title text bitmap default args} {
     set value [$w dialog $title]
     destroy $w
     if {$value == ""} {
-    	return ""
+        return ""
     } else {
-    	return [lsearch $args $value]
-   }    
+        return [lsearch $args $value]
+    }
 }
+
