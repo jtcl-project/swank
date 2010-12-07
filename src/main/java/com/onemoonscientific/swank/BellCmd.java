@@ -28,10 +28,6 @@ import tcl.lang.*;
 import tcl.pkg.java.ReflectObject;
 import java.awt.*;
 
-import java.io.*;
-
-import java.util.*;
-
 public class BellCmd implements Command {
 
     public void cmdProc(Interp interp, TclObject[] argv)
