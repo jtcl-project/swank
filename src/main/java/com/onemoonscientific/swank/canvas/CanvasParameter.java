@@ -8,9 +8,9 @@ import java.util.*;
 
 import javax.swing.SwingUtilities;
 
-
 public abstract class CanvasParameter implements CanvasParameterConfigure,
-    Cloneable {
+        Cloneable {
+
     static CanvasParameter[] stdParameters = {
         new AnchorParameter(), new AngleStartParameter(),
         new ArcStyleParameter(), new BitmapParameter(), new CapstyleParameter(),
@@ -50,39 +50,39 @@ public abstract class CanvasParameter implements CanvasParameterConfigure,
 
     /*
     public int compare(Object o1, Object o2) {
-        if (o1 == null) {
-            throw new NullPointerException();
-        }
-        if (o2 == null) {
-            throw new NullPointerException();
-        }
-        if (!(o1 instanceof CanvasParameter)) {
-            throw new ClassCastException();
-        }
-        if (!(o2 instanceof CanvasParameter)) {
-            throw new ClassCastException();
-        }
-        CanvasParameter cp1 = (CanvasParameter) o1;
-        CanvasParameter cp2 = (CanvasParameter) o2;
-        String name1 = cp1.getName();
-        String name2 = cp1.getName();
-        if ((name1 == null) || (name2 == null)) {
-            throw new NullPointerException();
-        }
-        return name1.compareTo(name2);
+    if (o1 == null) {
+    throw new NullPointerException();
+    }
+    if (o2 == null) {
+    throw new NullPointerException();
+    }
+    if (!(o1 instanceof CanvasParameter)) {
+    throw new ClassCastException();
+    }
+    if (!(o2 instanceof CanvasParameter)) {
+    throw new ClassCastException();
+    }
+    CanvasParameter cp1 = (CanvasParameter) o1;
+    CanvasParameter cp2 = (CanvasParameter) o2;
+    String name1 = cp1.getName();
+    String name2 = cp1.getName();
+    if ((name1 == null) || (name2 == null)) {
+    throw new NullPointerException();
+    }
+    return name1.compareTo(name2);
     }
     public boolean  equals(Object obj) {
-        if (this == obj) {
-            return true;
-         }
-         if (!(obj instanceof CanvasParameter)) {
-                return false;
-         }
-         CanvasParameter cp = (CanvasParameter) obj;
-         return (name == null ? cp.name == null : name.equals(cp.name));
+    if (this == obj) {
+    return true;
+    }
+    if (!(obj instanceof CanvasParameter)) {
+    return false;
+    }
+    CanvasParameter cp = (CanvasParameter) obj;
+    return (name == null ? cp.name == null : name.equals(cp.name));
     }
     public int hashCode() {
-            return  name.hashCode();
+    return  name.hashCode();
     }
      */
     public String toString() {
@@ -102,11 +102,11 @@ public abstract class CanvasParameter implements CanvasParameterConfigure,
     }
 
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
-        throws TclException {
+            throws TclException {
     }
 
     public abstract TclObject getValue(Interp interp, SwkShape swkShape)
-        throws TclException;
+            throws TclException;
 
     public static void addParameter(CanvasParameter par) {
         if (stdMap == null) {

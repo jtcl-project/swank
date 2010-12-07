@@ -27,7 +27,6 @@
  *
  * Created on February 19, 2000, 3:14 PM
  */
-
 /**
  *
  * @author  JOHNBRUC
@@ -49,18 +48,16 @@ import java.util.*;
 
 import javax.swing.*;
 
-
 public class ItemImage extends SwkShape {
+
     static CanvasParameter[] parameters = {
         new ImageParameter(), new TagsParameter(), new StateParameter(),
-        new TransformerParameter(),new NodeParameter(),
-    };
+        new TransformerParameter(), new NodeParameter(),};
     static Map parameterMap = new TreeMap();
 
     static {
         initializeParameters(parameters, parameterMap);
     }
-
     BufferedImage bufferedImage;
 
     ItemImage(Shape shape, SwkImageCanvas canvas) {
@@ -75,6 +72,7 @@ public class ItemImage extends SwkShape {
     public BufferedImage getImage() {
         return bufferedImage;
     }
+
     public boolean hitShape(double x1, double y1) {
         boolean hit = false;
         if (bufferedImage != null) {
@@ -85,39 +83,42 @@ public class ItemImage extends SwkShape {
                 aT.setTransform(shapeTransform);
             }
 
-            double x= storeCoords[0];
-            double y= storeCoords[1];
+            double x = storeCoords[0];
+            double y = storeCoords[1];
             aT.rotate(this.rotate, x, y);
             double width = bufferedImage.getWidth();
             double height = bufferedImage.getHeight();
             Rectangle2D.Double rf1 = new Rectangle2D.Double(x, y, width, height);
             Rectangle2D rf1d = aT.createTransformedShape(rf1).getBounds2D();
             shape = rf1d;
- 
+
             hit = shape.contains(x1, y1);
         }
         return hit;
     }
+
     public void coords(SwkImageCanvas canvas, double[] coords)
-        throws SwkException {
+            throws SwkException {
         if (coords.length != 2) {
-            throw new SwkException("wrong # coordinates: expected 2, got " +
-                coords.length);
+            throw new SwkException("wrong # coordinates: expected 2, got "
+                    + coords.length);
         }
 
         System.arraycopy(coords, 0, storeCoords, 0, 2);
     }
+
     @Override
     public void paintShape(Graphics2D g2) {
-                AffineTransform aT = new AffineTransform();
-                aT.translate((int) storeCoords[0],storeCoords[1]);
+        AffineTransform aT = new AffineTransform();
+        aT.translate((int) storeCoords[0], storeCoords[1]);
 
-                if (bufferedImage != null) {
-                    // FIXME can last argument be null?
-                    g2.drawImage(bufferedImage, aT, null);
-                }
-       
+        if (bufferedImage != null) {
+            // FIXME can last argument be null?
+            g2.drawImage(bufferedImage, aT, null);
+        }
+
     }
+
     public CanvasParameter[] getParameters() {
         return parameters;
     }

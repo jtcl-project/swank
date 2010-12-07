@@ -27,7 +27,6 @@
  *
  * Created on February 19, 2000, 3:14 PM
  */
-
 /**
  *
  * @author  JOHNBRUC
@@ -49,19 +48,17 @@ import java.util.*;
 
 import javax.swing.*;
 
-
 public class ItemWindow extends SwkShape {
+
     static CanvasParameter[] parameters = {
         new WindowParameter(), new AnchorParameter(),
         new WidthParameter(), new HeightParameter(), new TagsParameter(),
-        new TransformerParameter(),
-    };
+        new TransformerParameter(),};
     static Map parameterMap = new TreeMap();
 
     static {
         initializeParameters(parameters, parameterMap);
     }
-
     ImageIcon image;
     String windowName = "";
     int width = 0;
@@ -75,10 +72,10 @@ public class ItemWindow extends SwkShape {
     }
 
     public void coords(SwkImageCanvas canvas, double[] coords)
-        throws SwkException {
+            throws SwkException {
         if (coords.length != 2) {
-            throw new SwkException("wrong # coordinates: expected 2, got " +
-                coords.length);
+            throw new SwkException("wrong # coordinates: expected 2, got "
+                    + coords.length);
         }
 
         storeCoords[0] = coords[0];
@@ -94,10 +91,10 @@ public class ItemWindow extends SwkShape {
     }
 
     public void configShape(Interp interp, SwkImageCanvas swkCanvas,
-        TclObject[] argv, int start) throws TclException {
+            TclObject[] argv, int start) throws TclException {
         for (int i = start; i < argv.length; i += 2) {
-            if (((i + 1) < argv.length) &&
-                    "-window".startsWith(argv[i].toString())) {
+            if (((i + 1) < argv.length)
+                    && "-window".startsWith(argv[i].toString())) {
                 windowName = argv[i + 1].toString();
                 setupLayout(interp);
 
@@ -123,7 +120,7 @@ public class ItemWindow extends SwkShape {
 
         if (!(canvas.getComponent() instanceof Container)) {
             throw new TclException(interp,
-                "can't add window to this type of canvas");
+                    "can't add window to this type of canvas");
         }
 
         Container parent = (Container) canvas.getComponent();
@@ -162,7 +159,7 @@ public class ItemWindow extends SwkShape {
     }
 
     void placeWindow(Container parent, PlacerLayout placer, SwkWidget window,
-        String layoutString) {
+            String layoutString) {
         try {
             ((Component) window).invalidate();
 

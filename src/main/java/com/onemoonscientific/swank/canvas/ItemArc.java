@@ -22,7 +22,6 @@
  *
  *
  */
-
 /**
  *
  * @author  JOHNBRUC
@@ -41,21 +40,19 @@ import java.lang.*;
 
 import java.util.*;
 
-
 public class ItemArc extends SwkShape {
+
     static CanvasParameter[] parameters = {
         new ExtentParameter(), new AngleStartParameter(),
         new ArcStyleParameter(), new DashParameter(), new DashPhaseParameter(),
         new FillParameter(), new OutlineParameter(), new StateParameter(),
         new RotateParameter(), new ShearParameter(), new TagsParameter(),
-        new TransformerParameter(), new WidthParameter(),new NodeParameter(),
-    };
+        new TransformerParameter(), new WidthParameter(), new NodeParameter(),};
     static Map parameterMap = new TreeMap();
 
     static {
         initializeParameters(parameters, parameterMap);
     }
-
     String imageName = "";
     Arc2D arc2D = null;
 
@@ -73,10 +70,10 @@ public class ItemArc extends SwkShape {
     }
 
     public void coords(SwkImageCanvas canvas, double[] coords)
-        throws SwkException {
+            throws SwkException {
         if (coords.length != 4) {
-            throw new SwkException("wrong # coordinates: expected 4, got " +
-                coords.length);
+            throw new SwkException("wrong # coordinates: expected 4, got "
+                    + coords.length);
         }
 
         System.arraycopy(coords, 0, storeCoords, 0, 4);
@@ -99,9 +96,9 @@ public class ItemArc extends SwkShape {
         aT.shear(xShear, yShear);
         aT.translate(-storeCoords[0], -storeCoords[1]);
         aT.rotate(rotate, ((storeCoords[0] + storeCoords[2]) / 2.0),
-            ((storeCoords[1] + storeCoords[3]) / 2.0));
+                ((storeCoords[1] + storeCoords[3]) / 2.0));
         arc2D.setFrame(storeCoords[0], storeCoords[1],
-            storeCoords[2] - storeCoords[0], storeCoords[3] - storeCoords[1]);
+                storeCoords[2] - storeCoords[0], storeCoords[3] - storeCoords[1]);
         shape = aT.createTransformedShape(arc2D);
     }
 }

@@ -6,8 +6,8 @@ import tcl.lang.*;
 
 import java.awt.*;
 
-
 public class TextcolorParameter extends CanvasParameter {
+
     private static String name = "textcolor";
     private static Color defValue = null;
     private Color newValue = null;
@@ -29,7 +29,7 @@ public class TextcolorParameter extends CanvasParameter {
     }
 
     public TclObject getValue(Interp interp, SwkShape swkShape)
-        throws TclException {
+            throws TclException {
         if (swkShape == null) {
             throw new TclException(interp, "shape doesn't exist");
         }
@@ -46,7 +46,7 @@ public class TextcolorParameter extends CanvasParameter {
     }
 
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
-        throws TclException {
+            throws TclException {
         newValue = SwankUtil.getColor(interp, arg);
     }
 

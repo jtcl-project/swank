@@ -14,14 +14,14 @@ import java.io.*;
 
 import javax.swing.*;
 
-
 /**
  *
  * @author  johnbruc
  * @version
  */
 public class ImageSelection extends TransferHandler implements Transferable {
-    private static DataFlavor[] flavors = { DataFlavor.imageFlavor };
+
+    private static DataFlavor[] flavors = {DataFlavor.imageFlavor};
     private Image image;
 
     /** Creates new ImageSelection */
@@ -52,13 +52,13 @@ public class ImageSelection extends TransferHandler implements Transferable {
     }
 
     public boolean isDataFlavorSupported(
-        java.awt.datatransfer.DataFlavor dataFlavor) {
+            java.awt.datatransfer.DataFlavor dataFlavor) {
         return dataFlavor.equals(flavors[0]);
     }
 
     public java.lang.Object getTransferData(
-        java.awt.datatransfer.DataFlavor dataFlavor)
-        throws java.awt.datatransfer.UnsupportedFlavorException, 
+            java.awt.datatransfer.DataFlavor dataFlavor)
+            throws java.awt.datatransfer.UnsupportedFlavorException,
             java.io.IOException {
         if (isDataFlavorSupported(dataFlavor)) {
             return image;

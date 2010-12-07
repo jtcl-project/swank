@@ -4,7 +4,7 @@
  * See the file "LICENSE" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
-*/
+ */
 package com.onemoonscientific.swank;
 
 import tcl.lang.*;
@@ -24,8 +24,8 @@ import javax.swing.*;
 import javax.swing.text.*;
 import javax.swing.tree.*;
 
-
 class SwkJPopupMenuWidgetCmd implements Command {
+
     static final private String[] validCmds = {
         "cget", "configure", "delete"
     };
@@ -40,83 +40,83 @@ class SwkJPopupMenuWidgetCmd implements Command {
     }
 
     public void cmdProc(final Interp interp, final TclObject[] argv)
-        throws TclException {
+            throws TclException {
         int i;
 
         if (argv.length < 2) {
             throw new TclNumArgsException(interp, 1, argv,
-                "option ?arg arg ...?");
+                    "option ?arg arg ...?");
         }
 
         this.interp = interp;
 
         int opt = TclIndex.get(interp, argv[1], validCmds, "option", 0);
-        TclObject tObj = (TclObject) Widgets.getWidget(interp,argv[0].toString());
+        TclObject tObj = (TclObject) Widgets.getWidget(interp, argv[0].toString());
 
         if (tObj == null) {
             throw new TclException(interp,
-                "bad window path name \"" + argv[0].toString() + "\"");
+                    "bad window path name \"" + argv[0].toString() + "\"");
         }
 
         SwkJPopupMenu swkjpopupmenu = (SwkJPopupMenu) ReflectObject.get(interp,
                 tObj);
 
         switch (opt) {
-        case OPT_CGET:
+            case OPT_CGET:
 
-            if (argv.length != 3) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-
-            interp.setResult(swkjpopupmenu.jget(interp, argv[2]));
-
-            break;
-
-        case OPT_CONFIGURE:
-
-            if (!gotDefaults) {
-                swkjpopupmenu.setResourceDefaults();
-                gotDefaults = true;
-            }
-
-            if (argv.length == 2) {
-                swkjpopupmenu.jgetAll(interp);
-            } else if (argv.length == 3) {
-                String result = swkjpopupmenu.jget(interp, argv[2]);
-                ResourceObject ro = (ResourceObject) SwkJPopupMenu.resourceDB.get(argv[2].toString());
-
-                if (ro == null) {
-                    throw new TclException(interp,
-                        "unknown option \"" + argv[2].toString() + "\"");
+                if (argv.length != 3) {
+                    throw new TclNumArgsException(interp, 2, argv, "option");
                 }
 
-                TclObject list = TclList.newInstance();
-                TclList.append(interp, list,
-                    TclString.newInstance(argv[2].toString()));
-                TclList.append(interp, list, TclString.newInstance(ro.resource));
-                TclList.append(interp, list, TclString.newInstance(ro.className));
-                TclList.append(interp, list,
-                    TclString.newInstance(ro.defaultVal));
-                TclList.append(interp, list, TclString.newInstance(result));
-                interp.setResult(list);
-            } else {
-                swkjpopupmenu.configure(interp, argv, 2);
-            }
+                interp.setResult(swkjpopupmenu.jget(interp, argv[2]));
 
-            break;
+                break;
 
-        case OPT_DELETE:
-            delete(interp, swkjpopupmenu, argv);
+            case OPT_CONFIGURE:
 
-            break;
+                if (!gotDefaults) {
+                    swkjpopupmenu.setResourceDefaults();
+                    gotDefaults = true;
+                }
 
-        default:
-            throw new TclRuntimeError("TclIndex.get() error");
+                if (argv.length == 2) {
+                    swkjpopupmenu.jgetAll(interp);
+                } else if (argv.length == 3) {
+                    String result = swkjpopupmenu.jget(interp, argv[2]);
+                    ResourceObject ro = (ResourceObject) SwkJPopupMenu.resourceDB.get(argv[2].toString());
+
+                    if (ro == null) {
+                        throw new TclException(interp,
+                                "unknown option \"" + argv[2].toString() + "\"");
+                    }
+
+                    TclObject list = TclList.newInstance();
+                    TclList.append(interp, list,
+                            TclString.newInstance(argv[2].toString()));
+                    TclList.append(interp, list, TclString.newInstance(ro.resource));
+                    TclList.append(interp, list, TclString.newInstance(ro.className));
+                    TclList.append(interp, list,
+                            TclString.newInstance(ro.defaultVal));
+                    TclList.append(interp, list, TclString.newInstance(result));
+                    interp.setResult(list);
+                } else {
+                    swkjpopupmenu.configure(interp, argv, 2);
+                }
+
+                break;
+
+            case OPT_DELETE:
+                delete(interp, swkjpopupmenu, argv);
+
+                break;
+
+            default:
+                throw new TclRuntimeError("TclIndex.get() error");
         }
     }
 
     void delete(final Interp interp, final SwkJPopupMenu swkjpopupmenu,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if ((argv.length < 3) || (argv.length > 4)) {
             throw new TclNumArgsException(interp, 2, argv, "first ?last");
         }
@@ -132,6 +132,7 @@ class SwkJPopupMenuWidgetCmd implements Command {
     }
 
     class Delete extends UpdateOnEventThread {
+
         SwkJPopupMenu swkjpopupmenu = null;
         TclObject firstArg = null;
         TclObject lastArg = null;
@@ -141,7 +142,7 @@ class SwkJPopupMenuWidgetCmd implements Command {
         int last = 0;
 
         void exec(final SwkJPopupMenu swkjpopupmenu, final TclObject firstArg,
-            final TclObject lastArg) {
+                final TclObject lastArg) {
             this.firstArg = firstArg;
             this.lastArg = lastArg;
             this.swkjpopupmenu = swkjpopupmenu;

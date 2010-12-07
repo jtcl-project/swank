@@ -7,8 +7,8 @@ import java.awt.event.*;
 
 import java.util.*;
 
-
 class TextMouseEvent extends TclEvent {
+
     Interp interp = null;
     String cmd = null;
     SwkJTextPane swkJTextPane = null;
@@ -18,7 +18,7 @@ class TextMouseEvent extends TclEvent {
     int subtype = 0;
 
     TextMouseEvent(Interp interp, SwkJTextPane swkJTextPane, MouseEvent event,
-        Vector bindings, int type, int subtype) {
+            Vector bindings, int type, int subtype) {
         this.interp = interp;
         this.swkJTextPane = swkJTextPane;
         this.event = event;

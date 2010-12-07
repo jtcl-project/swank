@@ -6,8 +6,8 @@ import tcl.lang.*;
 
 import java.util.ArrayList;
 
-
 public class NodeParameter extends CanvasParameter {
+
     private static String name = "node";
     private static String defValue = "";
     private String newValue = null;
@@ -28,11 +28,11 @@ public class NodeParameter extends CanvasParameter {
         }
     }
 
-     public TclObject getValue(Interp interp, SwkShape swkShape)
+    public TclObject getValue(Interp interp, SwkShape swkShape)
             throws TclException {
         String value = "";
         if (swkShape != null) {
-             value =  swkShape.getNode();
+            value = swkShape.getNode();
 
         }
 
@@ -40,7 +40,7 @@ public class NodeParameter extends CanvasParameter {
     }
 
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
-        throws TclException {
+            throws TclException {
         newValue = arg.toString();
     }
 

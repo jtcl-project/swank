@@ -27,7 +27,6 @@
  *
  * Created on February 19, 2000, 3:14 PM
  */
-
 /**
  *
  * @author  JOHNBRUC
@@ -52,20 +51,18 @@ import java.util.*;
 
 import javax.swing.*;
 
-
 public class ItemHTML extends SwkShape implements TextInterface {
+
     static CanvasParameter[] parameters = {
         new TextParameter(), new AnchorParameter(), new FontParameter(), new StateParameter(),
         new WidthParameter(), new FillParameter(), new GradientParameter(), new TagsParameter(),
-        new TransformerParameter(), new OutlineParameter(),new RotateParameter(),new NodeParameter(),
-    };
+        new TransformerParameter(), new OutlineParameter(), new RotateParameter(), new NodeParameter(),};
     static Map parameterMap = new TreeMap();
 
     static {
         initializeParameters(parameters, parameterMap);
     }
     TextParameters textPar = TextParameters.getDefault();
-
     double x = 0.0;
     double y = 0.0;
     int[] ends = null;
@@ -81,11 +78,12 @@ public class ItemHTML extends SwkShape implements TextInterface {
         fill = Color.WHITE;
         jLabel.setVerticalAlignment(SwingConstants.TOP);
     }
+
     public void coords(SwkImageCanvas canvas, double[] coords)
             throws SwkException {
         if (coords.length != 4) {
-            throw new SwkException("wrong # coordinates: expected 4, got " +
-                coords.length);
+            throw new SwkException("wrong # coordinates: expected 4, got "
+                    + coords.length);
         }
 
         if ((storeCoords == null) || (storeCoords.length != coords.length)) {
@@ -95,16 +93,17 @@ public class ItemHTML extends SwkShape implements TextInterface {
         System.arraycopy(coords, 0, storeCoords, 0, coords.length);
         applyCoordinates();
     }
-   public void applyCoordinates() {
+
+    public void applyCoordinates() {
         checkCoordinates(storeCoords);
         AffineTransform aT = new AffineTransform();
         /*
-aT.translate(storeCoords[0], storeCoords[1]);
+        aT.translate(storeCoords[0], storeCoords[1]);
         aT.shear(xShear, yShear);
         aT.translate(-storeCoords[0], -storeCoords[1]);
         aT.rotate(rotate, ((storeCoords[0] + storeCoords[2]) / 2.0),
-            ((storeCoords[1] + storeCoords[3]) / 2.0));
-*/
+        ((storeCoords[1] + storeCoords[3]) / 2.0));
+         */
         aT.translate(-storeCoords[0], -storeCoords[1]);
         genGradient(aT);
         rect2D.setFrame(storeCoords[0], storeCoords[1],
@@ -131,10 +130,10 @@ aT.translate(storeCoords[0], storeCoords[1]);
         }
     }
 
-
     public void paintShape(Graphics2D g2) {
         paint(g2, getCanvas().getFontRenderContext());
     }
+
     public CanvasParameter[] getParameters() {
         return parameters;
     }
@@ -171,7 +170,6 @@ aT.translate(storeCoords[0], storeCoords[1]);
         jLabel.setText(text);
     }
 
-
     public float[] getAnchor() {
         return textPar.getAnchor();
     }
@@ -195,17 +193,18 @@ aT.translate(storeCoords[0], storeCoords[1]);
     public void setTextColor(Color newValue) {
         textPar = TextParameters.setTextColor(textPar, newValue);
     }
+
     public boolean hitShape(double x1, double y1) {
-       boolean result = false;
-       if (shape != null) {
-           Shape shape2 = shape;
-           AffineTransform shapeTransform = this.getTransform();
-           if (shapeTransform != null) {
-               shape2 = shapeTransform.createTransformedShape(shape);
-           }
-           result = shape2.contains(x1,y1);
-       }
-       return result;
+        boolean result = false;
+        if (shape != null) {
+            Shape shape2 = shape;
+            AffineTransform shapeTransform = this.getTransform();
+            if (shapeTransform != null) {
+                shape2 = shapeTransform.createTransformedShape(shape);
+            }
+            result = shape2.contains(x1, y1);
+        }
+        return result;
     }
 
     public void paint(Graphics2D g2, FontRenderContext fRC) {
@@ -232,26 +231,26 @@ aT.translate(storeCoords[0], storeCoords[1]);
 
 
         jLabel.setVisible(true);
-        jLabel.setSize((int) rectBounds.getWidth(),(int) rectBounds.getHeight());
+        jLabel.setSize((int) rectBounds.getWidth(), (int) rectBounds.getHeight());
         g2.translate((int) rectBounds.getX(), (int) rectBounds.getY());
 
         if (getTexturePaint() != null) {
             g2.setPaint(getTexturePaint());
-            g2.fillRect(0,0,(int) rectBounds.getWidth(),(int) rectBounds.getHeight());
+            g2.fillRect(0, 0, (int) rectBounds.getWidth(), (int) rectBounds.getHeight());
         } else if (getFillGradient() != null) {
             g2.setPaint(getFillGradient());
-            g2.fillRect(0,0,(int) rectBounds.getWidth(),(int) rectBounds.getHeight());
+            g2.fillRect(0, 0, (int) rectBounds.getWidth(), (int) rectBounds.getHeight());
         } else if (getFill() != null) {
             g2.setPaint(getFill());
-            g2.fillRect(0,0,(int) rectBounds.getWidth(),(int) rectBounds.getHeight());
+            g2.fillRect(0, 0, (int) rectBounds.getWidth(), (int) rectBounds.getHeight());
         }
 
         jLabel.setForeground(getTextColor());
-        
+
 
         //jLabel.setText("hello");
         jLabel.paint((Graphics) g2);
-        
+
         g2.translate(-(int) rectBounds.getX(), -(int) rectBounds.getY());
     }
 }

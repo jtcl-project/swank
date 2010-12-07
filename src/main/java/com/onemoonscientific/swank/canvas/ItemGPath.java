@@ -27,7 +27,6 @@
  *
  * Created on February 19, 2000, 3:14 PM
  */
-
 /**
  *
  * @author  JOHNBRUC
@@ -46,20 +45,18 @@ import java.lang.*;
 
 import java.util.*;
 
-
 public class ItemGPath extends SwkShape {
+
     static CanvasParameter[] parameters = {
         new DashParameter(), new DashPhaseParameter(), new WidthParameter(),
         new FillParameter(), new OutlineParameter(), new RotateParameter(),
-        new ShearParameter(), new StateParameter(), new TagsParameter(),new NodeParameter(),
-        new TransformerParameter(),
-    };
+        new ShearParameter(), new StateParameter(), new TagsParameter(), new NodeParameter(),
+        new TransformerParameter(),};
     static Map parameterMap = new TreeMap();
 
     static {
         initializeParameters(parameters, parameterMap);
     }
-
     boolean closePath = false;
     GeneralPath gPath = null;
 
@@ -70,7 +67,7 @@ public class ItemGPath extends SwkShape {
     }
 
     public void coords(SwkImageCanvas canvas, double[] coords)
-        throws SwkException {
+            throws SwkException {
         if ((storeCoords == null) || (storeCoords.length != coords.length)) {
             storeCoords = new double[coords.length];
         }
@@ -86,7 +83,7 @@ public class ItemGPath extends SwkShape {
         aT.translate(-storeCoords[0], -storeCoords[1]);
 
         aT.rotate(rotate, ((storeCoords[0] + storeCoords[2]) / 2.0),
-            ((storeCoords[1] + storeCoords[3]) / 2.0));
+                ((storeCoords[1] + storeCoords[3]) / 2.0));
         gPath.reset();
 
         for (int i = 0; i < storeCoords.length; i += 2) {

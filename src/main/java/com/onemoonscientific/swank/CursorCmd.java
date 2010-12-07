@@ -38,84 +38,84 @@ import java.util.*;
 
 import javax.swing.*;
 
-
 public class CursorCmd implements Command {
+
     static HashMap cursors = new HashMap();
-    static final private String[] validCmds = { "create", "object", };
+    static final private String[] validCmds = {"create", "object",};
     static final private int OPT_CREATE = 0;
     static final private int OPT_OBJECT = 1;
 
     /*
-        static {
-            for (int i = 0; i < builtinImageNames.length; i++) {
-                String fileName = "com/onemoonscientific/swank/library/images/" +
-                    builtinImageNames[i] + ".bmp";
-                URL url = Thread.currentThread().getContextClassLoader()
-                                .getResource(fileName);
+    static {
+    for (int i = 0; i < builtinImageNames.length; i++) {
+    String fileName = "com/onemoonscientific/swank/library/images/" +
+    builtinImageNames[i] + ".bmp";
+    URL url = Thread.currentThread().getContextClassLoader()
+    .getResource(fileName);
 
-                if (url != null) {
-                    ImageIcon image = new ImageIcon(url, builtinImageNames[i]);
+    if (url != null) {
+    ImageIcon image = new ImageIcon(url, builtinImageNames[i]);
 
-                    if (image != null) {
-                        builtinImages.put(builtinImageNames[i], image);
-                    }
-                }
-            }
-        }
+    if (image != null) {
+    builtinImages.put(builtinImageNames[i], image);
+    }
+    }
+    }
+    }
      */
     public void cmdProc(Interp interp, TclObject[] argv)
-        throws TclException {
+            throws TclException {
         int i;
 
         if (argv.length < 2) {
             throw new TclNumArgsException(interp, 1, argv,
-                "option ?arg arg ...?");
+                    "option ?arg arg ...?");
         }
 
         int opt = TclIndex.get(interp, argv[1], validCmds, "option", 0);
 
         switch (opt) {
-        case OPT_CREATE: {
-            if (argv.length < 4) {
-                throw new TclNumArgsException(interp, 1, argv,
-                    "option ?arg arg ...?");
-            }
-
-            String cursorName = argv[2].toString();
-            int firstOption = 3;
-
-            create(interp, cursorName, argv, firstOption);
-            interp.setResult(cursorName);
-
-            break;
-        }
-
-        case OPT_OBJECT: {
-            if (argv.length != 3) {
-                throw new TclNumArgsException(interp, 1, argv,
-                    "object imageName");
-            }
-
-            Object cursorObject = cursors.get(argv[2].toString());
-
-            if (cursorObject == null) {
-                throw new TclException(interp,
-                    "image " + argv[2].toString() + " doesn't exist");
-            } else {
-                if (cursorObject instanceof Cursor) {
-                    TclObject tObj = ReflectObject.newInstance(interp,
-                            Cursor.class, (Cursor) cursorObject);
-                    interp.setResult(tObj);
+            case OPT_CREATE: {
+                if (argv.length < 4) {
+                    throw new TclNumArgsException(interp, 1, argv,
+                            "option ?arg arg ...?");
                 }
+
+                String cursorName = argv[2].toString();
+                int firstOption = 3;
+
+                create(interp, cursorName, argv, firstOption);
+                interp.setResult(cursorName);
+
+                break;
             }
 
-            break;
-        }
+            case OPT_OBJECT: {
+                if (argv.length != 3) {
+                    throw new TclNumArgsException(interp, 1, argv,
+                            "object imageName");
+                }
+
+                Object cursorObject = cursors.get(argv[2].toString());
+
+                if (cursorObject == null) {
+                    throw new TclException(interp,
+                            "image " + argv[2].toString() + " doesn't exist");
+                } else {
+                    if (cursorObject instanceof Cursor) {
+                        TclObject tObj = ReflectObject.newInstance(interp,
+                                Cursor.class, (Cursor) cursorObject);
+                        interp.setResult(tObj);
+                    }
+                }
+
+                break;
+            }
         }
     }
 
     public static void create(Interp interp, String cursorName,
-        TclObject[] argv, int start) throws TclException {
+            TclObject[] argv, int start) throws TclException {
         int i;
 
         if (argv.length <= start) {
@@ -130,7 +130,7 @@ public class CursorCmd implements Command {
         for (i = start; i < argv.length; i += 2) {
             if ((i + 1) >= argv.length) {
                 throw new TclException(interp,
-                    "no value for \"" + argv[i].toString() + "\"");
+                        "no value for \"" + argv[i].toString() + "\"");
             }
 
             if (argv[i].toString().equals("-file")) {
@@ -164,7 +164,7 @@ public class CursorCmd implements Command {
 
         if (imageIcon == null) {
             throw new TclException(interp,
-                "Couldn't create image from file " + fileName);
+                    "Couldn't create image from file " + fileName);
         }
 
         Image image = imageIcon.getImage();
@@ -172,19 +172,19 @@ public class CursorCmd implements Command {
         int curHeight = image.getHeight(null);
 
         Toolkit toolkit = Toolkit.getDefaultToolkit();
-        Dimension bestSize = toolkit.getBestCursorSize(curWidth,curHeight);
+        Dimension bestSize = toolkit.getBestCursorSize(curWidth, curHeight);
         int bestWidth = (int) bestSize.getWidth();
         int bestHeight = (int) bestSize.getHeight();
         //System.out.println(cursorName+" "+bestWidth+" "+bestHeight+" "+curWidth+" "+curHeight);
         if ((bestWidth > curWidth) && (bestHeight > curHeight)) {
-            Image fullImage = new BufferedImage(bestWidth,bestHeight,BufferedImage.TYPE_INT_ARGB);
+            Image fullImage = new BufferedImage(bestWidth, bestHeight, BufferedImage.TYPE_INT_ARGB);
             Graphics g2D = fullImage.getGraphics();
-            Color transpColor = new Color(0,true);
-            int xOff = (bestWidth-curWidth)/2;
-            int yOff = (bestHeight-curHeight)/2;
+            Color transpColor = new Color(0, true);
+            int xOff = (bestWidth - curWidth) / 2;
+            int yOff = (bestHeight - curHeight) / 2;
             x += xOff;
             y += yOff;
-            g2D.drawImage(image,xOff,yOff,transpColor,null);
+            g2D.drawImage(image, xOff, yOff, transpColor, null);
             image = fullImage;
         }
         Cursor cursor = toolkit.createCustomCursor(image, new Point(x, y), cursorName);

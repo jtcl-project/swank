@@ -42,11 +42,9 @@ public abstract class SwkShape implements SwkShapeConfig {
     static public final byte HIDDEN = 2;
     static BasicStroke bstroke = new BasicStroke();
     public static int handleSize = 6;
-
     StrokeParameters strokePar = StrokeParameters.getDefault();
-
     Shape shape = null;
-    ItemTreeNode node =null;
+    ItemTreeNode node = null;
     int id;
     public double[] storeCoords = null;
     //SwkShape previous = null;
@@ -58,15 +56,11 @@ public abstract class SwkShape implements SwkShapeConfig {
     TexturePaint texturePaint = null;
     String imageName = "";
     Color outline = Color.black;
-
     BasicStroke stroke = null;
     boolean newStroke = false;
     boolean newTransform = false;
     float width = (float) 1.0;
     float height = (float) 1.0;
-
-
-
     Transformer transformer = null;
     float rotate = 0.0f;
     float xShear = 0.0f;
@@ -88,32 +82,38 @@ public abstract class SwkShape implements SwkShapeConfig {
     public int getState() {
         return state;
     }
-    public void setSelected (final boolean selected) {
+
+    public void setSelected(final boolean selected) {
         this.selected = selected;
     }
+
     public boolean isSelected() {
         return selected;
     }
-       public float getXShear() {
+
+    public float getXShear() {
         return xShear;
     }
 
     public float getYShear() {
         return yShear;
     }
+
     public void setNode(String nodeName) {
         try {
             SwkShape shapeNode = (SwkShape) canvas.getShape(nodeName);
             ItemTreeNode newParent = shapeNode.node;
-System.out.println("set node for "+getId()+" to "+nodeName);
+            System.out.println("set node for " + getId() + " to " + nodeName);
             newParent.add(node);
 
         } catch (SwkException swkE) {
         }
     }
+
     public String getNode() {
         return "";
     }
+
     public String getStateString() {
         if (state == ACTIVE) {
             return "normal";
@@ -154,14 +154,14 @@ System.out.println("set node for "+getId()+" to "+nodeName);
         return canvas;
     }
 
-/*    public SwkShape getPrevious() {
-        return previous;
+    /*    public SwkShape getPrevious() {
+    return previous;
     }
 
     public SwkShape getNext() {
-        return next;
+    return next;
     }
-*/
+     */
     public int getId() {
         return id;
     }
@@ -197,8 +197,9 @@ System.out.println("set node for "+getId()+" to "+nodeName);
     public float getWidth() {
         return width;
     }
+
     public void setWidth(double value) {
-	    width = (float) value;
+        width = (float) value;
     }
 
     public int getCap() {
@@ -206,16 +207,15 @@ System.out.println("set node for "+getId()+" to "+nodeName);
     }
 
     public void setCap(int newValue) {
-        strokePar  = StrokeParameters.setCap(strokePar,newValue);
+        strokePar = StrokeParameters.setCap(strokePar, newValue);
     }
-
 
     public int getJoin() {
         return strokePar.getJoin();
     }
 
     public void setJoin(int newValue) {
-        strokePar  = StrokeParameters.setJoin(strokePar,newValue);
+        strokePar = StrokeParameters.setJoin(strokePar, newValue);
     }
 
     public float getMiterLimit() {
@@ -225,27 +225,35 @@ System.out.println("set node for "+getId()+" to "+nodeName);
     public float[] getDash() {
         return strokePar.getDash();
     }
+
     public void setDash(float[] newDash) {
-        strokePar  = StrokeParameters.setDash(strokePar,newDash);
+        strokePar = StrokeParameters.setDash(strokePar, newDash);
     }
+
     public float getDashPhase() {
         return strokePar.getDashPhase();
     }
+
     public void setDashPhase(float newPhase) {
-        strokePar  = StrokeParameters.setDashPhase(strokePar,newPhase);
+        strokePar = StrokeParameters.setDashPhase(strokePar, newPhase);
     }
+
     public boolean getDashIntPattern() {
         return strokePar.isDashIntPattern();
     }
+
     public void setDashIntPattern(boolean newPar) {
-        strokePar  = StrokeParameters.setDashIntPattern(strokePar,newPar);
+        strokePar = StrokeParameters.setDashIntPattern(strokePar, newPar);
     }
+
     public String getDashString() {
         return strokePar.getDashString();
     }
+
     public void setDashString(String newString) {
-        strokePar  = StrokeParameters.setDashString(strokePar,newString);
+        strokePar = StrokeParameters.setDashString(strokePar, newString);
     }
+
     public float getRotate() {
         return rotate;
     }
@@ -265,41 +273,43 @@ System.out.println("set node for "+getId()+" to "+nodeName);
     public void setShape(Shape shape) {
         this.shape = shape;
     }
+
     public Cursor getHandleCursor(int handle) {
-         final Cursor cursor;
-         switch (handle) {
-             case 0:
-                 cursor = Cursor.getPredefinedCursor(Cursor.NW_RESIZE_CURSOR);
-                 break;
-             case 1:
-                 cursor = Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR);
-                 break;
-             case 2:
-                 cursor = Cursor.getPredefinedCursor(Cursor.NE_RESIZE_CURSOR);
-                 break;
-             case 3:
-                 cursor = Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR);
-                 break;
-             case 4:
-                 cursor = Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR);
-                 break;
-             case 5:
-                 cursor = Cursor.getPredefinedCursor(Cursor.S_RESIZE_CURSOR);
-                 break;
-             case 6:
-                 cursor = Cursor.getPredefinedCursor(Cursor.SW_RESIZE_CURSOR);
-                 break;
-             case 7:
-                 cursor = Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR);
-                 break;
-             default:
-                 cursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR);
-         }
-         return cursor;
+        final Cursor cursor;
+        switch (handle) {
+            case 0:
+                cursor = Cursor.getPredefinedCursor(Cursor.NW_RESIZE_CURSOR);
+                break;
+            case 1:
+                cursor = Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR);
+                break;
+            case 2:
+                cursor = Cursor.getPredefinedCursor(Cursor.NE_RESIZE_CURSOR);
+                break;
+            case 3:
+                cursor = Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR);
+                break;
+            case 4:
+                cursor = Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR);
+                break;
+            case 5:
+                cursor = Cursor.getPredefinedCursor(Cursor.S_RESIZE_CURSOR);
+                break;
+            case 6:
+                cursor = Cursor.getPredefinedCursor(Cursor.SW_RESIZE_CURSOR);
+                break;
+            case 7:
+                cursor = Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR);
+                break;
+            default:
+                cursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR);
+        }
+        return cursor;
     }
+
     public boolean hitHandle(int x, int y, double xTest, double yTest) {
-        int fuzz=2;
-        return (new Rectangle(x-fuzz, y-fuzz, handleSize+2*fuzz, handleSize+2*fuzz)).contains(xTest, yTest);
+        int fuzz = 2;
+        return (new Rectangle(x - fuzz, y - fuzz, handleSize + 2 * fuzz, handleSize + 2 * fuzz)).contains(xTest, yTest);
     }
 
     void drawHandle(Graphics2D g2, int x, int y) {
@@ -313,16 +323,16 @@ System.out.println("set node for "+getId()+" to "+nodeName);
     public void drawHandles(Graphics2D g2) {
         if (shape != null) {
             Rectangle2D bounds = shape.getBounds2D();
-            double x1 =  bounds.getMinX();
-            double y1 =  bounds.getMinY();
-            double x2 =  bounds.getMaxX();
-            double y2 =  bounds.getMaxY();
+            double x1 = bounds.getMinX();
+            double y1 = bounds.getMinY();
+            double x2 = bounds.getMaxX();
+            double y2 = bounds.getMaxY();
             double xm = (x1 + x2) / 2;
             double ym = (y1 + y2) / 2;
             double[] xy = {x1, y1, xm, y1, x2, y1, x2, ym, x2, y2, xm, y2, x1, y2, x1, ym};
             AffineTransform shapeTransform = getTransform();
             if (shapeTransform != null) {
-                shapeTransform.transform(xy,0,xy,0,xy.length/2);
+                shapeTransform.transform(xy, 0, xy, 0, xy.length / 2);
             }
             for (int i = 0; i < xy.length; i += 2) {
                 drawHandle(g2, (int) xy[i], (int) xy[i + 1]);
@@ -334,21 +344,21 @@ System.out.println("set node for "+getId()+" to "+nodeName);
         int hitIndex = -1;
         if (shape != null) {
             Rectangle2D bounds = shape.getBounds2D();
-            double x1 =  bounds.getMinX();
-            double y1 =  bounds.getMinY();
-            double x2 =  bounds.getMaxX();
-            double y2 =  bounds.getMaxY();
+            double x1 = bounds.getMinX();
+            double y1 = bounds.getMinY();
+            double x2 = bounds.getMaxX();
+            double y2 = bounds.getMaxY();
             double xm = (x1 + x2) / 2;
             double ym = (y1 + y2) / 2;
             double[] xy = {x1, y1, xm, y1, x2, y1, x2, ym, x2, y2, xm, y2, x1, y2, x1, ym};
             AffineTransform shapeTransform = getTransform();
             if (shapeTransform != null) {
-                shapeTransform.transform(xy,0,xy,0,xy.length/2);
+                shapeTransform.transform(xy, 0, xy, 0, xy.length / 2);
             }
 
             for (int i = 0; i < xy.length; i += 2) {
                 if (hitHandle((int) xy[i], (int) xy[i + 1], testX, testY)) {
-                    hitIndex = i/2;
+                    hitIndex = i / 2;
                     break;
                 }
             }
@@ -412,10 +422,10 @@ System.out.println("set node for "+getId()+" to "+nodeName);
             cPar = getPar(argv[i].toString());
 
             if (cPar == null) {
-                String parName = "com.onemoonscientific.swank.canvas." +
-                        argv[i].toString().substring(1, 2).toUpperCase() +
-                        argv[i].toString().substring(2).toLowerCase() +
-                        "Parameter";
+                String parName = "com.onemoonscientific.swank.canvas."
+                        + argv[i].toString().substring(1, 2).toUpperCase()
+                        + argv[i].toString().substring(2).toLowerCase()
+                        + "Parameter";
                 Class newClass = null;
 
                 try {
@@ -463,17 +473,17 @@ System.out.println("set node for "+getId()+" to "+nodeName);
             //  Mostly not used as custom pars are added automatically to stdPars
 
             if (cPar == null) {
-                String parName = "com.onemoonscientific.swank.canvas." +
-                        argv[i].toString().substring(1, 2).toUpperCase() +
-                        argv[i].toString().substring(2) + "Parameter";
+                String parName = "com.onemoonscientific.swank.canvas."
+                        + argv[i].toString().substring(1, 2).toUpperCase()
+                        + argv[i].toString().substring(2) + "Parameter";
                 Class newClass = null;
 
                 try {
                     newClass = Class.forName(parName);
                 } catch (ClassNotFoundException cnfE) {
                     throw new TclException(interp,
-                            "class " + parName + " doesn't exist " +
-                            cnfE.toString());
+                            "class " + parName + " doesn't exist "
+                            + cnfE.toString());
 
                     //continue;
                 }
@@ -526,6 +536,7 @@ System.out.println("set node for "+getId()+" to "+nodeName);
 
     public void dispose() {
     }
+
     public void coords(SwkImageCanvas canvas, double[] coordArray)
             throws SwkException {
     }
@@ -710,8 +721,8 @@ System.out.println("set node for "+getId()+" to "+nodeName);
             double yScale) {
         for (int i = 0; i < storeCoords.length; i += 2) {
             storeCoords[i] = ((storeCoords[i] - xOrigin) * xScale) + xOrigin;
-            storeCoords[i + 1] = ((storeCoords[i + 1] - yOrigin) * yScale) +
-                    yOrigin;
+            storeCoords[i + 1] = ((storeCoords[i + 1] - yOrigin) * yScale)
+                    + yOrigin;
         }
 
         applyCoordinates();
@@ -730,15 +741,15 @@ System.out.println("set node for "+getId()+" to "+nodeName);
             boolean cyclic = fillGradient.isCyclic();
             Point2D p1 = new Point2D.Double();
             Point2D p2 = new Point2D.Double();
-            double x = ((storeCoords[2] - storeCoords[0]) * gradPt1.getX()) +
-                    storeCoords[0];
-            double y = ((storeCoords[3] - storeCoords[1]) * gradPt1.getY()) +
-                    storeCoords[1];
+            double x = ((storeCoords[2] - storeCoords[0]) * gradPt1.getX())
+                    + storeCoords[0];
+            double y = ((storeCoords[3] - storeCoords[1]) * gradPt1.getY())
+                    + storeCoords[1];
             p1.setLocation(x, y);
-            x = ((storeCoords[2] - storeCoords[0]) * gradPt2.getX()) +
-                    storeCoords[0];
-            y = ((storeCoords[3] - storeCoords[1]) * gradPt2.getY()) +
-                    storeCoords[1];
+            x = ((storeCoords[2] - storeCoords[0]) * gradPt2.getX())
+                    + storeCoords[0];
+            y = ((storeCoords[3] - storeCoords[1]) * gradPt2.getY())
+                    + storeCoords[1];
             p2.setLocation(x, y);
 
             p1 = aT.transform(p1, p1);

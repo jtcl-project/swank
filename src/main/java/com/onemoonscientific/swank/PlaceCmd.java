@@ -37,8 +37,8 @@ import java.util.*;
 
 import javax.swing.*;
 
-
 public class PlaceCmd implements Command {
+
     static Hashtable columnTable = new Hashtable();
     static Hashtable rowTable = new Hashtable();
     static final private String[] validCmds = {
@@ -52,12 +52,12 @@ public class PlaceCmd implements Command {
     Interp interp;
 
     public void cmdProc(final Interp interp, final TclObject[] argv)
-        throws TclException {
+            throws TclException {
         int i;
 
         if (argv.length < 2) {
             throw new TclNumArgsException(interp, 1, argv,
-                "option arg ?arg ...?");
+                    "option arg ?arg ...?");
         }
 
         this.interp = interp;
@@ -76,13 +76,13 @@ public class PlaceCmd implements Command {
 
         TclObject optionArg = null;
 
-        if (!argv[1].toString().startsWith(".") &&
-                !argv[1].toString().startsWith("-")) {
+        if (!argv[1].toString().startsWith(".")
+                && !argv[1].toString().startsWith("-")) {
             optionArg = argv[1];
 
             if (argv.length < 3) {
                 throw new TclNumArgsException(interp, 1, argv,
-                    "option arg ?arg ...?");
+                        "option arg ?arg ...?");
             }
         } else {
             optionArg = configArg;
@@ -96,49 +96,49 @@ public class PlaceCmd implements Command {
         final int opt = TclIndex.get(interp, optionArg, validCmds, "option", 0);
 
         switch (opt) {
-        case OPT_CONFIGURE:
-            placeConfigure(interp, argv, firstWindow);
+            case OPT_CONFIGURE:
+                placeConfigure(interp, argv, firstWindow);
 
-            break;
+                break;
 
-        case OPT_FORGET:
-            placeForget(interp, argv, firstWindow);
+            case OPT_FORGET:
+                placeForget(interp, argv, firstWindow);
 
-            break;
+                break;
 
-        case OPT_INFO:
-            placeInfo(interp, argv);
+            case OPT_INFO:
+                placeInfo(interp, argv);
 
-            break;
+                break;
 
-        case OPT_SLAVES:
-            placeSlaves(interp, argv);
+            case OPT_SLAVES:
+                placeSlaves(interp, argv);
 
-            break;
+                break;
 
-        default:
-            throw new TclRuntimeError("TclIndex.get() error");
+            default:
+                throw new TclRuntimeError("TclIndex.get() error");
         }
     }
 
     void placeInfo(Interp interp, TclObject[] argv) throws TclException {
         if (argv.length != 3) {
             throw new TclException(interp,
-                "wrong # args: should be \"place info window\"");
+                    "wrong # args: should be \"place info window\"");
         }
 
         SwkWidget window = (SwkWidget) Widgets.get(interp, argv[2].toString());
 
         if (window == null) {
             throw new TclException(interp,
-                "window \"" + argv[2].toString() + "\" doesn't exist");
+                    "window \"" + argv[2].toString() + "\" doesn't exist");
         }
 
         String result = (new Info()).exec(window, argv[2].toString());
 
         if (result == null) {
             throw new TclException(interp,
-                "window \"" + argv[2].toString() + "\" isn't Placed");
+                    "window \"" + argv[2].toString() + "\" isn't Placed");
         }
 
         interp.setResult(result);
@@ -151,9 +151,9 @@ public class PlaceCmd implements Command {
             throw new TclNumArgsException(interp, 2, argv, "window");
         }
 
-        if (!Widgets.exists(interp,argv[2].toString())) {
+        if (!Widgets.exists(interp, argv[2].toString())) {
             throw new TclException(interp,
-                "bad window path name \"" + argv[2].toString() + "\"");
+                    "bad window path name \"" + argv[2].toString() + "\"");
         }
 
         String[] names = (new Slaves()).exec(argv[2].toString());
@@ -171,7 +171,7 @@ public class PlaceCmd implements Command {
     }
 
     void placeForget(Interp interp, TclObject[] argv, int firstWindow)
-        throws TclException {
+            throws TclException {
         String[] names = new String[argv.length - firstWindow];
         int j = 0;
 
@@ -183,22 +183,22 @@ public class PlaceCmd implements Command {
     }
 
     int initPlaceingWindow(Interp interp, TclObject[] argv, String[] args,
-        int firstWindow) throws TclException {
+            int firstWindow) throws TclException {
         int lastWindow = 0;
 
         if (args.length <= firstWindow) {
             throw new TclNumArgsException(interp, 1, argv,
-                "slave ?slave ...? ?options?");
+                    "slave ?slave ...? ?options?");
         }
 
-        if (!Widgets.exists(interp,args[firstWindow])) {
+        if (!Widgets.exists(interp, args[firstWindow])) {
             if (firstWindow == 1) {
                 throw new TclException(interp,
-                    "bad window path name \"" + args[firstWindow] + "\"");
+                        "bad window path name \"" + args[firstWindow] + "\"");
             } else {
                 throw new TclException(interp,
-                    "bad argument \"" + args[firstWindow] +
-                    "\": must be name of window");
+                        "bad argument \"" + args[firstWindow]
+                        + "\": must be name of window");
             }
         }
 
@@ -210,7 +210,7 @@ public class PlaceCmd implements Command {
 
                 if (window == null) {
                     throw new TclException(interp,
-                        "bad window path name \"" + args[i] + "\"");
+                            "bad window path name \"" + args[i] + "\"");
                 }
 
                 lastWindow = i;
@@ -225,21 +225,21 @@ public class PlaceCmd implements Command {
     }
 
     void getSpecialArgs(Interp interp, String[] args, int lastWindow,
-        Vector window1Special, StringBuffer strippedArgs)
-        throws TclException {
+            Vector window1Special, StringBuffer strippedArgs)
+            throws TclException {
         int firstArg = lastWindow + 1;
         int lastArg = args.length - 1;
 
         for (int i = firstArg; i <= lastArg; i += 2) {
             /*
             if (argv[i + 1].toString ().startsWith ("-") && !Character.isDigit(argv[i+1].toString().charAt(1))) {
-                throw new TclException (interp, "argument without value");
+            throw new TclException (interp, "argument without value");
             }
              */
             if (args[i].equals("-in")) {
-                if (!Widgets.exists(interp,args[i + 1].toString())) {
+                if (!Widgets.exists(interp, args[i + 1].toString())) {
                     throw new TclException(interp,
-                        "bad window path name \"" + args[i + 1] + "\"");
+                            "bad window path name \"" + args[i + 1] + "\"");
                 }
 
                 window1Special.add(args[i]);
@@ -255,7 +255,7 @@ public class PlaceCmd implements Command {
     }
 
     void placeConfigure(Interp interp, TclObject[] argv, int firstWindow)
-        throws TclException {
+            throws TclException {
         String[] args = new String[argv.length];
 
         for (int i = 0; i < argv.length; i++) {
@@ -270,8 +270,8 @@ public class PlaceCmd implements Command {
 
         if ((nArgs % 2) != 0) {
             throw new TclException(interp,
-                "extra option \"" + argv[lastArg].toString() +
-                "\" (option with no value?)");
+                    "extra option \"" + argv[lastArg].toString()
+                    + "\" (option with no value?)");
         }
 
         Vector window1Special = new Vector();
@@ -279,14 +279,14 @@ public class PlaceCmd implements Command {
         getSpecialArgs(interp, args, lastWindow, window1Special, strippedArgs);
         PlacerLayout.checkPlaceArgs(interp, strippedArgs.toString(), null);
         (new Configure()).exec(window1Special, args, strippedArgs.toString(),
-            firstWindow, lastWindow);
+                firstWindow, lastWindow);
     }
 
     String getParent(Interp interp, String widgetName)
-        throws TclException {
-        if (!Widgets.exists(interp,widgetName)) {
+            throws TclException {
+        if (!Widgets.exists(interp, widgetName)) {
             throw new TclException(interp,
-                "bad window path name \"" + widgetName + "\"");
+                    "bad window path name \"" + widgetName + "\"");
         }
 
         String masterName = null;
@@ -296,7 +296,7 @@ public class PlaceCmd implements Command {
             masterName = ".";
         } else if (lastDot == -1) {
             throw new TclException(interp,
-                "bad window path name \"" + widgetName + "\"");
+                    "bad window path name \"" + widgetName + "\"");
         } else {
             masterName = widgetName.substring(0, lastDot);
         }
@@ -305,6 +305,7 @@ public class PlaceCmd implements Command {
     }
 
     class Info extends GetValueOnEventThread {
+
         String result = null;
         String item = null;
         SwkWidget window = null;
@@ -326,7 +327,7 @@ public class PlaceCmd implements Command {
         }
 
         public void run() {
-           if (parent != null) {
+            if (parent != null) {
                 LayoutManager layoutManager = parent.getLayout();
 
                 if (!(layoutManager instanceof PlacerLayout)) {
@@ -336,13 +337,14 @@ public class PlaceCmd implements Command {
                 PlacerLayout placer = (PlacerLayout) layoutManager;
 
                 Object settings = placer.getComponentSettings((Component) window);
-    
+
                 result = settings.toString() + " -in " + parentName;
-           }
+            }
         }
     }
 
     class Slaves extends GetValueOnEventThread {
+
         String item = null;
         String[] names = null;
 
@@ -376,6 +378,7 @@ public class PlaceCmd implements Command {
     }
 
     class Forget extends UpdateOnEventThread {
+
         String[] names = null;
 
         void exec(String[] names) {
@@ -386,7 +389,7 @@ public class PlaceCmd implements Command {
         public void run() {
             try {
                 for (int i = 0; i < names.length; i++) {
-                    if (!Widgets.exists(interp,names[i])) {
+                    if (!Widgets.exists(interp, names[i])) {
                         continue;
                     }
 
@@ -415,6 +418,7 @@ public class PlaceCmd implements Command {
     }
 
     class Configure extends UpdateOnEventThread {
+
         String specialWindowName = null;
         String parentName = null;
         Container parent = null;
@@ -426,7 +430,7 @@ public class PlaceCmd implements Command {
         String[] args = null;
 
         void exec(final Vector window1Special, final String[] args,
-            String strippedArgs, int firstWindow, int lastWindow) {
+                String strippedArgs, int firstWindow, int lastWindow) {
             this.args = args;
             this.window1Special = window1Special;
             this.strippedArgs = strippedArgs;
@@ -440,8 +444,8 @@ public class PlaceCmd implements Command {
                 for (int j = 0; j < window1Special.size(); j += 2) {
                     option = (String) window1Special.elementAt(j);
 
-                    specialWindowName = (String) window1Special.elementAt(j +
-                            1);
+                    specialWindowName = (String) window1Special.elementAt(j
+                            + 1);
 
                     if (option.equals("-in")) {
                         parentName = (String) window1Special.elementAt(j + 1);
@@ -481,7 +485,7 @@ public class PlaceCmd implements Command {
 
                 if (windowName.equals(parentName)) {
                     throw new TclException(interp,
-                        "can't Place \"" + windowName + "\" inside itself");
+                            "can't Place \"" + windowName + "\" inside itself");
                 }
 
                 if (window1Special.size() > 0) {
@@ -494,8 +498,8 @@ public class PlaceCmd implements Command {
 
                 if ((window instanceof JWindow) || (window instanceof JFrame)) {
                     throw new TclException(interp,
-                        "can't Place \"" + windowName +
-                        "\": it's a top-level window");
+                            "can't Place \"" + windowName
+                            + "\": it's a top-level window");
                 }
 
                 LayoutManager layoutManager = parent.getLayout();
@@ -514,7 +518,7 @@ public class PlaceCmd implements Command {
 
                     //parent.add (strippedArgs.toString (), (Component) window);
                     parent.add((Component) window, strippedArgs.toString(),
-                        PlacePosition);
+                            PlacePosition);
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {

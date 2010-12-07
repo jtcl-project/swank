@@ -208,7 +208,7 @@ public class TextParameters {
         String text = this.getText();
         Rectangle2D rf1d = null;
         if ((text == null) || (text.equals(""))) {
-            return  new Rectangle2D.Float((float) x, (float) y,
+            return new Rectangle2D.Float((float) x, (float) y,
                     1, 1);
         }
         int nLines = getLineBreaks(fRC, paintFont, text, swkShape.width);
@@ -235,10 +235,10 @@ public class TextParameters {
             }
 
             float height2 = (float) (height1 * this.getAnchor()[0]);
-           AffineTransform aT = new AffineTransform();
+            AffineTransform aT = new AffineTransform();
 
             aT.rotate(swkShape.rotate, x, y);
-            
+
             Rectangle2D.Double rf2 = new Rectangle2D.Double((x
                     - width2), (y + height2), 0.0, 0.0);
             Rectangle2D rf2D = aT.createTransformedShape(rf2).getBounds2D();

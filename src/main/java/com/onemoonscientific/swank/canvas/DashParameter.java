@@ -4,10 +4,10 @@ import com.onemoonscientific.swank.*;
 
 import tcl.lang.*;
 
-
 public class DashParameter extends CanvasParameter {
+
     private static String name = "dash";
-    private static double[] defValue = {  };
+    private static double[] defValue = {};
     String dashString = "";
     boolean dashIntPattern = false;
     float[] dash = null;
@@ -29,7 +29,7 @@ public class DashParameter extends CanvasParameter {
     }
 
     public TclObject getValue(Interp interp, SwkShape swkShape)
-        throws TclException {
+            throws TclException {
         if (swkShape == null) {
             throw new TclException(interp, "shape doesn't exist");
         }
@@ -38,7 +38,7 @@ public class DashParameter extends CanvasParameter {
     }
 
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
-        throws TclException {
+            throws TclException {
         dashString = arg.toString();
         dashIntPattern = SwankUtil.isDashIntPattern(interp, arg);
         dash = SwankUtil.getDash(interp, arg);

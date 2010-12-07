@@ -36,11 +36,11 @@ import java.lang.*;
 
 import java.util.*;
 
-
 //Algorithm from http://www.antigrain.com/research/bezier_interpolation/
 class BezierPath {
+
     public static void makeBezierCurve(double[] coords, int numSteps,
-        GeneralPath gPath, double smoothValue) {
+            GeneralPath gPath, double smoothValue) {
         // Assume we need to calculate the control
         // points between (x1,y1) and (x2,y2).
         // Then x0,y0 - the previous vertex,
@@ -48,8 +48,8 @@ class BezierPath {
         boolean closed = false;
         int numCoords = coords.length;
 
-        if ((coords[0] == coords[numCoords - 2]) &&
-                (coords[1] == coords[numCoords - 1])) {
+        if ((coords[0] == coords[numCoords - 2])
+                && (coords[1] == coords[numCoords - 1])) {
             closed = true;
         }
 
@@ -99,12 +99,12 @@ class BezierPath {
             double xc3 = (x2 + x3) / 2.0;
             double yc3 = (y2 + y3) / 2.0;
 
-            double len1 = Math.sqrt(((x1 - x0) * (x1 - x0)) +
-                    ((y1 - y0) * (y1 - y0)));
-            double len2 = Math.sqrt(((x2 - x1) * (x2 - x1)) +
-                    ((y2 - y1) * (y2 - y1)));
-            double len3 = Math.sqrt(((x3 - x2) * (x3 - x2)) +
-                    ((y3 - y2) * (y3 - y2)));
+            double len1 = Math.sqrt(((x1 - x0) * (x1 - x0))
+                    + ((y1 - y0) * (y1 - y0)));
+            double len2 = Math.sqrt(((x2 - x1) * (x2 - x1))
+                    + ((y2 - y1) * (y2 - y1)));
+            double len3 = Math.sqrt(((x3 - x2) * (x3 - x2))
+                    + ((y3 - y2) * (y3 - y2)));
 
             double k1 = len1 / (len1 + len2);
             double k2 = len2 / (len2 + len3);
@@ -117,17 +117,17 @@ class BezierPath {
 
             // Resulting control points. Here smoothValue is mentioned
             // above coefficient K whose value should be in range [0...1].
-            float ctrl1_x = (float) ((xm1 + ((xc2 - xm1) * smoothValue) + x1) -
-                xm1);
-            float ctrl1_y = (float) ((ym1 + ((yc2 - ym1) * smoothValue) + y1) -
-                ym1);
+            float ctrl1_x = (float) ((xm1 + ((xc2 - xm1) * smoothValue) + x1)
+                    - xm1);
+            float ctrl1_y = (float) ((ym1 + ((yc2 - ym1) * smoothValue) + y1)
+                    - ym1);
 
-            float ctrl2_x = (float) ((xm2 + ((xc2 - xm2) * smoothValue) + x2) -
-                xm2);
-            float ctrl2_y = (float) ((ym2 + ((yc2 - ym2) * smoothValue) + y2) -
-                ym2);
+            float ctrl2_x = (float) ((xm2 + ((xc2 - xm2) * smoothValue) + x2)
+                    - xm2);
+            float ctrl2_y = (float) ((ym2 + ((yc2 - ym2) * smoothValue) + y2)
+                    - ym2);
             gPath.curveTo(ctrl1_x, ctrl1_y, ctrl2_x, ctrl2_y, (float) x2,
-                (float) y2);
+                    (float) y2);
         }
     }
 }

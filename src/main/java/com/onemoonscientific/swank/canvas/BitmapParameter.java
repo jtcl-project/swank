@@ -6,8 +6,8 @@ import tcl.lang.*;
 
 import javax.swing.ImageIcon;
 
-
 public class BitmapParameter extends CanvasParameter {
+
     private static String name = "bitmap";
     private static String defValue = "";
     private ImageIcon newValue = null;
@@ -29,7 +29,7 @@ public class BitmapParameter extends CanvasParameter {
     }
 
     public TclObject getValue(Interp interp, SwkShape swkShape)
-        throws TclException {
+            throws TclException {
         if (swkShape == null) {
             throw new TclException(interp, "shape doesn't exist");
         }
@@ -43,7 +43,7 @@ public class BitmapParameter extends CanvasParameter {
     }
 
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
-        throws TclException {
+            throws TclException {
         newValue = SwankUtil.getImageIcon(interp, arg);
     }
 

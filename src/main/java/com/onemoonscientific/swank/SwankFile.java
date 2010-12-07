@@ -9,8 +9,8 @@ import java.text.*;
 
 import java.util.*;
 
-
 public class SwankFile extends File {
+
     final static DateFormat dateformat = new SimpleDateFormat("MMM dd yyyy");
     final static String PATHDELIMS = "/\\";
     public final static char ftpseparator = '/';
@@ -37,8 +37,8 @@ public class SwankFile extends File {
     public SwankFile(Interp interp, String parent, String name) {
         this(interp, parent);
 
-        if ((path.length() > 0) &&
-                (path.charAt(path.length() - 1) == ftpseparator)) {
+        if ((path.length() > 0)
+                && (path.charAt(path.length() - 1) == ftpseparator)) {
             path += name;
         } else {
             path += (ftpseparator + name);
@@ -221,11 +221,12 @@ public class SwankFile extends File {
             String result = null;
             StringTokenizer st = new StringTokenizer(path, PATHDELIMS);
 
-            while (st.hasMoreTokens())
+            while (st.hasMoreTokens()) {
                 result = st.nextToken();
+            }
 
-            if ((result == null) ||
-                    ((result.length() > 1) && (result.charAt(1) == ':'))) {
+            if ((result == null)
+                    || ((result.length() > 1) && (result.charAt(1) == ':'))) {
                 result = "";
             }
 
@@ -484,8 +485,8 @@ public class SwankFile extends File {
                 SwankFile f;
 
                 for (int i = 0; i < fileList.length; i++) {
-                    if ((fileList[i] != null) &&
-                            (fileList[i].toString().length() != 0)) {
+                    if ((fileList[i] != null)
+                            && (fileList[i].toString().length() != 0)) {
                         f = new SwankFile(interp, fileList[i].toString());
 
                         if (f != null) {
@@ -506,14 +507,14 @@ public class SwankFile extends File {
 
     /*
     public String getParent() {
-         try {
-           interp.eval("::swankFile::getParent {"+path+"}");
-           return interp.getResult().toString();
-       }
-       catch (TclException tclE)
-       {
-       }
-        return "";
+    try {
+    interp.eval("::swankFile::getParent {"+path+"}");
+    return interp.getResult().toString();
+    }
+    catch (TclException tclE)
+    {
+    }
+    return "";
     }
      */
     public boolean mkdir() {
@@ -528,8 +529,8 @@ public class SwankFile extends File {
 
     public boolean renameTo(File dest) {
         try {
-            interp.eval("::swankFile::renameTo {" + getName() + "} {" +
-                dest.getName() + "}");
+            interp.eval("::swankFile::renameTo {" + getName() + "} {"
+                    + dest.getName() + "}");
 
             return TclBoolean.get(interp, interp.getResult());
         } catch (TclException tclE) {
@@ -538,6 +539,7 @@ public class SwankFile extends File {
     }
 
     interface FileFilter {
+
         public boolean accept(File pathname);
     }
 }

@@ -33,8 +33,8 @@ import java.util.*;
 
 import javax.swing.*;
 
-
 public class EventRecorderCmd implements Command {
+
     static final private int OPT_COUNT = 0;
     static final private int OPT_GET = 1;
     static final private int OPT_LIST = 2;
@@ -45,73 +45,73 @@ public class EventRecorderCmd implements Command {
     };
 
     public void cmdProc(Interp interp, TclObject[] argv)
-        throws TclException {
+            throws TclException {
         int i;
 
         if (argv.length < 2) {
             throw new TclNumArgsException(interp, 1, argv,
-                "option ?arg arg ...?");
+                    "option ?arg arg ...?");
         }
 
         int opt = TclIndex.get(interp, argv[1], validCmds, "option", 0);
 
         switch (opt) {
-        case OPT_COUNT: {
-            if (argv.length != 2) {
-                throw new TclNumArgsException(interp, 1, argv, "");
+            case OPT_COUNT: {
+                if (argv.length != 2) {
+                    throw new TclNumArgsException(interp, 1, argv, "");
+                }
+
+                interp.setResult(EventRecorder.eventCount());
+
+                break;
             }
 
-            interp.setResult(EventRecorder.eventCount());
+            case OPT_GET: {
+                if (argv.length != 3) {
+                    throw new TclNumArgsException(interp, 1, argv, "");
+                }
 
-            break;
-        }
+                int index = TclInteger.get(interp, argv[2]);
 
-        case OPT_GET: {
-            if (argv.length != 3) {
-                throw new TclNumArgsException(interp, 1, argv, "");
+                if (index >= EventRecorder.eventCount()) {
+                    throw new TclException(interp,
+                            "event \"" + index + "\" doesn't exist");
+                }
+
+                interp.setResult(EventRecorder.get(index));
+
+                break;
             }
 
-            int index = TclInteger.get(interp, argv[2]);
+            case OPT_LIST: {
+                if (argv.length != 2) {
+                    throw new TclNumArgsException(interp, 1, argv, "");
+                }
 
-            if (index >= EventRecorder.eventCount()) {
-                throw new TclException(interp,
-                    "event \"" + index + "\" doesn't exist");
+                EventRecorder.get(interp);
+
+                break;
             }
 
-            interp.setResult(EventRecorder.get(index));
+            case OPT_START: {
+                if (argv.length != 2) {
+                    throw new TclNumArgsException(interp, 1, argv, "");
+                }
 
-            break;
-        }
+                EventRecorder.start();
 
-        case OPT_LIST: {
-            if (argv.length != 2) {
-                throw new TclNumArgsException(interp, 1, argv, "");
+                break;
             }
 
-            EventRecorder.get(interp);
+            case OPT_STOP: {
+                if (argv.length != 2) {
+                    throw new TclNumArgsException(interp, 1, argv, "");
+                }
 
-            break;
-        }
+                EventRecorder.stop();
 
-        case OPT_START: {
-            if (argv.length != 2) {
-                throw new TclNumArgsException(interp, 1, argv, "");
+                break;
             }
-
-            EventRecorder.start();
-
-            break;
-        }
-
-        case OPT_STOP: {
-            if (argv.length != 2) {
-                throw new TclNumArgsException(interp, 1, argv, "");
-            }
-
-            EventRecorder.stop();
-
-            break;
-        }
         }
     }
 }

@@ -39,8 +39,8 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
-
 public class SwkBind {
+
     /** Processes a list of arguments to set up a binding.
      * @param interp Current interpreter for event
      * @param argv Array of arguments
@@ -48,7 +48,7 @@ public class SwkBind {
      * @return Returns SwkBinding object containing information about specified binding.
      */
     public static SwkBinding getBinding(Interp interp, TclObject[] argv,
-        int firstArg) {
+            int firstArg) {
         String eventString = argv[firstArg].toString();
 
         char eventChar;
@@ -93,9 +93,9 @@ public class SwkBind {
         if (eventString.length() == 1) {
             eventChar = eventString.charAt(0);
 
-            if ((start > 0) &&
-                    ((eventChar == '1') || (eventChar == '2') ||
-                    (eventChar == '3'))) {
+            if ((start > 0)
+                    && ((eventChar == '1') || (eventChar == '2')
+                    || (eventChar == '3'))) {
                 swkBinding.type = SwkBinding.MOUSE;
                 swkBinding.subtype = SwkBinding.PRESS;
 
@@ -164,8 +164,8 @@ public class SwkBind {
 
                             if (gotEvent) {
                                 System.out.println(
-                                    "Mod field after event field: " +
-                                    tokenizer.sval);
+                                        "Mod field after event field: "
+                                        + tokenizer.sval);
 
                                 return null;
                             }
@@ -178,7 +178,7 @@ public class SwkBind {
                                 //System.out.println(eventType.name);
                                 if (gotEvent) {
                                     System.out.println(
-                                        "Event field after event field");
+                                            "Event field after event field");
 
                                     return (null);
                                 }
@@ -194,8 +194,8 @@ public class SwkBind {
                                 char eCh = tokenizer.sval.charAt(0);
 
                                 if (!gotEvent) {
-                                    if ((eCh == '1') || (eCh == '2') ||
-                                            (eCh == '3')) {
+                                    if ((eCh == '1') || (eCh == '2')
+                                            || (eCh == '3')) {
                                         swkBinding.type = SwkBinding.MOUSE;
                                     } else {
                                         swkBinding.type = SwkBinding.KEY;
@@ -205,8 +205,8 @@ public class SwkBind {
                                 if (swkBinding.type == SwkBinding.KEY) {
                                     swkBinding.detail = eCh;
                                     swkBinding.keyStroke = null;
-                                } else if ((swkBinding.type == SwkBinding.MOUSE) ||
-                                        (swkBinding.type == SwkBinding.MOUSEMOTION)) {
+                                } else if ((swkBinding.type == SwkBinding.MOUSE)
+                                        || (swkBinding.type == SwkBinding.MOUSEMOTION)) {
                                     if (eCh == '1') {
                                         ;
                                         swkBinding.detail = InputEvent.BUTTON1_MASK;
@@ -242,8 +242,8 @@ public class SwkBind {
                                     //  System.out.println(eventType.name+" "+swkBinding.toString()+" "+eventType.detail);
                                     gotEvent = true;
                                 } else {
-                                    System.out.println("Unknown detail " +
-                                        tokenizer.sval.toLowerCase());
+                                    System.out.println("Unknown detail "
+                                            + tokenizer.sval.toLowerCase());
 
                                     return (null);
                                 }
@@ -262,8 +262,8 @@ public class SwkBind {
                                     //System.out.println(eventType.name+" "+swkBinding.toString());
                                     gotEvent = true;
                                 } else {
-                                    System.out.println("Unknown detail " +
-                                        tokenizer.sval.toLowerCase());
+                                    System.out.println("Unknown detail "
+                                            + tokenizer.sval.toLowerCase());
 
                                     return (null);
                                 }
@@ -293,7 +293,7 @@ public class SwkBind {
     }
 
     public static void updateBindingCommand(Interp interp,
-        SwkBinding swkBinding, TclObject[] argv, int firstArg) {
+            SwkBinding swkBinding, TclObject[] argv, int firstArg) {
         if (argv.length == (firstArg + 1)) {
             // should return binding
         } else if (argv[firstArg + 1].toString().length() == 0) {
@@ -316,20 +316,20 @@ public class SwkBind {
                 index = i;
                 break;
             }
-       }
+        }
         if (newBinding.add) {
-           if (index != -1) {
-              SwkBinding binding = bindings.get(index);
-              binding.command =  binding.command + '\n' + newBinding.command;
-           } else {
-               bindings.add(newBinding);
-           }
-        } else {
-           if (index != -1) {
-                bindings.set(index,newBinding);
-           } else {
+            if (index != -1) {
+                SwkBinding binding = bindings.get(index);
+                binding.command = binding.command + '\n' + newBinding.command;
+            } else {
                 bindings.add(newBinding);
-           }
+            }
+        } else {
+            if (index != -1) {
+                bindings.set(index, newBinding);
+            } else {
+                bindings.add(newBinding);
+            }
         }
     }
 }

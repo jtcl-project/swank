@@ -44,17 +44,17 @@ import java.util.regex.Pattern;
 
 import javax.swing.*;
 
-
 public class SwankUtil {
+
     static Hashtable colorTable = null;
     static Hashtable iColorTable = null;
     static Pattern intPattern = Pattern.compile("^[+-]?[0-9]+$");
     static Boolean hasJHelp = null;
     static Object helpobject = null;
     static Method helpmethod = null;
-    
+
     public static Color getColor(Interp interp, TclObject tclObject)
-        throws TclException {
+            throws TclException {
         if (colorTable == null) {
             initColorTable();
         }
@@ -86,55 +86,54 @@ public class SwankUtil {
                 }
 
             } else {
-                Color color = (Color) colorTable.get(argv[0].toString()
-                                                            .toLowerCase());
+                Color color = (Color) colorTable.get(argv[0].toString().toLowerCase());
 
                 if (color == null) {
                     throw new TclException(interp,
-                        "unknown color name \"" + argv[0].toString() + "\"");
+                            "unknown color name \"" + argv[0].toString() + "\"");
                 } else {
                     return (color);
                 }
             }
-	} else if (argv.length > 1) {
-            Color color = (Color) colorTable.get(tclObject.toString() .toLowerCase());
+        } else if (argv.length > 1) {
+            Color color = (Color) colorTable.get(tclObject.toString().toLowerCase());
             if (color != null) {
-                 return color;
+                return color;
             } else {
-	        if (argv.length == 2) {
-                    color = (Color) colorTable.get(argv[0].toString() .toLowerCase());
+                if (argv.length == 2) {
+                    color = (Color) colorTable.get(argv[0].toString().toLowerCase());
                     if (color == null) {
-                    throw new TclException(interp,
-                        "unknown color name \"" + argv[0].toString() + "\"");
+                        throw new TclException(interp,
+                                "unknown color name \"" + argv[0].toString() + "\"");
+                    } else {
+                        float alpha = (float) TclDouble.get(interp, argv[1]);
+                        if (alpha != 1.0) {
+                            float[] rgb = new float[4];
+                            color.getComponents(rgb);
+                            color = new Color(rgb[0], rgb[1], rgb[2], alpha);
+                        }
+                        return (color);
+                    }
+
+                } else if (argv.length == 3) {
+                    int red = TclInteger.get(interp, argv[0]);
+                    int green = TclInteger.get(interp, argv[1]);
+                    int blue = TclInteger.get(interp, argv[2]);
+
+                    return (new Color(red, green, blue));
+                } else if (argv.length == 4) {
+                    int red = TclInteger.get(interp, argv[0]);
+                    int green = TclInteger.get(interp, argv[1]);
+                    int blue = TclInteger.get(interp, argv[2]);
+                    int alpha = TclInteger.get(interp, argv[3]);
+
+                    return (new Color(red, green, blue, alpha));
                 } else {
-	            float alpha = (float) TclDouble.get(interp,argv[1]);
-		    if (alpha != 1.0) {
-			    float[] rgb = new float[4];
-			    color.getComponents(rgb);
-			    color = new Color(rgb[0],rgb[1],rgb[2],alpha);
-		    }
-                    return (color);
+                    return (null);
                 }
-
-            } else if (argv.length == 3) {
-                int red = TclInteger.get(interp, argv[0]);
-                int green = TclInteger.get(interp, argv[1]);
-                int blue = TclInteger.get(interp, argv[2]);
-
-                return (new Color(red, green, blue));
-            } else if (argv.length == 4) {
-                int red = TclInteger.get(interp, argv[0]);
-                int green = TclInteger.get(interp, argv[1]);
-                int blue = TclInteger.get(interp, argv[2]);
-                int alpha = TclInteger.get(interp, argv[3]);
-
-                return (new Color(red, green, blue, alpha));
-            } else {
-                return (null);
-            }
             }
         } else {
-                return (null);
+            return (null);
         }
     }
 
@@ -149,10 +148,10 @@ public class SwankUtil {
             color = (Color) colorTable.get(colorName.toLowerCase());
         }
         return color;
-    } 
+    }
 
     public static GradientPaint getGradient(Interp interp, TclObject tclObject,
-        Point2D p1, Point2D p2) throws TclException {
+            Point2D p1, Point2D p2) throws TclException {
         if (colorTable == null) {
             initColorTable();
         }
@@ -185,45 +184,46 @@ public class SwankUtil {
             return (new GradientPaint(p1, color1, p2, color2, cyclic));
         } else {
             throw new TclNumArgsException(interp, 0, argv,
-                "x1 y1 color1 x2 y2 color2 ?cyclic?");
+                    "x1 y1 color1 x2 y2 color2 ?cyclic?");
         }
     }
+
     public static String parseGradient(GradientPaint gradientPaint) {
-          String result = "";
-          if (gradientPaint != null) {
-                StringBuilder sBuild = new StringBuilder();
-                Point2D pt1 = gradientPaint.getPoint1();
-                Color color1 = gradientPaint.getColor1();
-                Point2D pt2 = gradientPaint.getPoint2();
-                Color color2 = gradientPaint.getColor2();
-                sBuild.append(pt1.getX());
-                sBuild.append(" ");
-                sBuild.append(pt1.getY());
-                sBuild.append(" ");
-                String colorName = parseColor(color1);
-                if (colorName.indexOf(' ') != -1) {
-                    sBuild.append('{');
-                }
-                sBuild.append(colorName);
-                if (colorName.indexOf(' ') != -1) {
-                    sBuild.append('}');
-                }
-                sBuild.append(" ");
-                sBuild.append(pt2.getX());
-                sBuild.append(" ");
-                sBuild.append(pt2.getY());
-                sBuild.append(" ");
-                colorName = parseColor(color2);
-                if (colorName.indexOf(' ') != -1) {
-                    sBuild.append('{');
-                }
-                sBuild.append(colorName);
-                if (colorName.indexOf(' ') != -1) {
-                    sBuild.append('}');
-                }
-                result = sBuild.toString();
-          }
-          return result;
+        String result = "";
+        if (gradientPaint != null) {
+            StringBuilder sBuild = new StringBuilder();
+            Point2D pt1 = gradientPaint.getPoint1();
+            Color color1 = gradientPaint.getColor1();
+            Point2D pt2 = gradientPaint.getPoint2();
+            Color color2 = gradientPaint.getColor2();
+            sBuild.append(pt1.getX());
+            sBuild.append(" ");
+            sBuild.append(pt1.getY());
+            sBuild.append(" ");
+            String colorName = parseColor(color1);
+            if (colorName.indexOf(' ') != -1) {
+                sBuild.append('{');
+            }
+            sBuild.append(colorName);
+            if (colorName.indexOf(' ') != -1) {
+                sBuild.append('}');
+            }
+            sBuild.append(" ");
+            sBuild.append(pt2.getX());
+            sBuild.append(" ");
+            sBuild.append(pt2.getY());
+            sBuild.append(" ");
+            colorName = parseColor(color2);
+            if (colorName.indexOf(' ') != -1) {
+                sBuild.append('{');
+            }
+            sBuild.append(colorName);
+            if (colorName.indexOf(' ') != -1) {
+                sBuild.append('}');
+            }
+            result = sBuild.toString();
+        }
+        return result;
     }
 
     public static String parseColor(Color color) {
@@ -235,33 +235,33 @@ public class SwankUtil {
             return ("");
         } else {
             int alpha = color.getAlpha();
-	    Color opaqueColor = color;
-	    if (alpha != 255) {
-		opaqueColor = new Color(color.getRed(),color.getGreen(),color.getBlue());
-	    }
+            Color opaqueColor = color;
+            if (alpha != 255) {
+                opaqueColor = new Color(color.getRed(), color.getGreen(), color.getBlue());
+            }
             String colorName = (String) iColorTable.get(opaqueColor);
 
             if (colorName != null) {
-		if (alpha != 255) {
-	            colorName = colorName + " " + ((float) alpha/255.0);
-		}
+                if (alpha != 255) {
+                    colorName = colorName + " " + ((float) alpha / 255.0);
+                }
                 return (colorName);
             } else {
-		if (alpha != 255) {
+                if (alpha != 255) {
                     if (alpha < 16) {
                         return ("#0" + Integer.toHexString(color.getRGB()));
                     } else {
                         return ("#" + Integer.toHexString(color.getRGB()));
                     }
-		} else {
+                } else {
                     return ("#" + Integer.toHexString(color.getRGB()).substring(2));
-		}
+                }
             }
         }
     }
 
     public static String getState(Interp interp, TclObject tclObject)
-        throws TclException {
+            throws TclException {
         String value = tclObject.toString();
         String state = "";
 
@@ -273,18 +273,18 @@ public class SwankUtil {
             state = SwkWidget.DISABLED;
         } else {
             throw new TclException(interp,
-                "bad state \"" + value +
-                "\": must be active, disabled, or normal");
+                    "bad state \"" + value
+                    + "\": must be active, disabled, or normal");
         }
 
         return state;
     }
 
     public static String setupTrace(Interp interp, VarTrace varTrace,
-        String textVariable, String name) throws TclException {
+            String textVariable, String name) throws TclException {
         if ((textVariable != null) && (!textVariable.equals(""))) {
             interp.untraceVar(textVariable, varTrace,
-                TCL.TRACE_WRITES | TCL.GLOBAL_ONLY);
+                    TCL.TRACE_WRITES | TCL.GLOBAL_ONLY);
         }
 
         String s = null;
@@ -308,7 +308,7 @@ public class SwankUtil {
     }
 
     public static String getWrap(Interp interp, TclObject tclObject)
-        throws TclException {
+            throws TclException {
         String value = tclObject.toString();
         String wrap = "none";
 
@@ -320,14 +320,14 @@ public class SwankUtil {
             wrap = "word";
         } else {
             throw new TclException(interp,
-                "bad wrap mode \"" + value + "\": must be char, none, or word");
+                    "bad wrap mode \"" + value + "\": must be char, none, or word");
         }
 
         return wrap;
     }
 
     public static Object[] getOptions(Interp interp, TclObject tclObject)
-        throws TclException {
+            throws TclException {
         TclObject[] tOptions = TclList.getElements(interp, tclObject);
         Object[] options = new Object[tOptions.length];
 
@@ -339,7 +339,7 @@ public class SwankUtil {
     }
 
     public static String getJustify(Interp interp, TclObject tclObject)
-        throws TclException {
+            throws TclException {
         String value = tclObject.toString();
         String justify = "";
 
@@ -351,15 +351,15 @@ public class SwankUtil {
             justify = SwkWidget.CENTER;
         } else {
             throw new TclException(interp,
-                "bad justification \"" + value +
-                "\": must be left, right, or center");
+                    "bad justification \"" + value
+                    + "\": must be left, right, or center");
         }
 
         return justify;
     }
 
     public static int getOrient(Interp interp, TclObject tclObject)
-        throws TclException {
+            throws TclException {
         String value = tclObject.toString();
         int orient = JSlider.VERTICAL;
 
@@ -369,15 +369,15 @@ public class SwankUtil {
             orient = JSlider.HORIZONTAL;
         } else {
             throw new TclException(interp,
-                "bad justification \"" + value +
-                "\": must be vertical or horizontal");
+                    "bad justification \"" + value
+                    + "\": must be vertical or horizontal");
         }
 
         return orient;
     }
 
     public static float[] getAnchor(Interp interp, TclObject tclObject)
-        throws TclException {
+            throws TclException {
         if (tclObject == null) {
             float[] a = new float[2];
             a[0] = 0.0f;
@@ -390,7 +390,7 @@ public class SwankUtil {
     }
 
     public static float[] getAnchor(Interp interp, String string)
-        throws TclException {
+            throws TclException {
         float[] a = new float[2];
 
         if (string == null) {
@@ -427,15 +427,15 @@ public class SwankUtil {
             a[1] = 0.5f;
         } else {
             throw new TclException(interp,
-                "bad anchor \"" + string +
-                "\": must be n, ne, e, se, s, sw, w, nw, or center");
+                    "bad anchor \"" + string
+                    + "\": must be n, ne, e, se, s, sw, w, nw, or center");
         }
 
         return (a);
     }
 
     public static String parseAnchor(float[] a) {
-        char[] anchor = { ' ', ' ' };
+        char[] anchor = {' ', ' '};
 
         if (a[1] == 0.0f) {
             anchor[1] = 'w';
@@ -457,7 +457,7 @@ public class SwankUtil {
     }
 
     public static int[] getAnchorConstants(Interp interp, String string)
-        throws TclException {
+            throws TclException {
         int[] a = new int[2];
 
         if (string == null) {
@@ -494,15 +494,15 @@ public class SwankUtil {
             a[1] = SwingConstants.CENTER;
         } else {
             throw new TclException(interp,
-                "bad anchor \"" + string +
-                "\": must be n, ne, e, se, s, sw, w, nw, or center");
+                    "bad anchor \"" + string
+                    + "\": must be n, ne, e, se, s, sw, w, nw, or center");
         }
 
         return (a);
     }
 
     public static String parseAnchorConstants(int[] a) {
-        char[] anchor = { ' ', ' ' };
+        char[] anchor = {' ', ' '};
 
         if (a[1] == SwingConstants.LEFT) {
             anchor[1] = 'w';
@@ -524,7 +524,7 @@ public class SwankUtil {
     }
 
     public static Rectangle getRectangle(Interp interp, TclObject tclObject)
-        throws TclException {
+            throws TclException {
         TclObject[] argv = TclList.getElements(interp, tclObject);
         int x = TclInteger.get(interp, argv[0]);
         int y = TclInteger.get(interp, argv[1]);
@@ -548,7 +548,7 @@ public class SwankUtil {
     }
 
     public static Rectangle getTkRectangle(Interp interp, Component comp,
-        TclObject tclObject) throws TclException {
+            TclObject tclObject) throws TclException {
         TclObject[] argv = TclList.getElements(interp, tclObject);
         int x = getTkSize(interp, comp, argv[0]);
         int y = getTkSize(interp, comp, argv[1]);
@@ -568,7 +568,7 @@ public class SwankUtil {
     }
 
     public static int[][] getTkRectangleCorners(Interp interp, Component comp,
-        TclObject tclObject) throws TclException {
+            TclObject tclObject) throws TclException {
         TclObject[] argv = TclList.getElements(interp, tclObject);
         int[][] corners = new int[2][2];
         corners[0][0] = getTkSize(interp, comp, argv[0]);
@@ -580,12 +580,12 @@ public class SwankUtil {
     }
 
     public static String parseTkRectangleCorners(int[][] corners) {
-        return corners[0][0] + " " + corners[0][1] + " " + corners[1][0] + " " +
-        corners[1][1];
+        return corners[0][0] + " " + corners[0][1] + " " + corners[1][0] + " "
+                + corners[1][1];
     }
 
     public static URL getURL(Interp interp, TclObject tclObject)
-        throws TclException {
+            throws TclException {
         TclObject[] argv = TclList.getElements(interp, tclObject);
         URL url = getURL(interp, argv[0].toString());
 
@@ -593,7 +593,7 @@ public class SwankUtil {
     }
 
     public static URL getURL(Interp interp, String urlString)
-        throws TclException {
+            throws TclException {
         try {
             URL url = new URL(urlString);
 
@@ -612,10 +612,10 @@ public class SwankUtil {
     }
 
     public static File getFile(Interp interp, TclObject tObj)
-        throws TclException {
+            throws TclException {
         if (tObj == null) {
             throw new TclException(interp,
-                "null fileString in SwankUtil.getFile");
+                    "null fileString in SwankUtil.getFile");
         }
 
         File file = new File(tObj.toString());
@@ -632,7 +632,7 @@ public class SwankUtil {
     }
 
     public static Insets getInsets(Interp interp, TclObject tclObject)
-        throws TclException {
+            throws TclException {
         TclObject[] argv = TclList.getElements(interp, tclObject);
         int top = TclInteger.get(interp, argv[0]);
         int left = TclInteger.get(interp, argv[1]);
@@ -659,7 +659,7 @@ public class SwankUtil {
     }
 
     public static Point getPoint(Interp interp, TclObject tclObject)
-        throws TclException {
+            throws TclException {
         TclObject[] argv = TclList.getElements(interp, tclObject);
         int x = TclInteger.get(interp, argv[0]);
         int y = TclInteger.get(interp, argv[1]);
@@ -675,7 +675,7 @@ public class SwankUtil {
     }
 
     public static Dimension getDimension(Interp interp, TclObject tclObject)
-        throws TclException {
+            throws TclException {
         TclObject[] argv = TclList.getElements(interp, tclObject);
         int width = TclInteger.get(interp, argv[0]);
         int height = TclInteger.get(interp, argv[1]);
@@ -691,22 +691,22 @@ public class SwankUtil {
     }
 
     public static Locale getLocale(Interp interp, TclObject tclObject)
-        throws TclException {
+            throws TclException {
         TclObject[] argv = TclList.getElements(interp, tclObject);
 
         if (argv.length == 2) {
             return (new Locale(argv[0].toString(), argv[1].toString()));
         } else if (argv.length == 3) {
             return (new Locale(argv[0].toString(), argv[1].toString(),
-                argv[2].toString()));
+                    argv[2].toString()));
         } else {
             return (Locale.US);
         }
     }
 
     public static String parseLocale(Locale locale) {
-        return locale.getLanguage() + " " + locale.getCountry() + " " +
-        locale.getVariant();
+        return locale.getLanguage() + " " + locale.getCountry() + " "
+                + locale.getVariant();
     }
 
     public static String parseImageIcon(ImageIcon imageIcon) {
@@ -734,7 +734,7 @@ public class SwankUtil {
     }
 
     public static ImageIcon getImageIcon(Interp interp, TclObject tclObject)
-        throws TclException {
+            throws TclException {
         TclObject[] argv = TclList.getElements(interp, tclObject);
 
         if (argv.length == 0) {
@@ -749,7 +749,7 @@ public class SwankUtil {
 
             if (imageObject == null) {
                 throw new TclException(interp,
-                    "image \"" + argv[0].toString() + "\" doesn't exist");
+                        "image \"" + argv[0].toString() + "\" doesn't exist");
             } else {
                 if (imageObject instanceof ImageIcon) {
                     return ((ImageIcon) imageObject);
@@ -757,7 +757,7 @@ public class SwankUtil {
                     return (new ImageIcon((BufferedImage) imageObject));
                 } else {
                     throw new TclException(interp,
-                        "image \"" + argv[0].toString() + "\" wrong type");
+                            "image \"" + argv[0].toString() + "\" wrong type");
                 }
             }
         } else {
@@ -782,11 +782,9 @@ public class SwankUtil {
                 URL url = null;
 
                 if (imageFile.startsWith("resource:")) {
-                    url = Thread.currentThread().getContextClassLoader()
-                                .getResource(imageFile.substring(10));
+                    url = Thread.currentThread().getContextClassLoader().getResource(imageFile.substring(10));
                 } else {
-                    url = Thread.currentThread().getContextClassLoader()
-                                .getResource(imageFile);
+                    url = Thread.currentThread().getContextClassLoader().getResource(imageFile);
                 }
 
                 if (url != null) {
@@ -797,7 +795,7 @@ public class SwankUtil {
 
                 if (image == null) {
                     throw new TclException(interp,
-                        "Couldn't load image " + imageFile);
+                            "Couldn't load image " + imageFile);
                 }
 
                 ImageCmd.images.put(imageName, image);
@@ -809,7 +807,7 @@ public class SwankUtil {
     }
 
     public static BufferedImage getBufferedImage(Interp interp,
-        TclObject tclObject) throws TclException {
+            TclObject tclObject) throws TclException {
         TclObject[] argv = TclList.getElements(interp, tclObject);
 
         if (argv.length == 0) {
@@ -824,7 +822,7 @@ public class SwankUtil {
 
             if (imageObject == null) {
                 throw new TclException(interp,
-                    "image \"" + argv[0].toString() + "\" doesn't exist");
+                        "image \"" + argv[0].toString() + "\" doesn't exist");
             } else {
                 if (imageObject instanceof BufferedImage) {
                     return ((BufferedImage) imageObject);
@@ -832,11 +830,11 @@ public class SwankUtil {
                     if (imageObject instanceof ImageIcon) {
                         imageIcon = (ImageIcon) imageObject;
 
-                        if ((imageIcon.getIconWidth() <= 0) ||
-                                (imageIcon.getIconHeight() <= 0)) {
+                        if ((imageIcon.getIconWidth() <= 0)
+                                || (imageIcon.getIconHeight() <= 0)) {
                             throw new TclException(interp,
-                                "image \"" + argv[0].toString() +
-                                "\" has invalid size");
+                                    "image \"" + argv[0].toString()
+                                    + "\" has invalid size");
                         }
 
                         BufferedImage bufferedImage = makeBufferedImage(imageIcon);
@@ -844,8 +842,8 @@ public class SwankUtil {
                         return (bufferedImage);
                     } else {
                         throw new TclException(interp,
-                            "image \"" + argv[0].toString() +
-                            "\" not BufferedImage");
+                                "image \"" + argv[0].toString()
+                                + "\" not BufferedImage");
                     }
                 }
             }
@@ -872,14 +870,14 @@ public class SwankUtil {
 
                 if (imageIcon == null) {
                     throw new TclException(interp,
-                        "Couldn't load image " + imageFile);
+                            "Couldn't load image " + imageFile);
                 }
 
-                if ((imageIcon.getIconWidth() <= 0) ||
-                        (imageIcon.getIconHeight() <= 0)) {
+                if ((imageIcon.getIconWidth() <= 0)
+                        || (imageIcon.getIconHeight() <= 0)) {
                     throw new TclException(interp,
-                        "image \"" + argv[0].toString() +
-                        "\" has invalid size");
+                            "image \"" + argv[0].toString()
+                            + "\" has invalid size");
                 }
 
                 BufferedImage bufferedImage = makeBufferedImage(imageIcon);
@@ -891,7 +889,7 @@ public class SwankUtil {
                     return ((BufferedImage) imageObject);
                 } else {
                     throw new TclException(interp,
-                        "Image " + argv[0].toString() + " not BufferedImage");
+                            "Image " + argv[0].toString() + " not BufferedImage");
                 }
             }
         }
@@ -907,7 +905,7 @@ public class SwankUtil {
     }
 
     public static Font getFont(Interp interp, TclObject tclObject)
-        throws TclException {
+            throws TclException {
         TclObject[] argv = TclList.getElements(interp, tclObject);
 
         String name;
@@ -982,40 +980,42 @@ public class SwankUtil {
 
         return (sBuf.toString());
     }
-   public static java.util.List getSpinlist(Interp interp, TclObject tclObject)
-        throws TclException {
+
+    public static java.util.List getSpinlist(Interp interp, TclObject tclObject)
+            throws TclException {
         TclObject[] argv = TclList.getElements(interp, tclObject);
         java.util.List spinValues = new ArrayList(argv.length);
-        for (TclObject arg: argv) {
-             spinValues.add(arg.toString());
+        for (TclObject arg : argv) {
+            spinValues.add(arg.toString());
         }
         return spinValues;
     }
+
     public static String parseSpinlist(Object object) {
         java.util.List list = (java.util.List) object;
 // fixme  need to build proper Tcl list result
-         boolean first = true;
-         StringBuffer sbuf = new StringBuffer();
-         for (Object o:list) {
-             if (!first) {
-                 sbuf.append(' ');
-             } else {
-                  first = false;
-             }
-             sbuf.append(o.toString());
-         }
-         return sbuf.toString();
+        boolean first = true;
+        StringBuffer sbuf = new StringBuffer();
+        for (Object o : list) {
+            if (!first) {
+                sbuf.append(' ');
+            } else {
+                first = false;
+            }
+            sbuf.append(o.toString());
+        }
+        return sbuf.toString();
     }
 
     public static String getTkRelief(Interp interp, TclObject tclObject)
-        throws TclException {
+            throws TclException {
         String relief = tclObject.toString();
         String validReliefs = "flat, groove, raised, ridge, solid, or sunken";
 
         if (validReliefs.indexOf(relief) < 0) {
             throw new TclException(interp,
-                "bad relief \"" + relief +
-                "\": must be flat, groove, raised, ridge, solid, or sunken");
+                    "bad relief \"" + relief
+                    + "\": must be flat, groove, raised, ridge, solid, or sunken");
         }
 
         return (relief);
@@ -1026,7 +1026,7 @@ public class SwankUtil {
     }
 
     public static int getTkSize(Interp interp, Component comp,
-        TclObject tclObject) throws TclException {
+            TclObject tclObject) throws TclException {
         String value = tclObject.toString();
         int size = getTkSize(interp, comp, value);
 
@@ -1034,7 +1034,7 @@ public class SwankUtil {
     }
 
     public static int getTkSize(Interp interp, Component comp, String value)
-        throws TclException {
+            throws TclException {
         Double dValue = null;
         int screenResolution = 0;
 
@@ -1066,14 +1066,14 @@ public class SwankUtil {
 
             if (length < 2) {
                 throw new TclException(interp,
-                    "Couldn't parse tkSize value " + value);
+                        "Couldn't parse tkSize value " + value);
             }
 
             try {
                 dValue = new Double(value.substring(0, length - 1));
             } catch (NumberFormatException nE) {
                 throw new TclException(interp,
-                    "bad screen distance \"" + value + "\"");
+                        "bad screen distance \"" + value + "\"");
             }
 
             if (dValue != null) {
@@ -1082,7 +1082,7 @@ public class SwankUtil {
                 return (size);
             } else {
                 throw new TclException(interp,
-                    "Couldn't parse tkSize value " + value);
+                        "Couldn't parse tkSize value " + value);
             }
         } else {
             try {
@@ -1093,7 +1093,7 @@ public class SwankUtil {
                 return (size);
             } catch (NumberFormatException nE) {
                 throw new TclException(interp,
-                    "bad screen distance \"" + value + "\"");
+                        "bad screen distance \"" + value + "\"");
             }
         }
     }
@@ -1107,7 +1107,7 @@ public class SwankUtil {
     }
 
     public static boolean isDashIntPattern(Interp interp, TclObject tclObject)
-        throws TclException {
+            throws TclException {
         if (tclObject == null) {
             throw new TclException(interp, "no tclObject in getDash");
         }
@@ -1124,7 +1124,7 @@ public class SwankUtil {
     }
 
     public static float[] getDash(Interp interp, TclObject tclObject)
-        throws TclException {
+            throws TclException {
         if (tclObject == null) {
             throw new TclException(interp, "no tclObject in getDash");
         }
@@ -1162,39 +1162,39 @@ public class SwankUtil {
 
             for (int i = 0; i < dashStringPattern.length(); i++) {
                 switch (dashStringPattern.charAt(i)) {
-                case '.':
-                    dash[j++] = 2;
-                    dash[j++] = 4;
+                    case '.':
+                        dash[j++] = 2;
+                        dash[j++] = 4;
 
-                    break;
+                        break;
 
-                case ',':
-                    dash[j++] = 4;
-                    dash[j++] = 4;
+                    case ',':
+                        dash[j++] = 4;
+                        dash[j++] = 4;
 
-                    break;
+                        break;
 
-                case '-':
-                    dash[j++] = 6;
-                    dash[j++] = 4;
+                    case '-':
+                        dash[j++] = 6;
+                        dash[j++] = 4;
 
-                    break;
+                        break;
 
-                case '_':
-                    dash[j++] = 8;
-                    dash[j++] = 4;
+                    case '_':
+                        dash[j++] = 8;
+                        dash[j++] = 4;
 
-                    break;
+                        break;
 
-                case ' ':
-                    dash[j - 1] *= 2;
+                    case ' ':
+                        dash[j - 1] *= 2;
 
-                    break;
+                        break;
 
-                default:
-                    throw new TclException(interp,
-                        "bad dash list \"" + dashStringPattern +
-                        "\": must be a list of integers or a format like \"-..\"");
+                    default:
+                        throw new TclException(interp,
+                                "bad dash list \"" + dashStringPattern
+                                + "\": must be a list of integers or a format like \"-..\"");
                 }
             }
 
@@ -1203,7 +1203,7 @@ public class SwankUtil {
     }
 
     public static double getTkSizeD(Interp interp, Component comp,
-        TclObject tclObject) throws TclException {
+            TclObject tclObject) throws TclException {
         String value = tclObject.toString();
         int screenResolution = 0;
         Toolkit toolKit = null;
@@ -1250,7 +1250,7 @@ public class SwankUtil {
                 return (size);
             } else {
                 throw new TclException(interp,
-                    "Couldn't parse tkSize value " + value);
+                        "Couldn't parse tkSize value " + value);
             }
         } else {
             try {
@@ -1260,13 +1260,13 @@ public class SwankUtil {
                 return (size);
             } catch (NumberFormatException nE) {
                 throw new TclException(interp,
-                    "bad screen distance \"" + value + "\"");
+                        "bad screen distance \"" + value + "\"");
             }
         }
     }
 
     public static Cursor getCursor(Interp interp, TclObject tclObject)
-        throws TclException {
+            throws TclException {
         if (tclObject.toString().startsWith("defa")) {
             return (Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         } else if (tclObject.toString().startsWith("arrow")) {
@@ -1306,7 +1306,7 @@ public class SwankUtil {
 
             if (cursor == null) {
                 throw new TclException(interp,
-                    "bad cursor spec \"" + tclObject.toString() + "\"");
+                        "bad cursor spec \"" + tclObject.toString() + "\"");
             }
 
             return cursor;
@@ -1317,58 +1317,58 @@ public class SwankUtil {
         int type = cursor.getType();
 
         switch (type) {
-        case Cursor.DEFAULT_CURSOR:
-            return "left_ptr";
+            case Cursor.DEFAULT_CURSOR:
+                return "left_ptr";
 
-        case Cursor.CROSSHAIR_CURSOR:
-            return "crosshair";
+            case Cursor.CROSSHAIR_CURSOR:
+                return "crosshair";
 
-        case Cursor.HAND_CURSOR:
-            return "hand2";
+            case Cursor.HAND_CURSOR:
+                return "hand2";
 
-        case Cursor.MOVE_CURSOR:
-            return "move";
+            case Cursor.MOVE_CURSOR:
+                return "move";
 
-        case Cursor.TEXT_CURSOR:
-            return "text";
+            case Cursor.TEXT_CURSOR:
+                return "text";
 
-        case Cursor.WAIT_CURSOR:
-            return "wait";
+            case Cursor.WAIT_CURSOR:
+                return "wait";
 
-        case Cursor.N_RESIZE_CURSOR:
-            return "n_resize";
+            case Cursor.N_RESIZE_CURSOR:
+                return "n_resize";
 
-        case Cursor.NE_RESIZE_CURSOR:
-            return "ne_resize";
+            case Cursor.NE_RESIZE_CURSOR:
+                return "ne_resize";
 
-        case Cursor.E_RESIZE_CURSOR:
-            return "e_resize";
+            case Cursor.E_RESIZE_CURSOR:
+                return "e_resize";
 
-        case Cursor.SE_RESIZE_CURSOR:
-            return "se_resize";
+            case Cursor.SE_RESIZE_CURSOR:
+                return "se_resize";
 
-        case Cursor.S_RESIZE_CURSOR:
-            return "s_resize";
+            case Cursor.S_RESIZE_CURSOR:
+                return "s_resize";
 
-        case Cursor.SW_RESIZE_CURSOR:
-            return "sw_resize";
+            case Cursor.SW_RESIZE_CURSOR:
+                return "sw_resize";
 
-        case Cursor.W_RESIZE_CURSOR:
-            return "w_resize";
+            case Cursor.W_RESIZE_CURSOR:
+                return "w_resize";
 
-        case Cursor.NW_RESIZE_CURSOR:
-            return "nw_resize";
+            case Cursor.NW_RESIZE_CURSOR:
+                return "nw_resize";
 
-        case Cursor.CUSTOM_CURSOR:
-            return cursor.getName();
+            case Cursor.CUSTOM_CURSOR:
+                return cursor.getName();
 
-        default:
-            return "left_ptr";
+            default:
+                return "left_ptr";
         }
     }
 
     public static int getTkSelectMode(Interp interp, TclObject tclObject)
-        throws TclException {
+            throws TclException {
         if (tclObject.toString().startsWith("single")) {
             return (ListSelectionModel.SINGLE_SELECTION);
         } else if (tclObject.toString().startsWith("browse")) {
@@ -1379,23 +1379,23 @@ public class SwankUtil {
             return (ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         } else {
             throw new TclException(interp,
-                "bad selection mode \"" + tclObject.toString() + "\"");
+                    "bad selection mode \"" + tclObject.toString() + "\"");
         }
     }
 
     public static String parseTkSelectMode(int mode) {
         switch (mode) {
-        case ListSelectionModel.SINGLE_SELECTION:
-            return "single";
+            case ListSelectionModel.SINGLE_SELECTION:
+                return "single";
 
-        case ListSelectionModel.SINGLE_INTERVAL_SELECTION:
-            return "multiple";
+            case ListSelectionModel.SINGLE_INTERVAL_SELECTION:
+                return "multiple";
 
-        case ListSelectionModel.MULTIPLE_INTERVAL_SELECTION:
-            return "extended";
+            case ListSelectionModel.MULTIPLE_INTERVAL_SELECTION:
+                return "extended";
 
-        default:
-            return "single";
+            default:
+                return "single";
         }
     }
 
@@ -1404,8 +1404,8 @@ public class SwankUtil {
     }
 
     public static Object getMenuBar(Interp interp, String menuName)
-        throws TclException {
-        TclObject tObj = (TclObject) Widgets.getWidget(interp,menuName);
+            throws TclException {
+        TclObject tObj = (TclObject) Widgets.getWidget(interp, menuName);
         SwkJMenuBar swkjmenubar = null;
 
         if (tObj == null) {
@@ -1413,7 +1413,7 @@ public class SwankUtil {
             interp.createCommand(menuName, new SwkJMenuBarWidgetCmd());
             tObj = ReflectObject.newInstance(interp, SwkJMenuBar.class, swkjmenubar);
             tObj.preserve();
-            Widgets.addNewWidget(interp,menuName, tObj);
+            Widgets.addNewWidget(interp, menuName, tObj);
         }
 
         Object object = ReflectObject.get(interp, tObj);
@@ -1425,10 +1425,9 @@ public class SwankUtil {
         return object;
     }
 
-
     public static Object getMenu(Interp interp, String menuName)
-        throws TclException {
-        TclObject tObj = (TclObject) Widgets.getWidget(interp,menuName);
+            throws TclException {
+        TclObject tObj = (TclObject) Widgets.getWidget(interp, menuName);
         SwkJMenu swkjmenu = null;
 
         if (tObj == null) {
@@ -1436,7 +1435,7 @@ public class SwankUtil {
             interp.createCommand(menuName, new SwkJMenuWidgetCmd());
             tObj = ReflectObject.newInstance(interp, SwkJMenu.class, swkjmenu);
             tObj.preserve();
-            Widgets.addNewWidget(interp,menuName, tObj);
+            Widgets.addNewWidget(interp, menuName, tObj);
         }
 
         Object object = ReflectObject.get(interp, tObj);
@@ -1449,12 +1448,12 @@ public class SwankUtil {
     }
 
     public static void addmenu(Interp interp, JComponent jcomp, TclObject[] argv)
-        throws TclException {
+            throws TclException {
         int i;
 
         if (argv.length < 3) {
             throw new TclNumArgsException(interp, 1, argv,
-                "option ?arg arg ...?");
+                    "option ?arg arg ...?");
         }
 
         if (argv[2].toString().equals("command")) {
@@ -1498,7 +1497,7 @@ public class SwankUtil {
 
             if (((argv.length - 3) % 2) != 0) {
                 throw new TclNumArgsException(interp, 1, argv,
-                    "arguments not multiple of 2");
+                        "arguments not multiple of 2");
             }
 
             TclObject[] argNew = new TclObject[argv.length - 5];
@@ -1514,7 +1513,7 @@ public class SwankUtil {
             }
 
             SwkJMenu swkjmenu = null;
-            TclObject tObj = (TclObject) Widgets.getWidget(interp,menuName);
+            TclObject tObj = (TclObject) Widgets.getWidget(interp, menuName);
 
             if (tObj == null) {
                 swkjmenu = new SwkJMenu(interp, menuName, "Menu");
@@ -2328,7 +2327,7 @@ public class SwankUtil {
     }
 
     static public TclObject arrayToList(Interp interp, ArrayList aList)
-        throws TclException {
+            throws TclException {
         TclObject list = TclList.newInstance();
 
         if (aList != null) {
@@ -2340,36 +2339,39 @@ public class SwankUtil {
 
         return list;
     }
+
     public static void doWait() {
         try {
             SwingUtilities.invokeAndWait(new Runnable() {
-                    public void run() {
-                    }
-                });
+
+                public void run() {
+                }
+            });
         } catch (Exception e) {
         }
     }
-  public static void setJHelpTarget(Component comp, String target) {
-       if (hasJHelp == null) {
-           try {
-               Class helpClass = Class.forName("com.onemoonscientific.swank.jhelp.SwkJHelpCmd");
+
+    public static void setJHelpTarget(Component comp, String target) {
+        if (hasJHelp == null) {
+            try {
+                Class helpClass = Class.forName("com.onemoonscientific.swank.jhelp.SwkJHelpCmd");
                 helpobject = helpClass.newInstance();
-                helpmethod = helpClass.getMethod("setTarget",new Class[] {Component.class, String.class});
-                 
+                helpmethod = helpClass.getMethod("setTarget", new Class[]{Component.class, String.class});
+
                 hasJHelp = new Boolean(true);
                 System.out.println("class does exist");
             } catch (Exception e) {
-               hasJHelp = new Boolean(false);
-               System.out.println("class doesn't exist");
-           }
-       }
-       if (hasJHelp) {
-            try {
-                helpmethod.invoke(helpobject,comp,target);
-            } catch(Exception e)    {
+                hasJHelp = new Boolean(false);
+                System.out.println("class doesn't exist");
             }
         }
-                
+        if (hasJHelp) {
+            try {
+                helpmethod.invoke(helpobject, comp, target);
+            } catch (Exception e) {
+            }
+        }
+
     }
 
     private static Color parseHexColor(String colorName) {
@@ -2377,7 +2379,7 @@ public class SwankUtil {
         int r;
         int g;
         int b;
-	int a=255;
+        int a = 255;
         try {
             if (len == 3) {
                 r = Integer.parseInt(colorName.substring(1, 2), 16) * 16;
@@ -2392,7 +2394,7 @@ public class SwankUtil {
                 r = Integer.parseInt(colorName.substring(1, 3), 16);
                 g = Integer.parseInt(colorName.substring(3, 5), 16);
                 b = Integer.parseInt(colorName.substring(5, 7), 16);
-           } else if (len == 8) {
+            } else if (len == 8) {
                 a = Integer.parseInt(colorName.substring(1, 3), 16);
                 r = Integer.parseInt(colorName.substring(3, 5), 16);
                 g = Integer.parseInt(colorName.substring(5, 7), 16);
@@ -2415,6 +2417,5 @@ public class SwankUtil {
 
         return new Color(r, g, b, a);
     }
-       
-  }
+}
 

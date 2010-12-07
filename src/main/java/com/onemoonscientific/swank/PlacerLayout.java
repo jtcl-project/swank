@@ -15,7 +15,6 @@
  * RCS: @(#) $Id: PlacerLayout.java,v 1.2 2005/11/07 03:20:21 bruce_johnson Exp $
  *
  */
-
 /**
  * PlacerLayout is used to lay out widget components.
  *
@@ -34,17 +33,15 @@ import java.lang.*;
 
 import java.util.*;
 
-
 public class PlacerLayout implements LayoutManager {
     //this hashtable will do the mapping between
     //options and the actual option object
-    private static Hashtable option_table;
 
+    private static Hashtable option_table;
     //this hashtable will do the mapping between
     //option arguments and the option that they
     //are valid for
     private static Hashtable value_table;
-
     //if the option_table hash returns a ref to the
     //INT_MAP object then we know that this option
     //just takes an integer
@@ -100,23 +97,17 @@ public class PlacerLayout implements LayoutManager {
     private static final float DEFAULT_RELY = 0;
     private static final float DEFAULT_RELWIDTH = 0;
     private static final float DEFAULT_RELHEIGHT = 0;
-
     //place holder for mapping int values to options
     private static final Object INT_MAP = new Object();
-
     //place holder for mapping double values to options
     private static final Object DOUBLE_MAP = new Object();
-
     //this exception is throws if the number that is passes in on
     //number options is less than zero
     private static final NumberFormatException NFE = new NumberFormatException();
-
     //place holder for mapping boolean values to options
     private static final Object BOOLEAN_MAP = new Object();
-
     //place holder for mapping Tk size values to options
     private static final Object SIZE_MAP = new Object();
-
     //this dimension will be returned from our class in calls to
     //minimumLayoutSize. It is allocated once here so that it does
     //not have to get allocated every time minimumLayoutSize is called
@@ -197,11 +188,9 @@ public class PlacerLayout implements LayoutManager {
         value_table.put(OPT_RELWIDTH, OPT_RELWIDTH);
         value_table.put(OPT_RELHEIGHT, OPT_RELHEIGHT);
     }
-
     private Hashtable component_table;
     private Component firstcomp;
     private Component lastcomp;
-
     // This is kind of wacky, but there does not seem to
     // be any way to "update" the options of a component
     // in a Java layout manager. To implement "update",
@@ -320,7 +309,7 @@ public class PlacerLayout implements LayoutManager {
         //an element be added to the hash table
         if ((argv.length % 2) != 0) {
             throw new PlaceingException(
-                "Fatal error in PlacerLayout string spec, must have even number of arguments");
+                    "Fatal error in PlacerLayout string spec, must have even number of arguments");
         }
 
         max = argv.length;
@@ -353,8 +342,8 @@ public class PlacerLayout implements LayoutManager {
                             throw NFE;
                         }
                     } catch (NumberFormatException e) {
-                        throw new PlaceingException("error : value of the " +
-                            argv[i].toString() + " option must be an integer");
+                        throw new PlaceingException("error : value of the "
+                                + argv[i].toString() + " option must be an integer");
                     }
                 }
             } else if (option == DOUBLE_MAP) {
@@ -368,8 +357,8 @@ public class PlacerLayout implements LayoutManager {
                         fVal = (float) Double.parseDouble(argv[i + 1].toString());
                         gotValue = true;
                     } catch (NumberFormatException e) {
-                        throw new PlaceingException("error : value of the " +
-                            argv[i].toString() + " option must be a double");
+                        throw new PlaceingException("error : value of the "
+                                + argv[i].toString() + " option must be a double");
                     }
                 }
 
@@ -381,9 +370,9 @@ public class PlacerLayout implements LayoutManager {
                 //temp check for fatal case
                 if (value == null) {
                     String str =
-                        "null value object for double parser on option \"" +
-                        argv[i].toString() + "\" : \"" +
-                        argv[i + 1].toString() + "\"";
+                            "null value object for double parser on option \""
+                            + argv[i].toString() + "\" : \""
+                            + argv[i + 1].toString() + "\"";
 
                     throw new RuntimeException(str);
 
@@ -436,9 +425,9 @@ public class PlacerLayout implements LayoutManager {
 
                 //temp check for fatal case
                 if (value == null) {
-                    String str = "null value object for int parser on option \"" +
-                        argv[i].toString() + "\" : \"" +
-                        argv[i + 1].toString() + "\"";
+                    String str = "null value object for int parser on option \""
+                            + argv[i].toString() + "\" : \""
+                            + argv[i + 1].toString() + "\"";
 
                     throw new RuntimeException(str);
 
@@ -495,12 +484,12 @@ public class PlacerLayout implements LayoutManager {
                     } else if (s.equals("1")) {
                         bool = true;
                     } else {
-                        throw new PlaceingException("error : value of the " +
-                            argv[i].toString() + " option must be a boolean");
+                        throw new PlaceingException("error : value of the "
+                                + argv[i].toString() + " option must be a boolean");
                     }
                 } else {
-                    throw new PlaceingException("error : value of the " +
-                        argv[i].toString() + " option must be a boolean");
+                    throw new PlaceingException("error : value of the "
+                            + argv[i].toString() + " option must be a boolean");
                 }
 
                 //this is an int option so we need to find out which
@@ -510,9 +499,9 @@ public class PlacerLayout implements LayoutManager {
 
                 //temp check for fatal case
                 if (value == null) {
-                    String str = "null value object for int parser on option \"" +
-                        argv[i].toString() + "\" : \"" +
-                        argv[i + 1].toString() + "\"";
+                    String str = "null value object for int parser on option \""
+                            + argv[i].toString() + "\" : \""
+                            + argv[i + 1].toString() + "\"";
 
                     throw new RuntimeException(str);
 
@@ -528,18 +517,18 @@ public class PlacerLayout implements LayoutManager {
                 //that was just given does not match
                 //any of the predefined option types
                 // unknown or ambiguous option "-foll": must be -after, -anchor, -before, -expand, -fill, -in, -ipadx, -ipady, -padx, -pady, or -side
-                throw new PlaceingException("error : option \"" +
-                    argv[i].toString() + "\" does not match any of " +
-                    OPT_ANCHOR + " " + OPT_BORDERMODE + " " + OPT_X + " " +
-                    OPT_Y + " " + OPT_WIDTH + " " + OPT_HEIGHT + " " +
-                    OPT_RELX + " " + OPT_RELY + " " + OPT_RELWIDTH + " " +
-                    OPT_RELHEIGHT);
+                throw new PlaceingException("error : option \""
+                        + argv[i].toString() + "\" does not match any of "
+                        + OPT_ANCHOR + " " + OPT_BORDERMODE + " " + OPT_X + " "
+                        + OPT_Y + " " + OPT_WIDTH + " " + OPT_HEIGHT + " "
+                        + OPT_RELX + " " + OPT_RELY + " " + OPT_RELWIDTH + " "
+                        + OPT_RELHEIGHT);
             } else if (option != value_table.get(argv[i + 1].toString())) {
                 //in this case the given value for the option
                 //did not match one of the possible option values
-                throw new PlaceingException("error : option \"" +
-                    argv[i].toString() + "\" can not take the value \"" +
-                    argv[i + 1].toString() + "\"");
+                throw new PlaceingException("error : option \""
+                        + argv[i].toString() + "\" can not take the value \""
+                        + argv[i + 1].toString() + "\"");
             } else {
                 //if no other conditions are true then we
                 //must have matched both the option and the value
@@ -550,9 +539,9 @@ public class PlacerLayout implements LayoutManager {
                 //temp check
                 if (value == null) {
                     String str =
-                        "null value object for option parser on option \"" +
-                        argv[i].toString() + "\" : \"" +
-                        argv[i + 1].toString() + "\"";
+                            "null value object for option parser on option \""
+                            + argv[i].toString() + "\" : \""
+                            + argv[i + 1].toString() + "\"";
 
                     throw new RuntimeException(str);
                 }
@@ -718,10 +707,10 @@ public class PlacerLayout implements LayoutManager {
                 borderY = 0;
             }
 
-            int width = (int) (pr.width +
-                (pr.relwidth * (d.width - borderWidth)));
-            int height = (int) (pr.height +
-                (pr.relheight * (d.height - borderHeight)));
+            int width = (int) (pr.width
+                    + (pr.relwidth * (d.width - borderWidth)));
+            int height = (int) (pr.height
+                    + (pr.relheight * (d.height - borderHeight)));
 
             int x = (int) (pr.x + (pr.relx * (d.width - borderWidth)));
             int y = (int) (pr.y + (pr.rely * (d.height - borderHeight)));
@@ -840,10 +829,10 @@ public class PlacerLayout implements LayoutManager {
                 borderY = 0;
             }
 
-            width = (int) (pr.width +
-                (pr.relwidth * (dim.width - borderWidth)));
-            height = (int) (pr.height +
-                (pr.relheight * (dim.height - borderHeight)));
+            width = (int) (pr.width
+                    + (pr.relwidth * (dim.width - borderWidth)));
+            height = (int) (pr.height
+                    + (pr.relheight * (dim.height - borderHeight)));
 
             if (width == 0) {
                 width = minD.width;
@@ -1058,7 +1047,7 @@ public class PlacerLayout implements LayoutManager {
      * @param comp the the component to be added
      */
     public static void checkPlaceArgs(Interp interp, String spec, Component comp)
-        throws TclException {
+            throws TclException {
         int i;
         int max;
 
@@ -1072,7 +1061,7 @@ public class PlacerLayout implements LayoutManager {
         //an element be added to the hash table
         if ((argv.length % 2) != 0) {
             throw new TclException(interp,
-                "Error in PlacerLayout string spec, must have even number of arguments");
+                    "Error in PlacerLayout string spec, must have even number of arguments");
         }
 
         max = argv.length;
@@ -1100,8 +1089,8 @@ public class PlacerLayout implements LayoutManager {
                         }
                     } catch (NumberFormatException e) {
                         throw new TclException(interp,
-                            "error : value of the " + argv[i].toString() +
-                            " option must be a non negative integer");
+                                "error : value of the " + argv[i].toString()
+                                + " option must be a non negative integer");
                     }
                 }
             } else if (option == DOUBLE_MAP) {
@@ -1114,8 +1103,8 @@ public class PlacerLayout implements LayoutManager {
                         num = Double.parseDouble(argv[i + 1].toString());
                     } catch (NumberFormatException e) {
                         throw new TclException(interp,
-                            "expected floating-point number but got \"" +
-                            argv[i + 1].toString() + "\"");
+                                "expected floating-point number but got \""
+                                + argv[i + 1].toString() + "\"");
                     }
                 }
             } else if (option == SIZE_MAP) {
@@ -1131,9 +1120,9 @@ public class PlacerLayout implements LayoutManager {
 
                 //temp check for fatal case
                 if (value == null) {
-                    String str = "null value object for int parser on option \"" +
-                        argv[i].toString() + "\" : \"" +
-                        argv[i + 1].toString() + "\"";
+                    String str = "null value object for int parser on option \""
+                            + argv[i].toString() + "\" : \""
+                            + argv[i + 1].toString() + "\"";
 
                     throw new TclException(interp, str);
                 }
@@ -1170,13 +1159,13 @@ public class PlacerLayout implements LayoutManager {
                         bool = true;
                     } else {
                         throw new TclException(interp,
-                            "error : value of the " + argv[i].toString() +
-                            " option must be a boolean");
+                                "error : value of the " + argv[i].toString()
+                                + " option must be a boolean");
                     }
                 } else {
                     throw new TclException(interp,
-                        "error : value of the " + argv[i].toString() +
-                        " option must be a boolean");
+                            "error : value of the " + argv[i].toString()
+                            + " option must be a boolean");
                 }
 
                 //this is an int option so we need to find out which
@@ -1186,9 +1175,9 @@ public class PlacerLayout implements LayoutManager {
 
                 //temp check for fatal case
                 if (value == null) {
-                    String str = "null value object for int parser on option \"" +
-                        argv[i].toString() + "\" : \"" +
-                        argv[i + 1].toString() + "\"";
+                    String str = "null value object for int parser on option \""
+                            + argv[i].toString() + "\" : \""
+                            + argv[i + 1].toString() + "\"";
 
                     throw new TclException(interp, str);
                 }
@@ -1198,17 +1187,17 @@ public class PlacerLayout implements LayoutManager {
                 //any of the predefined option types
                 // unknown or ambiguous option "-foll": must be -after, -anchor, -before, -expand, -fill, -in, -ipadx, -ipady, -padx, -pady, or -side
                 throw new TclException(interp,
-                    "error : option \"" + argv[i].toString() +
-                    "\" does not match any of " + OPT_X + " " + OPT_Y + " " +
-                    OPT_RELX + " " + OPT_RELY + " " + OPT_WIDTH + " " +
-                    OPT_HEIGHT);
+                        "error : option \"" + argv[i].toString()
+                        + "\" does not match any of " + OPT_X + " " + OPT_Y + " "
+                        + OPT_RELX + " " + OPT_RELY + " " + OPT_WIDTH + " "
+                        + OPT_HEIGHT);
             } else if (option != value_table.get(argv[i + 1].toString())) {
                 //in this case the given value for the option
                 //did not match one of the possible option values
                 throw new TclException(interp,
-                    "error : option \"" + argv[i].toString() +
-                    "\" can not take the value \"" + argv[i + 1].toString() +
-                    "\"");
+                        "error : option \"" + argv[i].toString()
+                        + "\" can not take the value \"" + argv[i + 1].toString()
+                        + "\"");
             } else {
                 //if no other conditions are true then we
                 //must have matched both the option and the value
@@ -1219,9 +1208,9 @@ public class PlacerLayout implements LayoutManager {
                 //temp check
                 if (value == null) {
                     String str =
-                        "null value object for option parser on option \"" +
-                        argv[i].toString() + "\" : \"" +
-                        argv[i + 1].toString() + "\"";
+                            "null value object for option parser on option \""
+                            + argv[i].toString() + "\" : \""
+                            + argv[i + 1].toString() + "\"";
 
                     throw new TclException(interp, str);
                 }
@@ -1240,6 +1229,7 @@ public class PlacerLayout implements LayoutManager {
     //there is one of these records for each widget packed
     //into a window, it stores the pack info for that widget
     class PlaceRecord {
+
         Component prev = null;
         Component next = null;
         public Object anchor = DEFAULT_ANCHOR;
@@ -1259,10 +1249,10 @@ public class PlacerLayout implements LayoutManager {
     }
 }
 
-
 //this exception is thrown if invalid arguments are passed
 //to the placer layout
 class PlaceingException extends RuntimeException {
+
     public PlaceingException(String desc) {
         super(desc);
     }

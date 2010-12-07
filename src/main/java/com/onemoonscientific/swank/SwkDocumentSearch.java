@@ -35,8 +35,8 @@ import java.util.regex.*;
 import javax.swing.*;
 import javax.swing.text.*;
 
-
 public class SwkDocumentSearch {
+
     public static final int SEARCH_BACKWARDS = 1;
     public static final int SEARCH_REGEXP = 2;
     public static final int SEARCH_NOCASE = 4;
@@ -53,7 +53,7 @@ public class SwkDocumentSearch {
     Result result = new Result();
 
     public SwkDocumentSearch(SwkDefaultStyledDocument searchDoc, String string,
-        int flags) {
+            int flags) {
         doc = searchDoc;
         searchString = string;
         this.flags = flags;
@@ -163,8 +163,8 @@ public class SwkDocumentSearch {
 
                 if (searchIndex >= 0) {
                     result.i = nChars;
-                    result.s = (j + 1) + "." +
-                        ((start - elemStart) + searchIndex);
+                    result.s = (j + 1) + "."
+                            + ((start - elemStart) + searchIndex);
 
                     return result;
                 }
@@ -248,8 +248,8 @@ public class SwkDocumentSearch {
 
                 if (searchIndex >= 0) {
                     result.i = nChars;
-                    result.s = (j + 1) + "." +
-                        ((start - elemStart) + searchIndex);
+                    result.s = (j + 1) + "."
+                            + ((start - elemStart) + searchIndex);
 
                     return result;
                 }

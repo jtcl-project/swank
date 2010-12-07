@@ -38,9 +38,9 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
-
 public class SwkDefaultStyledDocument extends DefaultStyledDocument
-    implements DocumentListener {
+        implements DocumentListener {
+
     static Hashtable resourceDB = null;
     String name = null;
     TclObject tclObject = null;
@@ -51,7 +51,6 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
     Vector rangeOffsets = new Vector();
     int swkwidth;
     boolean removeInProgress = false;
-
     // This Hashtable maps from Style -> Hashtable<Element, null>. That is, each
     // key is a Style. The values are Hashtables, the keys of which are the
     // Elements that use the Style. The values of the inner Hashtables are useless
@@ -85,7 +84,7 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
     // indicating that the attributes for the Element have changed. This causes the
     // View to re-check the attributes and redraw.
     public void styleUpdated(SwkJTextPane swkjtextpane, Style style,
-        boolean remove) {
+            boolean remove) {
         // Find the set of Elements that use this style . . .
         //    AttributeSet attrs = style.getAttributes();
         //   if (attrs == null) {return;}
@@ -141,17 +140,17 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
                 int checkIndex = checkName.indexOf(tagName);
                 int lastChar = checkIndex + tagName.length();
 
-                if ((checkIndex != -1) &&
-                        ((checkIndex == 0) ||
-                        (checkName.charAt(checkIndex - 1) == ' ')) &&
-                        ((lastChar == checkName.length()) ||
-                        (checkName.charAt(lastChar) == ' '))) {
+                if ((checkIndex != -1)
+                        && ((checkIndex == 0)
+                        || (checkName.charAt(checkIndex - 1) == ' '))
+                        && ((lastChar == checkName.length())
+                        || (checkName.charAt(lastChar) == ' '))) {
                     styleList = checkName.split("\\s", -1);
 
                     if (remove) {
                         //System.out.println("remove style "+start+" "+end);
                         this.setCharacterAttributes(start, end - start,
-                            rStyle.getEmptySet(), true);
+                                rStyle.getEmptySet(), true);
 
                         //System.out.println("empty set");
                         //this.setParagraphAttributes(start, end - start,rStyle.getEmptySet() , true);
@@ -161,9 +160,9 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
 
                         for (int j = 0; j < styleList.length; j++) {
                             /*
-                                                    if (!styleList[j].toString ().equals (tagName)) {
-                                                        continue;
-                                                    }
+                            if (!styleList[j].toString ().equals (tagName)) {
+                            continue;
+                            }
                              */
 
                             //System.out.println("styleList "+styleList[j].toString()+" "+start+" "+end);
@@ -188,7 +187,7 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
                         //nextStyle = swkjtextpane.getStyle (checkName);
                         if (groupedStyle != null) {
                             this.setCharacterAttributes(start, end - start,
-                                groupedStyle, true);
+                                    groupedStyle, true);
                         }
 
                         DefaultDocumentEvent ev = new DefaultDocumentEvent(start,
@@ -304,9 +303,9 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
             }
 
             /*       Enumeration e = ht.keys();
-               while (e.hasMoreElements()) {
-               Element el = (Element)e.nextElement();
-               }
+            while (e.hasMoreElements()) {
+            Element el = (Element)e.nextElement();
+            }
              */
         }
     }
@@ -358,7 +357,7 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
     }
 
     void removeStyleFromRange(SwkJTextPane swkjtextpane, int index1,
-        int index2, String tagName) {
+            int index2, String tagName) {
         Style style;
         Style nextStyle;
         removeInProgress = true;
@@ -411,17 +410,17 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
             int checkIndex = checkName.indexOf(tagName);
             int lastChar = checkIndex + tagName.length();
 
-            if ((checkIndex != -1) &&
-                    ((checkIndex == 0) ||
-                    (checkName.charAt(checkIndex - 1) == ' ')) &&
-                    ((lastChar == checkName.length()) ||
-                    (checkName.charAt(lastChar) == ' '))) {
+            if ((checkIndex != -1)
+                    && ((checkIndex == 0)
+                    || (checkName.charAt(checkIndex - 1) == ' '))
+                    && ((lastChar == checkName.length())
+                    || (checkName.charAt(lastChar) == ' '))) {
                 String[] styleList = checkName.split("\\s", -1);
 
                 if (tagName.equals(checkName)) {
                     //System.out.println("setchar "+adjustStart+" "+adjustEnd);
                     this.setCharacterAttributes(adjustStart,
-                        adjustEnd - adjustStart, rStyle.getEmptySet(), true);
+                            adjustEnd - adjustStart, rStyle.getEmptySet(), true);
 
                     //this.setParagraphAttributes(adjustStart, adjustEnd - adjustStart,rStyle.getEmptySet() , true);
                 } else {
@@ -462,7 +461,7 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
                     //System.out.println("newTag "+newTag+" "+start+" "+end);
                     groupedStyle.addAttribute("tagName", newTag);
                     this.setCharacterAttributes(start, end - start,
-                        groupedStyle, true);
+                            groupedStyle, true);
                 }
             }
 
@@ -475,7 +474,7 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
     }
 
     void addStyleToRange(SwkJTextPane swkjtextpane, int index1, int index2,
-        String tagName) {
+            String tagName) {
         Style style;
         Style nextStyle;
         StyleContext rStyle = new StyleContext();
@@ -524,11 +523,11 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
             int checkIndex = oldName.indexOf(tagName);
             int lastChar = checkIndex + tagName.length();
 
-            if ((checkIndex != -1) &&
-                    ((checkIndex == 0) ||
-                    (oldName.charAt(checkIndex - 1) == ' ')) &&
-                    ((lastChar == oldName.length()) ||
-                    (oldName.charAt(lastChar) == ' '))) {
+            if ((checkIndex != -1)
+                    && ((checkIndex == 0)
+                    || (oldName.charAt(checkIndex - 1) == ' '))
+                    && ((lastChar == oldName.length())
+                    || (oldName.charAt(lastChar) == ' '))) {
                 newName = oldName;
 
                 //System.out.println("new eq old");
@@ -559,7 +558,7 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
                 }
 
                 this.setCharacterAttributes(adjustStart,
-                    adjustEnd - adjustStart, groupedStyle, true);
+                        adjustEnd - adjustStart, groupedStyle, true);
             }
 
             if ((end >= index2) || (end >= endOffset)) {
@@ -569,13 +568,13 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
     }
 
     public void setMarkGravity(SwkJTextPane swkjtextpane, String markName,
-        String direction) throws IllegalArgumentException {
+            String direction) throws IllegalArgumentException {
         int offset = 0;
         SwkPosition swkPosition = (SwkPosition) marks.get(markName);
 
         if (swkPosition == null) {
-            throw new IllegalArgumentException("there is no mark named \"" +
-                markName + "\"");
+            throw new IllegalArgumentException("there is no mark named \""
+                    + markName + "\"");
         }
 
         if (direction.equals("left")) {
@@ -595,7 +594,7 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
                     swkPosition.position = createPosition(offset);
                 } catch (BadLocationException badLoc) {
                     throw new IllegalArgumentException(
-                        "bad location in mark gravity");
+                            "bad location in mark gravity");
                 }
 
                 swkPosition.bias = Position.Bias.Backward;
@@ -621,20 +620,20 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
                     swkPosition.position = createPosition(offset);
                 } catch (BadLocationException badLoc) {
                     throw new IllegalArgumentException(
-                        "bad location in mark gravity");
+                            "bad location in mark gravity");
                 }
 
                 swkPosition.bias = Position.Bias.Forward;
                 marks.put(markName, swkPosition);
             }
         } else {
-            throw new IllegalArgumentException("bad mark gravity \"" +
-                direction + "\": must be left or right");
+            throw new IllegalArgumentException("bad mark gravity \""
+                    + direction + "\": must be left or right");
         }
     }
 
     public void setMark(SwkJTextPane swkjtextpane, String markName, String index)
-        throws IllegalArgumentException {
+            throws IllegalArgumentException {
         if (markName.toString().equals("end")) {
             return;
         }
@@ -697,7 +696,7 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
     }
 
     public Result compareIndices(SwkJTextPane swkjtextpane, String indexArg1,
-        String op, String indexArg2) {
+            String op, String indexArg2) {
         int index1 = getIndexLC(swkjtextpane, indexArg1);
         int index2 = getIndexLC(swkjtextpane, indexArg2);
         Result result = new Result();
@@ -728,15 +727,15 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
                 result.setValue(true);
             }
         } else {
-            result.setError("bad comparison operator \"" + op +
-                "\": must be <, <=, ==, >=, >, or !=");
+            result.setError("bad comparison operator \"" + op
+                    + "\": must be <, <=, ==, >=, >, or !=");
         }
 
         return result;
     }
 
     public int getIndexLC(SwkJTextPane swkjtextpane, String indexArg)
-        throws IllegalArgumentException {
+            throws IllegalArgumentException {
         String[] indexVals = indexArg.split("\\s", -1);
         String base = indexVals[0];
         String badTextIndex = "bad text index \"" + indexArg + "\"";
@@ -745,8 +744,8 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
         int plusPosition = base.toString().indexOf("+");
         int minusPosition = base.toString().indexOf("-");
 
-        if ((dotPosition == -1) &&
-                ((plusPosition == 0) || (minusPosition == 0))) {
+        if ((dotPosition == -1)
+                && ((plusPosition == 0) || (minusPosition == 0))) {
             throw new IllegalArgumentException(badTextIndex);
         }
 
@@ -806,7 +805,7 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
 
             if (dotPosition > 0) {
                 swkPosition = (SwkPosition) marks.get(baseString.substring(0,
-                            dotPosition));
+                        dotPosition));
 
                 if (swkPosition != null) {
                     throw new IllegalArgumentException(badTextIndex);
@@ -835,35 +834,34 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
                         throw new IllegalArgumentException(badTextIndex);
                     }
                 } else {
-                    if ((dotPosition >= 0) &&
-                            (dotPosition < (baseString.length() - 1))) {
+                    if ((dotPosition >= 0)
+                            && (dotPosition < (baseString.length() - 1))) {
                         lineIndex = -1;
                         charIndex = 0;
 
                         try {
                             lineIndex = Integer.parseInt(baseString.substring(
-                                        0, dotPosition));
+                                    0, dotPosition));
                         } catch (NumberFormatException nfE) {
                             if (baseString.substring(dotPosition + 1).equals("first")) {
                                 offset = getRangeOffset(baseString.substring(
-                                            0, dotPosition), 1);
+                                        0, dotPosition), 1);
 
                                 if (offset < 0) {
                                     throw new IllegalArgumentException(
-                                        "text doesn't contain any characters tagged with \"" +
-                                        baseString.substring(0, dotPosition) +
-                                        "\"");
+                                            "text doesn't contain any characters tagged with \""
+                                            + baseString.substring(0, dotPosition)
+                                            + "\"");
                                 }
-                            } else if (baseString.substring(dotPosition + 1)
-                                                     .equals("last")) {
+                            } else if (baseString.substring(dotPosition + 1).equals("last")) {
                                 offset = getRangeOffset(baseString.substring(
-                                            0, dotPosition), 2);
+                                        0, dotPosition), 2);
 
                                 if (offset < 0) {
                                     throw new IllegalArgumentException(
-                                        "text doesn't contain any characters tagged with \"" +
-                                        baseString.substring(0, dotPosition) +
-                                        "\"");
+                                            "text doesn't contain any characters tagged with \""
+                                            + baseString.substring(0, dotPosition)
+                                            + "\"");
                                 }
                             } else {
                                 throw new IllegalArgumentException(badTextIndex);
@@ -872,11 +870,10 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
 
                         if (lineIndex > 0) {
                             try {
-                                charIndex = Integer.parseInt(baseString.substring(dotPosition +
-                                            1));
+                                charIndex = Integer.parseInt(baseString.substring(dotPosition
+                                        + 1));
                             } catch (NumberFormatException nfE) {
-                                if (baseString.substring(dotPosition + 1)
-                                                  .equals("end")) {
+                                if (baseString.substring(dotPosition + 1).equals("end")) {
                                     charIndex = Integer.MAX_VALUE;
                                 } else {
                                     throw new IllegalArgumentException(badTextIndex);
@@ -895,18 +892,18 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
                                 //lineIndex = paragraphs.size ();
                                 offset = endOffset;
                             } else {
-                                elem = (Element) paragraphs.elementAt(lineIndex -
-                                        1);
+                                elem = (Element) paragraphs.elementAt(lineIndex
+                                        - 1);
 
                                 if (elem != null) {
                                     if (charIndex < 0) {
                                         offset = elem.getStartOffset();
-                                    } else if (charIndex >= (elem.getEndOffset() -
-                                            elem.getStartOffset())) {
+                                    } else if (charIndex >= (elem.getEndOffset()
+                                            - elem.getStartOffset())) {
                                         offset = elem.getEndOffset() - 1;
                                     } else {
-                                        offset = elem.getStartOffset() +
-                                            charIndex;
+                                        offset = elem.getStartOffset()
+                                                + charIndex;
                                     }
                                 }
                             }
@@ -982,9 +979,9 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
                     } else {
                         throw new IllegalArgumentException(badTextIndex);
                     }
-                } else if (gotValue &&
-                        (modString.substring(cpos).length() < 6) &&
-                        "lines".startsWith(modString.substring(cpos))) {
+                } else if (gotValue
+                        && (modString.substring(cpos).length() < 6)
+                        && "lines".startsWith(modString.substring(cpos))) {
                     if (gotValue) {
                         offset = indexMath(offset, sign * delta, 0);
                         gotValue = gotSign = false;
@@ -992,8 +989,8 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
                     } else {
                         throw new IllegalArgumentException(badTextIndex);
                     }
-                } else if ((modString.substring(cpos).length() > 4) &&
-                        "lineend".startsWith(modString)) {
+                } else if ((modString.substring(cpos).length() > 4)
+                        && "lineend".startsWith(modString)) {
                     if (gotSign || gotValue) {
                         throw new IllegalArgumentException(badTextIndex);
                     } else {
@@ -1002,8 +999,8 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
                         gotValue = gotSign = false;
                         sign = 1;
                     }
-                } else if ((modString.substring(cpos).length() > 4) &&
-                        "linestart".startsWith(modString)) {
+                } else if ((modString.substring(cpos).length() > 4)
+                        && "linestart".startsWith(modString)) {
                     if (gotSign || gotValue) {
                         throw new IllegalArgumentException(badTextIndex);
                     } else {
@@ -1012,8 +1009,8 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
                         gotValue = gotSign = false;
                         sign = 1;
                     }
-                } else if ((modString.substring(cpos).length() > 4) &&
-                        "wordend".startsWith(modString)) {
+                } else if ((modString.substring(cpos).length() > 4)
+                        && "wordend".startsWith(modString)) {
                     if (gotSign || gotValue) {
                         throw new IllegalArgumentException(badTextIndex);
                     }
@@ -1022,8 +1019,8 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
                     gotUnits = true;
                     gotValue = gotSign = false;
                     sign = 1;
-                } else if ((modString.substring(cpos).length() > 4) &&
-                        "wordstart".startsWith(modString)) {
+                } else if ((modString.substring(cpos).length() > 4)
+                        && "wordstart".startsWith(modString)) {
                     if (gotSign || gotValue) {
                         throw new IllegalArgumentException(badTextIndex);
                     }
@@ -1041,8 +1038,8 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
         }
 
         if ((gotValue || gotSign) && !gotUnits) {
-            throw new IllegalArgumentException("bad text index \"" +
-                indexArg.toString() + "\"");
+            throw new IllegalArgumentException("bad text index \""
+                    + indexArg.toString() + "\"");
         }
 
         return (offset);
@@ -1067,8 +1064,8 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
         for (j = 0; j < paragraphs.size(); j++) {
             elem = (Element) paragraphs.elementAt(j);
 
-            if ((offset >= elem.getStartOffset()) &&
-                    (offset < elem.getEndOffset())) {
+            if ((offset >= elem.getStartOffset())
+                    && (offset < elem.getEndOffset())) {
                 foundOffset = true;
 
                 break;
@@ -1119,17 +1116,17 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
         for (int j = 0; j < paragraphs.size(); j++) {
             elem = (Element) paragraphs.elementAt(j);
 
-            if ((offset >= elem.getStartOffset()) &&
-                    (offset < elem.getEndOffset())) {
+            if ((offset >= elem.getStartOffset())
+                    && (offset < elem.getEndOffset())) {
                 charIndex = offset - elem.getStartOffset();
 
-                if ((indexVals != null) && (indexVals.length == 2) &&
-                        (indexVals[1].toString().startsWith("lines"))) {
+                if ((indexVals != null) && (indexVals.length == 2)
+                        && (indexVals[1].toString().startsWith("lines"))) {
                     charIndex = 0;
                 }
 
-                if ((indexVals != null) && (indexVals.length == 2) &&
-                        (indexVals[1].toString().startsWith("linee"))) {
+                if ((indexVals != null) && (indexVals.length == 2)
+                        && (indexVals[1].toString().startsWith("linee"))) {
                     charIndex = elem.getEndOffset() - elem.getStartOffset();
                 }
 
@@ -1156,8 +1153,8 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
         for (int j = 0; j < paragraphs.size(); j++) {
             elem = (Element) paragraphs.elementAt(j);
 
-            if ((offset >= elem.getStartOffset()) &&
-                    (offset < elem.getEndOffset())) {
+            if ((offset >= elem.getStartOffset())
+                    && (offset < elem.getEndOffset())) {
                 return j;
             }
         }
@@ -1206,10 +1203,10 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
 
     private int compare(int i, int j) {
         if (((Integer) rangeOffsets.elementAt(i)).intValue() > ((Integer) rangeOffsets.elementAt(
-                    j)).intValue()) {
+                j)).intValue()) {
             return 1;
         } else if (((Integer) rangeOffsets.elementAt(i)).intValue() < ((Integer) rangeOffsets.elementAt(
-                    j)).intValue()) {
+                j)).intValue()) {
             return -1;
         } else {
             return (0);
@@ -1228,8 +1225,8 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
         int p = low;
         int q = middle;
 
-        if (((high - low) >= 4) &&
-                (compare(from[middle - 1], from[middle]) <= 0)) {
+        if (((high - low) >= 4)
+                && (compare(from[middle - 1], from[middle]) <= 0)) {
             for (int i = low; i < high; i++) {
                 to[i] = from[i];
             }
@@ -1239,8 +1236,8 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
 
         // A normal merge.
         for (int i = low; i < high; i++) {
-            if ((q >= high) ||
-                    ((p < middle) && (compare(from[p], from[q]) <= 0))) {
+            if ((q >= high)
+                    || ((p < middle) && (compare(from[p], from[q]) <= 0))) {
                 to[i] = from[p++];
             } else {
                 to[i] = from[q++];
@@ -1308,11 +1305,11 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
                 int checkIndex = checkName.indexOf(tagName);
                 int lastChar = checkIndex + tagName.length();
 
-                if ((checkIndex != -1) &&
-                        ((checkIndex == 0) ||
-                        (checkName.charAt(checkIndex - 1) == ' ')) &&
-                        ((lastChar == checkName.length()) ||
-                        (checkName.charAt(lastChar) == ' '))) {
+                if ((checkIndex != -1)
+                        && ((checkIndex == 0)
+                        || (checkName.charAt(checkIndex - 1) == ' '))
+                        && ((lastChar == checkName.length())
+                        || (checkName.charAt(lastChar) == ' '))) {
                     styleList = checkName.split("\\s", -1);
 
                     for (int j = 0; j < styleList.length; j++) {
@@ -1531,6 +1528,7 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
     }
 
     class SwkPosition {
+
         Position position = null;
         Position.Bias bias = Position.Bias.Forward;
 

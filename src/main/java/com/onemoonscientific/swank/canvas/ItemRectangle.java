@@ -27,7 +27,6 @@
  *
  * Created on February 19, 2000, 3:02 PM
  */
-
 /**
  *
  * @author  JOHNBRUC
@@ -46,22 +45,20 @@ import java.lang.*;
 
 import java.util.*;
 
-
 public class ItemRectangle extends SwkShape implements TextInterface {
+
     static CanvasParameter[] parameters = {
         new WidthParameter(), new TextureParameter(), new GradientParameter(),
         new FillParameter(), new OutlineParameter(), new TagsParameter(),
         new TransformerParameter(), new RotateParameter(), new ShearParameter(),
-        new StateParameter(),new NodeParameter(),
-        new TextParameter(), new FontParameter(), new AnchorParameter(), new TextcolorParameter(),
-    };
+        new StateParameter(), new NodeParameter(),
+        new TextParameter(), new FontParameter(), new AnchorParameter(), new TextcolorParameter(),};
     static Map parameterMap = new TreeMap();
 
     static {
         initializeParameters(parameters, parameterMap);
     }
     TextParameters textPar = TextParameters.getDefault();
-
     String imageName = "";
     Rectangle2D rect2D = null;
     Color textColor = null;
@@ -70,7 +67,8 @@ public class ItemRectangle extends SwkShape implements TextInterface {
         super(shape, canvas);
         rect2D = (Rectangle2D) shape;
     }
-     public String getText() {
+
+    public String getText() {
         return textPar.getText();
     }
 
@@ -102,12 +100,11 @@ public class ItemRectangle extends SwkShape implements TextInterface {
         textPar = TextParameters.setTextColor(textPar, newValue);
     }
 
-
     public void coords(SwkImageCanvas canvas, double[] coords)
-        throws SwkException {
+            throws SwkException {
         if (coords.length != 4) {
-            throw new SwkException("wrong # coordinates: expected 4, got " +
-                coords.length);
+            throw new SwkException("wrong # coordinates: expected 4, got "
+                    + coords.length);
         }
 
         if ((storeCoords == null) || (storeCoords.length != coords.length)) {
@@ -124,24 +121,26 @@ public class ItemRectangle extends SwkShape implements TextInterface {
     public void applyCoordinates() {
         checkCoordinates(storeCoords);
         rect2D.setFrame(storeCoords[0], storeCoords[1],
-            storeCoords[2] - storeCoords[0], storeCoords[3] - storeCoords[1]);
+                storeCoords[2] - storeCoords[0], storeCoords[3] - storeCoords[1]);
 
         AffineTransform aT = new AffineTransform();
         aT.translate(storeCoords[0], storeCoords[1]);
         aT.shear(xShear, yShear);
         aT.translate(-storeCoords[0], -storeCoords[1]);
         aT.rotate(rotate, ((storeCoords[0] + storeCoords[2]) / 2.0),
-            ((storeCoords[1] + storeCoords[3]) / 2.0));
+                ((storeCoords[1] + storeCoords[3]) / 2.0));
         genGradient(aT);
         shape = aT.createTransformedShape(rect2D);
     }
+
     public void paintShape(Graphics2D g2) {
         super.paintShape(g2);
-        double x = (storeCoords[0]+storeCoords[2])/2.0;
-        double y = (storeCoords[1]+storeCoords[3])/2.0;
+        double x = (storeCoords[0] + storeCoords[2]) / 2.0;
+        double y = (storeCoords[1] + storeCoords[3]) / 2.0;
 
-        textPar.paint(g2, getCanvas().getFontRenderContext(), this,x,y);
-  }
+        textPar.paint(g2, getCanvas().getFontRenderContext(), this, x, y);
+    }
+
     public CanvasParameter[] getParameters() {
         return parameters;
     }

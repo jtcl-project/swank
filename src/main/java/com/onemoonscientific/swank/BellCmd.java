@@ -32,10 +32,10 @@ import java.io.*;
 
 import java.util.*;
 
-
 public class BellCmd implements Command {
+
     public void cmdProc(Interp interp, TclObject[] argv)
-        throws TclException {
+            throws TclException {
         int i;
         TclObject tObj;
 
@@ -47,27 +47,28 @@ public class BellCmd implements Command {
 
         if (argv.length == 3) {
             if (argv[1].toString().equals("-displayof")) {
-                tObj = (TclObject) Widgets.getWidget(interp,argv[2].toString());
+                tObj = (TclObject) Widgets.getWidget(interp, argv[2].toString());
 
                 if (tObj == null) {
                     throw new TclException(interp,
-                        "bad window path name \"" + argv[2] + "\"");
+                            "bad window path name \"" + argv[2] + "\"");
                 }
 
                 object = ReflectObject.get(interp, tObj);
             } else {
                 throw new TclException(interp,
-                    "bad option \"" + argv[1] + "\": must be -displayof");
+                        "bad option \"" + argv[1] + "\": must be -displayof");
             }
         } else {
             object = null;
         }
 
         (new UpdateOnEventThread() {
-                public void run() {
-                    beep(object);
-                }
-            }).execOnThread();
+
+            public void run() {
+                beep(object);
+            }
+        }).execOnThread();
     }
 
     public static void beep(Object object) {

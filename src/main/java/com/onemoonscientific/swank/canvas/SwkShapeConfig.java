@@ -28,10 +28,10 @@ import com.onemoonscientific.swank.*;
 
 import tcl.lang.*;
 
-
 public interface SwkShapeConfig {
+
     public void coords(SwkImageCanvas canvas, double[] coords)
-        throws SwkException;
+            throws SwkException;
 
     public String getType();
 }

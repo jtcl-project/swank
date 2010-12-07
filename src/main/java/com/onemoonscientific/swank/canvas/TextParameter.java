@@ -4,8 +4,8 @@ import com.onemoonscientific.swank.*;
 
 import tcl.lang.*;
 
-
 public class TextParameter extends CanvasParameter {
+
     private static String name = "text";
     private static String defValue = "";
     private String newValue = defValue;
@@ -27,7 +27,7 @@ public class TextParameter extends CanvasParameter {
     }
 
     public TclObject getValue(Interp interp, SwkShape swkShape)
-        throws TclException {
+            throws TclException {
 // fixme switch to using a TextInterface
 // fixme shouldn't read shape on Tcl thread
         if ((swkShape != null) && ((swkShape instanceof TextInterface))) {
@@ -42,7 +42,7 @@ public class TextParameter extends CanvasParameter {
     }
 
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
-        throws TclException {
+            throws TclException {
         if (arg == null) {
             newValue = "";
         } else {

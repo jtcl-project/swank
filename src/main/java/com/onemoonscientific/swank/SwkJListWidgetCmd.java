@@ -16,8 +16,8 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
-
 class SwkJListWidgetCmd implements Command {
+
     static final private String[] validCmds = {
         "cget", "configure", "activate", "bbox",
         "curselection", "delete", "get", "size", "see", "index", "nearest",
@@ -48,138 +48,138 @@ class SwkJListWidgetCmd implements Command {
     }
 
     public void cmdProc(final Interp interp, final TclObject[] argv)
-        throws TclException {
+            throws TclException {
         if (argv.length < 2) {
             throw new TclNumArgsException(interp, 1, argv,
-                "option ?arg arg ...?");
+                    "option ?arg arg ...?");
         }
 
         this.interp = interp;
 
         final int opt = TclIndex.get(interp, argv[1], validCmds, "option", 0);
-        final TclObject tObj = (TclObject) Widgets.getWidget(interp,argv[0].toString());
+        final TclObject tObj = (TclObject) Widgets.getWidget(interp, argv[0].toString());
 
         if (tObj == null) {
             throw new TclException(interp,
-                "bad window path name \"" + argv[0].toString() + "\"");
+                    "bad window path name \"" + argv[0].toString() + "\"");
         }
 
         final SwkJList swkjlist = (SwkJList) ReflectObject.get(interp, tObj);
         Result idxResult = new Result();
 
         switch (opt) {
-        case OPT_CGET:
+            case OPT_CGET:
 
-            if (argv.length != 3) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-
-            interp.setResult(swkjlist.jget(interp, argv[2]));
-
-            break;
-
-        case OPT_CONFIGURE:
-
-            if (!gotDefaults) {
-                swkjlist.setResourceDefaults();
-                gotDefaults = true;
-            }
-
-            if (argv.length == 2) {
-                swkjlist.jgetAll(interp);
-            } else if (argv.length == 3) {
-                String result = swkjlist.jget(interp, argv[2]);
-                ResourceObject ro = (ResourceObject) SwkJList.resourceDB.get(argv[2].toString());
-
-                if (ro == null) {
-                    throw new TclException(interp,
-                        "unknown option \"" + argv[2].toString() + "\"");
+                if (argv.length != 3) {
+                    throw new TclNumArgsException(interp, 2, argv, "option");
                 }
 
-                TclObject list = TclList.newInstance();
-                TclList.append(interp, list,
-                    TclString.newInstance(argv[2].toString()));
-                TclList.append(interp, list, TclString.newInstance(ro.resource));
-                TclList.append(interp, list, TclString.newInstance(ro.className));
-                TclList.append(interp, list,
-                    TclString.newInstance(ro.defaultVal));
-                TclList.append(interp, list, TclString.newInstance(result));
-                interp.setResult(list);
-            } else {
-                swkjlist.configure(interp, argv, 2);
-            }
+                interp.setResult(swkjlist.jget(interp, argv[2]));
 
-            break;
+                break;
 
-        case OPT_BBOX:
-            getBoundingBox(interp, swkjlist, argv);
+            case OPT_CONFIGURE:
 
-            break;
+                if (!gotDefaults) {
+                    swkjlist.setResourceDefaults();
+                    gotDefaults = true;
+                }
 
-        case OPT_CURSELECTION:
-            getCurrentSelection(interp, swkjlist, argv);
+                if (argv.length == 2) {
+                    swkjlist.jgetAll(interp);
+                } else if (argv.length == 3) {
+                    String result = swkjlist.jget(interp, argv[2]);
+                    ResourceObject ro = (ResourceObject) SwkJList.resourceDB.get(argv[2].toString());
 
-            break;
+                    if (ro == null) {
+                        throw new TclException(interp,
+                                "unknown option \"" + argv[2].toString() + "\"");
+                    }
 
-        case OPT_DELETE:
-            deleteItems(interp, swkjlist, argv);
+                    TclObject list = TclList.newInstance();
+                    TclList.append(interp, list,
+                            TclString.newInstance(argv[2].toString()));
+                    TclList.append(interp, list, TclString.newInstance(ro.resource));
+                    TclList.append(interp, list, TclString.newInstance(ro.className));
+                    TclList.append(interp, list,
+                            TclString.newInstance(ro.defaultVal));
+                    TclList.append(interp, list, TclString.newInstance(result));
+                    interp.setResult(list);
+                } else {
+                    swkjlist.configure(interp, argv, 2);
+                }
 
-            break;
+                break;
 
-        case OPT_GET:
-            getItems(interp, swkjlist, argv);
+            case OPT_BBOX:
+                getBoundingBox(interp, swkjlist, argv);
 
-            break;
+                break;
 
-        case OPT_SIZE:
-            getSize(interp, swkjlist, argv);
+            case OPT_CURSELECTION:
+                getCurrentSelection(interp, swkjlist, argv);
 
-            break;
+                break;
 
-        case OPT_SEE:
-            seeItem(interp, swkjlist, argv);
+            case OPT_DELETE:
+                deleteItems(interp, swkjlist, argv);
 
-            break;
+                break;
 
-        case OPT_INDEX:
-            getIndex(interp, swkjlist, argv);
+            case OPT_GET:
+                getItems(interp, swkjlist, argv);
 
-            break;
+                break;
 
-        case OPT_ACTIVATE:
-            activate(interp, swkjlist, argv);
+            case OPT_SIZE:
+                getSize(interp, swkjlist, argv);
 
-            break;
+                break;
 
-        case OPT_NEAREST:
-            nearest(interp, swkjlist, argv);
+            case OPT_SEE:
+                seeItem(interp, swkjlist, argv);
 
-            break;
+                break;
 
-        case OPT_INSERT:
-            insert(interp, swkjlist, argv);
+            case OPT_INDEX:
+                getIndex(interp, swkjlist, argv);
 
-            break;
+                break;
 
-        case OPT_SELECTION:
-            doSelection(interp, swkjlist, argv);
+            case OPT_ACTIVATE:
+                activate(interp, swkjlist, argv);
 
-            break;
+                break;
 
-        case OPT_SCAN:
-        case OPT_XVIEW:
-        case OPT_YVIEW:
-            viewStuff(interp, swkjlist, argv, opt);
+            case OPT_NEAREST:
+                nearest(interp, swkjlist, argv);
 
-            break;
+                break;
 
-        default:
-            throw new TclRuntimeError("TclIndex.get() error");
+            case OPT_INSERT:
+                insert(interp, swkjlist, argv);
+
+                break;
+
+            case OPT_SELECTION:
+                doSelection(interp, swkjlist, argv);
+
+                break;
+
+            case OPT_SCAN:
+            case OPT_XVIEW:
+            case OPT_YVIEW:
+                viewStuff(interp, swkjlist, argv, opt);
+
+                break;
+
+            default:
+                throw new TclRuntimeError("TclIndex.get() error");
         }
     }
 
     void getBoundingBox(final Interp interp, final SwkJList swkjlist,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if (argv.length != 3) {
             throw new TclNumArgsException(interp, 2, argv, "index");
         }
@@ -192,7 +192,7 @@ class SwkJListWidgetCmd implements Command {
     }
 
     void getCurrentSelection(final Interp interp, final SwkJList swkjlist,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if (argv.length != 2) {
             throw new TclNumArgsException(interp, 2, argv, "");
         }
@@ -208,7 +208,7 @@ class SwkJListWidgetCmd implements Command {
     }
 
     void deleteItems(final Interp interp, final SwkJList swkjlist,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if ((argv.length < 3) || (argv.length > 4)) {
             throw new TclNumArgsException(interp, 2, argv, "first ?last");
         }
@@ -224,7 +224,7 @@ class SwkJListWidgetCmd implements Command {
     }
 
     void getItems(final Interp interp, final SwkJList swkjlist,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if ((argv.length < 3) || (argv.length > 4)) {
             throw new TclNumArgsException(interp, 2, argv, "first ?last");
         }
@@ -240,7 +240,7 @@ class SwkJListWidgetCmd implements Command {
     }
 
     void getSize(final Interp interp, final SwkJList swkjlist,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if (argv.length != 2) {
             throw new TclNumArgsException(interp, 2, argv, "");
         }
@@ -250,7 +250,7 @@ class SwkJListWidgetCmd implements Command {
     }
 
     void seeItem(final Interp interp, final SwkJList swkjlist,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if (argv.length != 3) {
             throw new TclNumArgsException(interp, 2, argv, "index");
         }
@@ -259,7 +259,7 @@ class SwkJListWidgetCmd implements Command {
     }
 
     void getIndex(final Interp interp, final SwkJList swkjlist,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if (argv.length != 3) {
             throw new TclNumArgsException(interp, 2, argv, "index");
         }
@@ -269,7 +269,7 @@ class SwkJListWidgetCmd implements Command {
     }
 
     void activate(final Interp interp, final SwkJList swkjlist,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if (argv.length != 3) {
             throw new TclNumArgsException(interp, 2, argv, "index");
         }
@@ -279,7 +279,7 @@ class SwkJListWidgetCmd implements Command {
     }
 
     void nearest(final Interp interp, final SwkJList swkjlist,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if (argv.length != 3) {
             throw new TclNumArgsException(interp, 2, argv, "y");
         }
@@ -290,7 +290,7 @@ class SwkJListWidgetCmd implements Command {
     }
 
     void insert(final Interp interp, final SwkJList swkjlist,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         boolean atEnd = false;
         int start = 3;
 
@@ -310,7 +310,7 @@ class SwkJListWidgetCmd implements Command {
     }
 
     void doSelection(final Interp interp, final SwkJList swkjlist,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if ((argv.length < 4) || (argv.length > 5)) {
             throw new TclNumArgsException(interp, 2, argv, "option ?arg");
         }
@@ -349,148 +349,75 @@ class SwkJListWidgetCmd implements Command {
             (new Selection()).execSet(swkjlist, firstArg, lastArg);
         } else {
             throw new TclException(interp,
-                "bad selection option \"" + argv[2].toString() +
-                "\": must be anchor, clear, includes, or set");
+                    "bad selection option \"" + argv[2].toString()
+                    + "\": must be anchor, clear, includes, or set");
         }
     }
 
     void viewStuff(final Interp interp, final SwkJList swkjlist,
-        final TclObject[] argv, final int opt) throws TclException {
+            final TclObject[] argv, final int opt) throws TclException {
         Result idxResult = new Result();
 
         switch (opt) {
-        case OPT_SCAN:
+            case OPT_SCAN:
 
-            if (argv.length != 5) {
-                throw new TclNumArgsException(interp, 2, argv, "mark|dragto x y");
-            }
-
-            int scanX = TclInteger.get(interp, argv[3]);
-            int scanY = TclInteger.get(interp, argv[4]);
-
-            if (argv[2].toString().equals("mark")) {
-                int markX = scanX;
-                int markY = scanY;
-            } else if (argv[2].toString().equals("dragto")) {
-                int dragX = scanX;
-                int dragY = scanY;
-                double fy1 = 0.0;
-
-                if (fy1 < 0.0) {
-                    fy1 = 0.0;
+                if (argv.length != 5) {
+                    throw new TclNumArgsException(interp, 2, argv, "mark|dragto x y");
                 }
 
+                int scanX = TclInteger.get(interp, argv[3]);
+                int scanY = TclInteger.get(interp, argv[4]);
+
+                if (argv[2].toString().equals("mark")) {
+                    int markX = scanX;
+                    int markY = scanY;
+                } else if (argv[2].toString().equals("dragto")) {
+                    int dragX = scanX;
+                    int dragY = scanY;
+                    double fy1 = 0.0;
+
+                    if (fy1 < 0.0) {
+                        fy1 = 0.0;
+                    }
+
+                    JViewport jvp = Widgets.getViewport((Component) swkjlist);
+
+                    if (jvp != null) {
+                        Point pt = jvp.getViewPosition();
+
+                        Dimension listSize = swkjlist.getSize();
+                        pt.y = (int) (fy1 * listSize.height);
+
+                        Dimension extentSize = jvp.getExtentSize();
+
+                        if ((pt.y + extentSize.height) > listSize.height) {
+                            pt.y = listSize.height - extentSize.height;
+                        }
+
+                        jvp.setViewPosition(pt);
+                    }
+                } else {
+                    throw new TclException(interp,
+                            "bad scan option \"" + argv[2].toString()
+                            + "\": must be mark or dragto");
+                }
+
+                break;
+
+            case OPT_XVIEW: {
+                int maxSize = 1;
+                int len = 0;
                 JViewport jvp = Widgets.getViewport((Component) swkjlist);
 
-                if (jvp != null) {
-                    Point pt = jvp.getViewPosition();
+                for (int i = 0; i < swkjlist.model.getSize(); i++) {
+                    len = ((String) swkjlist.model.elementAt(i)).length();
 
-                    Dimension listSize = swkjlist.getSize();
-                    pt.y = (int) (fy1 * listSize.height);
-
-                    Dimension extentSize = jvp.getExtentSize();
-
-                    if ((pt.y + extentSize.height) > listSize.height) {
-                        pt.y = listSize.height - extentSize.height;
+                    if (len > maxSize) {
+                        maxSize = len;
                     }
-
-                    jvp.setViewPosition(pt);
-                }
-            } else {
-                throw new TclException(interp,
-                    "bad scan option \"" + argv[2].toString() +
-                    "\": must be mark or dragto");
-            }
-
-            break;
-
-        case OPT_XVIEW: {
-            int maxSize = 1;
-            int len = 0;
-            JViewport jvp = Widgets.getViewport((Component) swkjlist);
-
-            for (int i = 0; i < swkjlist.model.getSize(); i++) {
-                len = ((String) swkjlist.model.elementAt(i)).length();
-
-                if (len > maxSize) {
-                    maxSize = len;
-                }
-            }
-
-            if (argv.length == 2) {
-                if (jvp != null) {
-                    Point pt = jvp.getViewPosition();
-
-                    Dimension viewSize = jvp.getViewSize();
-                    Dimension listSize = swkjlist.getSize();
-                    Dimension extentSize = jvp.getExtentSize();
-
-                    double fx1 = (1.0 * pt.x) / listSize.width;
-                    double fx2 = (1.0 * (pt.x + extentSize.width)) / listSize.width;
-                    TclObject list = TclList.newInstance();
-                    TclList.append(interp, list, TclDouble.newInstance(fx1));
-                    TclList.append(interp, list, TclDouble.newInstance(fx2));
-                    interp.setResult(list);
-                }
-            } else if (argv.length == 3) {
-                swkjlist.getIndex(argv[2].toString(), -1, idxResult);
-                idxResult.checkError(interp);
-                index = idxResult.i;
-
-                double fx1 = (1.0 * index) / maxSize;
-
-                if (fx1 < 0.0) {
-                    fx1 = 0.0;
                 }
 
-                Point pt = Widgets.getViewport((Component) swkjlist)
-                                  .getViewPosition();
-
-                Dimension listSize = swkjlist.getSize();
-                pt.y = (int) (fx1 * listSize.width);
-
-                if (jvp != null) {
-                    Dimension extentSize = jvp.getExtentSize();
-
-                    if ((pt.x + extentSize.width) > listSize.width) {
-                        pt.x = listSize.width - extentSize.width;
-                    }
-
-                    jvp.setViewPosition(pt);
-                }
-            } else if (argv[2].toString().equals("moveto")) {
-                if (argv.length != 4) {
-                    throw new TclNumArgsException(interp, 2, argv,
-                        "option ?arg arg ...?");
-                }
-
-                double fx1 = TclDouble.get(interp, argv[3]);
-
-                if (fx1 < 0.0) {
-                    fx1 = 0.0;
-                }
-
-                if (jvp != null) {
-                    Point pt = jvp.getViewPosition();
-
-                    Dimension listSize = swkjlist.getSize();
-                    pt.x = (int) (fx1 * listSize.height);
-
-                    Dimension extentSize = jvp.getExtentSize();
-
-                    if ((pt.x + extentSize.width) > listSize.width) {
-                        pt.x = listSize.width - extentSize.width;
-                    }
-
-                    jvp.setViewPosition(pt);
-                }
-            } else if (argv[2].toString().equals("scroll")) {
-                if (argv.length != 5) {
-                    throw new TclNumArgsException(interp, 2, argv,
-                        "option ?arg arg ...?");
-                }
-
-                if (argv[4].toString().equals("units")) {
+                if (argv.length == 2) {
                     if (jvp != null) {
                         Point pt = jvp.getViewPosition();
 
@@ -499,135 +426,131 @@ class SwkJListWidgetCmd implements Command {
                         Dimension extentSize = jvp.getExtentSize();
 
                         double fx1 = (1.0 * pt.x) / listSize.width;
-                        int units = TclInteger.get(interp, argv[3]);
-                        double incrX = listSize.width / maxSize;
-                        pt.x = (int) ((fx1 * listSize.width) + (incrX * units));
+                        double fx2 = (1.0 * (pt.x + extentSize.width)) / listSize.width;
+                        TclObject list = TclList.newInstance();
+                        TclList.append(interp, list, TclDouble.newInstance(fx1));
+                        TclList.append(interp, list, TclDouble.newInstance(fx2));
+                        interp.setResult(list);
+                    }
+                } else if (argv.length == 3) {
+                    swkjlist.getIndex(argv[2].toString(), -1, idxResult);
+                    idxResult.checkError(interp);
+                    index = idxResult.i;
+
+                    double fx1 = (1.0 * index) / maxSize;
+
+                    if (fx1 < 0.0) {
+                        fx1 = 0.0;
+                    }
+
+                    Point pt = Widgets.getViewport((Component) swkjlist).getViewPosition();
+
+                    Dimension listSize = swkjlist.getSize();
+                    pt.y = (int) (fx1 * listSize.width);
+
+                    if (jvp != null) {
+                        Dimension extentSize = jvp.getExtentSize();
 
                         if ((pt.x + extentSize.width) > listSize.width) {
                             pt.x = listSize.width - extentSize.width;
                         }
 
-                        if (pt.x < 0) {
-                            pt.x = 0;
-                        }
-
                         jvp.setViewPosition(pt);
                     }
-                } else if (argv[4].toString().equals("pages")) {
+                } else if (argv[2].toString().equals("moveto")) {
+                    if (argv.length != 4) {
+                        throw new TclNumArgsException(interp, 2, argv,
+                                "option ?arg arg ...?");
+                    }
+
+                    double fx1 = TclDouble.get(interp, argv[3]);
+
+                    if (fx1 < 0.0) {
+                        fx1 = 0.0;
+                    }
+
                     if (jvp != null) {
                         Point pt = jvp.getViewPosition();
 
-                        Dimension viewSize = jvp.getViewSize();
                         Dimension listSize = swkjlist.getSize();
-                        Dimension extentSize = jvp.getExtentSize();
+                        pt.x = (int) (fx1 * listSize.height);
 
-                        double fx1 = (1.0 * pt.x) / listSize.width;
-                        int units = TclInteger.get(interp, argv[3]);
-                        double incrX = extentSize.width;
-                        pt.x = (int) ((fx1 * listSize.width) + (incrX * units));
+                        Dimension extentSize = jvp.getExtentSize();
 
                         if ((pt.x + extentSize.width) > listSize.width) {
                             pt.x = listSize.width - extentSize.width;
                         }
 
-                        if (pt.x < 0) {
-                            pt.x = 0;
-                        }
-
                         jvp.setViewPosition(pt);
                     }
-                }
-            } else {
-                throw new TclException(interp,
-                    "unknown option \"" + argv[2].toString() +
-                    "\": must be moveto or scroll");
-            }
+                } else if (argv[2].toString().equals("scroll")) {
+                    if (argv.length != 5) {
+                        throw new TclNumArgsException(interp, 2, argv,
+                                "option ?arg arg ...?");
+                    }
 
-            break;
-        }
+                    if (argv[4].toString().equals("units")) {
+                        if (jvp != null) {
+                            Point pt = jvp.getViewPosition();
 
-        case OPT_YVIEW: {
-            double fy1;
-            double fy2;
-            JViewport jvp = Widgets.getViewport((Component) swkjlist);
+                            Dimension viewSize = jvp.getViewSize();
+                            Dimension listSize = swkjlist.getSize();
+                            Dimension extentSize = jvp.getExtentSize();
 
-            if (argv.length == 2) {
-                if (jvp != null) {
-                    Point pt = jvp.getViewPosition();
+                            double fx1 = (1.0 * pt.x) / listSize.width;
+                            int units = TclInteger.get(interp, argv[3]);
+                            double incrX = listSize.width / maxSize;
+                            pt.x = (int) ((fx1 * listSize.width) + (incrX * units));
 
-                    Dimension viewSize = jvp.getViewSize();
-                    Dimension listSize = swkjlist.getSize();
-                    Dimension extentSize = jvp.getExtentSize();
-                    fy1 = (1.0 * pt.y) / listSize.height;
-                    fy2 = (1.0 * (pt.y + extentSize.height)) / listSize.height;
+                            if ((pt.x + extentSize.width) > listSize.width) {
+                                pt.x = listSize.width - extentSize.width;
+                            }
 
-                    TclObject list = TclList.newInstance();
-                    TclList.append(interp, list, TclDouble.newInstance(fy1));
-                    TclList.append(interp, list, TclDouble.newInstance(fy2));
-                    interp.setResult(list);
-                }
-            } else if (argv.length == 3) {
-                swkjlist.getIndex(argv[2].toString(), -1, idxResult);
-                idxResult.checkError(interp);
-                index = idxResult.i;
+                            if (pt.x < 0) {
+                                pt.x = 0;
+                            }
 
-                if (swkjlist.model.getSize() == 0) {
-                    fy1 = 1.0;
+                            jvp.setViewPosition(pt);
+                        }
+                    } else if (argv[4].toString().equals("pages")) {
+                        if (jvp != null) {
+                            Point pt = jvp.getViewPosition();
+
+                            Dimension viewSize = jvp.getViewSize();
+                            Dimension listSize = swkjlist.getSize();
+                            Dimension extentSize = jvp.getExtentSize();
+
+                            double fx1 = (1.0 * pt.x) / listSize.width;
+                            int units = TclInteger.get(interp, argv[3]);
+                            double incrX = extentSize.width;
+                            pt.x = (int) ((fx1 * listSize.width) + (incrX * units));
+
+                            if ((pt.x + extentSize.width) > listSize.width) {
+                                pt.x = listSize.width - extentSize.width;
+                            }
+
+                            if (pt.x < 0) {
+                                pt.x = 0;
+                            }
+
+                            jvp.setViewPosition(pt);
+                        }
+                    }
                 } else {
-                    fy1 = (1.0 * index) / swkjlist.model.getSize();
+                    throw new TclException(interp,
+                            "unknown option \"" + argv[2].toString()
+                            + "\": must be moveto or scroll");
                 }
 
-                if (fy1 < 0.0) {
-                    fy1 = 0.0;
-                }
+                break;
+            }
 
-                if (jvp != null) {
-                    Point pt = jvp.getViewPosition();
+            case OPT_YVIEW: {
+                double fy1;
+                double fy2;
+                JViewport jvp = Widgets.getViewport((Component) swkjlist);
 
-                    Dimension listSize = swkjlist.getSize();
-                    pt.y = (int) (fy1 * listSize.height);
-
-                    Dimension extentSize = jvp.getExtentSize();
-
-                    if ((pt.y + extentSize.height) > listSize.height) {
-                        pt.y = listSize.height - extentSize.height;
-                    }
-
-                    jvp.setViewPosition(pt);
-                }
-            } else if (argv[2].toString().equals("moveto")) {
-                if (argv.length != 4) {
-                    throw new TclNumArgsException(interp, 2, argv,
-                        "option ?arg arg ...?");
-                }
-
-                fy1 = TclDouble.get(interp, argv[3]);
-
-                if (fy1 < 0.0) {
-                    fy1 = 0.0;
-                }
-
-                if (jvp != null) {
-                    Point pt = jvp.getViewPosition();
-
-                    Dimension listSize = swkjlist.getSize();
-                    pt.y = (int) (fy1 * listSize.height);
-
-                    Dimension extentSize = jvp.getExtentSize();
-
-                    if ((pt.y + extentSize.height) > listSize.height) {
-                        pt.y = listSize.height - extentSize.height;
-                    }
-
-                    jvp.setViewPosition(pt);
-                }
-            } else if (argv[2].toString().equals("scroll")) {
-                if (argv.length != 5) {
-                    throw new TclNumArgsException(interp, 2, argv,
-                        "option ?arg arg ...?");
-                }
-
-                if (argv[4].toString().equals("units")) {
+                if (argv.length == 2) {
                     if (jvp != null) {
                         Point pt = jvp.getViewPosition();
 
@@ -635,15 +558,116 @@ class SwkJListWidgetCmd implements Command {
                         Dimension listSize = swkjlist.getSize();
                         Dimension extentSize = jvp.getExtentSize();
                         fy1 = (1.0 * pt.y) / listSize.height;
+                        fy2 = (1.0 * (pt.y + extentSize.height)) / listSize.height;
 
-                        int units = TclInteger.get(interp, argv[3]);
+                        TclObject list = TclList.newInstance();
+                        TclList.append(interp, list, TclDouble.newInstance(fy1));
+                        TclList.append(interp, list, TclDouble.newInstance(fy2));
+                        interp.setResult(list);
+                    }
+                } else if (argv.length == 3) {
+                    swkjlist.getIndex(argv[2].toString(), -1, idxResult);
+                    idxResult.checkError(interp);
+                    index = idxResult.i;
 
-                        if (swkjlist.model.getSize() == 0) {
-                            pt.y = 0;
-                        } else {
-                            double incrY = listSize.height / swkjlist.model.getSize();
-                            pt.y = (int) ((fy1 * listSize.height) +
-                                (incrY * units));
+                    if (swkjlist.model.getSize() == 0) {
+                        fy1 = 1.0;
+                    } else {
+                        fy1 = (1.0 * index) / swkjlist.model.getSize();
+                    }
+
+                    if (fy1 < 0.0) {
+                        fy1 = 0.0;
+                    }
+
+                    if (jvp != null) {
+                        Point pt = jvp.getViewPosition();
+
+                        Dimension listSize = swkjlist.getSize();
+                        pt.y = (int) (fy1 * listSize.height);
+
+                        Dimension extentSize = jvp.getExtentSize();
+
+                        if ((pt.y + extentSize.height) > listSize.height) {
+                            pt.y = listSize.height - extentSize.height;
+                        }
+
+                        jvp.setViewPosition(pt);
+                    }
+                } else if (argv[2].toString().equals("moveto")) {
+                    if (argv.length != 4) {
+                        throw new TclNumArgsException(interp, 2, argv,
+                                "option ?arg arg ...?");
+                    }
+
+                    fy1 = TclDouble.get(interp, argv[3]);
+
+                    if (fy1 < 0.0) {
+                        fy1 = 0.0;
+                    }
+
+                    if (jvp != null) {
+                        Point pt = jvp.getViewPosition();
+
+                        Dimension listSize = swkjlist.getSize();
+                        pt.y = (int) (fy1 * listSize.height);
+
+                        Dimension extentSize = jvp.getExtentSize();
+
+                        if ((pt.y + extentSize.height) > listSize.height) {
+                            pt.y = listSize.height - extentSize.height;
+                        }
+
+                        jvp.setViewPosition(pt);
+                    }
+                } else if (argv[2].toString().equals("scroll")) {
+                    if (argv.length != 5) {
+                        throw new TclNumArgsException(interp, 2, argv,
+                                "option ?arg arg ...?");
+                    }
+
+                    if (argv[4].toString().equals("units")) {
+                        if (jvp != null) {
+                            Point pt = jvp.getViewPosition();
+
+                            Dimension viewSize = jvp.getViewSize();
+                            Dimension listSize = swkjlist.getSize();
+                            Dimension extentSize = jvp.getExtentSize();
+                            fy1 = (1.0 * pt.y) / listSize.height;
+
+                            int units = TclInteger.get(interp, argv[3]);
+
+                            if (swkjlist.model.getSize() == 0) {
+                                pt.y = 0;
+                            } else {
+                                double incrY = listSize.height / swkjlist.model.getSize();
+                                pt.y = (int) ((fy1 * listSize.height)
+                                        + (incrY * units));
+
+                                if ((pt.y + extentSize.height) > listSize.height) {
+                                    pt.y = listSize.height - extentSize.height;
+                                }
+
+                                if (pt.y < 0) {
+                                    pt.y = 0;
+                                }
+                            }
+
+                            jvp.setViewPosition(pt);
+                        }
+                    } else if (argv[4].toString().equals("pages")) {
+                        if (jvp != null) {
+                            Point pt = jvp.getViewPosition();
+
+                            Dimension viewSize = jvp.getViewSize();
+                            Dimension listSize = swkjlist.getSize();
+                            Dimension extentSize = jvp.getExtentSize();
+                            fy1 = (1.0 * pt.y) / listSize.height;
+
+                            int units = TclInteger.get(interp, argv[3]);
+                            double incrY = extentSize.height;
+                            pt.y = (int) ((fy1 * listSize.height)
+                                    + (incrY * units));
 
                             if ((pt.y + extentSize.height) > listSize.height) {
                                 pt.y = listSize.height - extentSize.height;
@@ -652,57 +676,33 @@ class SwkJListWidgetCmd implements Command {
                             if (pt.y < 0) {
                                 pt.y = 0;
                             }
-                        }
 
-                        jvp.setViewPosition(pt);
+                            jvp.setViewPosition(pt);
+                        }
                     }
-                } else if (argv[4].toString().equals("pages")) {
-                    if (jvp != null) {
-                        Point pt = jvp.getViewPosition();
-
-                        Dimension viewSize = jvp.getViewSize();
-                        Dimension listSize = swkjlist.getSize();
-                        Dimension extentSize = jvp.getExtentSize();
-                        fy1 = (1.0 * pt.y) / listSize.height;
-
-                        int units = TclInteger.get(interp, argv[3]);
-                        double incrY = extentSize.height;
-                        pt.y = (int) ((fy1 * listSize.height) +
-                            (incrY * units));
-
-                        if ((pt.y + extentSize.height) > listSize.height) {
-                            pt.y = listSize.height - extentSize.height;
-                        }
-
-                        if (pt.y < 0) {
-                            pt.y = 0;
-                        }
-
-                        jvp.setViewPosition(pt);
-                    }
+                } else {
+                    throw new TclException(interp,
+                            "unknown option \"" + argv[2].toString()
+                            + "\": must be moveto or scroll");
                 }
-            } else {
-                throw new TclException(interp,
-                    "unknown option \"" + argv[2].toString() +
-                    "\": must be moveto or scroll");
+
+                break;
             }
 
-            break;
-        }
-
-        default:
-            throw new TclRuntimeError("TclIndex.get() error");
+            default:
+                throw new TclRuntimeError("TclIndex.get() error");
         }
     }
 
     class BoundingBox extends GetValueOnEventThread {
+
         SwkJList swkjlist;
         String item = null;
         Rectangle rect = null;
         String errMessage = null;
 
         Rectangle exec(final SwkJList swkjlist, final String item)
-            throws TclException {
+                throws TclException {
             this.swkjlist = swkjlist;
             this.item = item;
             execOnThread();
@@ -747,8 +747,8 @@ class SwkJListWidgetCmd implements Command {
                 rect.x -= pt.x;
                 rect.y -= pt.y;
 
-                if (((rect.y + rect.height) <= 0) ||
-                        (rect.y >= extentSize.height)) {
+                if (((rect.y + rect.height) <= 0)
+                        || (rect.y >= extentSize.height)) {
                     rect = null;
                 }
             }
@@ -756,6 +756,7 @@ class SwkJListWidgetCmd implements Command {
     }
 
     class CurrentSelection extends GetValueOnEventThread {
+
         SwkJList swkjlist;
         int[] selected = null;
 
@@ -772,13 +773,14 @@ class SwkJListWidgetCmd implements Command {
     }
 
     class Delete extends UpdateOnEventThread {
+
         SwkJList swkjlist = null;
         String firstArg = null;
         String lastArg = null;
         String errMessage = null;
 
         void exec(final SwkJList swkjlist, final String firstArg,
-            final String lastArg) throws TclException {
+                final String lastArg) throws TclException {
             this.firstArg = firstArg;
             this.lastArg = lastArg;
             this.swkjlist = swkjlist;
@@ -833,6 +835,7 @@ class SwkJListWidgetCmd implements Command {
     }
 
     class Items extends GetValueOnEventThread {
+
         SwkJList swkjlist = null;
         String firstArg = null;
         String lastArg = null;
@@ -840,7 +843,7 @@ class SwkJListWidgetCmd implements Command {
         ArrayList resultItems = new ArrayList();
 
         void exec(final SwkJList swkjlist, final String firstArg,
-            final String lastArg) throws TclException {
+                final String lastArg) throws TclException {
             this.swkjlist = swkjlist;
             this.firstArg = firstArg;
             this.lastArg = lastArg;
@@ -861,7 +864,7 @@ class SwkJListWidgetCmd implements Command {
 
                 for (int i = 0; i < n; i++) {
                     TclList.append(interp, list,
-                        TclString.newInstance((String) resultItems.get(i)));
+                            TclString.newInstance((String) resultItems.get(i)));
                 }
 
                 interp.setResult(list);
@@ -913,6 +916,7 @@ class SwkJListWidgetCmd implements Command {
     }
 
     class Size extends GetValueOnEventThread {
+
         SwkJList swkjlist = null;
         int size = 0;
 
@@ -929,12 +933,13 @@ class SwkJListWidgetCmd implements Command {
     }
 
     class See extends UpdateOnEventThread {
+
         SwkJList swkjlist = null;
         String item = null;
         String errMessage = null;
 
         void exec(final SwkJList swkjlist, final String item)
-            throws TclException {
+                throws TclException {
             this.item = item;
             this.swkjlist = swkjlist;
             execOnThread();
@@ -972,13 +977,14 @@ class SwkJListWidgetCmd implements Command {
     }
 
     class Index extends GetValueOnEventThread {
+
         SwkJList swkjlist = null;
         String item = null;
         int index = 0;
         String errMessage = null;
 
         int exec(final SwkJList swkjlist, final String item)
-            throws TclException {
+                throws TclException {
             this.item = item;
             this.swkjlist = swkjlist;
             execOnThread();
@@ -1006,13 +1012,14 @@ class SwkJListWidgetCmd implements Command {
     }
 
     class Activate extends GetValueOnEventThread {
+
         SwkJList swkjlist = null;
         String item = null;
         int index = 0;
         String errMessage = null;
 
         int exec(final SwkJList swkjlist, final String item)
-            throws TclException {
+                throws TclException {
             this.item = item;
             this.swkjlist = swkjlist;
             execOnThread();
@@ -1052,6 +1059,7 @@ class SwkJListWidgetCmd implements Command {
     }
 
     class Nearest extends GetValueOnEventThread {
+
         SwkJList swkjlist = null;
         int y = 0;
         int index = 0;
@@ -1096,6 +1104,7 @@ class SwkJListWidgetCmd implements Command {
     }
 
     class Insert extends GetValueOnEventThread {
+
         SwkJList swkjlist = null;
         int size = 0;
         String[] items = null;
@@ -1104,7 +1113,7 @@ class SwkJListWidgetCmd implements Command {
         boolean atEnd = false;
 
         int exec(final SwkJList swkjlist, String idxString,
-            final String[] items, boolean atEnd) throws TclException {
+                final String[] items, boolean atEnd) throws TclException {
             this.swkjlist = swkjlist;
             this.items = items;
             this.atEnd = atEnd;
@@ -1155,6 +1164,7 @@ class SwkJListWidgetCmd implements Command {
     }
 
     class Selection extends GetValueOnEventThread {
+
         static final int CLEAR = 0;
         static final int ANCHOR = 1;
         static final int SET = 2;
@@ -1165,7 +1175,7 @@ class SwkJListWidgetCmd implements Command {
         String errMessage = null;
 
         void execClear(final SwkJList swkjlist, final String firstArg,
-            final String lastArg) throws TclException {
+                final String lastArg) throws TclException {
             this.firstArg = firstArg;
             this.lastArg = lastArg;
             this.swkjlist = swkjlist;
@@ -1178,7 +1188,7 @@ class SwkJListWidgetCmd implements Command {
         }
 
         void execSet(final SwkJList swkjlist, final String firstArg,
-            final String lastArg) {
+                final String lastArg) {
             this.firstArg = firstArg;
             this.lastArg = lastArg;
             this.swkjlist = swkjlist;
@@ -1307,13 +1317,14 @@ class SwkJListWidgetCmd implements Command {
     }
 
     class Includes extends GetValueOnEventThread {
+
         SwkJList swkjlist = null;
         String item = null;
         boolean includes = false;
         String errMessage = null;
 
         boolean exec(final SwkJList swkjlist, final String item)
-            throws TclException {
+                throws TclException {
             this.item = item;
             this.swkjlist = swkjlist;
             execOnThread();

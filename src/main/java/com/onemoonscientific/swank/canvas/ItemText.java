@@ -44,15 +44,13 @@ import java.text.*;
 
 import java.util.*;
 
-
 public class ItemText extends SwkShape implements TextInterface {
 
     static BreakIterator wordIterator = BreakIterator.getWordInstance();
     static CanvasParameter[] parameters = {
         new TextParameter(), new AnchorParameter(), new FontParameter(),
         new WidthParameter(), new FillParameter(), new TagsParameter(), new StateParameter(),
-        new TransformerParameter(), new RotateParameter(),new NodeParameter(),
-     };
+        new TransformerParameter(), new RotateParameter(), new NodeParameter(),};
     static Map parameterMap = new TreeMap();
 
     static {
@@ -82,8 +80,8 @@ public class ItemText extends SwkShape implements TextInterface {
     }
 
     public void paintShape(Graphics2D g2) {
-        shape = textPar.paint(g2, getCanvas().getFontRenderContext(), this, storeCoords[0],storeCoords[1]);
-   }
+        shape = textPar.paint(g2, getCanvas().getFontRenderContext(), this, storeCoords[0], storeCoords[1]);
+    }
 
     public CanvasParameter[] getParameters() {
         return parameters;
@@ -146,11 +144,11 @@ public class ItemText extends SwkShape implements TextInterface {
     }
 
     public boolean hitShape(double x1, double y1) {
-       boolean result = false;
-       if (shape != null) {
-          result = shape.contains(x1,y1);
-       }
-       return result;
+        boolean result = false;
+        if (shape != null) {
+            result = shape.contains(x1, y1);
+        }
+        return result;
     }
 
     // FIXME getting bounds of multiline text not correct
@@ -158,42 +156,41 @@ public class ItemText extends SwkShape implements TextInterface {
         if (shape != null) {
             return shape.getBounds2D();
         } else {
-        
-        String text = getText();
 
-        if (text == null) {
-            return new Rectangle2D.Float((float) getX(), (float) getY(), 1, 1);
+            String text = getText();
+
+            if (text == null) {
+                return new Rectangle2D.Float((float) getX(), (float) getY(), 1, 1);
+            }
+
+            FontRenderContext fRC = canvas.getFontRenderContext();
+
+            if (fRC == null) {
+                return new Rectangle2D.Float((float) getX(), (float) getY(), 1, 1);
+            }
+
+            AffineTransform aT = new AffineTransform();
+            Font font = getFont();
+            float width1 = (float) (font.getStringBounds(text, fRC).getWidth());
+            float height1 = (float) (font.getStringBounds(text, fRC).getHeight());
+            float width2 = (float) (width1 * getAnchor()[1]);
+            float height2 = (float) (height1 * getAnchor()[0]);
+            Rectangle2D rf1 = new Rectangle2D.Double((float) (getX() - width2),
+                    (float) (getY() - height1 + height2), width1, height1);
+            rf1 = aT.createTransformedShape(rf1).getBounds2D();
+
+            return rf1;
         }
 
-        FontRenderContext fRC = canvas.getFontRenderContext();
-
-        if (fRC == null) {
-            return new Rectangle2D.Float((float) getX(), (float) getY(), 1, 1);
-        }
-
-        AffineTransform aT = new AffineTransform();
-        Font font = getFont();
-        float width1 = (float) (font.getStringBounds(text, fRC).getWidth());
-        float height1 = (float) (font.getStringBounds(text, fRC).getHeight());
-        float width2 = (float) (width1 * getAnchor()[1]);
-        float height2 = (float) (height1 * getAnchor()[0]);
-        Rectangle2D rf1 = new Rectangle2D.Double((float) (getX() - width2),
-                (float) (getY() - height1 + height2), width1, height1);
-        rf1 =  aT.createTransformedShape(rf1).getBounds2D();
-
-        return rf1;
-        }
-         
     }
-
 
     public void drawHandles(Graphics2D g2) {
         if (shape != null) {
             Rectangle2D bounds = shape.getBounds2D();
-            double x1 =  bounds.getMinX();
-            double y1 =  bounds.getMinY();
-            double x2 =  bounds.getMaxX();
-            double y2 =  bounds.getMaxY();
+            double x1 = bounds.getMinX();
+            double y1 = bounds.getMinY();
+            double x2 = bounds.getMaxX();
+            double y2 = bounds.getMaxY();
             double xm = (x1 + x2) / 2;
             double ym = (y1 + y2) / 2;
             double[] xy = {x2, ym};
@@ -207,24 +204,25 @@ public class ItemText extends SwkShape implements TextInterface {
         int hitIndex = -1;
         if (shape != null) {
             Rectangle2D bounds = shape.getBounds2D();
-            double x1 =  bounds.getMinX();
-            double y1 =  bounds.getMinY();
-            double x2 =  bounds.getMaxX();
-            double y2 =  bounds.getMaxY();
+            double x1 = bounds.getMinX();
+            double y1 = bounds.getMinY();
+            double x2 = bounds.getMaxX();
+            double y2 = bounds.getMaxY();
             double xm = (x1 + x2) / 2;
             double ym = (y1 + y2) / 2;
             double[] xy = {x2, ym};
 
             for (int i = 0; i < xy.length; i += 2) {
                 if (hitHandle((int) xy[i], (int) xy[i + 1], testX, testY)) {
-                    hitIndex = i/2;
+                    hitIndex = i / 2;
                     break;
                 }
             }
         }
         return hitIndex;
     }
-   public Cursor getHandleCursor(int handle) {
+
+    public Cursor getHandleCursor(int handle) {
         final Cursor cursor;
         switch (handle) {
             case 0:
@@ -235,5 +233,4 @@ public class ItemText extends SwkShape implements TextInterface {
         }
         return cursor;
     }
-
 }

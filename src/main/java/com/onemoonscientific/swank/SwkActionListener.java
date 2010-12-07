@@ -38,8 +38,8 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
-
 public class SwkActionListener implements ActionListener, SwkListener {
+
     Interp interp;
     String menu = null;
     Component component;
@@ -60,7 +60,7 @@ public class SwkActionListener implements ActionListener, SwkListener {
     public void actionPerformed(ActionEvent e) {
         if (!EventQueue.isDispatchThread()) {
             System.out.println(
-                "SwkActionListener: actionPerformed not on event thread");
+                    "SwkActionListener: actionPerformed not on event thread");
         }
 
         BindEvent bEvent = new BindEvent(interp, (SwkListener) this,
@@ -71,13 +71,13 @@ public class SwkActionListener implements ActionListener, SwkListener {
     public void processEvent(EventObject eventObject, Object obj, int subtype) {
         if (EventQueue.isDispatchThread()) {
             System.out.println(
-                "SwkActionListener: processEvent on event thread");
+                    "SwkActionListener: processEvent on event thread");
         }
 
         ActionEvent e = (ActionEvent) eventObject;
 
         if ((menu != null) && (menu.length() != 0)) {
-            TclObject tObj = (TclObject) Widgets.getWidget(interp,menu);
+            TclObject tObj = (TclObject) Widgets.getWidget(interp, menu);
 
             if (tObj != null) {
                 try {
@@ -86,19 +86,20 @@ public class SwkActionListener implements ActionListener, SwkListener {
 
                     if (object instanceof javax.swing.JPopupMenu) {
                         SwingUtilities.invokeLater(new Runnable() {
-                                public void run() {
-                                    ((JPopupMenu) object).show(component, 0,
+
+                            public void run() {
+                                ((JPopupMenu) object).show(component, 0,
                                         dim.height + 2);
-                                }
-                            });
+                            }
+                        });
 
                         //((JPopupMenu) object).setLocation (100,100);
                         //((JPopupMenu) object).setVisible(true);
                     } else if (object instanceof javax.swing.JMenu) {
                         final SwkJMenu swkjmenu = (SwkJMenu) object;
 
-                        if ((swkjmenu.postCommand != null) &&
-                                (swkjmenu.postCommand.length() > 0)) {
+                        if ((swkjmenu.postCommand != null)
+                                && (swkjmenu.postCommand.length() > 0)) {
                             try {
                                 interp.eval(swkjmenu.postCommand);
                             } catch (TclException tclE) {
@@ -106,18 +107,19 @@ public class SwkActionListener implements ActionListener, SwkListener {
                                     return;
                                 } else {
                                     interp.addErrorInfo(
-                                        "\n    (\"binding\" script)");
+                                            "\n    (\"binding\" script)");
                                     interp.backgroundError();
                                 }
                             }
                         }
 
                         SwingUtilities.invokeLater(new Runnable() {
-                                public void run() {
-                                    swkjmenu.getPopupMenu().show(component, 0,
+
+                            public void run() {
+                                swkjmenu.getPopupMenu().show(component, 0,
                                         dim.height + 2);
-                                }
-                            });
+                            }
+                        });
                     }
                 } catch (TclException tclE) {
                 }

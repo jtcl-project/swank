@@ -2,8 +2,8 @@ package com.onemoonscientific.swank;
 
 import javax.swing.SwingUtilities;
 
-
 public class Setter extends UpdateOnEventThread {
+
     int iOpt = 0;
     public int iValue = 0;
     public boolean bValue = false;
@@ -97,9 +97,10 @@ public class Setter extends UpdateOnEventThread {
     void doWait() {
         try {
             SwingUtilities.invokeAndWait(new Runnable() {
-                    public void run() {
-                    }
-                });
+
+                public void run() {
+                }
+            });
         } catch (Exception e) {
         }
     }

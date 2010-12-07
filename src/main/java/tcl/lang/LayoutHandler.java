@@ -10,8 +10,8 @@ import java.util.Iterator;
 
 import javax.swing.*;
 
-
 public class LayoutHandler extends IdleHandler {
+
     private static HashSet repaintComponents = new HashSet();
     private static HashSet layoutContainers = new HashSet();
 
@@ -24,7 +24,7 @@ public class LayoutHandler extends IdleHandler {
     }
 
     synchronized public static void addRepaintRequest(Interp interp,
-        JComponent jcomp) {
+            JComponent jcomp) {
         if (jcomp != null) {
             repaintComponents.add(jcomp);
 
@@ -45,10 +45,11 @@ public class LayoutHandler extends IdleHandler {
     public static synchronized void doRepaints() {
         try {
             SwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-                        doRepaintsNow();
-                    }
-                });
+
+                public void run() {
+                    doRepaintsNow();
+                }
+            });
         } catch (Exception e) {
         }
     }

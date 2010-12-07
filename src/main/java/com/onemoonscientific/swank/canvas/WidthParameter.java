@@ -4,8 +4,8 @@ import com.onemoonscientific.swank.*;
 
 import tcl.lang.*;
 
-
 public class WidthParameter extends CanvasParameter {
+
     private static String name = "width";
     private static double defValue = 1.0;
     private float newValue = 1.0f;
@@ -27,7 +27,7 @@ public class WidthParameter extends CanvasParameter {
     }
 
     public TclObject getValue(Interp interp, SwkShape swkShape)
-        throws TclException {
+            throws TclException {
         if (swkShape == null) {
             throw new TclException(interp, "shape doesn't exist");
         }
@@ -36,7 +36,7 @@ public class WidthParameter extends CanvasParameter {
     }
 
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
-        throws TclException {
+            throws TclException {
         newValue = (float) SwankUtil.getTkSizeD(interp,
                 swkCanvas.getComponent(), arg);
     }

@@ -4,8 +4,8 @@ import tcl.lang.*;
 
 import java.awt.geom.*;
 
-
 public class RadiusParameter extends CanvasParameter {
+
     private static String name = "radius";
     private static double defValue = 90.0;
     double newValue = defValue;
@@ -27,7 +27,7 @@ public class RadiusParameter extends CanvasParameter {
     }
 
     public TclObject getValue(Interp interp, SwkShape swkShape)
-        throws TclException {
+            throws TclException {
         double radius = 0.0;
 
         if ((swkShape != null) && (swkShape instanceof SymbolInterface)) {
@@ -38,7 +38,7 @@ public class RadiusParameter extends CanvasParameter {
     }
 
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
-        throws TclException {
+            throws TclException {
         newValue = TclDouble.get(interp, arg);
     }
 

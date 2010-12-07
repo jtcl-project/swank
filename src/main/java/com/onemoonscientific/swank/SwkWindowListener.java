@@ -37,8 +37,8 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
-
 public class SwkWindowListener extends WindowAdapter implements SwkListener {
+
     Interp interp;
     String command = "puts component";
     ArrayList<SwkBinding> bindings;
@@ -50,10 +50,10 @@ public class SwkWindowListener extends WindowAdapter implements SwkListener {
         this.component = component;
         bindings = new ArrayList<SwkBinding>();
     }
+
     public ArrayList<SwkBinding> getBindings() {
         return bindings;
     }
-
 
     public void setCommand(String name) {
         command = name;
@@ -67,7 +67,7 @@ public class SwkWindowListener extends WindowAdapter implements SwkListener {
                 binding = (SwkBinding) bindings.get(i);
 
                 if (binding.equals(newBinding)) {
-                    bindings.set(i,newBinding);
+                    bindings.set(i, newBinding);
 
                     return;
                 }
@@ -84,10 +84,10 @@ public class SwkWindowListener extends WindowAdapter implements SwkListener {
     public void windowActivated(WindowEvent e) {
         processWindow(e, SwkBinding.ACTIVATED);
     }
+
     public void windowDeactivated(WindowEvent e) {
         processWindow(e, SwkBinding.DEACTIVATED);
     }
-
 
     public void processWindow(WindowEvent e, int subtype) {
         BindEvent bEvent = new BindEvent(interp, (SwkListener) this,
@@ -101,7 +101,7 @@ public class SwkWindowListener extends WindowAdapter implements SwkListener {
         Vector tagList = ((SwkWidget) component).getTagList();
 
         SwkBinding binding;
-      for (int j = 0; j < tagList.size(); j++) {
+        for (int j = 0; j < tagList.size(); j++) {
             bindings = null;
 
             String tag = (String) tagList.elementAt(j);
@@ -120,26 +120,26 @@ public class SwkWindowListener extends WindowAdapter implements SwkListener {
                 continue;
             }
 
-        for (int i = 0; i < bindings.size(); i++) {
-            binding = (SwkBinding) bindings.get(i);
-            if (binding.subtype != subtype) {
-                continue;
-            }
+            for (int i = 0; i < bindings.size(); i++) {
+                binding = (SwkBinding) bindings.get(i);
+                if (binding.subtype != subtype) {
+                    continue;
+                }
 
 
-            if ((binding.command != null) && (binding.command.length() != 0)) {
-                try {
-                    BindCmd.doCmd(interp, binding, component, e);
-                } catch (TclException tclE) {
-                    if (tclE.getCompletionCode() == TCL.BREAK) {
-                        return;
-                    } else {
-                        interp.addErrorInfo("\n    (\"binding\" script)");
-                        interp.backgroundError();
+                if ((binding.command != null) && (binding.command.length() != 0)) {
+                    try {
+                        BindCmd.doCmd(interp, binding, component, e);
+                    } catch (TclException tclE) {
+                        if (tclE.getCompletionCode() == TCL.BREAK) {
+                            return;
+                        } else {
+                            interp.addErrorInfo("\n    (\"binding\" script)");
+                            interp.backgroundError();
+                        }
                     }
                 }
             }
         }
-    }
     }
 }

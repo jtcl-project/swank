@@ -50,11 +50,10 @@ public class ItemAnnotation extends ItemLine implements TextInterface {
     static CanvasParameter[] parameters = {
         new FillParameter(), new SmoothParameter(), new DashParameter(),
         new DashPhaseParameter(), new WidthParameter(), new RotateParameter(),
-        new ShearParameter(), new TagsParameter(), new StateParameter(),new NodeParameter(),
+        new ShearParameter(), new TagsParameter(), new StateParameter(), new NodeParameter(),
         new TransformerParameter(), new CapstyleParameter(),
         new JoinstyleParameter(), new ArrowShapeParameter(),
-        new TextParameter(), new FontParameter(), new TextcolorParameter(),
-    };
+        new TextParameter(), new FontParameter(), new TextcolorParameter(),};
     static Map parameterMap = new TreeMap();
 
     static {
@@ -69,6 +68,7 @@ public class ItemAnnotation extends ItemLine implements TextInterface {
         endPointStyle1 = EndPointStyle.SQUARE;
         endPointStyle2 = EndPointStyle.ARROW;
     }
+
     public String getText() {
         return textPar.getText();
     }
@@ -113,7 +113,7 @@ public class ItemAnnotation extends ItemLine implements TextInterface {
         AffineTransform shapeTransform = getTransform();
 
         g2.setPaint(outline);
-        double[] xy = {storeCoords[0],storeCoords[1],storeCoords[2],storeCoords[3]};
+        double[] xy = {storeCoords[0], storeCoords[1], storeCoords[2], storeCoords[3]};
         if ((endPointStyle1 == EndPointStyle.NONE) && (endPointStyle2 == EndPointStyle.NONE)) {
             if (shapeTransform != null) {
                 g2.draw(shapeTransform.createTransformedShape(shape));
@@ -126,7 +126,7 @@ public class ItemAnnotation extends ItemLine implements TextInterface {
             // draw line
             if (shapeTransform != null) {
                 g2.draw(shapeTransform.createTransformedShape(shape));
-                shapeTransform.transform(xy,0,xy,0,xy.length/2);
+                shapeTransform.transform(xy, 0, xy, 0, xy.length / 2);
             } else {
                 g2.draw(shape);
             }
@@ -144,7 +144,7 @@ public class ItemAnnotation extends ItemLine implements TextInterface {
                 g2.draw(lastArrowPath);
             }
         }
-        float[]  anchor = new float[2];
+        float[] anchor = new float[2];
         anchor[1] = 0.5f;
         if (xy[1] > xy[3]) {
             anchor[0] = 1.0f;
@@ -152,7 +152,7 @@ public class ItemAnnotation extends ItemLine implements TextInterface {
             anchor[0] = 0.0f;
         }
         setAnchor(anchor);
-        textPar.paint(g2, getCanvas().getFontRenderContext(), this,storeCoords[0],storeCoords[1]);
+        textPar.paint(g2, getCanvas().getFontRenderContext(), this, storeCoords[0], storeCoords[1]);
 
     }
 
@@ -182,27 +182,27 @@ public class ItemAnnotation extends ItemLine implements TextInterface {
 
     public void drawHandles(Graphics2D g2) {
         if (shape != null) {
-            double[] xy = {storeCoords[0],storeCoords[1],storeCoords[2],storeCoords[3]};
+            double[] xy = {storeCoords[0], storeCoords[1], storeCoords[2], storeCoords[3]};
             AffineTransform shapeTransform = getTransform();
             if (shapeTransform != null) {
-                shapeTransform.transform(xy,0,xy,0,xy.length/2);
+                shapeTransform.transform(xy, 0, xy, 0, xy.length / 2);
             }
-            drawHandle(g2, (int) xy[0],(int) xy[1]);
-            drawHandle(g2, (int) xy[2],(int) xy[3]);
+            drawHandle(g2, (int) xy[0], (int) xy[1]);
+            drawHandle(g2, (int) xy[2], (int) xy[3]);
         }
     }
 
     public int hitHandles(double testX, double testY) {
         int hitIndex = -1;
         if (shape != null) {
-            double[] xy = {storeCoords[0],storeCoords[1],storeCoords[2],storeCoords[3]};
+            double[] xy = {storeCoords[0], storeCoords[1], storeCoords[2], storeCoords[3]};
             AffineTransform shapeTransform = getTransform();
             if (shapeTransform != null) {
-                shapeTransform.transform(xy,0,xy,0,xy.length/2);
+                shapeTransform.transform(xy, 0, xy, 0, xy.length / 2);
             }
-            if (hitHandle((int) xy[0],(int) xy[1], testX, testY)) {
+            if (hitHandle((int) xy[0], (int) xy[1], testX, testY)) {
                 hitIndex = 0;
-            } else if (hitHandle((int) xy[2],(int) xy[3], testX, testY)) {
+            } else if (hitHandle((int) xy[2], (int) xy[3], testX, testY)) {
                 hitIndex = 1;
             }
         }

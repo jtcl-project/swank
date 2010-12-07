@@ -26,10 +26,10 @@ package com.onemoonscientific.swank;
 
 import tcl.lang.*;
 
-
 public interface SwkTextVariable {
+
     public void setTextVariable(Interp interp, String name)
-        throws TclException;
+            throws TclException;
 
     public String getTextVariable();
 }

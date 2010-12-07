@@ -37,37 +37,38 @@ import java.util.*;
 
 import javax.swing.*;
 
-
 public class EmbedCmd implements Command {
+
     public void cmdProc(Interp interp, TclObject[] argv)
-        throws TclException {
+            throws TclException {
         if (argv.length != 3) {
             throw new TclNumArgsException(interp, 1, argv, "window container");
         }
 
-        TclObject tObj = (TclObject) Widgets.getWidget(interp,argv[1].toString());
+        TclObject tObj = (TclObject) Widgets.getWidget(interp, argv[1].toString());
 
         if (tObj == null) {
             throw new TclException(interp,
-                "bad window path name \"" + argv[1].toString() + "\"");
+                    "bad window path name \"" + argv[1].toString() + "\"");
         }
 
         SwkWidget swkwidget = (SwkWidget) ReflectObject.get(interp, tObj);
-        Object  containerObject =  ReflectObject.get(interp, argv[2]);
+        Object containerObject = ReflectObject.get(interp, argv[2]);
         if (!(containerObject instanceof Container)) {
             throw new TclException(interp, "container object not instance of Container");
         }
         Component component = (Component) swkwidget;
         Container container = (Container) containerObject;
-        add(container,component);
+        add(container, component);
     }
 
     public static void add(final Container container, final Component component) {
         (new UpdateOnEventThread() {
-                public void run() {
-                    container.setLayout(new BorderLayout());
-                    container.add(component,BorderLayout.CENTER);
-                }
-            }).execOnThread();
+
+            public void run() {
+                container.setLayout(new BorderLayout());
+                container.add(component, BorderLayout.CENTER);
+            }
+        }).execOnThread();
     }
 }

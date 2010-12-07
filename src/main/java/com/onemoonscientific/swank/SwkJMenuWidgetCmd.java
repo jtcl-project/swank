@@ -24,11 +24,11 @@ import javax.swing.*;
 import javax.swing.text.*;
 import javax.swing.tree.*;
 
-
 class SwkJMenuWidgetCmd implements Command {
+
     static final private String[] validCmds = {
         "cget", "configure", "add", "delete", "popup", "post",
-        "invoke", "index","insert","entrycget", "entryconfigure"
+        "invoke", "index", "insert", "entrycget", "entryconfigure"
     };
     static final private int OPT_CGET = 0;
     static final private int OPT_CONFIGURE = 1;
@@ -49,151 +49,151 @@ class SwkJMenuWidgetCmd implements Command {
     }
 
     public void cmdProc(final Interp interp, final TclObject[] argv)
-        throws TclException {
+            throws TclException {
         int i;
 
         if (argv.length < 2) {
             throw new TclNumArgsException(interp, 1, argv,
-                "option ?arg arg ...?");
+                    "option ?arg arg ...?");
         }
 
         this.interp = interp;
 
         int opt = TclIndex.get(interp, argv[1], validCmds, "option", 0);
-        TclObject tObj = (TclObject) Widgets.getWidget(interp,argv[0].toString());
+        TclObject tObj = (TclObject) Widgets.getWidget(interp, argv[0].toString());
 
         if (tObj == null) {
             throw new TclException(interp,
-                "bad window path name \"" + argv[0].toString() + "\"");
+                    "bad window path name \"" + argv[0].toString() + "\"");
         }
 
         final SwkJMenu swkjmenu = (SwkJMenu) ReflectObject.get(interp, tObj);
 
         switch (opt) {
-        case OPT_CGET:
+            case OPT_CGET:
 
-            if (argv.length != 3) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-
-            interp.setResult(swkjmenu.jget(interp, argv[2]));
-
-            break;
-
-        case OPT_CONFIGURE:
-
-            if (!gotDefaults) {
-                swkjmenu.setResourceDefaults();
-                gotDefaults = true;
-            }
-
-            if (argv.length == 2) {
-                swkjmenu.jgetAll(interp);
-            } else if (argv.length == 3) {
-                String result = swkjmenu.jget(interp, argv[2]);
-                ResourceObject ro = (ResourceObject) SwkJMenu.resourceDB.get(argv[2].toString());
-
-                if (ro == null) {
-                    throw new TclException(interp,
-                        "unknown option \"" + argv[2].toString() + "\"");
+                if (argv.length != 3) {
+                    throw new TclNumArgsException(interp, 2, argv, "option");
                 }
 
-                TclObject list = TclList.newInstance();
-                TclList.append(interp, list,
-                    TclString.newInstance(argv[2].toString()));
-                TclList.append(interp, list, TclString.newInstance(ro.resource));
-                TclList.append(interp, list, TclString.newInstance(ro.className));
-                TclList.append(interp, list,
-                    TclString.newInstance(ro.defaultVal));
-                TclList.append(interp, list, TclString.newInstance(result));
-                interp.setResult(list);
-            } else {
-                swkjmenu.configure(interp, argv, 2);
-            }
+                interp.setResult(swkjmenu.jget(interp, argv[2]));
 
-            break;
-        case OPT_ENTRYCGET:
-            if (argv.length != 4) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-            String ecgetResult = (new EntryConfigure()).execGet(interp, swkjmenu,  argv, 2);
-            interp.setResult(ecgetResult);
-            break;
+                break;
 
-        case OPT_ENTRYCONFIGURE:
-            if (argv.length == 2) {
-                throw new TclNumArgsException(interp, 2, argv, "index ?options?");
-            } else if (argv.length == 3) {
-                (new EntryConfigure()).execGetAll(interp, swkjmenu, argv, 2);
-            } else if (argv.length == 4) {
-                String result = (new EntryConfigure()).execGet(interp, swkjmenu,  argv, 2);
-                ResourceObject ro = (ResourceObject) SwkJMenu.resourceDB.get(argv[3].toString());
+            case OPT_CONFIGURE:
 
-                if (ro == null) {
-                    throw new TclException(interp,
-                        "unknown option \"" + argv[2].toString() + "\"");
+                if (!gotDefaults) {
+                    swkjmenu.setResourceDefaults();
+                    gotDefaults = true;
                 }
 
-                TclObject list = TclList.newInstance();
-                TclList.append(interp, list,
-                    TclString.newInstance(argv[3].toString()));
-                TclList.append(interp, list, TclString.newInstance(argv[3].toString()));
-                TclList.append(interp, list, TclString.newInstance(argv[3].toString()));
-                TclList.append(interp, list, TclString.newInstance(""));
-                TclList.append(interp, list, TclString.newInstance(result));
-                interp.setResult(list);
-            } else {
-                (new EntryConfigure()).execConfigure(interp, swkjmenu, argv, 2);
+                if (argv.length == 2) {
+                    swkjmenu.jgetAll(interp);
+                } else if (argv.length == 3) {
+                    String result = swkjmenu.jget(interp, argv[2]);
+                    ResourceObject ro = (ResourceObject) SwkJMenu.resourceDB.get(argv[2].toString());
+
+                    if (ro == null) {
+                        throw new TclException(interp,
+                                "unknown option \"" + argv[2].toString() + "\"");
+                    }
+
+                    TclObject list = TclList.newInstance();
+                    TclList.append(interp, list,
+                            TclString.newInstance(argv[2].toString()));
+                    TclList.append(interp, list, TclString.newInstance(ro.resource));
+                    TclList.append(interp, list, TclString.newInstance(ro.className));
+                    TclList.append(interp, list,
+                            TclString.newInstance(ro.defaultVal));
+                    TclList.append(interp, list, TclString.newInstance(result));
+                    interp.setResult(list);
+                } else {
+                    swkjmenu.configure(interp, argv, 2);
+                }
+
+                break;
+            case OPT_ENTRYCGET:
+                if (argv.length != 4) {
+                    throw new TclNumArgsException(interp, 2, argv, "option");
+                }
+                String ecgetResult = (new EntryConfigure()).execGet(interp, swkjmenu, argv, 2);
+                interp.setResult(ecgetResult);
+                break;
+
+            case OPT_ENTRYCONFIGURE:
+                if (argv.length == 2) {
+                    throw new TclNumArgsException(interp, 2, argv, "index ?options?");
+                } else if (argv.length == 3) {
+                    (new EntryConfigure()).execGetAll(interp, swkjmenu, argv, 2);
+                } else if (argv.length == 4) {
+                    String result = (new EntryConfigure()).execGet(interp, swkjmenu, argv, 2);
+                    ResourceObject ro = (ResourceObject) SwkJMenu.resourceDB.get(argv[3].toString());
+
+                    if (ro == null) {
+                        throw new TclException(interp,
+                                "unknown option \"" + argv[2].toString() + "\"");
+                    }
+
+                    TclObject list = TclList.newInstance();
+                    TclList.append(interp, list,
+                            TclString.newInstance(argv[3].toString()));
+                    TclList.append(interp, list, TclString.newInstance(argv[3].toString()));
+                    TclList.append(interp, list, TclString.newInstance(argv[3].toString()));
+                    TclList.append(interp, list, TclString.newInstance(""));
+                    TclList.append(interp, list, TclString.newInstance(result));
+                    interp.setResult(list);
+                } else {
+                    (new EntryConfigure()).execConfigure(interp, swkjmenu, argv, 2);
+                }
+
+                break;
+
+            case OPT_ADD:
+                addmenu(interp, swkjmenu, argv);
+
+                break;
+
+            case OPT_DELETE:
+                delete(interp, swkjmenu, argv);
+
+                break;
+
+            case OPT_POPUP: {
+                popup(interp, swkjmenu, argv);
+
+                break;
             }
 
-            break;
+            case OPT_POST: {
+                post(interp, swkjmenu, argv);
 
-        case OPT_ADD:
-            addmenu(interp, swkjmenu, argv);
+                break;
+            }
 
-            break;
+            case OPT_INVOKE: {
+                invoke(interp, swkjmenu, argv);
 
-        case OPT_DELETE:
-            delete(interp, swkjmenu, argv);
+                break;
+            }
 
-            break;
+            case OPT_INDEX: {
+                index(interp, swkjmenu, argv);
 
-        case OPT_POPUP: {
-            popup(interp, swkjmenu, argv);
+                break;
+            }
+            case OPT_INSERT:
+                insertmenu(interp, swkjmenu, argv);
 
-            break;
-        }
-
-        case OPT_POST: {
-            post(interp, swkjmenu, argv);
-
-            break;
-        }
-
-        case OPT_INVOKE: {
-            invoke(interp, swkjmenu, argv);
-
-            break;
-        }
-
-        case OPT_INDEX: {
-            index(interp, swkjmenu, argv);
-
-            break;
-        }
-        case OPT_INSERT:
-            insertmenu(interp, swkjmenu, argv);
-
-            break;
+                break;
 
 
-        default:
-            throw new TclRuntimeError("TclIndex.get() error");
+            default:
+                throw new TclRuntimeError("TclIndex.get() error");
         }
     }
 
     void popup(final Interp interp, final SwkJMenu swkjmenu,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if (argv.length < 3) {
             throw new TclNumArgsException(interp, 2, argv, "option");
         }
@@ -203,11 +203,11 @@ class SwkJMenuWidgetCmd implements Command {
                 throw new TclNumArgsException(interp, 3, argv, "widget x y");
             }
 
-            TclObject tObj2 = (TclObject) Widgets.getWidget(interp,argv[3].toString());
+            TclObject tObj2 = (TclObject) Widgets.getWidget(interp, argv[3].toString());
 
             if (tObj2 == null) {
                 throw new TclException(interp,
-                    "widget \"" + argv[3].toString() + "\" doesn't exist");
+                        "widget \"" + argv[3].toString() + "\" doesn't exist");
             }
 
             final SwkWidget widget = (SwkWidget) ReflectObject.get(interp, tObj2);
@@ -218,17 +218,17 @@ class SwkJMenuWidgetCmd implements Command {
     }
 
     void post(final Interp interp, final SwkJMenu swkjmenu,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if (argv.length != 4) {
             throw new TclNumArgsException(interp, 2, argv, "option");
         }
 
         String parent = Widgets.pathParent(interp, argv[0].toString());
-        TclObject tObj2 = (TclObject) Widgets.getWidget(interp,parent);
+        TclObject tObj2 = (TclObject) Widgets.getWidget(interp, parent);
 
         if (tObj2 == null) {
             throw new TclException(interp,
-                "widget \"" + parent + "\" doesn't exist");
+                    "widget \"" + parent + "\" doesn't exist");
         }
 
         final int x = TclInteger.get(interp, argv[2]);
@@ -241,7 +241,7 @@ class SwkJMenuWidgetCmd implements Command {
     }
 
     void index(final Interp interp, final SwkJMenu swkjmenu,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if (argv.length != 3) {
             throw new TclNumArgsException(interp, 2, argv, "index");
         }
@@ -256,7 +256,7 @@ class SwkJMenuWidgetCmd implements Command {
     }
 
     void invoke(final Interp interp, final SwkJMenu swkjmenu,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if (argv.length != 3) {
             throw new TclNumArgsException(interp, 2, argv, "index");
         }
@@ -269,7 +269,7 @@ class SwkJMenuWidgetCmd implements Command {
     }
 
     void delete(final Interp interp, final SwkJMenu swkjmenu,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if ((argv.length < 3) || (argv.length > 4)) {
             throw new TclNumArgsException(interp, 2, argv, "first ?last");
         }
@@ -285,52 +285,54 @@ class SwkJMenuWidgetCmd implements Command {
     }
 
     /*      public SwkWidget Addrun(SwkJMenu swkjmenu,String itemType) {
-          //JComponent jcomp = null;
-         if (itemType.equals("command")) {
-              SwkJMenuItem jmenuItem = new SwkJMenuItem(interp, "", "SwkJMenuItem");
-              return (SwkWidget)jmenuItem;
+    //JComponent jcomp = null;
+    if (itemType.equals("command")) {
+    SwkJMenuItem jmenuItem = new SwkJMenuItem(interp, "", "SwkJMenuItem");
+    return (SwkWidget)jmenuItem;
 
-          } else if (itemType.startsWith("check")) {
-              SwkJCheckBoxMenuItem jmenuItem = new SwkJCheckBoxMenuItem(interp,
-                      "", "SwkJMenuItem");
+    } else if (itemType.startsWith("check")) {
+    SwkJCheckBoxMenuItem jmenuItem = new SwkJCheckBoxMenuItem(interp,
+    "", "SwkJMenuItem");
 
-          } else if (itemType.startsWith("radio")) {
-              SwkJRadioButtonMenuItem jmenuItem = new SwkJRadioButtonMenuItem(interp,
-                      "", "SwkJMenuItem");
+    } else if (itemType.startsWith("radio")) {
+    SwkJRadioButtonMenuItem jmenuItem = new SwkJRadioButtonMenuItem(interp,
+    "", "SwkJMenuItem");
 
-          } else if (itemType.startsWith("sepa")) {
-              SwkJMenuItem jmenuItem = null;
+    } else if (itemType.startsWith("sepa")) {
+    SwkJMenuItem jmenuItem = null;
 
-          } else if (itemType.equals("cascade")) {
-              String menuName = null;
-              int j = 0;
-          }
+    } else if (itemType.equals("cascade")) {
+    String menuName = null;
+    int j = 0;
+    }
 
-            return jmenuItem;
-          }
+    return jmenuItem;
+    }
 
      */
     public void insertmenu(Interp interp, SwkJMenu swkjmenu, TclObject[] argv) throws TclException {
-         addOrInsertMenu(interp,swkjmenu,argv,true);
+        addOrInsertMenu(interp, swkjmenu, argv, true);
     }
+
     public void addmenu(Interp interp, SwkJMenu swkjmenu, TclObject[] argv) throws TclException {
-         addOrInsertMenu(interp,swkjmenu,argv,false);
+        addOrInsertMenu(interp, swkjmenu, argv, false);
     }
-    public void addOrInsertMenu(Interp interp, SwkJMenu swkjmenu, TclObject[] argv,boolean insertMode)
-        throws TclException {
+
+    public void addOrInsertMenu(Interp interp, SwkJMenu swkjmenu, TclObject[] argv, boolean insertMode)
+            throws TclException {
         int i;
         int start = 3;
         int insertPos = -1;
         if (insertMode) {
             start = 4;
-            insertPos = TclInteger.get(interp,argv[2]);
+            insertPos = TclInteger.get(interp, argv[2]);
         }
         if (argv.length < 3) {
             throw new TclNumArgsException(interp, 1, argv,
-                "option ?arg arg ...?");
+                    "option ?arg arg ...?");
         }
 
-        String itemType = argv[start-1].toString();
+        String itemType = argv[start - 1].toString();
 
         if (itemType.equals("cascade")) {
             String menuName = null;
@@ -338,10 +340,10 @@ class SwkJMenuWidgetCmd implements Command {
 
             if (((argv.length - start) % 2) != 0) {
                 throw new TclNumArgsException(interp, 1, argv,
-                    "arguments not multiple of 2");
+                        "arguments not multiple of 2");
             }
 
-            TclObject[] argNew = new TclObject[argv.length - start-2];
+            TclObject[] argNew = new TclObject[argv.length - start - 2];
 
             for (i = start; i < argv.length; i += 2) {
                 if (argv[i].toString().equals("-menu")) {
@@ -353,10 +355,10 @@ class SwkJMenuWidgetCmd implements Command {
                 }
             }
 
-            TclObject tObj = (TclObject) Widgets.getWidget(interp,menuName);
+            TclObject tObj = (TclObject) Widgets.getWidget(interp, menuName);
 
             if (tObj == null) {
-                SwkJMenu cascade = (new Add()).exec(swkjmenu, menuName, itemType,insertPos);
+                SwkJMenu cascade = (new Add()).exec(swkjmenu, menuName, itemType, insertPos);
                 interp.createCommand(menuName, new SwkJMenuWidgetCmd());
                 tObj = ReflectObject.newInstance(interp, SwkJMenu.class, cascade);
                 tObj.preserve();
@@ -367,11 +369,11 @@ class SwkJMenuWidgetCmd implements Command {
                 cascade.setCreated(false);
             } else {
                 SwkJMenu cascade = (SwkJMenu) ReflectObject.get(interp, tObj);
-                (new Add()).exec(swkjmenu, menuName, cascade,insertPos);
+                (new Add()).exec(swkjmenu, menuName, cascade, insertPos);
                 cascade.configure(interp, argNew, 0);
             }
         } else {
-            SwkWidget swkWidget = (new Add()).exec(swkjmenu, itemType,insertPos);
+            SwkWidget swkWidget = (new Add()).exec(swkjmenu, itemType, insertPos);
 
             if (swkWidget != null) {
                 swkWidget.configure(interp, argv, start);
@@ -384,13 +386,14 @@ class SwkJMenuWidgetCmd implements Command {
     }
 
     class Popup extends UpdateOnEventThread {
+
         int x = 0;
         int y = 0;
         SwkJMenu swkjmenu = null;
         SwkWidget widget = null;
 
         void exec(final SwkJMenu swkjmenu, final SwkWidget widget, final int x,
-            final int y) {
+                final int y) {
             this.x = x;
             this.y = y;
             this.widget = widget;
@@ -404,13 +407,14 @@ class SwkJMenuWidgetCmd implements Command {
     }
 
     class Post extends UpdateOnEventThread {
+
         int x = 0;
         int y = 0;
         SwkJMenu swkjmenu = null;
         SwkWidget widget = null;
 
         void exec(final SwkJMenu swkjmenu, final SwkWidget widget, final int x,
-            final int y) {
+                final int y) {
             this.x = x;
             this.y = y;
             this.widget = widget;
@@ -421,11 +425,12 @@ class SwkJMenuWidgetCmd implements Command {
         public void run() {
             Point point = ((Component) widget).getLocationOnScreen();
             swkjmenu.getPopupMenu().show((Component) widget, x - point.x,
-                y - point.y);
+                    y - point.y);
         }
     }
 
     class Index extends GetValueOnEventThread {
+
         SwkJMenu swkjmenu = null;
         TclObject item = null;
         int index = 0;
@@ -454,6 +459,7 @@ class SwkJMenuWidgetCmd implements Command {
     }
 
     class Invoke extends GetValueOnEventThread {
+
         SwkJMenu swkjmenu = null;
         TclObject item = null;
         String command = null;
@@ -494,6 +500,7 @@ class SwkJMenuWidgetCmd implements Command {
     }
 
     class Delete extends GetValueOnEventThread {
+
         SwkJMenu swkjmenu = null;
         TclObject firstArg = null;
         TclObject lastArg = null;
@@ -503,7 +510,7 @@ class SwkJMenuWidgetCmd implements Command {
         int last = 0;
 
         void exec(final SwkJMenu swkjmenu, final TclObject firstArg,
-            final TclObject lastArg) {
+                final TclObject lastArg) {
             this.firstArg = firstArg;
             this.lastArg = lastArg;
             this.swkjmenu = swkjmenu;
@@ -554,6 +561,7 @@ class SwkJMenuWidgetCmd implements Command {
     }
 
     class Add extends GetValueOnEventThread {
+
         SwkJMenu swkjmenu = null;
         JComponent jcomp = null;
         String itemType = "";
@@ -562,7 +570,7 @@ class SwkJMenuWidgetCmd implements Command {
         SwkJMenu cascade = null;
         int insertPos = -1;
 
-        SwkWidget exec(final SwkJMenu swkjmenu, final String itemType,final int insertPos) {
+        SwkWidget exec(final SwkJMenu swkjmenu, final String itemType, final int insertPos) {
             this.swkjmenu = swkjmenu;
             this.itemType = itemType;
             this.insertPos = insertPos;
@@ -572,7 +580,7 @@ class SwkJMenuWidgetCmd implements Command {
         }
 
         SwkJMenu exec(final SwkJMenu swkjmenu, final String menuName,
-            final String itemType,final int insertPos) {
+                final String itemType, final int insertPos) {
             this.swkjmenu = swkjmenu;
             this.itemType = itemType;
             this.menuName = menuName;
@@ -583,7 +591,7 @@ class SwkJMenuWidgetCmd implements Command {
         }
 
         SwkJMenu exec(final SwkJMenu swkjmenu, final String menuName,
-            SwkJMenu cascade,final int insertPos) {
+                SwkJMenu cascade, final int insertPos) {
             this.swkjmenu = swkjmenu;
             this.cascade = cascade;
             this.itemType = "cascade";
@@ -600,7 +608,7 @@ class SwkJMenuWidgetCmd implements Command {
                 SwkJMenuItem jmenuItem = new SwkJMenuItem(interp, "",
                         "SwkJMenuItem");
                 if (insertPos != -1) {
-                    swkjmenu.insert(jmenuItem,insertPos);
+                    swkjmenu.insert(jmenuItem, insertPos);
                 } else {
                     swkjmenu.add(jmenuItem);
                 }
@@ -609,7 +617,7 @@ class SwkJMenuWidgetCmd implements Command {
                 SwkJCheckBoxMenuItem jmenuItem = new SwkJCheckBoxMenuItem(interp,
                         "", "SwkJMenuItem");
                 if (insertPos != -1) {
-                    swkjmenu.insert(jmenuItem,insertPos);
+                    swkjmenu.insert(jmenuItem, insertPos);
                 } else {
                     swkjmenu.add(jmenuItem);
                 }
@@ -618,7 +626,7 @@ class SwkJMenuWidgetCmd implements Command {
                 SwkJRadioButtonMenuItem jmenuItem = new SwkJRadioButtonMenuItem(interp,
                         "", "SwkJMenuItem");
                 if (insertPos != -1) {
-                    swkjmenu.insert(jmenuItem,insertPos);
+                    swkjmenu.insert(jmenuItem, insertPos);
                 } else {
                     swkjmenu.add(jmenuItem);
                 }
@@ -636,34 +644,38 @@ class SwkJMenuWidgetCmd implements Command {
                 }
 
                 if (insertPos != -1) {
-                    swkjmenu.insert(cascade,insertPos);
+                    swkjmenu.insert(cascade, insertPos);
                 } else {
                     swkjmenu.add(cascade);
                 }
             }
         }
     }
+
     class EntryConfigure extends GetValueOnEventThread {
+
         SwkJMenu swkjmenu = null;
         TclObject entryArg = null;
         String sIndex = null;
         int index = 0;
         SwkJMenuItem jMenuItem = null;
+
         String execGet(Interp interp, final SwkJMenu swkjmenu, final TclObject[] argv, final int start) throws TclException {
             this.entryArg = argv[start];
             this.swkjmenu = swkjmenu;
             getEntry();
             if (jMenuItem != null) {
-                  return jMenuItem.jget(interp, argv[start+1]);
+                return jMenuItem.jget(interp, argv[start + 1]);
             }
             return "";
         }
+
         void execConfigure(Interp interp, final SwkJMenu swkjmenu, final TclObject[] argv, final int start) throws TclException {
             this.entryArg = argv[start];
             this.swkjmenu = swkjmenu;
             getEntry();
             if (jMenuItem != null) {
-                  jMenuItem.configure(interp, argv, start+1);
+                jMenuItem.configure(interp, argv, start + 1);
             }
         }
 
@@ -672,9 +684,10 @@ class SwkJMenuWidgetCmd implements Command {
             this.swkjmenu = swkjmenu;
             getEntry();
             if (jMenuItem != null) {
-                  jMenuItem.jgetAll(interp);
+                jMenuItem.jgetAll(interp);
             }
         }
+
         void getEntry() {
             try {
                 index = TclInteger.get(interp, entryArg);
@@ -688,10 +701,10 @@ class SwkJMenuWidgetCmd implements Command {
             if (sIndex != null) {
                 index = swkjmenu.getIndex(sIndex, -1);
             }
-           Component comp = swkjmenu.getPopupMenu().getComponent(index);
+            Component comp = swkjmenu.getPopupMenu().getComponent(index);
             if (comp instanceof SwkJMenuItem) {
-                 jMenuItem = (SwkJMenuItem) comp;
+                jMenuItem = (SwkJMenuItem) comp;
             }
-       }
+        }
     }
 }

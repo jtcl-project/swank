@@ -25,8 +25,8 @@ import javax.swing.*;
 import javax.swing.text.*;
 import javax.swing.tree.*;
 
-
 class SwkJComboBoxWidgetCmd implements Command {
+
     static final private String[] validCmds = {
         "cget", "configure", "remove", "item", "index"
     };
@@ -45,22 +45,22 @@ class SwkJComboBoxWidgetCmd implements Command {
     }
 
     public void cmdProc(final Interp interp, final TclObject[] argv)
-        throws TclException {
+            throws TclException {
         this.interp = interp;
 
         int i;
 
         if (argv.length < 2) {
             throw new TclNumArgsException(interp, 1, argv,
-                "option ?arg arg ...?");
+                    "option ?arg arg ...?");
         }
 
         int opt = TclIndex.get(interp, argv[1], validCmds, "option", 0);
-        TclObject tObj = (TclObject) Widgets.getWidget(interp,argv[0].toString());
+        TclObject tObj = (TclObject) Widgets.getWidget(interp, argv[0].toString());
 
         if (tObj == null) {
             throw new TclException(interp,
-                "bad window path name \"" + argv[0].toString() + "\"");
+                    "bad window path name \"" + argv[0].toString() + "\"");
         }
 
         final SwkJComboBox swkjcombobox = (SwkJComboBox) ReflectObject.get(interp,
@@ -68,71 +68,71 @@ class SwkJComboBoxWidgetCmd implements Command {
         this.swkjcombobox = swkjcombobox;
 
         switch (opt) {
-        case OPT_CGET:
+            case OPT_CGET:
 
-            if (argv.length != 3) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-
-            interp.setResult(swkjcombobox.jget(interp, argv[2]));
-
-            break;
-
-        case OPT_CONFIGURE:
-
-            if (!gotDefaults) {
-                swkjcombobox.setResourceDefaults();
-                gotDefaults = true;
-            }
-
-            if (argv.length == 2) {
-                swkjcombobox.jgetAll(interp);
-            } else if (argv.length == 3) {
-                String result = swkjcombobox.jget(interp, argv[2]);
-                ResourceObject ro = (ResourceObject) SwkJComboBox.resourceDB.get(argv[2].toString());
-
-                if (ro == null) {
-                    throw new TclException(interp,
-                        "unknown option \"" + argv[2].toString() + "\"");
+                if (argv.length != 3) {
+                    throw new TclNumArgsException(interp, 2, argv, "option");
                 }
 
-                TclObject list = TclList.newInstance();
-                TclList.append(interp, list,
-                    TclString.newInstance(argv[2].toString()));
-                TclList.append(interp, list, TclString.newInstance(ro.resource));
-                TclList.append(interp, list, TclString.newInstance(ro.className));
-                TclList.append(interp, list,
-                    TclString.newInstance(ro.defaultVal));
-                TclList.append(interp, list, TclString.newInstance(result));
-                interp.setResult(list);
-            } else {
-                swkjcombobox.configure(interp, argv, 2);
-            }
+                interp.setResult(swkjcombobox.jget(interp, argv[2]));
 
-            break;
+                break;
 
-        case OPT_REMOVE:
-            remove(interp, swkjcombobox, argv);
+            case OPT_CONFIGURE:
 
-            break;
+                if (!gotDefaults) {
+                    swkjcombobox.setResourceDefaults();
+                    gotDefaults = true;
+                }
 
-        case OPT_ITEM:
-            item(interp, swkjcombobox, argv);
+                if (argv.length == 2) {
+                    swkjcombobox.jgetAll(interp);
+                } else if (argv.length == 3) {
+                    String result = swkjcombobox.jget(interp, argv[2]);
+                    ResourceObject ro = (ResourceObject) SwkJComboBox.resourceDB.get(argv[2].toString());
 
-            break;
+                    if (ro == null) {
+                        throw new TclException(interp,
+                                "unknown option \"" + argv[2].toString() + "\"");
+                    }
 
-        case OPT_INDEX:
-            index(interp, swkjcombobox, argv);
+                    TclObject list = TclList.newInstance();
+                    TclList.append(interp, list,
+                            TclString.newInstance(argv[2].toString()));
+                    TclList.append(interp, list, TclString.newInstance(ro.resource));
+                    TclList.append(interp, list, TclString.newInstance(ro.className));
+                    TclList.append(interp, list,
+                            TclString.newInstance(ro.defaultVal));
+                    TclList.append(interp, list, TclString.newInstance(result));
+                    interp.setResult(list);
+                } else {
+                    swkjcombobox.configure(interp, argv, 2);
+                }
 
-            break;
+                break;
 
-        default:
-            throw new TclRuntimeError("TclIndex.get() error");
+            case OPT_REMOVE:
+                remove(interp, swkjcombobox, argv);
+
+                break;
+
+            case OPT_ITEM:
+                item(interp, swkjcombobox, argv);
+
+                break;
+
+            case OPT_INDEX:
+                index(interp, swkjcombobox, argv);
+
+                break;
+
+            default:
+                throw new TclRuntimeError("TclIndex.get() error");
         }
     }
 
     void index(final Interp interp, final SwkJComboBox swkjcombobox,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if (argv.length < 3) {
             throw new TclNumArgsException(interp, 2, argv, "option");
         }
@@ -141,7 +141,7 @@ class SwkJComboBoxWidgetCmd implements Command {
     }
 
     void remove(final Interp interp, final SwkJComboBox swkjcombobox,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if (argv.length != 3) {
             throw new TclNumArgsException(interp, 2, argv, "option");
         }
@@ -158,10 +158,10 @@ class SwkJComboBoxWidgetCmd implements Command {
     }
 
     void item(final Interp interp, final SwkJComboBox swkjcombobox,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if (argv.length < 3) {
             throw new TclNumArgsException(interp, 2, argv,
-                "index ?element element ...?");
+                    "index ?element element ...?");
         }
 
         if (argv[2].toString().equals("count")) {
@@ -193,6 +193,7 @@ class SwkJComboBoxWidgetCmd implements Command {
     }
 
     class GetIndex extends GetValueOnEventThread {
+
         int index = -1;
         String item = null;
 
@@ -214,6 +215,7 @@ class SwkJComboBoxWidgetCmd implements Command {
     }
 
     class RemoveItems extends UpdateOnEventThread {
+
         int index = -1;
 
         void exec(final int index) {
@@ -235,6 +237,7 @@ class SwkJComboBoxWidgetCmd implements Command {
     }
 
     class GetItemCount extends GetValueOnEventThread {
+
         int intResult;
 
         void exec() {
@@ -248,6 +251,7 @@ class SwkJComboBoxWidgetCmd implements Command {
     }
 
     class GetItemAt extends GetValueOnEventThread {
+
         String result;
         int index = 0;
 
@@ -264,6 +268,7 @@ class SwkJComboBoxWidgetCmd implements Command {
     }
 
     class AddItems extends GetValueOnEventThread {
+
         Object[] itemObjects = null;
         String s1 = null;
 
@@ -279,7 +284,7 @@ class SwkJComboBoxWidgetCmd implements Command {
 
             for (int i = 0; i < itemStrings.length; i++) {
                 if (itemStrings[i].startsWith(".")) {
-                    TclObject tObj2 = (TclObject) Widgets.getWidget(interp,itemStrings[i]);
+                    TclObject tObj2 = (TclObject) Widgets.getWidget(interp, itemStrings[i]);
 
                     if (tObj2 != null) {
                         try {
@@ -293,14 +298,14 @@ class SwkJComboBoxWidgetCmd implements Command {
                         itemObjects[i] = itemStrings[i];
                     }
                 } else if (itemStrings[i].startsWith("image:") && (itemStrings[i].length() > 7)) {
-                   Object imageObject =  ImageCmd.getImage(itemStrings[i].substring(6));
-                   if ((imageObject != null) && (imageObject instanceof BufferedImage)) {
-                       itemObjects[i] = (BufferedImage) imageObject;
-                   } else if ((imageObject != null) && (imageObject instanceof ImageIcon)) {
-                       itemObjects[i] = (ImageIcon) imageObject;
-                   } else {
-                       itemObjects[i] = itemStrings[i];
-                   }
+                    Object imageObject = ImageCmd.getImage(itemStrings[i].substring(6));
+                    if ((imageObject != null) && (imageObject instanceof BufferedImage)) {
+                        itemObjects[i] = (BufferedImage) imageObject;
+                    } else if ((imageObject != null) && (imageObject instanceof ImageIcon)) {
+                        itemObjects[i] = (ImageIcon) imageObject;
+                    } else {
+                        itemObjects[i] = itemStrings[i];
+                    }
                 } else {
                     itemObjects[i] = itemStrings[i];
                 }

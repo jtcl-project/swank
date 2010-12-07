@@ -24,8 +24,8 @@ import javax.swing.*;
 import javax.swing.text.*;
 import javax.swing.tree.*;
 
-
 class SwkJTextFieldWidgetCmd implements Command {
+
     static final private String[] validCmds = {
         "cget", "configure", "delete", "get", "index",
         "insert", "scan", "selection", "xview"
@@ -48,103 +48,104 @@ class SwkJTextFieldWidgetCmd implements Command {
     }
 
     public void cmdProc(Interp interp, TclObject[] argv)
-        throws TclException {
+            throws TclException {
         int i;
 
         if (argv.length < 2) {
             throw new TclNumArgsException(interp, 1, argv,
-                "option ?arg arg ...?");
+                    "option ?arg arg ...?");
         }
 
         this.interp = interp;
 
         int opt = TclIndex.get(interp, argv[1], validCmds, "option", 0);
-        TclObject tObj = (TclObject) Widgets.getWidget(interp,argv[0].toString());
+        TclObject tObj = (TclObject) Widgets.getWidget(interp, argv[0].toString());
 
         if (tObj == null) {
             throw new TclException(interp,
-                "bad window path name \"" + argv[0].toString() + "\"");
+                    "bad window path name \"" + argv[0].toString() + "\"");
         }
 
         final SwkJTextField swkjtextfield = (SwkJTextField) ReflectObject.get(interp,
                 tObj);
 
         switch (opt) {
-        case OPT_CGET:
+            case OPT_CGET:
 
-            if (argv.length != 3) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-
-            interp.setResult(swkjtextfield.jget(interp, argv[2]));
-
-            break;
-
-        case OPT_CONFIGURE:
-
-            if (!gotDefaults) {
-                swkjtextfield.setResourceDefaults();
-                gotDefaults = true;
-            }
-
-            if (argv.length == 2) {
-                swkjtextfield.jgetAll(interp);
-            } else if (argv.length == 3) {
-                String result = swkjtextfield.jget(interp, argv[2]);
-                ResourceObject ro = (ResourceObject) SwkJTextField.resourceDB.get(argv[2].toString());
-
-                if (ro == null) {
-                    throw new TclException(interp,
-                        "unknown option \"" + argv[2].toString() + "\"");
+                if (argv.length != 3) {
+                    throw new TclNumArgsException(interp, 2, argv, "option");
                 }
 
-                TclObject list = TclList.newInstance();
-                TclList.append(interp, list,
-                    TclString.newInstance(argv[2].toString()));
-                TclList.append(interp, list, TclString.newInstance(ro.resource));
-                TclList.append(interp, list, TclString.newInstance(ro.className));
-                TclList.append(interp, list,
-                    TclString.newInstance(ro.defaultVal));
-                TclList.append(interp, list, TclString.newInstance(result));
-                interp.setResult(list);
-            } else {
-                swkjtextfield.configure(interp, argv, 2);
-            }
+                interp.setResult(swkjtextfield.jget(interp, argv[2]));
 
-            break;
+                break;
 
-        case OPT_DELETE:
-            break;
+            case OPT_CONFIGURE:
 
-        case OPT_GET:
-            interp.setResult(swkjtextfield.getText());
+                if (!gotDefaults) {
+                    swkjtextfield.setResourceDefaults();
+                    gotDefaults = true;
+                }
 
-            break;
+                if (argv.length == 2) {
+                    swkjtextfield.jgetAll(interp);
+                } else if (argv.length == 3) {
+                    String result = swkjtextfield.jget(interp, argv[2]);
+                    ResourceObject ro = (ResourceObject) SwkJTextField.resourceDB.get(argv[2].toString());
 
-        case OPT_INDEX:
-            getIndex(interp, swkjtextfield, argv, 0);
+                    if (ro == null) {
+                        throw new TclException(interp,
+                                "unknown option \"" + argv[2].toString() + "\"");
+                    }
 
-            break;
+                    TclObject list = TclList.newInstance();
+                    TclList.append(interp, list,
+                            TclString.newInstance(argv[2].toString()));
+                    TclList.append(interp, list, TclString.newInstance(ro.resource));
+                    TclList.append(interp, list, TclString.newInstance(ro.className));
+                    TclList.append(interp, list,
+                            TclString.newInstance(ro.defaultVal));
+                    TclList.append(interp, list, TclString.newInstance(result));
+                    interp.setResult(list);
+                } else {
+                    swkjtextfield.configure(interp, argv, 2);
+                }
 
-        case OPT_INSERT:
-            insert(interp, swkjtextfield, argv);
+                break;
 
-            break;
+            case OPT_DELETE:
+                break;
 
-        case OPT_SCAN:
-            break;
+            case OPT_GET:
+                interp.setResult(swkjtextfield.getText());
 
-        case OPT_SELECTION:
-            break;
+                break;
 
-        case OPT_XVIEW:
+            case OPT_INDEX:
+                getIndex(interp, swkjtextfield, argv, 0);
 
-            if (argv.length == 2) {
-                (new ViewValues()).exec(swkjtextfield);
-            } else if (argv.length == 3) {
-                index = getIndex2(interp, swkjtextfield, argv, -1);
+                break;
 
-                SwingUtilities.invokeLater(new Runnable() {
+            case OPT_INSERT:
+                insert(interp, swkjtextfield, argv);
+
+                break;
+
+            case OPT_SCAN:
+                break;
+
+            case OPT_SELECTION:
+                break;
+
+            case OPT_XVIEW:
+
+                if (argv.length == 2) {
+                    (new ViewValues()).exec(swkjtextfield);
+                } else if (argv.length == 3) {
+                    index = getIndex2(interp, swkjtextfield, argv, -1);
+
+                    SwingUtilities.invokeLater(new Runnable() {
+
                         public void run() {
                             BoundedRangeModel brm = swkjtextfield.getHorizontalVisibility();
                             int maxSize = swkjtextfield.getText().length();
@@ -154,20 +155,21 @@ class SwkJTextFieldWidgetCmd implements Command {
                                 fx1 = 0.0;
                             }
 
-                            final int x = (int) ((fx1 * (brm.getMaximum() -
-                                brm.getMinimum())) + brm.getMinimum());
+                            final int x = (int) ((fx1 * (brm.getMaximum()
+                                    - brm.getMinimum())) + brm.getMinimum());
                             swkjtextfield.setScrollOffset(x);
                         }
                     });
-            } else if (argv[2].toString().equals("moveto")) {
-                if (argv.length != 4) {
-                    throw new TclNumArgsException(interp, 2, argv,
-                        "option ?arg arg ...?");
-                }
+                } else if (argv[2].toString().equals("moveto")) {
+                    if (argv.length != 4) {
+                        throw new TclNumArgsException(interp, 2, argv,
+                                "option ?arg arg ...?");
+                    }
 
-                final double fx1 = TclDouble.get(interp, argv[3]);
+                    final double fx1 = TclDouble.get(interp, argv[3]);
 
-                SwingUtilities.invokeLater(new Runnable() {
+                    SwingUtilities.invokeLater(new Runnable() {
+
                         public void run() {
                             BoundedRangeModel brm = swkjtextfield.getHorizontalVisibility();
                             double fx = fx1;
@@ -176,53 +178,55 @@ class SwkJTextFieldWidgetCmd implements Command {
                                 fx = 0.0;
                             }
 
-                            final int x = (int) ((fx * (brm.getMaximum() -
-                                brm.getMinimum())) + brm.getMinimum());
+                            final int x = (int) ((fx * (brm.getMaximum()
+                                    - brm.getMinimum())) + brm.getMinimum());
 
                             //            System.out.println("Moveto is called for TextField " + x);
                             swkjtextfield.setScrollOffset(x);
                         }
                     });
-            } else if (argv[2].toString().equals("scroll")) {
-                if (argv.length != 5) {
-                    throw new TclNumArgsException(interp, 2, argv,
-                        "option ?arg arg ...?");
-                }
+                } else if (argv[2].toString().equals("scroll")) {
+                    if (argv.length != 5) {
+                        throw new TclNumArgsException(interp, 2, argv,
+                                "option ?arg arg ...?");
+                    }
 
-                if (argv[4].toString().equals("units")) {
-                    final int units = TclInteger.get(interp, argv[3]);
+                    if (argv[4].toString().equals("units")) {
+                        final int units = TclInteger.get(interp, argv[3]);
 
-                    SwingUtilities.invokeLater(new Runnable() {
+                        SwingUtilities.invokeLater(new Runnable() {
+
                             public void run() {
                                 int x = swkjtextfield.getScrollOffset();
                                 swkjtextfield.setScrollOffset(x + units);
                             }
                         });
-                } else if (argv[4].toString().equals("pages")) {
-                    final int units = TclInteger.get(interp, argv[3]);
+                    } else if (argv[4].toString().equals("pages")) {
+                        final int units = TclInteger.get(interp, argv[3]);
 
-                    SwingUtilities.invokeLater(new Runnable() {
+                        SwingUtilities.invokeLater(new Runnable() {
+
                             public void run() {
                                 int x = swkjtextfield.getScrollOffset();
                                 swkjtextfield.setScrollOffset(x + units);
                             }
                         });
+                    }
+                } else {
+                    throw new TclException(interp,
+                            "unknown option \"" + argv[2].toString()
+                            + "\": must be moveto or scroll");
                 }
-            } else {
-                throw new TclException(interp,
-                    "unknown option \"" + argv[2].toString() +
-                    "\": must be moveto or scroll");
-            }
 
-            break;
+                break;
 
-        default:
-            throw new TclRuntimeError("TclIndex.get() error");
+            default:
+                throw new TclRuntimeError("TclIndex.get() error");
         }
     }
 
     int getIndex2(final Interp interp, final SwkJTextField swkjtextfield,
-        final TclObject[] argv, int offset) throws TclException {
+            final TclObject[] argv, int offset) throws TclException {
         if (argv.length != 3) {
             throw new TclNumArgsException(interp, 2, argv, "index");
         }
@@ -233,7 +237,7 @@ class SwkJTextFieldWidgetCmd implements Command {
     }
 
     void getIndex(final Interp interp, final SwkJTextField swkjtextfield,
-        final TclObject[] argv, int offset) throws TclException {
+            final TclObject[] argv, int offset) throws TclException {
         if (argv.length != 3) {
             throw new TclNumArgsException(interp, 2, argv, "index");
         }
@@ -243,16 +247,17 @@ class SwkJTextFieldWidgetCmd implements Command {
     }
 
     void insert(final Interp interp, final SwkJTextField swkjtextfield,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if (argv.length != 4) {
             throw new TclNumArgsException(interp, 2, argv, "option");
         }
 
         (new Insert()).exec(swkjtextfield, argv[2].toString(),
-            argv[3].toString());
+                argv[3].toString());
     }
 
     class Index extends GetValueOnEventThread {
+
         SwkJTextField swkjtextfield = null;
         String item = null;
         int index = 0;
@@ -260,7 +265,7 @@ class SwkJTextFieldWidgetCmd implements Command {
         String errMessage = null;
 
         int exec(final SwkJTextField swkjtextfield, final String item,
-            int endVal) throws TclException {
+                int endVal) throws TclException {
             this.item = item;
             this.endVal = endVal;
             this.swkjtextfield = swkjtextfield;
@@ -288,13 +293,14 @@ class SwkJTextFieldWidgetCmd implements Command {
     }
 
     class Insert extends UpdateOnEventThread {
+
         SwkJTextField swkjtextfield = null;
         String strIndex = null;
         String text = null;
         String errMessage = null;
 
         void exec(final SwkJTextField swkjtextfield, final String strIndex,
-            final String text) throws TclException {
+                final String text) throws TclException {
             this.strIndex = strIndex;
             this.text = text;
             this.swkjtextfield = swkjtextfield;
@@ -308,7 +314,7 @@ class SwkJTextFieldWidgetCmd implements Command {
             if (!result.hasError()) {
                 try {
                     swkjtextfield.getDocument().insertString(result.i, text,
-                        null);
+                            null);
                 } catch (BadLocationException bLE) {
                     // throw new TclException(interp, bLE.toString());
                     // FIXME need to do something like add background error
@@ -318,6 +324,7 @@ class SwkJTextFieldWidgetCmd implements Command {
     }
 
     class ViewValues extends GetValueOnEventThread {
+
         SwkJTextField swkjtextfield = null;
         double fx1 = 0.0;
         double fx2 = 0.0;
@@ -334,10 +341,10 @@ class SwkJTextFieldWidgetCmd implements Command {
 
         public void run() {
             BoundedRangeModel brm = swkjtextfield.getHorizontalVisibility();
-            fx1 = (1.0 * brm.getValue()) / (brm.getMaximum() -
-                brm.getMinimum());
-            fx2 = (1.0 * (brm.getValue() + brm.getExtent())) / (brm.getMaximum() -
-                brm.getMinimum());
+            fx1 = (1.0 * brm.getValue()) / (brm.getMaximum()
+                    - brm.getMinimum());
+            fx2 = (1.0 * (brm.getValue() + brm.getExtent())) / (brm.getMaximum()
+                    - brm.getMinimum());
         }
     }
 }

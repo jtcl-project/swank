@@ -4,8 +4,8 @@ import tcl.lang.*;
 
 import java.awt.geom.*;
 
-
 public class SymbolParameter extends CanvasParameter {
+
     private static String name = "symbol";
     private static int defValue = 3;
     private int newValue = defValue;
@@ -50,34 +50,34 @@ public class SymbolParameter extends CanvasParameter {
 
     public static String getSymbolType(int symbolType) {
         switch (symbolType) {
-        case -1:
-            return "none";
+            case -1:
+                return "none";
 
-        case 0:
-            return "circle";
+            case 0:
+                return "circle";
 
-        case 1:
-            return "uptriangle";
+            case 1:
+                return "uptriangle";
 
-        case 2:
-            return "downtriangle";
+            case 2:
+                return "downtriangle";
 
-        case 3:
-            return "cross";
+            case 3:
+                return "cross";
 
-        case 4:
-            return "square";
+            case 4:
+                return "square";
 
-        case 5:
-            return "diamond";
+            case 5:
+                return "diamond";
 
-        default:
-            return "";
+            default:
+                return "";
         }
     }
 
     public TclObject getValue(Interp interp, SwkShape swkShape)
-        throws TclException {
+            throws TclException {
         String symbolType = "";
 
         if ((swkShape != null) && (swkShape instanceof SymbolInterface)) {
@@ -88,7 +88,7 @@ public class SymbolParameter extends CanvasParameter {
     }
 
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
-        throws TclException {
+            throws TclException {
         newValue = -1;
 
         if ((arg != null) && (arg.toString().length() > 0)) {

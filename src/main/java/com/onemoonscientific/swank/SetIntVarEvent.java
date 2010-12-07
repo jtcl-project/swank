@@ -7,8 +7,8 @@ import java.awt.event.*;
 
 import java.util.*;
 
-
 public class SetIntVarEvent extends SetVarEvent {
+
     int value = 0;
 
     public SetIntVarEvent(Interp interp, String var1, String var2, int value) {

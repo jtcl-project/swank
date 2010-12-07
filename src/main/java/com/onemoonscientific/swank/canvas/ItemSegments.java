@@ -27,7 +27,6 @@
  *
  * Created on February 19, 2000, 3:14 PM
  */
-
 /**
  *
  * @author  JOHNBRUC
@@ -46,20 +45,18 @@ import java.lang.*;
 
 import java.util.*;
 
-
 public class ItemSegments extends SwkShape {
+
     static CanvasParameter[] parameters = {
         new DashParameter(), new DashPhaseParameter(), new WidthParameter(),
         new FillParameter(), new OutlineParameter(), new RotateParameter(),
-        new ShearParameter(), new TagsParameter(), new StateParameter(),new NodeParameter(),
-        new TransformerParameter(),
-    };
+        new ShearParameter(), new TagsParameter(), new StateParameter(), new NodeParameter(),
+        new TransformerParameter(),};
     static Map parameterMap = new TreeMap();
 
     static {
         initializeParameters(parameters, parameterMap);
     }
-
     boolean closePath = false;
     GeneralPath gPath = null;
 
@@ -70,17 +67,17 @@ public class ItemSegments extends SwkShape {
     }
 
     public void coords(SwkImageCanvas canvas, double[] coords)
-        throws SwkException {
+            throws SwkException {
         if (coords.length < 4) {
             throw new SwkException(
-                "wrong # coordinates: expected at least 4, got " +
-                coords.length);
+                    "wrong # coordinates: expected at least 4, got "
+                    + coords.length);
         }
 
         if ((coords.length % 4) != 0) {
             throw new SwkException(
-                "wrong # coordinates: expected multiple of 4, got " +
-                coords.length);
+                    "wrong # coordinates: expected multiple of 4, got "
+                    + coords.length);
         }
 
         if ((storeCoords == null) || (storeCoords.length != coords.length)) {
@@ -105,7 +102,7 @@ public class ItemSegments extends SwkShape {
         aT.translate(-storeCoords[0], -storeCoords[1]);
 
         aT.rotate(rotate, ((storeCoords[0] + storeCoords[2]) / 2.0),
-            ((storeCoords[1] + storeCoords[3]) / 2.0));
+                ((storeCoords[1] + storeCoords[3]) / 2.0));
         shape = aT.createTransformedShape(gPath);
     }
 

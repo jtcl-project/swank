@@ -26,8 +26,8 @@ package com.onemoonscientific.swank;
 
 import tcl.lang.*;
 
-
 public interface SwkVariable {
+
     public void setVarName(Interp interp, String name)
-        throws TclException;
+            throws TclException;
 }

@@ -37,8 +37,8 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.tree.*;
 
-
 public class SwkTreeModel implements TreeModel {
+
     private Vector treeModelListeners = new Vector();
     private SwkTreeObject rootObject;
     protected String procBase = "";
@@ -65,14 +65,13 @@ public class SwkTreeModel implements TreeModel {
     }
 
     //////////////// Fire events //////////////////////////////////////////////
-
     /**
      * The only event raised by this model is TreeStructureChanged with the
      * root as path, i.e. the whole tree has changed.
      */
     protected void fireTreeStructureChanged(Object oldRoot) {
         int len = treeModelListeners.size();
-        TreeModelEvent e = new TreeModelEvent(this, new Object[] { oldRoot });
+        TreeModelEvent e = new TreeModelEvent(this, new Object[]{oldRoot});
 
         for (int i = 0; i < len; i++) {
             ((TreeModelListener) treeModelListeners.elementAt(i)).treeStructureChanged(e);
@@ -80,7 +79,6 @@ public class SwkTreeModel implements TreeModel {
     }
 
     //////////////// TreeModel interface implementation ///////////////////////
-
     /**
      * Adds a listener for the TreeModelEvent posted after the tree changes.
      */
@@ -93,8 +91,8 @@ public class SwkTreeModel implements TreeModel {
      */
     public Object getChild(Object parent, int index) {
         try {
-            interp.eval(procBase + "getChild {" +
-                ((SwkTreeObject) parent).string + "} " + index);
+            interp.eval(procBase + "getChild {"
+                    + ((SwkTreeObject) parent).string + "} " + index);
 
             return new SwkTreeObject(interp, interp.getResult().toString());
         } catch (TclException tclE) {
@@ -114,8 +112,8 @@ public class SwkTreeModel implements TreeModel {
         }
 
         try {
-            interp.eval(procBase + "getChildCount {" +
-                ((SwkTreeObject) parent).string + "}");
+            interp.eval(procBase + "getChildCount {"
+                    + ((SwkTreeObject) parent).string + "}");
 
             return TclInteger.get(interp, interp.getResult());
         } catch (TclException tclE) {
@@ -139,9 +137,9 @@ public class SwkTreeModel implements TreeModel {
         }
 
         try {
-            interp.eval(procBase + "getIndexOfChild {" +
-                ((SwkTreeObject) parent).string + "} {" +
-                ((SwkTreeObject) parent).string + "}");
+            interp.eval(procBase + "getIndexOfChild {"
+                    + ((SwkTreeObject) parent).string + "} {"
+                    + ((SwkTreeObject) parent).string + "}");
 
             return TclInteger.get(interp, interp.getResult());
         } catch (TclException tclE) {
@@ -168,8 +166,8 @@ public class SwkTreeModel implements TreeModel {
         }
 
         try {
-            interp.eval(procBase + "getChildCount {" +
-                ((SwkTreeObject) node).string + "}");
+            interp.eval(procBase + "getChildCount {"
+                    + ((SwkTreeObject) node).string + "}");
 
             return TclInteger.get(interp, interp.getResult()) == 0;
         } catch (TclException tclE) {
@@ -192,7 +190,7 @@ public class SwkTreeModel implements TreeModel {
      * identified by path to newValue.  Not used by this model.
      */
     public void valueForPathChanged(TreePath path, Object newValue) {
-        System.out.println("*** valueForPathChanged : " + path + " --> " +
-            newValue);
+        System.out.println("*** valueForPathChanged : " + path + " --> "
+                + newValue);
     }
 }

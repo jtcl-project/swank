@@ -4,8 +4,8 @@ import tcl.lang.*;
 
 import java.awt.BasicStroke;
 
-
 public class StartstyleParameter extends EndstyleParameter {
+
     private static String name = "startstyle";
     private static String defValue = "none";
 
@@ -26,7 +26,7 @@ public class StartstyleParameter extends EndstyleParameter {
     }
 
     public TclObject getValue(Interp interp, SwkShape swkShape)
-        throws TclException {
+            throws TclException {
         if (swkShape == null) {
             throw new TclException(interp, "shape doesn't exist");
         }

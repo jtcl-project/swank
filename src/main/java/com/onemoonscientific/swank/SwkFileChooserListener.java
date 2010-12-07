@@ -37,8 +37,8 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
-
 public class SwkFileChooserListener implements ActionListener, SwkListener {
+
     Interp interp;
     String command = "";
     Component component;

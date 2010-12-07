@@ -5,12 +5,12 @@
  */
 package com.onemoonscientific.swank;
 
-
 /**
  *
  * @author brucejohnson
  */
 public class SwkException extends Exception {
+
     /** Creates a new instance of SwkException */
     public SwkException(String message) {
         super(message);

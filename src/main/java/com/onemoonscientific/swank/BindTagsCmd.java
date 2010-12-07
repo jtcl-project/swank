@@ -37,24 +37,20 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
-
 /** This class implements the Jacl bind command.
  * @author Bruce A. Johnson
  * @version %I%, %G%
  */
 public class BindTagsCmd implements Command {
     // This Hashtable stores class level focus bindings.
-    public static Hashtable focusTable = new Hashtable();
 
+    public static Hashtable focusTable = new Hashtable();
     // This Hashtable stores class level configure bindings.
     public static Hashtable configureTable = new Hashtable();
-
     // This Hashtable stores class level key bindings.
     public static Hashtable keyTable = new Hashtable();
-
     // This Hashtable stores class level mouse bindings.
     public static Hashtable mouseTable = new Hashtable();
-
     // This Hashtable stores class level mousemotion bindings.
     public static Hashtable mouseMotionTable = new Hashtable();
 
@@ -64,7 +60,7 @@ public class BindTagsCmd implements Command {
      * @throws TclException .
      */
     public void cmdProc(Interp interp, TclObject[] argv)
-        throws TclException {
+            throws TclException {
         int i;
         SwkWidget swkWidget = null;
         Vector bindingVector = null;
@@ -73,18 +69,18 @@ public class BindTagsCmd implements Command {
             throw new TclNumArgsException(interp, 1, argv, "widget ?tagList?");
         }
 
-        TclObject tObj = (TclObject) Widgets.getWidget(interp,argv[1].toString());
+        TclObject tObj = (TclObject) Widgets.getWidget(interp, argv[1].toString());
 
         if (tObj == null) {
             throw new TclException(interp,
-                "bad window path name \"" + argv[1].toString() + "\"");
+                    "bad window path name \"" + argv[1].toString() + "\"");
         }
 
         swkWidget = (SwkWidget) ReflectObject.get(interp, tObj);
 
         if (swkWidget == null) {
             throw new TclException(interp,
-                "Can't find widget " + tObj.toString());
+                    "Can't find widget " + tObj.toString());
         }
 
         if (argv.length == 2) {
@@ -93,7 +89,7 @@ public class BindTagsCmd implements Command {
 
             for (i = 0; i < tagList.size(); i++) {
                 TclList.append(interp, list,
-                    TclString.newInstance((String) tagList.elementAt(i)));
+                        TclString.newInstance((String) tagList.elementAt(i)));
             }
 
             interp.setResult(list);

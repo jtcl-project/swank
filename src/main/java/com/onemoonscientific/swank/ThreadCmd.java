@@ -35,16 +35,16 @@ import java.lang.*;
 
 import java.util.*;
 
-
 public class ThreadCmd implements Command {
+
     public void cmdProc(Interp interp, TclObject[] argv)
-        throws TclException {
+            throws TclException {
         int i;
         TclObject tObj;
         Thread[] threads = new Thread[Thread.currentThread().activeCount()];
         Thread.enumerate(threads);
-        System.out.println("Active thread is " +
-            Thread.currentThread().getName());
+        System.out.println("Active thread is "
+                + Thread.currentThread().getName());
 
         for (i = 0; i < threads.length; i++) {
             System.out.println(threads[i].getName());

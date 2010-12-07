@@ -35,10 +35,10 @@ import java.util.*;
 
 import javax.swing.*;
 
-
 public class DestroyCmd implements Command {
+
     public void cmdProc(final Interp interp, final TclObject[] argv)
-        throws TclException {
+            throws TclException {
         String name;
         TclObject tObj2;
         Object object2;
@@ -56,34 +56,36 @@ public class DestroyCmd implements Command {
         }
 
         (new GetValueOnEventThread() {
-                public void run() {
-                    destroyWidgets(interp, widgetNames);
-                }
-            }).execOnThread();
+
+            public void run() {
+                destroyWidgets(interp, widgetNames);
+            }
+        }).execOnThread();
     }
 
     public static void destroyWidgets(final Interp interp,
-        final String[] widgetNames) {
+            final String[] widgetNames) {
         HashSet<Container> topLevels = new HashSet<Container>();
         for (int j = 0; j < widgetNames.length; j++) {
             try {
-                destroyWidget(interp, widgetNames[j],topLevels);
+                destroyWidget(interp, widgetNames[j], topLevels);
             } catch (TclException tclE) {
                 interp.backgroundError();
             }
         }
-        for(Container topLevel:topLevels) {
-             Widgets.relayoutContainer(topLevel);
+        for (Container topLevel : topLevels) {
+            Widgets.relayoutContainer(topLevel);
         }
     }
 
     public static void destroyWidget(final Interp interp, final String name)
-        throws TclException {
-                destroyWidget(interp, name,null);
+            throws TclException {
+        destroyWidget(interp, name, null);
     }
+
     public static void destroyWidget(final Interp interp, final String name, final HashSet topLevels)
-        throws TclException {
-        TclObject tObj = (TclObject) Widgets.getWidget(interp,name);
+            throws TclException {
+        TclObject tObj = (TclObject) Widgets.getWidget(interp, name);
 
         if (tObj == null) {
             return;
@@ -92,11 +94,11 @@ public class DestroyCmd implements Command {
         Vector childrenNames = Widgets.children(interp, name);
 
         for (int k = 0; k < childrenNames.size(); k++) {
-            destroyWidget(interp, (String) childrenNames.elementAt(k),topLevels);
+            destroyWidget(interp, (String) childrenNames.elementAt(k), topLevels);
         }
 
         Widgets.removeChild(interp, name);
-        Widgets.removeWidget(interp,name);
+        Widgets.removeWidget(interp, name);
         interp.deleteCommand(name);
 
         Object object = ReflectObject.get(interp, tObj);

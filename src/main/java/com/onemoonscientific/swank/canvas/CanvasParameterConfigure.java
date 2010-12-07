@@ -7,14 +7,14 @@ package com.onemoonscientific.swank.canvas;
 
 import tcl.lang.*;
 
-
 /**
  *
  * @author brucejohnson
  */
 public interface CanvasParameterConfigure {
+
     public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape);
 
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
-        throws TclException;
+            throws TclException;
 }

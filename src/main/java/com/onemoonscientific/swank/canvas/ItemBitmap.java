@@ -51,7 +51,7 @@ import javax.swing.*;
 public class ItemBitmap extends SwkShape {
 
     static CanvasParameter[] parameters = {
-        new BitmapParameter(), new TagsParameter(), new StateParameter(),new NodeParameter(),
+        new BitmapParameter(), new TagsParameter(), new StateParameter(), new NodeParameter(),
         new TransformerParameter(),};
     static Map parameterMap = new TreeMap();
 
@@ -76,8 +76,8 @@ public class ItemBitmap extends SwkShape {
     public void coords(SwkImageCanvas canvas, double[] coords)
             throws SwkException {
         if (coords.length != 2) {
-            throw new SwkException("wrong # coordinates: expected 2, got " +
-                    coords.length);
+            throw new SwkException("wrong # coordinates: expected 2, got "
+                    + coords.length);
         }
 
         System.arraycopy(coords, 0, storeCoords, 0, 2);

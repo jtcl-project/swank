@@ -36,9 +36,9 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
-
 public class SwkDocumentListener implements DocumentListener, VarTrace,
-    TraceLock {
+        TraceLock {
+
     Interp interp;
     String varName = null;
     JTextComponent jtext;
@@ -55,6 +55,7 @@ public class SwkDocumentListener implements DocumentListener, VarTrace,
         //System.out.println("set insert lock "+newValue);
         insertLock = newValue;
     }
+
     public void setRemoveLock(boolean newValue) {
         //System.out.println("set remove lock "+newValue);
         removeLock = newValue;
@@ -65,7 +66,7 @@ public class SwkDocumentListener implements DocumentListener, VarTrace,
     }
 
     public void traceProc(Interp interp, String string1, String string2,
-        int flags) throws TclException {
+            int flags) throws TclException {
         if (traceLock) {
             traceLock = false;
 
@@ -78,10 +79,11 @@ public class SwkDocumentListener implements DocumentListener, VarTrace,
 
         setFromVar(interp);
     }
+
     public void setFromVar(Interp interp) throws TclException {
         if (EventQueue.isDispatchThread()) {
             System.out.println(
-                "SwkDocumentListener: setFromVar on event thread");
+                    "SwkDocumentListener: setFromVar on event thread");
         }
 
         if (varName != null) {
@@ -89,26 +91,27 @@ public class SwkDocumentListener implements DocumentListener, VarTrace,
                 TclObject tobj = interp.getVar(varName, TCL.GLOBAL_ONLY);
                 final String s1 = tobj.toString();
                 SwingUtilities.invokeLater(new Runnable() {
-                        public void run() {
-                            // locks are used so that when the call to setText is made, which will result in
-                            // remove and/or insert udpates to happen, updateVar doesn't get called.  This would
-                            // have resulted in an infinite loop (setVar -> event -> updateVar -> setVar ->event ...)
-                            // lock is removed in the insert and/or update event code
-                            //  XXX fundamental flaw in logic though, what if setVars happen before event processing,
-                            //  One event processing call would remove the lock for all setVar actions.
-                            // Perhaps this is actually OK, because according to the DocumentListener docs:
-                            //        ...and all listeners must be notified prior to making further mutations to the Document.
-                            if (s1.length() == 0) {
-                                if (jtext.getText().length() != 0) {
-                                    setRemoveLock(true);
-                                }
-                            } else {
+
+                    public void run() {
+                        // locks are used so that when the call to setText is made, which will result in
+                        // remove and/or insert udpates to happen, updateVar doesn't get called.  This would
+                        // have resulted in an infinite loop (setVar -> event -> updateVar -> setVar ->event ...)
+                        // lock is removed in the insert and/or update event code
+                        //  XXX fundamental flaw in logic though, what if setVars happen before event processing,
+                        //  One event processing call would remove the lock for all setVar actions.
+                        // Perhaps this is actually OK, because according to the DocumentListener docs:
+                        //        ...and all listeners must be notified prior to making further mutations to the Document.
+                        if (s1.length() == 0) {
+                            if (jtext.getText().length() != 0) {
                                 setRemoveLock(true);
-                                setInsertLock(true);
                             }
-                            jtext.setText(s1);
+                        } else {
+                            setRemoveLock(true);
+                            setInsertLock(true);
                         }
-                    });
+                        jtext.setText(s1);
+                    }
+                });
             } catch (TclException tclE) {
             }
         }
@@ -117,13 +120,13 @@ public class SwkDocumentListener implements DocumentListener, VarTrace,
     public void setVarName(String name) throws TclException {
         if (EventQueue.isDispatchThread()) {
             System.out.println(
-                "SwkDocumentListener: setVarName on event thread");
+                    "SwkDocumentListener: setVarName on event thread");
         }
 
         //      System.out.println("setVarName is called" + name);
         if ((varName != null) && (!varName.equals(""))) {
-            interp.untraceVar(varName, this, TCL.TRACE_WRITES |
-                TCL.GLOBAL_ONLY);
+            interp.untraceVar(varName, this, TCL.TRACE_WRITES
+                    | TCL.GLOBAL_ONLY);
         }
 
         if ((name != null) && (name != "")) {
@@ -131,18 +134,19 @@ public class SwkDocumentListener implements DocumentListener, VarTrace,
                 TclObject tobj = interp.getVar(name, TCL.GLOBAL_ONLY);
                 final String s1 = tobj.toString();
                 SwingUtilities.invokeLater(new Runnable() {
-                        public void run() {
-                            if (s1.length() == 0) {
-                                if (jtext.getText().length() != 0) {
-                                    setRemoveLock(true);
-                                }
-                            } else {
+
+                    public void run() {
+                        if (s1.length() == 0) {
+                            if (jtext.getText().length() != 0) {
                                 setRemoveLock(true);
-                                setInsertLock(true);
                             }
-                            jtext.setText(s1);
+                        } else {
+                            setRemoveLock(true);
+                            setInsertLock(true);
                         }
-                    });
+                        jtext.setText(s1);
+                    }
+                });
             } catch (TclException tclException) {
                 interp.resetResult();
 
@@ -181,12 +185,12 @@ public class SwkDocumentListener implements DocumentListener, VarTrace,
         SetStringVarEvent dvEvent = new SetStringVarEvent(interp, this,
                 varName, null, string);
 
-               //System.out.println("updateVar is called"+varName + " "+string + " " + this.toString());
+        //System.out.println("updateVar is called"+varName + " "+string + " " + this.toString());
         interp.getNotifier().queueEvent(dvEvent, TCL.QUEUE_TAIL);
     }
 
     public void insertUpdate(DocumentEvent docEvent) {
-              //System.out.println("InsertUpdate :"+insertLock+" "+docEvent.getLength()+" "+docEvent.getType().toString());
+        //System.out.println("InsertUpdate :"+insertLock+" "+docEvent.getLength()+" "+docEvent.getType().toString());
         if (!insertLock) {
             updateVar(docEvent);
         } else {
@@ -196,7 +200,7 @@ public class SwkDocumentListener implements DocumentListener, VarTrace,
     }
 
     public void removeUpdate(DocumentEvent docEvent) {
-              //System.out.println("RemoveUpdate :"+removeLock+" "+docEvent.getLength()+" "+docEvent.getType().toString());
+        //System.out.println("RemoveUpdate :"+removeLock+" "+docEvent.getLength()+" "+docEvent.getType().toString());
         if (!removeLock) {
             updateVar(docEvent);
         } else {
@@ -205,7 +209,7 @@ public class SwkDocumentListener implements DocumentListener, VarTrace,
     }
 
     public void changedUpdate(DocumentEvent docEvent) {
-              //System.out.println("ChangeUpdate :"+insertLock);
+        //System.out.println("ChangeUpdate :"+insertLock);
         updateVar(docEvent);
     }
 }

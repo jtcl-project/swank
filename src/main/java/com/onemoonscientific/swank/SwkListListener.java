@@ -37,9 +37,11 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
-
 public interface SwkListListener {
-         public SwkListSelectionListener getListSelectionListener();
-         public ListSelectionModel  getSelectionModel ();
-         public void setListSelectionListener(SwkListSelectionListener selectionListener);
+
+    public SwkListSelectionListener getListSelectionListener();
+
+    public ListSelectionModel getSelectionModel();
+
+    public void setListSelectionListener(SwkListSelectionListener selectionListener);
 }

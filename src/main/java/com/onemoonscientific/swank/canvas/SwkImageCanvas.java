@@ -35,7 +35,6 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.event.TreeModelListener;
 import javax.swing.event.TreeModelEvent;
 
-
 /** Class for objects which represent a Swank swkcanvas widget. */
 public class SwkImageCanvas implements SwkCanvasType {
 
@@ -136,13 +135,12 @@ public class SwkImageCanvas implements SwkCanvasType {
     Transformer fracTransformer = null;
     Transformer pfTransformer = null;
     Transformer fpTransformer = null;
-
     Point2D transMouse = new Point2D.Double();
     Point2D origMouse = new Point2D.Double();
     FontRenderContext fRC = null;
     Hashtable swkShapes = new Hashtable(16);
     ItemTreeNode rootNode = new ItemTreeNode();
-    DefaultTreeModel treeModel= new DefaultTreeModel(rootNode);
+    DefaultTreeModel treeModel = new DefaultTreeModel(rootNode);
     int lastShapeId = 0;
     HitShape eventCurrentShape = null;
     SwkShape lastShapeScanned = null;
@@ -164,6 +162,7 @@ public class SwkImageCanvas implements SwkCanvasType {
     int mouseY = 0;
     Component component = null;
     BufferedImage bufOffscreen = null;
+
     public SwkImageCanvas(final Interp interp, String name, String className) {
         this.name = name.intern();
         this.interp = interp;
@@ -182,10 +181,12 @@ public class SwkImageCanvas implements SwkCanvasType {
         fpTransformer = new Transformer("fp");
         transformerHash.put("fp", fpTransformer);
     }
- class MyTreeModelListener implements TreeModelListener {
+
+    class MyTreeModelListener implements TreeModelListener {
+
         public void treeNodesChanged(TreeModelEvent e) {
             DefaultMutableTreeNode node;
-            node = (DefaultMutableTreeNode)(e.getTreePath().getLastPathComponent());
+            node = (DefaultMutableTreeNode) (e.getTreePath().getLastPathComponent());
 
             /*
              * If the event lists children, then the changed
@@ -194,18 +195,21 @@ public class SwkImageCanvas implements SwkCanvasType {
              * specified node are the same.
              */
 
-                int index = e.getChildIndices()[0];
-                node = (DefaultMutableTreeNode)(node.getChildAt(index));
+            int index = e.getChildIndices()[0];
+            node = (DefaultMutableTreeNode) (node.getChildAt(index));
 
             System.out.println("The user has finished editing the node.");
             System.out.println("New value: " + node.getUserObject());
         }
+
         public void treeNodesInserted(TreeModelEvent e) {
             System.out.println("inserted");
         }
+
         public void treeNodesRemoved(TreeModelEvent e) {
             System.out.println("removed");
         }
+
         public void treeStructureChanged(TreeModelEvent e) {
             System.out.println("changed");
         }
@@ -226,12 +230,15 @@ public class SwkImageCanvas implements SwkCanvasType {
     public void setCreated(boolean state) {
         isCreated = state;
     }
+
     public BufferedImage getBuffer() {
         return bufOffscreen;
     }
+
     public Vector getTagList() {
         return (tagList);
     }
+
     public void setTagList(Interp interp, TclObject tagListObj)
             throws TclException {
         TclObject[] tagObjs = TclList.getElements(interp, tagListObj);
@@ -321,6 +328,7 @@ public class SwkImageCanvas implements SwkCanvasType {
     public SwkShape getLastShapeScanned() {
         return lastShapeScanned;
     }
+
     public int getHandle() {
         return handle;
     }
@@ -340,7 +348,7 @@ public class SwkImageCanvas implements SwkCanvasType {
 
         return transformer;
     }
-   
+
     public Transformer getTransformer(String name) {
         return (Transformer) transformerHash.get(name);
     }
@@ -383,8 +391,9 @@ public class SwkImageCanvas implements SwkCanvasType {
     }
      */
     public int getLastShapeId() {
-       return lastShapeId;
+        return lastShapeId;
     }
+
     public void addShape(SwkShape shape) throws SwkException {
         swkShapes.put(new Integer(shape.id), shape);
 
@@ -398,7 +407,7 @@ public class SwkImageCanvas implements SwkCanvasType {
         if (g1 != null) {
             shape.paintShape((Graphics2D) g1);
         }
-	repaint(50);
+        repaint(50);
         //treeModel.nodeStructureChanged(rootNode);
     }
 
@@ -410,7 +419,7 @@ public class SwkImageCanvas implements SwkCanvasType {
             if (eventCurrentShape != null) {
                 swkShape = eventCurrentShape.swkShape;
             } else {
-                throw new SwkException("tag \""+arg+"\"doesn't exist");
+                throw new SwkException("tag \"" + arg + "\"doesn't exist");
             }
         }
 
@@ -420,8 +429,8 @@ public class SwkImageCanvas implements SwkCanvasType {
                     iElem = Integer.parseInt(arg);
 
                     if ((iElem < 0) || (iElem >= lastShapeId)) {
-                        throw new SwkException("Invalid canvas item id " +
-                                iElem + " " + lastShapeId);
+                        throw new SwkException("Invalid canvas item id "
+                                + iElem + " " + lastShapeId);
                     } else {
                         swkShape = (SwkShape) swkShapes.get(new Integer(iElem));
 
@@ -439,7 +448,7 @@ public class SwkImageCanvas implements SwkCanvasType {
             Tag tag = (Tag) tagHash.get(arg);
 
             if (tag == null) {
-                throw new SwkException("tag \""+arg+"\"doesn't exist");
+                throw new SwkException("tag \"" + arg + "\"doesn't exist");
             } else if (tag.tagShapes.size() != 1) {
                 throw new SwkException("more than one shape for this tag");
             } else {
@@ -452,14 +461,14 @@ public class SwkImageCanvas implements SwkCanvasType {
     }
 
     void unlinkShape(SwkShape swkShape) {
-         swkShape.node.removeFromParent();
+        swkShape.node.removeFromParent();
     }
-
 
     void deleteAll() throws SwkException {
-       String[] tags = {"all"};
-       delete(tags);
+        String[] tags = {"all"};
+        delete(tags);
     }
+
     void delete(final String[] tags) throws SwkException {
         Vector shapes = getShapesWithTags(tags);
         SwkShape swkShape = null;
@@ -471,7 +480,7 @@ public class SwkImageCanvas implements SwkCanvasType {
             swkShape.dispose();
             swkShapes.remove(new Integer(swkShape.id));
 
-            for (Object o:swkShape.tags.entrySet()) {
+            for (Object o : swkShape.tags.entrySet()) {
                 Entry entry = (Entry) o;
                 tag = (Tag) entry.getValue();
                 tag.tagShapes.remove(swkShape);
@@ -491,7 +500,7 @@ public class SwkImageCanvas implements SwkCanvasType {
                 parent.add(swkShape.node);
             }
         } else {
-            SwkShape afterShape =  getShape(afterObj);
+            SwkShape afterShape = getShape(afterObj);
             ItemTreeNode afterParent = (ItemTreeNode) afterShape.node.getParent();
             for (int i = 0; i < shapes.size(); i++) {
                 SwkShape swkShape = (SwkShape) shapes.elementAt(i);
@@ -499,22 +508,23 @@ public class SwkImageCanvas implements SwkCanvasType {
                 if (parent == afterParent) {
                     parent.remove(swkShape.node);
                     int index = parent.getIndex(afterShape.node);
-                    parent.insert(swkShape.node,index+1);
+                    parent.insert(swkShape.node, index + 1);
                 }
             }
         }
     }
-   void lower(String lowerTag, String beforeObj) throws SwkException {
+
+    void lower(String lowerTag, String beforeObj) throws SwkException {
         Vector shapes = getShapesWithTags(lowerTag);
         if (beforeObj == null) {
             for (int i = (shapes.size() - 1); i >= 0; i--) {
                 SwkShape swkShape = (SwkShape) shapes.elementAt(i);
                 ItemTreeNode parent = (ItemTreeNode) swkShape.node.getParent();
                 parent.remove(swkShape.node);
-                parent.insert(swkShape.node,0);
+                parent.insert(swkShape.node, 0);
             }
         } else {
-            SwkShape beforeShape =  getShape(beforeObj);
+            SwkShape beforeShape = getShape(beforeObj);
             ItemTreeNode beforeParent = (ItemTreeNode) beforeShape.node.getParent();
             for (int i = (shapes.size() - 1); i >= 0; i--) {
                 SwkShape swkShape = (SwkShape) shapes.elementAt(i);
@@ -522,7 +532,7 @@ public class SwkImageCanvas implements SwkCanvasType {
                 if (parent == beforeParent) {
                     parent.remove(swkShape.node);
                     int index = parent.getIndex(beforeShape.node);
-                    parent.insert(swkShape.node,0);
+                    parent.insert(swkShape.node, 0);
                 }
             }
         }
@@ -562,6 +572,7 @@ public class SwkImageCanvas implements SwkCanvasType {
             return null;
         }
     }
+
     Rectangle2D getShapeBounds(SwkShape swkShape) {
         Rectangle2D thisBound = null;
         if (swkShape.shape == null) {
@@ -638,8 +649,8 @@ public class SwkImageCanvas implements SwkCanvasType {
                             iElem));
 
                     if (swkShape == null) {
-                        throw new SwkException("Invalid canvas item id (null) " +
-                                iElem);
+                        throw new SwkException("Invalid canvas item id (null) "
+                                + iElem);
                     } else {
                         shapeHash.put(swkShape, swkShape);
                     }
@@ -700,7 +711,7 @@ public class SwkImageCanvas implements SwkCanvasType {
         }
 
         if (clearFirst) {
-           for (Object o:shape.tags.entrySet()) {
+            for (Object o : shape.tags.entrySet()) {
                 Entry entry = (Entry) o;
                 tag = (Tag) entry.getValue();
                 tag.tagShapes.remove(shape);
@@ -768,6 +779,7 @@ public class SwkImageCanvas implements SwkCanvasType {
         mEvent.translatePoint((int) (transMouse.getX() - x),
                 (int) (transMouse.getY() - y));
     }
+
     public Point transformPosition(double x, double y) {
         Point loc = getComponent().getLocationOnScreen();
         x -= loc.x;
@@ -778,7 +790,7 @@ public class SwkImageCanvas implements SwkCanvasType {
             transMouse = canvasTransform.inverseTransform(origMouse, transMouse);
         } catch (java.awt.geom.NoninvertibleTransformException ntE) {
         }
-        Point point = new Point((int) transMouse.getX(),(int) transMouse.getY());
+        Point point = new Point((int) transMouse.getX(), (int) transMouse.getY());
         return point;
     }
 
@@ -790,12 +802,12 @@ public class SwkImageCanvas implements SwkCanvasType {
         Enumeration tags = null;
         lastShapeScanned = null;
 
-        for (int iMode=0;iMode<2;iMode++) {
+        for (int iMode = 0; iMode < 2; iMode++) {
             handle = -1;
-            for (Enumeration e = rootNode.reverseDepthFirstEnumeration() ; e.hasMoreElements() ;) {
+            for (Enumeration e = rootNode.reverseDepthFirstEnumeration(); e.hasMoreElements();) {
                 ItemTreeNode node = (ItemTreeNode) e.nextElement();
                 SwkShape swkShape = (SwkShape) node.getUserObject();
-                if ((swkShape == null) ||  (swkShape.getState() != SwkShape.ACTIVE)) {
+                if ((swkShape == null) || (swkShape.getState() != SwkShape.ACTIVE)) {
                     continue;
                 }
                 if (swkShape instanceof ItemNode) {
@@ -803,7 +815,7 @@ public class SwkImageCanvas implements SwkCanvasType {
                 }
                 if (iMode == 0) {
                     if (swkShape.isSelected()) {
-                        handle = swkShape.hitHandles(x1,y1);
+                        handle = swkShape.hitHandles(x1, y1);
                         if (handle < 0) {
                             continue;
                         }
@@ -824,8 +836,8 @@ public class SwkImageCanvas implements SwkCanvasType {
                     Entry entry = (Entry) o;
                     Tag tag = (Tag) entry.getValue();
 
-                    tagOrId = tag.name + " " +
-                        String.valueOf(swkShape.id);
+                    tagOrId = tag.name + " "
+                            + String.valueOf(swkShape.id);
                     shapeHash.add(tagOrId);
                 }
 
@@ -847,7 +859,7 @@ public class SwkImageCanvas implements SwkCanvasType {
 
         int i = 0;
 
-         for (Object o : shapeHash) {
+        for (Object o : shapeHash) {
             String shapeTagOrID = (String) o;
             tagOrIds[i++] = TclString.newInstance(shapeTagOrID);
         }
@@ -882,15 +894,15 @@ public class SwkImageCanvas implements SwkCanvasType {
 
         SwingUtilities.invokeLater(new Runnable() {
 
-            public void run() {
-                if (component2 != null) {
-                    if (component2 instanceof SwkCanvas) {
-                        ((SwkCanvas) component2).repaint();
-                    }
-                }
-            }
+        public void run() {
+        if (component2 != null) {
+        if (component2 instanceof SwkCanvas) {
+        ((SwkCanvas) component2).repaint();
+        }
+        }
+        }
         });
-        */
+         */
     }
 
     public void repaint(final int delay) {
@@ -899,7 +911,7 @@ public class SwkImageCanvas implements SwkCanvasType {
 
             public void run() {
                 if (component2 != null) {
-                     if (component2 instanceof SwkCanvas) {
+                    if (component2 instanceof SwkCanvas) {
                         ((SwkCanvas) component2).changed = true;
                         ((SwkCanvas) component2).startTimer(delay);
                     }
@@ -908,21 +920,21 @@ public class SwkImageCanvas implements SwkCanvasType {
         });
     }
 
-    public void save(int oWidth, int oHeight,OutputStream oStream) {
+    public void save(int oWidth, int oHeight, OutputStream oStream) {
         Dimension size = getSize();
         if (oStream != null) {
             BufferedImage bufferedImage = new BufferedImage((int) size.getWidth(), (int) size.getHeight(), BufferedImage.TYPE_INT_RGB);
             Graphics offgraphics = bufferedImage.getGraphics();
-            paintComponent(offgraphics,null);
+            paintComponent(offgraphics, null);
             offgraphics.dispose();
             if (oWidth > 0) {
                 if (oHeight <= 0) {
-                    oHeight = (int) (oWidth * (double) size.getHeight()/size.getWidth());
+                    oHeight = (int) (oWidth * (double) size.getHeight() / size.getWidth());
                 }
-                BufferedImage thumbNailImage = new BufferedImage(oWidth,oHeight,BufferedImage.TYPE_INT_RGB);
+                BufferedImage thumbNailImage = new BufferedImage(oWidth, oHeight, BufferedImage.TYPE_INT_RGB);
                 Graphics2D g2Thumb = thumbNailImage.createGraphics();
-                g2Thumb.setRenderingHint(RenderingHints.KEY_INTERPOLATION,RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-                g2Thumb.drawImage(bufferedImage,0,0,oWidth,oHeight,null);
+                g2Thumb.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+                g2Thumb.drawImage(bufferedImage, 0, 0, oWidth, oHeight, null);
                 g2Thumb.dispose();
                 writeImage(thumbNailImage, oStream);
             } else {
@@ -939,14 +951,18 @@ public class SwkImageCanvas implements SwkCanvasType {
         } catch (IOException e) {
         }
     }
+
     class NodeBounds {
-          final ItemTreeNode node;
-          final Rectangle2D rect;
-          NodeBounds(final ItemTreeNode node, final Rectangle2D rect) {
-              this.node = node;
-              this.rect = rect;
-          }
+
+        final ItemTreeNode node;
+        final Rectangle2D rect;
+
+        NodeBounds(final ItemTreeNode node, final Rectangle2D rect) {
+            this.node = node;
+            this.rect = rect;
+        }
     }
+
     public void paintComponent(Graphics g, BufferedImage bufOffscreen) {
         g1 = g;
         this.bufOffscreen = bufOffscreen;
@@ -966,15 +982,15 @@ public class SwkImageCanvas implements SwkCanvasType {
         boolean resetUnion = true;
         Stack<NodeBounds> unionStack = new Stack<NodeBounds>();
         AffineTransform fracAT = fracTransformer.getTransform();
-        fracAT.setToScale(d.getWidth(),d.getHeight());
+        fracAT.setToScale(d.getWidth(), d.getHeight());
         AffineTransform fpAT = fpTransformer.getTransform();
         fpAT.setToScale(d.getWidth(), 1.0);
         AffineTransform pfAT = pfTransformer.getTransform();
         pfAT.setToScale(d.getWidth(), 1.0);
-        for (Enumeration e = rootNode.depthFirstEnumeration() ; e.hasMoreElements() ;) {
+        for (Enumeration e = rootNode.depthFirstEnumeration(); e.hasMoreElements();) {
             ItemTreeNode node = (ItemTreeNode) e.nextElement();
             SwkShape swkShape = (SwkShape) node.getUserObject();
-            if ((swkShape == null) ||  (swkShape.getState() == SwkShape.HIDDEN)) {
+            if ((swkShape == null) || (swkShape.getState() == SwkShape.HIDDEN)) {
                 continue;
             }
             //System.out.println(swkShape.getId());
@@ -990,26 +1006,26 @@ public class SwkImageCanvas implements SwkCanvasType {
                     thisNodeBound = unionStack.pop();
                     Rectangle2D thisBound = thisNodeBound.rect;
                     if (firstRect) {
-                         unionRect.setRect(thisBound);
-                         firstRect = false;
+                        unionRect.setRect(thisBound);
+                        firstRect = false;
                     } else {
                         Rectangle2D.union(thisBound, unionRect, unionRect);
                     }
                 }
                 ((ItemNode) swkShape).rect2D.setRect(unionRect);
                 swkShape.paintShape(g2);
-                NodeBounds thisNodeBounds = new NodeBounds(node,unionRect);
+                NodeBounds thisNodeBounds = new NodeBounds(node, unionRect);
                 unionStack.push(thisNodeBounds);
-            }  else {
+            } else {
                 Rectangle2D thisBound = getShapeBounds(swkShape);
-                NodeBounds thisNodeBounds = new NodeBounds(node,thisBound);
+                NodeBounds thisNodeBounds = new NodeBounds(node, thisBound);
                 unionStack.push(thisNodeBounds);
 
                 swkShape.paintShape(g2);
-            if (swkShape.isSelected()) {
-                swkShape.drawHandles(g2);
+                if (swkShape.isSelected()) {
+                    swkShape.drawHandles(g2);
+                }
             }
-           }
         }
         g2.setTransform(storeAT);
     }
@@ -1024,7 +1040,7 @@ public class SwkImageCanvas implements SwkCanvasType {
 
     public void close() throws TclException {
         try {
-           deleteAll();
+            deleteAll();
         } catch (Exception e) {
         }
     }

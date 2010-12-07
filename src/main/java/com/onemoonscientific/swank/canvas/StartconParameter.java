@@ -32,7 +32,7 @@ public class StartconParameter extends CanvasParameter {
             throws TclException {
         String value = "";
         if ((swkShape != null) && (swkShape instanceof ItemConnector)) {
-             value = ((ItemConnector) swkShape).startCon;
+            value = ((ItemConnector) swkShape).startCon;
 
         }
 

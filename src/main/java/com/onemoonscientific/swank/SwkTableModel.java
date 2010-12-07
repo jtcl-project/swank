@@ -40,9 +40,9 @@ import javax.swing.event.*;
 import javax.swing.table.*;
 import javax.swing.text.*;
 
-
 public class SwkTableModel extends AbstractTableModel
-    implements TableModelListener {
+        implements TableModelListener {
+
     static private final int DEFAULT = 0;
     static private final int DATE = 1;
     static private final int INT = 2;
@@ -51,7 +51,7 @@ public class SwkTableModel extends AbstractTableModel
     static private final int HEADER = 2;
     static private final int GET = 3;
     static private final int SET = 4;
-    String[] modes = { "rows", "columns", "header", "get", "set" };
+    String[] modes = {"rows", "columns", "header", "get", "set"};
     Interp interp = null;
     public String command = null;
     public String variable = null;
@@ -193,23 +193,23 @@ public class SwkTableModel extends AbstractTableModel
     }
 
     /*    public int getIndexForRow(int row) {
-            checkModel();
-            int index = -1;
-            if ((row >= 0) && (row < indexes.length)) {
-                index = indexes[row];
-            }
-            return index;
-        }
+    checkModel();
+    int index = -1;
+    if ((row >= 0) && (row < indexes.length)) {
+    index = indexes[row];
+    }
+    return index;
+    }
 
-        public int getRowForIndex(int index) {
-            checkModel();
-            int row = -1;
-            if ((index >= 0) && (index < rindexes.length)) {
-                 row = rindexes[index];
-            }
-            return row;
-        }
-    */
+    public int getRowForIndex(int index) {
+    checkModel();
+    int row = -1;
+    if ((index >= 0) && (index < rindexes.length)) {
+    row = rindexes[index];
+    }
+    return row;
+    }
+     */
     public void setValueAt(Object value, int row, int col) {
         if (useCommand) {
             if ((command == null) || command.equals("")) {
@@ -229,7 +229,7 @@ public class SwkTableModel extends AbstractTableModel
 
                 try {
                     interp.setVar(variable, (row + "," + col), tobj,
-                        TCL.GLOBAL_ONLY);
+                            TCL.GLOBAL_ONLY);
                     fireTableCellUpdatedET(row, col);
                 } catch (TclException tclE) {
                 }
@@ -313,7 +313,7 @@ public class SwkTableModel extends AbstractTableModel
     }
 
     public void doCommand(Interp interp, String command, int mode, int row,
-        int col, Object value) {
+            int col, Object value) {
         int i;
         char type;
         StringBuffer sbuf = new StringBuffer();
@@ -328,42 +328,42 @@ public class SwkTableModel extends AbstractTableModel
                 type = command.charAt(i);
 
                 switch (type) {
-                case 'c':
-                    sbuf.append(Integer.toString(col));
+                    case 'c':
+                        sbuf.append(Integer.toString(col));
 
-                    break;
+                        break;
 
-                case 'r':
-                    sbuf.append(Integer.toString(row));
+                    case 'r':
+                        sbuf.append(Integer.toString(row));
 
-                    break;
+                        break;
 
-                case 'C':
-                    sbuf.append(Integer.toString(row));
-                    sbuf.append(",");
-                    sbuf.append(Integer.toString(col));
+                    case 'C':
+                        sbuf.append(Integer.toString(row));
+                        sbuf.append(",");
+                        sbuf.append(Integer.toString(col));
 
-                    break;
+                        break;
 
-                case 'i':
-                    sbuf.append(Integer.toString(mode));
+                    case 'i':
+                        sbuf.append(Integer.toString(mode));
 
-                    break;
+                        break;
 
-                case 'm':
-                    sbuf.append(modes[mode]);
+                    case 'm':
+                        sbuf.append(modes[mode]);
 
-                    break;
+                        break;
 
-                case 's':
+                    case 's':
 
-                    if (value != null) {
-                        sbuf.append(value.toString());
-                    } else {
-                        sbuf.append("{}");
-                    }
+                        if (value != null) {
+                            sbuf.append(value.toString());
+                        } else {
+                            sbuf.append("{}");
+                        }
 
-                    break;
+                        break;
                 }
             }
         }
@@ -387,25 +387,25 @@ public class SwkTableModel extends AbstractTableModel
     }
 
     /*
-    *----------------------------------------------------------------------
-    *
-    * getBoolean --
-    *
-    *      Given a string, return a boolean value corresponding
-    *      to the string. From jacl Util.java
-    *
-    * Results:
-    *
-    *
-    * Side effects:
-    *      None.
-    *
-    *----------------------------------------------------------------------
-    */
+     *----------------------------------------------------------------------
+     *
+     * getBoolean --
+     *
+     *      Given a string, return a boolean value corresponding
+     *      to the string. From jacl Util.java
+     *
+     * Results:
+     *
+     *
+     * Side effects:
+     *      None.
+     *
+     *----------------------------------------------------------------------
+     */
     static boolean getBoolean(Interp interp, // The current interpreter.
-        String string) // The string representation of the boolean.
-        throws TclException // For malformed boolean values.
-     {
+            String string) // The string representation of the boolean.
+            throws TclException // For malformed boolean values.
+    {
         String s = string.toLowerCase();
 
         // The length of 's' needs to be > 1 if it begins with 'o',
@@ -431,26 +431,29 @@ public class SwkTableModel extends AbstractTableModel
         }
 
         throw new TclException(interp,
-            "expected boolean value but got \"" + string + "\"");
+                "expected boolean value but got \"" + string + "\"");
     }
 
     void fireTableStructureChangedET() {
         SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    fireTableStructureChanged();
-                }
-            });
+
+            public void run() {
+                fireTableStructureChanged();
+            }
+        });
     }
 
     void fireTableCellUpdatedET(final int row, final int col) {
         SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    fireTableCellUpdated(row, col);
-                }
-            });
+
+            public void run() {
+                fireTableCellUpdated(row, col);
+            }
+        });
     }
 
     class SwkTableEvent extends TclEvent {
+
         Interp interp = null;
         String cmd = null;
         int mode = 0;
@@ -458,7 +461,7 @@ public class SwkTableModel extends AbstractTableModel
         int col = 0;
 
         public SwkTableEvent(Interp interp, int mode, int row, int col,
-            String cmd) {
+                String cmd) {
             this.interp = interp;
             this.row = row;
             this.col = col;

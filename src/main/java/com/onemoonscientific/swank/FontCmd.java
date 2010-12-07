@@ -33,12 +33,11 @@ import java.io.*;
 
 import java.util.*;
 
-
 public class FontCmd implements Command {
+
     static final private String[] validCmds = {
         "actual", "configure", "create", "delete", "families", "measure",
-        "metrics", "names",
-    };
+        "metrics", "names",};
     static final private int OPT_ACTUAL = 0;
     static final private int OPT_CONFIGURE = 1;
     static final private int OPT_CREATE = 2;
@@ -49,237 +48,237 @@ public class FontCmd implements Command {
     static final private int OPT_NAMES = 7;
 
     public void cmdProc(Interp interp, TclObject[] argv)
-        throws TclException {
+            throws TclException {
         if (argv.length < 2) {
             throw new TclNumArgsException(interp, 1, argv,
-                "option ?arg arg ...?");
+                    "option ?arg arg ...?");
         }
 
         int opt = TclIndex.get(interp, argv[1], validCmds, "option", 0);
 
         switch (opt) {
-        case OPT_ACTUAL: {
-            if (argv.length < 4) {
-                throw new TclNumArgsException(interp, 1, argv,
-                    "option ?arg arg ...?");
+            case OPT_ACTUAL: {
+                if (argv.length < 4) {
+                    throw new TclNumArgsException(interp, 1, argv,
+                            "option ?arg arg ...?");
+                }
+
+                break;
             }
 
-            break;
-        }
+            case OPT_CONFIGURE: {
+                if (argv.length < 4) {
+                    throw new TclNumArgsException(interp, 1, argv,
+                            "option ?arg arg ...?");
+                }
 
-        case OPT_CONFIGURE: {
-            if (argv.length < 4) {
-                throw new TclNumArgsException(interp, 1, argv,
-                    "option ?arg arg ...?");
+                break;
             }
 
-            break;
-        }
+            case OPT_CREATE: {
+                if (argv.length < 4) {
+                    throw new TclNumArgsException(interp, 1, argv,
+                            "option ?arg arg ...?");
+                }
 
-        case OPT_CREATE: {
-            if (argv.length < 4) {
-                throw new TclNumArgsException(interp, 1, argv,
-                    "option ?arg arg ...?");
+                break;
             }
 
-            break;
-        }
+            case OPT_DELETE: {
+                if (argv.length < 4) {
+                    throw new TclNumArgsException(interp, 1, argv,
+                            "option ?arg arg ...?");
+                }
 
-        case OPT_DELETE: {
-            if (argv.length < 4) {
-                throw new TclNumArgsException(interp, 1, argv,
-                    "option ?arg arg ...?");
+                break;
             }
 
-            break;
-        }
+            case OPT_FAMILIES: {
+                String[] fontFamilies = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
+                TclObject list = TclList.newInstance();
 
-        case OPT_FAMILIES: {
-            String[] fontFamilies = GraphicsEnvironment.getLocalGraphicsEnvironment()
-                                                       .getAvailableFontFamilyNames();
-            TclObject list = TclList.newInstance();
+                for (int i = 0; i < fontFamilies.length; i++) {
+                    TclList.append(interp, list,
+                            TclString.newInstance(fontFamilies[i]));
+                }
 
-            for (int i = 0; i < fontFamilies.length; i++) {
-                TclList.append(interp, list,
-                    TclString.newInstance(fontFamilies[i]));
+                interp.setResult(list);
+
+                break;
             }
 
-            interp.setResult(list);
+            case OPT_MEASURE: {
+                if (argv.length < 4) {
+                    throw new TclNumArgsException(interp, 1, argv,
+                            "option ?arg arg ...?");
+                }
 
-            break;
-        }
+                Font font = SwankUtil.getFont(interp, argv[2]);
 
-        case OPT_MEASURE: {
-            if (argv.length < 4) {
-                throw new TclNumArgsException(interp, 1, argv,
-                    "option ?arg arg ...?");
-            }
+                if (font == null) {
+                    throw new TclException(interp,
+                            "unknown font \"" + argv[2].toString() + "\"");
+                }
 
-            Font font = SwankUtil.getFont(interp, argv[2]);
+                Component comp = null;
 
-            if (font == null) {
-                throw new TclException(interp,
-                    "unknown font \"" + argv[2].toString() + "\"");
-            }
-
-            Component comp = null;
-
-            if (argv.length > 3) {
-                if ("-displayof".startsWith(argv[3].toString())) {
-                    if (argv.length == 4) {
-                        throw new TclException(interp,
-                            "-value for \"-displayof\" missing");
-                    } else {
-                        comp = (Component) Widgets.get(interp,
-                                argv[4].toString());
+                if (argv.length > 3) {
+                    if ("-displayof".startsWith(argv[3].toString())) {
+                        if (argv.length == 4) {
+                            throw new TclException(interp,
+                                    "-value for \"-displayof\" missing");
+                        } else {
+                            comp = (Component) Widgets.get(interp,
+                                    argv[4].toString());
+                        }
                     }
                 }
+
+                if (comp == null) {
+                    comp = (Component) Widgets.get(interp, "any");
+                }
+
+                if (comp == null) {
+                    throw new TclException(interp,
+                            "can't get component for font command");
+                }
+
+                FontMetrics fontMetrics = comp.getFontMetrics(font);
+                int width = fontMetrics.stringWidth(argv[3].toString());
+                interp.setResult(width);
+
+                break;
             }
 
-            if (comp == null) {
-                comp = (Component) Widgets.get(interp, "any");
-            }
+            case OPT_METRICS: {
+                if (argv.length < 3) {
+                    throw new TclNumArgsException(interp, 1, argv,
+                            "option ?arg arg ...?");
+                }
 
-            if (comp == null) {
-                throw new TclException(interp,
-                    "can't get component for font command");
-            }
+                int start = 3;
+                Component comp = null;
+                Font font = SwankUtil.getFont(interp, argv[2]);
 
-            FontMetrics fontMetrics = comp.getFontMetrics(font);
-            int width = fontMetrics.stringWidth(argv[3].toString());
-            interp.setResult(width);
+                if (font == null) {
+                    throw new TclException(interp,
+                            "unknown font \"" + argv[2].toString() + "\"");
+                }
 
-            break;
-        }
-
-        case OPT_METRICS: {
-            if (argv.length < 3) {
-                throw new TclNumArgsException(interp, 1, argv,
-                    "option ?arg arg ...?");
-            }
-
-            int start = 3;
-            Component comp = null;
-            Font font = SwankUtil.getFont(interp, argv[2]);
-
-            if (font == null) {
-                throw new TclException(interp,
-                    "unknown font \"" + argv[2].toString() + "\"");
-            }
-
-            if (argv.length > 3) {
-                if ("-displayof".startsWith(argv[3].toString())) {
-                    if (argv.length == 4) {
-                        throw new TclException(interp,
-                            "-value for \"-displayof\" missing");
-                    } else {
-                        start = 5;
-                        comp = (Component) Widgets.get(interp,
-                                argv[4].toString());
+                if (argv.length > 3) {
+                    if ("-displayof".startsWith(argv[3].toString())) {
+                        if (argv.length == 4) {
+                            throw new TclException(interp,
+                                    "-value for \"-displayof\" missing");
+                        } else {
+                            start = 5;
+                            comp = (Component) Widgets.get(interp,
+                                    argv[4].toString());
+                        }
                     }
                 }
-            }
 
-            if (comp == null) {
-                comp = (Component) Widgets.get(interp, "any");
-            }
-
-            if (comp == null) {
-                throw new TclException(interp,
-                    "can't get component for font command");
-            }
-
-            // FontMetrics fontMetrics = comp.getFontMetrics(font);
-            FontMetrics fontMetrics = (new Add()).exec(comp, font);
-
-            boolean getAscent = true;
-            boolean getDescent = true;
-            boolean getLinespace = true;
-            boolean getFixed = true;
-            boolean singleMode = false;
-
-            for (int i = start; i < argv.length; i++) {
-                if (i == start) {
-                    getAscent = getDescent = getLinespace = getFixed = false;
-                    singleMode = true;
+                if (comp == null) {
+                    comp = (Component) Widgets.get(interp, "any");
                 }
 
-                if ("-ascent".startsWith(argv[i].toString())) {
-                    getAscent = true;
+                if (comp == null) {
+                    throw new TclException(interp,
+                            "can't get component for font command");
                 }
 
-                if ("-descent".startsWith(argv[i].toString())) {
-                    getDescent = true;
+                // FontMetrics fontMetrics = comp.getFontMetrics(font);
+                FontMetrics fontMetrics = (new Add()).exec(comp, font);
+
+                boolean getAscent = true;
+                boolean getDescent = true;
+                boolean getLinespace = true;
+                boolean getFixed = true;
+                boolean singleMode = false;
+
+                for (int i = start; i < argv.length; i++) {
+                    if (i == start) {
+                        getAscent = getDescent = getLinespace = getFixed = false;
+                        singleMode = true;
+                    }
+
+                    if ("-ascent".startsWith(argv[i].toString())) {
+                        getAscent = true;
+                    }
+
+                    if ("-descent".startsWith(argv[i].toString())) {
+                        getDescent = true;
+                    }
+
+                    if ("-linespace".startsWith(argv[i].toString())) {
+                        getLinespace = true;
+                    }
+
+                    if ("-fixed".startsWith(argv[i].toString())) {
+                        getFixed = true;
+                    }
                 }
 
-                if ("-linespace".startsWith(argv[i].toString())) {
-                    getLinespace = true;
-                }
+                TclObject list = TclList.newInstance();
 
-                if ("-fixed".startsWith(argv[i].toString())) {
-                    getFixed = true;
-                }
-            }
+                if (getAscent) {
+                    if (!singleMode) {
+                        TclList.append(interp, list,
+                                TclString.newInstance("-ascent"));
+                    }
 
-            TclObject list = TclList.newInstance();
-
-            if (getAscent) {
-                if (!singleMode) {
                     TclList.append(interp, list,
-                        TclString.newInstance("-ascent"));
+                            TclInteger.newInstance(fontMetrics.getAscent()));
                 }
 
-                TclList.append(interp, list,
-                    TclInteger.newInstance(fontMetrics.getAscent()));
-            }
+                if (getDescent) {
+                    if (!singleMode) {
+                        TclList.append(interp, list,
+                                TclString.newInstance("-descent"));
+                    }
 
-            if (getDescent) {
-                if (!singleMode) {
                     TclList.append(interp, list,
-                        TclString.newInstance("-descent"));
+                            TclInteger.newInstance(fontMetrics.getDescent()));
                 }
 
-                TclList.append(interp, list,
-                    TclInteger.newInstance(fontMetrics.getDescent()));
-            }
+                if (getLinespace) {
+                    if (!singleMode) {
+                        TclList.append(interp, list,
+                                TclString.newInstance("-linespace"));
+                    }
 
-            if (getLinespace) {
-                if (!singleMode) {
                     TclList.append(interp, list,
-                        TclString.newInstance("-linespace"));
+                            TclInteger.newInstance(fontMetrics.getHeight()));
                 }
 
-                TclList.append(interp, list,
-                    TclInteger.newInstance(fontMetrics.getHeight()));
-            }
+                if (getFixed) {
+                    if (!singleMode) {
+                        TclList.append(interp, list, TclString.newInstance("-fixed"));
+                    }
 
-            if (getFixed) {
-                if (!singleMode) {
-                    TclList.append(interp, list, TclString.newInstance("-fixed"));
+                    TclList.append(interp, list,
+                            TclBoolean.newInstance(
+                            fontMetrics.charWidth('m') == fontMetrics.charWidth('i')));
                 }
 
-                TclList.append(interp, list,
-                    TclBoolean.newInstance(
-                        fontMetrics.charWidth('m') == fontMetrics.charWidth('i')));
+                interp.setResult(list);
+
+                break;
             }
 
-            interp.setResult(list);
+            case OPT_NAMES: {
+                if (argv.length < 4) {
+                    throw new TclNumArgsException(interp, 1, argv,
+                            "option ?arg arg ...?");
+                }
 
-            break;
-        }
-
-        case OPT_NAMES: {
-            if (argv.length < 4) {
-                throw new TclNumArgsException(interp, 1, argv,
-                    "option ?arg arg ...?");
+                break;
             }
-
-            break;
-        }
         }
     }
 
     class Add extends GetValueOnEventThread {
+
         Component comp = null;
         Font font = null;
         FontMetrics fontMetrics = null;

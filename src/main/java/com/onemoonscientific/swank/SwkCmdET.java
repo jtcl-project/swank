@@ -36,8 +36,8 @@ import java.util.*;
 
 import javax.swing.*;
 
-
 public class SwkCmdET implements Command {
+
     int interpResult = 0;
     String errorString = null;
 
@@ -46,7 +46,7 @@ public class SwkCmdET implements Command {
      * @param argv
      * @throws TclException  */
     public void cmdProc(Interp interp, TclObject[] argv)
-        throws TclException {
+            throws TclException {
         System.out.println("SwkCmdET on " + Thread.currentThread().getName());
 
         for (int i = 0; i < argv.length; i++) {
@@ -76,7 +76,7 @@ public class SwkCmdET implements Command {
     }
 
     void cmdProcET(final Interp interp, final TclObject[] argv)
-        throws TclException {
+            throws TclException {
         System.out.println("should never see this from cmdProcET");
     }
 
@@ -90,6 +90,7 @@ public class SwkCmdET implements Command {
     }
 
     class WidgetCmd implements Runnable {
+
         Interp interp;
         TclObject[] argv = null;
 
@@ -120,6 +121,7 @@ public class SwkCmdET implements Command {
     }
 
     class ETWait implements Runnable {
+
         public void run() {
             System.out.println("waiting " + System.currentTimeMillis());
         }

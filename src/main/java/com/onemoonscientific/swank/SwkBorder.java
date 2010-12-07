@@ -37,8 +37,8 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
-
 public class SwkBorder extends AbstractBorder {
+
     private int width = 6;
 
     public void paintBorder(Component c, Graphics g, int x, int y, int w, int h) {
@@ -126,7 +126,7 @@ public class SwkBorder extends AbstractBorder {
             return new Insets(width, width, width, width);
         } else {
             return new Insets(width + eBI.top, width + eBI.left,
-                width + eBI.bottom, width + eBI.right);
+                    width + eBI.bottom, width + eBI.right);
         }
     }
 

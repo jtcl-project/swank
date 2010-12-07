@@ -9,7 +9,6 @@
  * RCS: @(#) $Id: SwkGridBagLayout.java,v 1.2 2004/08/20 19:30:52 bruce_johnson Exp $
  *
  */
-
 /**
  * SwkGridBagLayout is used to lay out widget components.
  *
@@ -27,8 +26,8 @@ import java.util.*;
 
 import javax.swing.*;
 
-
 public class SwkGridBagLayout extends GridBagLayout {
+
     boolean propagate = true;
     Hashtable columnTable = new Hashtable();
     Hashtable rowTable = new Hashtable();
@@ -64,8 +63,8 @@ public class SwkGridBagLayout extends GridBagLayout {
                 rcProps = (GridRowColumnProps) rowTable.get(key);
             }
 
-            if ((rcProps.weight > 0) || (rcProps.minSize > 0) ||
-                    (rcProps.pad > 0)) {
+            if ((rcProps.weight > 0) || (rcProps.minSize > 0)
+                    || (rcProps.pad > 0)) {
                 int iKey = Integer.parseInt(key);
 
                 if (iKey > x) {

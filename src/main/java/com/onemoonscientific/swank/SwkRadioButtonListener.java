@@ -37,9 +37,9 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
-
 public class SwkRadioButtonListener implements ActionListener, VarTrace,
-    SwkListener {
+        SwkListener {
+
     Interp interp;
     String command = "";
     String value = "";
@@ -53,10 +53,10 @@ public class SwkRadioButtonListener implements ActionListener, VarTrace,
     }
 
     public void traceProc(Interp interp, String string1, String string2,
-        int flags) throws TclException {
+            int flags) throws TclException {
         if (EventQueue.isDispatchThread()) {
             System.out.println(
-                "SwkRadioButtonListener: traceProc on event thread");
+                    "SwkRadioButtonListener: traceProc on event thread");
         }
 
         setFromVar(interp);
@@ -65,11 +65,11 @@ public class SwkRadioButtonListener implements ActionListener, VarTrace,
     public void setFromVar(Interp interp) throws TclException {
         if (EventQueue.isDispatchThread()) {
             System.out.println(
-                "SwkRadioButtonListener: setFromVar on event thread");
+                    "SwkRadioButtonListener: setFromVar on event thread");
         }
 
         if (!traceLock) {
-            TclObject wObj = (TclObject) Widgets.getWidget(interp,component.getName());
+            TclObject wObj = (TclObject) Widgets.getWidget(interp, component.getName());
 
             if (wObj == null) {
                 return;
@@ -80,10 +80,11 @@ public class SwkRadioButtonListener implements ActionListener, VarTrace,
 
                 if (tobj.toString().equals(value)) {
                     SwingUtilities.invokeLater(new Runnable() {
-                            public void run() {
-                                component.setSelected(true);
-                            }
-                        });
+
+                        public void run() {
+                            component.setSelected(true);
+                        }
+                    });
                 }
             } catch (TclException tclE) {
             }
@@ -93,13 +94,13 @@ public class SwkRadioButtonListener implements ActionListener, VarTrace,
     }
 
     public void setVarName(Interp interp, String name)
-        throws TclException {
+            throws TclException {
         //  ButtonGroup bgroup;
         // FIXME  some of this should be on event thread
         if ((varName != null) && (!varName.equals(""))) {
             ButtonGroup bgroup = (ButtonGroup) SwkJRadioButton.bgroupTable.get(varName);
-            interp.untraceVar(varName, this, TCL.TRACE_WRITES |
-                TCL.GLOBAL_ONLY);
+            interp.untraceVar(varName, this, TCL.TRACE_WRITES
+                    | TCL.GLOBAL_ONLY);
 
             if (bgroup != null) {
                 bgroup.remove(component);
@@ -114,9 +115,10 @@ public class SwkRadioButtonListener implements ActionListener, VarTrace,
 
                 final boolean state = tObj.toString().equals(value); //If the value doesn't match the state then deselect
                 SwingUtilities.invokeLater(new Runnable() {
-                            public void run() {
-                                component.setSelected(state);
-                            }
+
+                    public void run() {
+                        component.setSelected(state);
+                    }
                 });
             } catch (TclException tclException) {
                 interp.resetResult();
@@ -134,10 +136,11 @@ public class SwkRadioButtonListener implements ActionListener, VarTrace,
             final ButtonGroup bgroup2 = bgroup;
             interp.traceVar(name, this, TCL.TRACE_WRITES | TCL.GLOBAL_ONLY);
             SwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-                        bgroup2.add(component);
-                    }
-                });
+
+                public void run() {
+                    bgroup2.add(component);
+                }
+            });
         }
 
         varName = name.intern();
@@ -160,28 +163,28 @@ public class SwkRadioButtonListener implements ActionListener, VarTrace,
     }
 
     /*
-        public void setValue(String name) throws TclException {
-            value = name;
-            TclObject tObj = null;
-            if ((varName != null) && (!varName.equals(""))) {
-                try {
-                  tObj = interp.getVar(varName, TCL.GLOBAL_ONLY);
-                    if (tObj.toString().equals(value)) {
-                        final boolean state = true;
-                        SwingUtilities.invokeLater(new Runnable() {
-                                public void run() {
-                                    component.setSelected(state);
-                                }
-                            });
-                    }
-                } catch (TclException tclException) {
-                    interp.resetResult();
-                    tObj = TclString.newInstance(value);
-                    interp.setVar(varName, tObj, TCL.GLOBAL_ONLY);
-                }
-           }
-        }
-    */
+    public void setValue(String name) throws TclException {
+    value = name;
+    TclObject tObj = null;
+    if ((varName != null) && (!varName.equals(""))) {
+    try {
+    tObj = interp.getVar(varName, TCL.GLOBAL_ONLY);
+    if (tObj.toString().equals(value)) {
+    final boolean state = true;
+    SwingUtilities.invokeLater(new Runnable() {
+    public void run() {
+    component.setSelected(state);
+    }
+    });
+    }
+    } catch (TclException tclException) {
+    interp.resetResult();
+    tObj = TclString.newInstance(value);
+    interp.setVar(varName, tObj, TCL.GLOBAL_ONLY);
+    }
+    }
+    }
+     */
     public String getValue() {
         return (value);
     }
@@ -197,7 +200,7 @@ public class SwkRadioButtonListener implements ActionListener, VarTrace,
     public void actionPerformed(ActionEvent e) {
         if (!EventQueue.isDispatchThread()) {
             System.out.println(
-                "SwkCheckButtonListener: actionPerformed not on event thread");
+                    "SwkCheckButtonListener: actionPerformed not on event thread");
         }
 
         String myValue;
@@ -226,7 +229,7 @@ public class SwkRadioButtonListener implements ActionListener, VarTrace,
 
         if (EventQueue.isDispatchThread()) {
             System.out.println(
-                "SwkRadioButtonListener: processEvent on event thread");
+                    "SwkRadioButtonListener: processEvent on event thread");
         }
 
         if ((command != null) && (command.length() != 0)) {

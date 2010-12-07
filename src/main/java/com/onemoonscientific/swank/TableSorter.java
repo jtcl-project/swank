@@ -14,7 +14,6 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.*;
 
-
 /**
  * TableSorter is a decorator for TableModels; adding sorting
  * functionality to a supplied TableModel. TableSorter does
@@ -67,30 +66,31 @@ import javax.swing.table.*;
  * @version 2.0 02/27/04
  */
 public class TableSorter extends AbstractTableModel {
+
     public static final int DESCENDING = -1;
     public static final int NOT_SORTED = 0;
     public static final int ASCENDING = 1;
     private int lastCompareType = 0;
     private static Directive EMPTY_DIRECTIVE = new Directive(-1, NOT_SORTED);
     public static final Comparator COMPARABLE_COMPARATOR = new Comparator() {
-            public int compare(Object o1, Object o2) {
-                return ((Comparable) o1).compareTo(o2);
-            }
-        };
-/*
+
+        public int compare(Object o1, Object o2) {
+            return ((Comparable) o1).compareTo(o2);
+        }
+    };
+    /*
     public static final Comparator DICTIONARY_COMPARATOR = new Comparator() {
-            public int compare(Object o1, Object o2) {
-                return doDictionary(o1.toString(), o2.toString());
-            }
-        };
-*/
-   public static final Comparator LEXICAL_COMPARATOR = new Comparator() {
+    public int compare(Object o1, Object o2) {
+    return doDictionary(o1.toString(), o2.toString());
+    }
+    };
+     */
+    public static final Comparator LEXICAL_COMPARATOR = new Comparator() {
+
         public int compare(Object o1, Object o2) {
             return o1.toString().compareTo(o2.toString());
         }
     };
-
-
     protected TableModel tableModel;
     private SimpleDateFormat dateFormat = null;
     private Row[] viewToModel;
@@ -216,7 +216,7 @@ public class TableSorter extends AbstractTableModel {
         }
 
         return new Arrow(directive.direction == DESCENDING, size,
-            sortingColumns.indexOf(directive));
+                sortingColumns.indexOf(directive));
     }
 
     private void cancelSorting() {
@@ -266,7 +266,7 @@ public class TableSorter extends AbstractTableModel {
     }
 
     public int modelIndex(int viewIndex) {
-        
+
         return getViewToModel()[viewIndex].modelIndex;
     }
 
@@ -309,10 +309,10 @@ public class TableSorter extends AbstractTableModel {
     }
 
     public Object getValueAt(int row, int column) {
-  //      System.out.print("row: " + row + "column: " + column);
-  //      System.out.print(" tableModel: row "+tableModel.getRowCount()+"Column :"+ tableModel.getColumnCount());
-    //int k = modelIndex(row);
-  //  System.out.println(" modelIndex(row)" +k);
+        //      System.out.print("row: " + row + "column: " + column);
+        //      System.out.print(" tableModel: row "+tableModel.getRowCount()+"Column :"+ tableModel.getColumnCount());
+        //int k = modelIndex(row);
+        //  System.out.println(" modelIndex(row)" +k);
         return tableModel.getValueAt(modelIndex(row), column);
     }
 
@@ -321,7 +321,6 @@ public class TableSorter extends AbstractTableModel {
     }
 
     // FIXME, add mode that is case insensitive?
-
     /**
      * Compares the order of two strings in "dictionary" order.
      *  Copied from Qsort.java of tcljava
@@ -343,21 +342,21 @@ public class TableSorter extends AbstractTableModel {
         int len2 = str2.length();
         if ((len1 == 0) && (len2 == 0)) {
             lastCompareType = 121;
-             return 0;
-        } else if (len1 ==0) {
+            return 0;
+        } else if (len1 == 0) {
             lastCompareType = 122;
-             return -1;
-        } else if (len2 ==0) {
+            return -1;
+        } else if (len2 == 0) {
             lastCompareType = 123;
-             return 1;
+            return 1;
         }
         while (cont) {
             if ((i1 >= len1) || (i2 >= len2)) {
                 break;
             }
 
-            if (Character.isDigit(str2.charAt(i2)) &&
-                    Character.isDigit(str1.charAt(i1))) {
+            if (Character.isDigit(str2.charAt(i2))
+                    && Character.isDigit(str1.charAt(i1))) {
                 // There are decimal numbers embedded in the two
                 // strings.  Compare them as numbers, rather than
                 // strings.  If one number has more leading zeros than
@@ -407,18 +406,18 @@ public class TableSorter extends AbstractTableModel {
 
                     if (!Character.isDigit(str2.charAt(i2))) {
                         if (Character.isDigit(str1.charAt(i1))) {
-            lastCompareType = 124;
+                            lastCompareType = 124;
                             return 1;
                         } else {
                             if (diff != 0) {
-            lastCompareType = 125;
+                                lastCompareType = 125;
                                 return diff;
                             }
 
                             break;
                         }
                     } else if (!Character.isDigit(str1.charAt(i1))) {
-            lastCompareType = 126;
+                        lastCompareType = 126;
                         return -1;
                     }
                 }
@@ -429,30 +428,30 @@ public class TableSorter extends AbstractTableModel {
             diff = str1.charAt(i1) - str2.charAt(i2);
 
             if (diff != 0) {
-                if (Character.isUpperCase(str1.charAt(i1)) &&
-                        Character.isLowerCase(str2.charAt(i2))) {
-                    diff = Character.toLowerCase(str1.charAt(i1)) -
-                        str2.charAt(i2);
+                if (Character.isUpperCase(str1.charAt(i1))
+                        && Character.isLowerCase(str2.charAt(i2))) {
+                    diff = Character.toLowerCase(str1.charAt(i1))
+                            - str2.charAt(i2);
 
                     if (diff != 0) {
-            lastCompareType = 127;
+                        lastCompareType = 127;
                         return diff;
                     } else if (secondaryDiff == 0) {
                         secondaryDiff = -1;
                     }
-                } else if (Character.isUpperCase(str2.charAt(i2)) &&
-                        Character.isLowerCase(str1.charAt(i1))) {
-                    diff = str1.charAt(i1) -
-                        Character.toLowerCase(str2.charAt(i2));
+                } else if (Character.isUpperCase(str2.charAt(i2))
+                        && Character.isLowerCase(str1.charAt(i1))) {
+                    diff = str1.charAt(i1)
+                            - Character.toLowerCase(str2.charAt(i2));
 
                     if (diff != 0) {
-            lastCompareType = 128;
+                        lastCompareType = 128;
                         return diff;
                     } else if (secondaryDiff == 0) {
                         secondaryDiff = 1;
                     }
                 } else {
-            lastCompareType = 129;
+                    lastCompareType = 129;
                     return diff;
                 }
             }
@@ -463,18 +462,18 @@ public class TableSorter extends AbstractTableModel {
 
         if ((i1 >= len1) && (i2 < len2)) {
             if (!Character.isDigit(str2.charAt(i2))) {
-            lastCompareType = 130;
+                lastCompareType = 130;
                 return 1;
             } else {
-            lastCompareType = 131;
+                lastCompareType = 131;
                 return -1;
             }
         } else if ((i2 >= len2) && (i1 < len1)) {
             if (!Character.isDigit(str1.charAt(i1))) {
-            lastCompareType = 132;
+                lastCompareType = 132;
                 return -1;
             } else {
-            lastCompareType = 133;
+                lastCompareType = 133;
                 return 1;
             }
         }
@@ -483,7 +482,7 @@ public class TableSorter extends AbstractTableModel {
             diff = secondaryDiff;
         }
 
-            lastCompareType = 134;
+        lastCompareType = 134;
         return diff;
     }
 
@@ -536,8 +535,8 @@ public class TableSorter extends AbstractTableModel {
         Object v1 = o1;
         Object v2 = o2;
 
-        if ((type == java.lang.Number.class) ||
-                (type.getSuperclass() == java.lang.Number.class)) {
+        if ((type == java.lang.Number.class)
+                || (type.getSuperclass() == java.lang.Number.class)) {
             double d1;
             double d2;
             String s1 = null;
@@ -589,8 +588,8 @@ public class TableSorter extends AbstractTableModel {
                 return 0;
             }
         } else if (type == java.util.Date.class) {
-            if (!(v1 instanceof java.util.Date) ||
-                    !(v2 instanceof java.util.Date)) {
+            if (!(v1 instanceof java.util.Date)
+                    || !(v2 instanceof java.util.Date)) {
                 String s1 = v1.toString();
                 String s2 = v2.toString();
 
@@ -603,7 +602,7 @@ public class TableSorter extends AbstractTableModel {
             Date d2 = (Date) v2;
             long n2 = d2.getTime();
 
-                lastCompareType = 10;
+            lastCompareType = 10;
             if (n1 < n2) {
                 return -1;
             } else if (n1 > n2) {
@@ -612,8 +611,8 @@ public class TableSorter extends AbstractTableModel {
                 return 0;
             }
         } else if (type == String.class) {
-            if (!(v1 instanceof java.lang.String) ||
-                    !(v2 instanceof java.lang.String)) {
+            if (!(v1 instanceof java.lang.String)
+                    || !(v2 instanceof java.lang.String)) {
                 String s1 = v1.toString();
                 String s2 = v2.toString();
 
@@ -630,8 +629,8 @@ public class TableSorter extends AbstractTableModel {
             boolean b1;
             boolean b2;
 
-            if (!(v1 instanceof java.lang.Boolean) ||
-                    !(v2 instanceof java.lang.Boolean)) {
+            if (!(v1 instanceof java.lang.Boolean)
+                    || !(v2 instanceof java.lang.Boolean)) {
                 String s1 = v1.toString();
                 String s2 = v2.toString();
 
@@ -639,7 +638,7 @@ public class TableSorter extends AbstractTableModel {
                 Boolean bool2 = getBoolean(s1);
 
                 if ((bool1 == null) || (bool2 == null)) {
-                lastCompareType = 13;
+                    lastCompareType = 13;
                     return (doDictionary(s1, s2));
                 }
 
@@ -653,7 +652,7 @@ public class TableSorter extends AbstractTableModel {
                 b2 = bool2.booleanValue();
             }
 
-                lastCompareType = 14;
+            lastCompareType = 14;
             if (b1 == b2) {
                 return 0;
             } else if (b1) { // Define false < true
@@ -665,19 +664,19 @@ public class TableSorter extends AbstractTableModel {
         } else {
             String s1 = v1.toString();
             String s2 = v2.toString();
-                lastCompareType = 15;
-            return doDictionary(s1,s2);
-/*
+            lastCompareType = 15;
+            return doDictionary(s1, s2);
+            /*
             int result = s1.compareTo(s2);
 
             if (result < 0) {
-                return -1;
+            return -1;
             } else if (result > 0) {
-                return 1;
+            return 1;
             } else {
-                return 0;
+            return 0;
             }
-*/
+             */
         }
     }
 
@@ -698,7 +697,7 @@ public class TableSorter extends AbstractTableModel {
      *----------------------------------------------------------------------
      */
     private static Boolean getBoolean(String string) // The string representation of the boolean.
-     {
+    {
         String s = string.toLowerCase();
 
         // The length of 's' needs to be > 1 if it begins with 'o',
@@ -728,6 +727,7 @@ public class TableSorter extends AbstractTableModel {
 
     // Helper classes
     private class Row implements Comparable {
+
         private int modelIndex;
 
         public Row(int index) {
@@ -760,13 +760,13 @@ public class TableSorter extends AbstractTableModel {
                     //comparison = getComparator(column).compare(o1, o2);
                     //comparison1 = doDictionary(o1.toString(),o2.toString());
                     //if ((comparison*comparison1) < 0) {
-                            //System.out.println(column+" "+lastCompareType+" "+lastCompareType1+" "+comparison+" "+comparison1+" o1>"+o1.toString()+"<o2>"+o2.toString()+"<");
+                    //System.out.println(column+" "+lastCompareType+" "+lastCompareType1+" "+comparison+" "+comparison1+" o1>"+o1.toString()+"<o2>"+o2.toString()+"<");
                     //}
                 }
 
                 if (comparison != 0) {
                     return (directive.direction == DESCENDING) ? (-comparison)
-                                                               : comparison;
+                            : comparison;
                 }
             }
 
@@ -775,6 +775,7 @@ public class TableSorter extends AbstractTableModel {
     }
 
     private class TableModelHandler implements TableModelListener {
+
         public void tableChanged(TableModelEvent e) {
             // If we're not sorting by anything, just pass the event along.
             if (!isSorting()) {
@@ -814,10 +815,10 @@ public class TableSorter extends AbstractTableModel {
             // clause avoids this problem.
             int column = e.getColumn();
 
-            if ((e.getFirstRow() == e.getLastRow()) &&
-                    (column != TableModelEvent.ALL_COLUMNS) &&
-                    (getSortingStatus(column) == NOT_SORTED) &&
-                    (modelToView != null)) {
+            if ((e.getFirstRow() == e.getLastRow())
+                    && (column != TableModelEvent.ALL_COLUMNS)
+                    && (getSortingStatus(column) == NOT_SORTED)
+                    && (modelToView != null)) {
                 int viewIndex = getModelToView()[e.getFirstRow()];
                 fireTableChanged(new TableModelEvent(TableSorter.this,
                         viewIndex, viewIndex, column, e.getType()));
@@ -834,31 +835,33 @@ public class TableSorter extends AbstractTableModel {
     }
 
     private class MouseHandler extends MouseAdapter {
+
         public void mouseClicked(MouseEvent e) {
             if (e.getButton() == MouseEvent.BUTTON1) {
-            JTableHeader h = (JTableHeader) e.getSource();
-            TableColumnModel columnModel = h.getColumnModel();
-            int viewColumn = columnModel.getColumnIndexAtX(e.getX());
-            int column = columnModel.getColumn(viewColumn).getModelIndex();
+                JTableHeader h = (JTableHeader) e.getSource();
+                TableColumnModel columnModel = h.getColumnModel();
+                int viewColumn = columnModel.getColumnIndexAtX(e.getX());
+                int column = columnModel.getColumn(viewColumn).getModelIndex();
 
-            if (column != -1) {
-                int status = getSortingStatus(column);
+                if (column != -1) {
+                    int status = getSortingStatus(column);
 
-                if (!e.isControlDown()) {
-                    cancelSorting();
+                    if (!e.isControlDown()) {
+                        cancelSorting();
+                    }
+
+                    // Cycle the sorting states through {NOT_SORTED, ASCENDING, DESCENDING} or
+                    // {NOT_SORTED, DESCENDING, ASCENDING} depending on whether shift is pressed.
+                    status = status + (e.isShiftDown() ? (-1) : 1);
+                    status = ((status + 4) % 3) - 1; // signed mod, returning {-1, 0, 1}
+                    setSortingStatus(column, status);
                 }
-
-                // Cycle the sorting states through {NOT_SORTED, ASCENDING, DESCENDING} or
-                // {NOT_SORTED, DESCENDING, ASCENDING} depending on whether shift is pressed.
-                status = status + (e.isShiftDown() ? (-1) : 1);
-                status = ((status + 4) % 3) - 1; // signed mod, returning {-1, 0, 1}
-                setSortingStatus(column, status);
-            }
             }
         }
     }
 
     private static class Arrow implements Icon {
+
         private boolean descending;
         private int size;
         private int priority;
@@ -927,6 +930,7 @@ public class TableSorter extends AbstractTableModel {
     }
 
     private class SortableHeaderRenderer implements TableCellRenderer {
+
         private TableCellRenderer tableCellRenderer;
 
         public SortableHeaderRenderer(TableCellRenderer tableCellRenderer) {
@@ -934,8 +938,8 @@ public class TableSorter extends AbstractTableModel {
         }
 
         public Component getTableCellRendererComponent(JTable table,
-            Object value, boolean isSelected, boolean hasFocus, int row,
-            int column) {
+                Object value, boolean isSelected, boolean hasFocus, int row,
+                int column) {
             Component c = tableCellRenderer.getTableCellRendererComponent(table,
                     value, isSelected, hasFocus, row, column);
 
@@ -953,6 +957,7 @@ public class TableSorter extends AbstractTableModel {
     }
 
     private static class Directive {
+
         private int column;
         private int direction;
 

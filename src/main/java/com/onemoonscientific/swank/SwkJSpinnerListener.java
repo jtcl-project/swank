@@ -37,9 +37,9 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
-
 public class SwkJSpinnerListener implements ChangeListener, VarTrace,
-    SwkListener {
+        SwkListener {
+
     Interp interp;
     String command = "";
     String value = "";
@@ -53,10 +53,10 @@ public class SwkJSpinnerListener implements ChangeListener, VarTrace,
     }
 
     public void traceProc(Interp interp, String string1, String string2,
-        int flags) throws TclException {
+            int flags) throws TclException {
         if (EventQueue.isDispatchThread()) {
             System.out.println(
-                "SwkJSpinnerListener: traceProc on event thread");
+                    "SwkJSpinnerListener: traceProc on event thread");
         }
 
         setFromVar(interp);
@@ -65,13 +65,12 @@ public class SwkJSpinnerListener implements ChangeListener, VarTrace,
     public void setFromVar(Interp interp) throws TclException {
         if (EventQueue.isDispatchThread()) {
             System.out.println(
-                "Warning: SpinnerListener setFrom Var on EventThread");
+                    "Warning: SpinnerListener setFrom Var on EventThread");
         }
 
         if (!traceLock) {
             try {
-                TclObject tobj = interp.getVar(varName, TCL.GLOBAL_ONLY)
-                                       .duplicate();
+                TclObject tobj = interp.getVar(varName, TCL.GLOBAL_ONLY).duplicate();
                 SpinnerModel model = component.getModel();
                 if (tobj != null) {
                     final String sValue;
@@ -80,22 +79,23 @@ public class SwkJSpinnerListener implements ChangeListener, VarTrace,
                         sValue = tobj.toString().trim();
                         dValue = 0.0;
                     } else {
-                        dValue = TclDouble.get(interp,tobj);
+                        dValue = TclDouble.get(interp, tobj);
                         sValue = null;
                     }
-                        try {
-                            SwingUtilities.invokeLater(new Runnable() {
-                                    public void run() {
-                                        if (sValue == null) {
-                                            component.setValue(new Double(dValue));
-                                        } else {
-                                            component.setValue(sValue);
-                                        }
-                                    }
-                                });
-                        } catch (Exception e) {
-                            System.out.println("coudn't set item in spinner " + sValue);
-                        }
+                    try {
+                        SwingUtilities.invokeLater(new Runnable() {
+
+                            public void run() {
+                                if (sValue == null) {
+                                    component.setValue(new Double(dValue));
+                                } else {
+                                    component.setValue(sValue);
+                                }
+                            }
+                        });
+                    } catch (Exception e) {
+                        System.out.println("coudn't set item in spinner " + sValue);
+                    }
                 }
             } catch (TclException tclE) {
             } finally {
@@ -106,15 +106,15 @@ public class SwkJSpinnerListener implements ChangeListener, VarTrace,
     }
 
     public void setVarName(Interp interp, String name)
-        throws TclException {
+            throws TclException {
         if (EventQueue.isDispatchThread()) {
             System.out.println(
-                "Warning: SpinnerListener setFrom Var on EventThread");
+                    "Warning: SpinnerListener setFrom Var on EventThread");
         }
 
         if ((varName != null) && (!varName.equals(""))) {
-            interp.untraceVar(varName, this, TCL.TRACE_WRITES |
-                TCL.GLOBAL_ONLY);
+            interp.untraceVar(varName, this, TCL.TRACE_WRITES
+                    | TCL.GLOBAL_ONLY);
         }
 
         if ((name != null) && (name != "")) {
@@ -129,25 +129,26 @@ public class SwkJSpinnerListener implements ChangeListener, VarTrace,
                         sValue = tobj.toString().trim();
                         dValue = 0.0;
                     } else {
-                        dValue = TclDouble.get(interp,tobj);
+                        dValue = TclDouble.get(interp, tobj);
                         sValue = null;
                     }
 
-                        try {
-                            SwingUtilities.invokeLater(new Runnable() {
-                                    public void run() {
-                                       if (sValue == null) {
-                                            component.setValue(new Double(dValue));
-                                        } else {
-                                            component.setValue(sValue);
-                                        }
- 
-                                    }
-                                });
-                        } catch (Exception e) {
-                            System.out.println("coudn't set item in spinner " +
-                                sValue);
-                        }
+                    try {
+                        SwingUtilities.invokeLater(new Runnable() {
+
+                            public void run() {
+                                if (sValue == null) {
+                                    component.setValue(new Double(dValue));
+                                } else {
+                                    component.setValue(sValue);
+                                }
+
+                            }
+                        });
+                    } catch (Exception e) {
+                        System.out.println("coudn't set item in spinner "
+                                + sValue);
+                    }
                 }
             } catch (TclException tclException) {
             }
@@ -162,6 +163,7 @@ public class SwkJSpinnerListener implements ChangeListener, VarTrace,
     public String getVarName() {
         return (varName);
     }
+
     public void setCommand(String name) {
         command = name;
     }
@@ -184,7 +186,7 @@ public class SwkJSpinnerListener implements ChangeListener, VarTrace,
 
     public void stateChanged(ChangeEvent e) {
         String s1 = component.getValue().toString();
-        
+
         if ((varName != null) && (!varName.equals(""))) {
             SetStringVarEvent strEvent = new SetStringVarEvent(interp, varName,
                     null, s1);
@@ -202,7 +204,7 @@ public class SwkJSpinnerListener implements ChangeListener, VarTrace,
 
         if (EventQueue.isDispatchThread()) {
             System.out.println(
-                "Warning: SpinnerListener setVarValue on EventThread");
+                    "Warning: SpinnerListener setVarValue on EventThread");
         }
 
         if ((varName != null) && (varName.length() != 0)) {
@@ -228,7 +230,7 @@ public class SwkJSpinnerListener implements ChangeListener, VarTrace,
 
         if (EventQueue.isDispatchThread()) {
             System.out.println(
-                "Warning: SpinnerListener setVarValue on EventThread");
+                    "Warning: SpinnerListener setVarValue on EventThread");
         }
 
         if ((varName != null) && (varName.length() != 0)) {
@@ -253,7 +255,7 @@ public class SwkJSpinnerListener implements ChangeListener, VarTrace,
         //   System.out.println("Process Event" + this);
         if (EventQueue.isDispatchThread()) {
             System.out.println(
-                "Warning: SpinnerListener processEvent is on EventThread");
+                    "Warning: SpinnerListener processEvent is on EventThread");
         }
 
         // FIXME some of this should remain on Swing ET

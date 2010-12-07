@@ -10,7 +10,6 @@ import java.util.*;
 
 import javax.swing.filechooser.*;
 
-
 /**
  * This class is necessary due to an annoying bug on Windows NT where
  * instantiating a JFileChooser with the default FileSystemView will
@@ -26,8 +25,9 @@ import javax.swing.filechooser.*;
  * method of getting file system roots.
  */
 public class SwankAltFileSystemView extends FileSystemView {
-    private static final Object[] noArgs = {  };
-    private static final Class[] noArgTypes = {  };
+
+    private static final Object[] noArgs = {};
+    private static final Class[] noArgTypes = {};
     private static Method listRootsMethod = null;
     private static boolean listRootsMethodChecked = false;
     private boolean smode = false;
@@ -47,9 +47,9 @@ public class SwankAltFileSystemView extends FileSystemView {
     }
 
     /*  protected  File createFileSystemRoot(File f) {
-          // Creates a new File object for f with correct behavior for a file system root directory.
-          return null;
-      }
+    // Creates a new File object for f with correct behavior for a file system root directory.
+    return null;
+    }
      */
     public File createNewFolder(File containingDir) throws IOException {
         SwankFile result = new SwankFile(interp,
@@ -63,18 +63,18 @@ public class SwankAltFileSystemView extends FileSystemView {
     }
 
     /*
-     public File getChild(File parent, String fileName)
-     {
-         try {
-            interp.eval("::fileSystemView::getChild {"+parent.toString()+"} {"+fileName+"}");
-        }
-        catch (TclException tclE)
-        {
-            return null;
-        }
-        return new File(interp.getResult().toString());
-     }
-    */
+    public File getChild(File parent, String fileName)
+    {
+    try {
+    interp.eval("::fileSystemView::getChild {"+parent.toString()+"} {"+fileName+"}");
+    }
+    catch (TclException tclE)
+    {
+    return null;
+    }
+    return new File(interp.getResult().toString());
+    }
+     */
     public File getDefaultDirectory() {
         //    Return the user's default starting directory for the file chooser.
         if (smode) {
@@ -116,7 +116,7 @@ public class SwankAltFileSystemView extends FileSystemView {
     }
 
     /*static FileSystemView getFileSystemView() {
-     }
+    }
      */
     public File getHomeDirectory() {
         if (smode) {
@@ -159,9 +159,9 @@ public class SwankAltFileSystemView extends FileSystemView {
         if (smode) {
             return super.getRoots();
         } else {
-            return new SwankFile[] {
-                new SwankFile(interp, "" + SwankFile.ftpseparator)
-            };
+            return new SwankFile[]{
+                        new SwankFile(interp, "" + SwankFile.ftpseparator)
+                    };
         }
     }
 
@@ -174,14 +174,14 @@ public class SwankAltFileSystemView extends FileSystemView {
         return f.getName();
 
         /*  //Name of a file, directory, or folder as it would be displayed in a system file browser.
-          try {
-             interp.eval("::fileSystemView::createFileObject {"+f.toString()+"}");
-         }
-         catch (TclException tclE)
-         {
-             return null;
-         }
-         return interp.getResult().toString();
+        try {
+        interp.eval("::fileSystemView::createFileObject {"+f.toString()+"}");
+        }
+        catch (TclException tclE)
+        {
+        return null;
+        }
+        return interp.getResult().toString();
          */
     }
 
@@ -189,7 +189,7 @@ public class SwankAltFileSystemView extends FileSystemView {
     public Icon getSystemIcon (File f) {
     return icon;
     }
-    */
+     */
     public String getSystemTypeDescription(File f) {
         if (debug) {
             System.out.println("getSystemTypeDescription " + f.toString());
@@ -200,14 +200,14 @@ public class SwankAltFileSystemView extends FileSystemView {
 
         /*
         //    Type description for a file, directory, or folder as it would be displayed in a system file browser.
-          try {
-             interp.eval("::fileSystemView::getSystemTypeDescription {"+f.toString()+"}");
-         }
-         catch (TclException tclE)
-         {
-             return null;
-         }
-         return interp.getResult().toString();
+        try {
+        interp.eval("::fileSystemView::getSystemTypeDescription {"+f.toString()+"}");
+        }
+        catch (TclException tclE)
+        {
+        return null;
+        }
+        return interp.getResult().toString();
          */
     }
 
@@ -231,13 +231,13 @@ public class SwankAltFileSystemView extends FileSystemView {
         return isComputerNode;
 
         /*    try {
-                interp.eval("::fileSystemView::getSystemTypeDescription {"+dir.toString()+"}");
-                return TclBoolean.get(interp, interp.getResult());
-          }
-            catch (TclException tclE)
-            {
-                return false;
-            }
+        interp.eval("::fileSystemView::getSystemTypeDescription {"+dir.toString()+"}");
+        return TclBoolean.get(interp, interp.getResult());
+        }
+        catch (TclException tclE)
+        {
+        return false;
+        }
          */
     }
 
@@ -261,14 +261,14 @@ public class SwankAltFileSystemView extends FileSystemView {
         return isDrive;
 
         /*
-         try {
-             interp.eval("::fileSystemView::getSystemTypeDescription {"+dir.toString()+"}");
-          return TclBoolean.get(interp, interp.getResult());
+        try {
+        interp.eval("::fileSystemView::getSystemTypeDescription {"+dir.toString()+"}");
+        return TclBoolean.get(interp, interp.getResult());
         }
-         catch (TclException tclE)
-         {
-             return false;
-         }
+        catch (TclException tclE)
+        {
+        return false;
+        }
          */
     }
 
@@ -292,14 +292,14 @@ public class SwankAltFileSystemView extends FileSystemView {
         return isFileSystem;
 
         /*
-          try {
-             interp.eval("::fileSystemView::getSystemTypeDescription {"+f.toString()+"}");
-          return TclBoolean.get(interp, interp.getResult());
+        try {
+        interp.eval("::fileSystemView::getSystemTypeDescription {"+f.toString()+"}");
+        return TclBoolean.get(interp, interp.getResult());
         }
-         catch (TclException tclE)
-         {
-             return false;
-         }
+        catch (TclException tclE)
+        {
+        return false;
+        }
          */
     }
 
@@ -323,15 +323,15 @@ public class SwankAltFileSystemView extends FileSystemView {
         return isFileSystemRoot;
 
         /*
-          try {
-              interp.eval("::fileSystemView::getSystemTypeDescription {"+dir.toString()+"}");
-           return TclBoolean.get(interp, interp.getResult());
-         }
-          catch (TclException tclE)
-          {
-              return false;
-          }
-          */
+        try {
+        interp.eval("::fileSystemView::getSystemTypeDescription {"+dir.toString()+"}");
+        return TclBoolean.get(interp, interp.getResult());
+        }
+        catch (TclException tclE)
+        {
+        return false;
+        }
+         */
     }
 
     public boolean isFloppyDrive(File dir) {
@@ -355,13 +355,13 @@ public class SwankAltFileSystemView extends FileSystemView {
 
         /*
         try {
-             interp.eval("::fileSystemView::getSystemTypeDescription {"+dir.toString()+"}");
-          return TclBoolean.get(interp, interp.getResult());
+        interp.eval("::fileSystemView::getSystemTypeDescription {"+dir.toString()+"}");
+        return TclBoolean.get(interp, interp.getResult());
         }
-         catch (TclException tclE)
-         {
-             return false;
-         }
+        catch (TclException tclE)
+        {
+        return false;
+        }
          **/
     }
 
@@ -403,16 +403,16 @@ public class SwankAltFileSystemView extends FileSystemView {
         /*
         //    On Windows, a file can appear in multiple folders, other than its parent directory in the filesystem.
         if ((folder == null) || (file == null)) {
-            return false;
+        return false;
         }
         try {
-             interp.eval("::fileSystemView::getSystemTypeDescription {"+folder.toString()+"} {"+file.toString()+"}");
-          return TclBoolean.get(interp, interp.getResult());
+        interp.eval("::fileSystemView::getSystemTypeDescription {"+folder.toString()+"} {"+file.toString()+"}");
+        return TclBoolean.get(interp, interp.getResult());
         }
-         catch (TclException tclE)
-         {
-             return false;
-         }
+        catch (TclException tclE)
+        {
+        return false;
+        }
          */
     }
 
@@ -426,8 +426,8 @@ public class SwankAltFileSystemView extends FileSystemView {
         if (smode) {
             isRoot = super.isRoot(f);
         } else {
-            if (f instanceof SwankFile && (f.getParent() == null) &&
-                    (f.getName().length() == 0)) {
+            if (f instanceof SwankFile && (f.getParent() == null)
+                    && (f.getName().length() == 0)) {
                 isRoot = true;
             } else {
                 isRoot = false;
@@ -462,19 +462,20 @@ public class SwankAltFileSystemView extends FileSystemView {
 
         /*
         //Returns true if the file (directory) can be visited.
-          // Returns a File object constructed from the given path string
+        // Returns a File object constructed from the given path string
         try {
-             interp.eval("::fileSystemView::getSystemTypeDescription {"+f.toString()+"}");
-          return new Boolean(TclBoolean.get(interp, interp.getResult()));
+        interp.eval("::fileSystemView::getSystemTypeDescription {"+f.toString()+"}");
+        return new Boolean(TclBoolean.get(interp, interp.getResult()));
         }
-         catch (TclException tclE)
-         {
-             return null;
-         }
+        catch (TclException tclE)
+        {
+        return null;
+        }
          */
     }
 
     class FileSystemRoot extends File {
+
         public FileSystemRoot(File f) {
             super(f, "");
         }

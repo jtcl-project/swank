@@ -37,9 +37,9 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
-
 public class SwkJComboBoxListener implements ActionListener, VarTrace,
-    SwkListener {
+        SwkListener {
+
     Interp interp;
     String command = "";
     String value = "";
@@ -54,10 +54,10 @@ public class SwkJComboBoxListener implements ActionListener, VarTrace,
     }
 
     public void traceProc(Interp interp, String string1, String string2,
-        int flags) throws TclException {
+            int flags) throws TclException {
         if (EventQueue.isDispatchThread()) {
             System.out.println(
-                "SwkJComboBoxListener: traceProc on event thread");
+                    "SwkJComboBoxListener: traceProc on event thread");
         }
 
         setFromVar(interp);
@@ -66,13 +66,12 @@ public class SwkJComboBoxListener implements ActionListener, VarTrace,
     public void setFromVar(Interp interp) throws TclException {
         if (EventQueue.isDispatchThread()) {
             System.out.println(
-                "Warning: ComboBoxListener setFrom Var on EventThread");
+                    "Warning: ComboBoxListener setFrom Var on EventThread");
         }
 
         if (!traceLock) {
             try {
-                TclObject tobj = interp.getVar(varName, TCL.GLOBAL_ONLY)
-                                       .duplicate();
+                TclObject tobj = interp.getVar(varName, TCL.GLOBAL_ONLY).duplicate();
 
                 if (tobj != null) {
                     final String item = tobj.toString().trim();
@@ -82,13 +81,14 @@ public class SwkJComboBoxListener implements ActionListener, VarTrace,
 
                         try {
                             SwingUtilities.invokeLater(new Runnable() {
-                                    public void run() {
-                                        component.setSelectedItem(item);
-                                    }
-                                });
+
+                                public void run() {
+                                    component.setSelectedItem(item);
+                                }
+                            });
                         } catch (Exception e) {
-                            System.out.println("coudn't set item in combo " +
-                                item);
+                            System.out.println("coudn't set item in combo "
+                                    + item);
                         }
                     }
                 }
@@ -102,15 +102,15 @@ public class SwkJComboBoxListener implements ActionListener, VarTrace,
     }
 
     public void setVarName(Interp interp, String name)
-        throws TclException {
+            throws TclException {
         if (EventQueue.isDispatchThread()) {
             System.out.println(
-                "Warning: ComboBoxListener setFrom Var on EventThread");
+                    "Warning: ComboBoxListener setFrom Var on EventThread");
         }
 
         if ((varName != null) && (!varName.equals(""))) {
-            interp.untraceVar(varName, this, TCL.TRACE_WRITES |
-                TCL.GLOBAL_ONLY);
+            interp.untraceVar(varName, this, TCL.TRACE_WRITES
+                    | TCL.GLOBAL_ONLY);
         }
 
         if ((name != null) && (name != "")) {
@@ -124,13 +124,14 @@ public class SwkJComboBoxListener implements ActionListener, VarTrace,
                         //actionDisabled = true;
                         try {
                             SwingUtilities.invokeLater(new Runnable() {
-                                    public void run() {
-                                        component.setSelectedItem(item);
-                                    }
-                                });
+
+                                public void run() {
+                                    component.setSelectedItem(item);
+                                }
+                            });
                         } catch (Exception e) {
-                            System.out.println("coudn't set item in combo " +
-                                item);
+                            System.out.println("coudn't set item in combo "
+                                    + item);
                         }
                     }
                 }
@@ -190,11 +191,11 @@ public class SwkJComboBoxListener implements ActionListener, VarTrace,
             return;
         }
         //if (!((SwkWidget) component).isCreated()) {
-         //   return;
+        //   return;
         //}
 
         String s1 = component.getSelectedItem().toString();
-        
+
         if ((varName != null) && (!varName.equals(""))) {
             SetStringVarEvent strEvent = new SetStringVarEvent(interp, varName,
                     null, s1);
@@ -212,7 +213,7 @@ public class SwkJComboBoxListener implements ActionListener, VarTrace,
 
         if (EventQueue.isDispatchThread()) {
             System.out.println(
-                "Warning: ComboBoxListener setVarValue on EventThread");
+                    "Warning: ComboBoxListener setVarValue on EventThread");
         }
 
         if ((varName != null) && (varName.length() != 0)) {
@@ -238,7 +239,7 @@ public class SwkJComboBoxListener implements ActionListener, VarTrace,
 
         if (EventQueue.isDispatchThread()) {
             System.out.println(
-                "Warning: ComboBoxListener setVarValue on EventThread");
+                    "Warning: ComboBoxListener setVarValue on EventThread");
         }
 
         if ((varName != null) && (varName.length() != 0)) {
@@ -263,7 +264,7 @@ public class SwkJComboBoxListener implements ActionListener, VarTrace,
         //   System.out.println("Process Event" + this);
         if (EventQueue.isDispatchThread()) {
             System.out.println(
-                "Warning: ComboBoxListener processEvent is on EventThread");
+                    "Warning: ComboBoxListener processEvent is on EventThread");
         }
 
         // FIXME some of this should remain on Swing ET
@@ -286,6 +287,7 @@ public class SwkJComboBoxListener implements ActionListener, VarTrace,
     }
 
     class GetItemCount extends GetValueOnEventThread {
+
         int intResult;
 
         int exec() {
@@ -300,6 +302,7 @@ public class SwkJComboBoxListener implements ActionListener, VarTrace,
     }
 
     class GetItemAt extends GetValueOnEventThread {
+
         String result;
         int index = 0;
 

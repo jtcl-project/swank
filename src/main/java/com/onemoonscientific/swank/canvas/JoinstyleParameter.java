@@ -4,8 +4,8 @@ import tcl.lang.*;
 
 import java.awt.BasicStroke;
 
-
 public class JoinstyleParameter extends CanvasParameter {
+
     private static String name = "joinstyle";
     private static String defValue = "miter";
     private int newValue = BasicStroke.JOIN_MITER;
@@ -27,7 +27,7 @@ public class JoinstyleParameter extends CanvasParameter {
     }
 
     public TclObject getValue(Interp interp, SwkShape swkShape)
-        throws TclException {
+            throws TclException {
         if (swkShape == null) {
             throw new TclException(interp, "shape doesn't exist");
         }
@@ -35,27 +35,27 @@ public class JoinstyleParameter extends CanvasParameter {
         String join = "miter";
 
         switch (swkShape.getJoin()) {
-        case BasicStroke.JOIN_BEVEL:
-            join = "bevel";
+            case BasicStroke.JOIN_BEVEL:
+                join = "bevel";
 
-            break;
+                break;
 
-        case BasicStroke.JOIN_MITER:
-            join = "miter";
+            case BasicStroke.JOIN_MITER:
+                join = "miter";
 
-            break;
+                break;
 
-        case BasicStroke.JOIN_ROUND:
-            join = "round";
+            case BasicStroke.JOIN_ROUND:
+                join = "round";
 
-            break;
+                break;
         }
 
         return TclString.newInstance(join);
     }
 
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
-        throws TclException {
+            throws TclException {
         if (arg.toString().startsWith("bevel")) {
             newValue = BasicStroke.JOIN_BEVEL;
         } else if (arg.toString().startsWith("miter")) {

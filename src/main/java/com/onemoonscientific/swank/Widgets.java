@@ -36,22 +36,21 @@ import java.util.*;
 
 import javax.swing.*;
 
-
 public class Widgets {
-    
 
     private static Hashtable getWidgetMap(Interp interp) {
-    
-         WidgetsMap widgetsMap = (WidgetsMap) interp.getAssocData("Widgets");
-         if (widgetsMap == null) {
-               widgetsMap = new WidgetsMap();
-               interp.setAssocData("Widgets",widgetsMap);
-         }
-         return widgetsMap.getWidgets();
-               
+
+        WidgetsMap widgetsMap = (WidgetsMap) interp.getAssocData("Widgets");
+        if (widgetsMap == null) {
+            widgetsMap = new WidgetsMap();
+            interp.setAssocData("Widgets", widgetsMap);
+        }
+        return widgetsMap.getWidgets();
+
     }
+
     public static boolean exists(Interp interp, String widgetName) {
-        
+
         if (getWidgetMap(interp).get(widgetName) == null) {
             return false;
         } else {
@@ -60,10 +59,10 @@ public class Widgets {
     }
 
     public static void addNewWidget(Interp interp, String widgetName,
-        TclObject widgetObject) throws TclException {
+            TclObject widgetObject) throws TclException {
         if (exists(interp, widgetName)) {
             throw new TclException(interp,
-                "widget \"" + widgetName + "\" already exists");
+                    "widget \"" + widgetName + "\" already exists");
         }
 
         if (!widgetName.equals(".")) {
@@ -71,7 +70,7 @@ public class Widgets {
 
             if (!exists(interp, parentName)) {
                 throw new TclException(interp,
-                    "bad window path name \"" + parentName + "\"");
+                        "bad window path name \"" + parentName + "\"");
             }
 
             SwkWidget parent = (SwkWidget) get(interp, parentName);
@@ -90,7 +89,7 @@ public class Widgets {
     }
 
     public static void removeChild(Interp interp, String widgetName)
-        throws TclException {
+            throws TclException {
         TclObject tObj = (TclObject) getWidgetMap(interp).get(widgetName);
 
         if (tObj == null) {
@@ -115,7 +114,7 @@ public class Widgets {
     }
 
     public static Vector children(Interp interp, String parentName)
-        throws TclException {
+            throws TclException {
         SwkWidget parent = (SwkWidget) get(interp, parentName);
         LinkedList children = parent.getChildrenList();
         Vector childrenNames = new Vector();
@@ -133,12 +132,13 @@ public class Widgets {
 
         return childrenNames;
     }
+
     public static void removeWidget(Interp interp, String widgetName) {
-          getWidgetMap(interp).remove(widgetName);
+        getWidgetMap(interp).remove(widgetName);
     }
-    
+
     public static void remove(Interp interp, String widgetName)
-        throws TclException {
+            throws TclException {
         TclObject tObj = (TclObject) getWidgetMap(interp).get(widgetName);
 
         if (tObj == null) {
@@ -163,7 +163,7 @@ public class Widgets {
     }
 
     public static JViewport getViewport(Component comp)
-        throws TclException {
+            throws TclException {
         Container container = comp.getParent();
 
         while (container != null) {
@@ -186,7 +186,7 @@ public class Widgets {
     }
 
     public static String pathParent(Interp interp, String widgetName)
-        throws TclException {
+            throws TclException {
         String masterName = null;
         int lastDot = widgetName.lastIndexOf(".");
 
@@ -194,7 +194,7 @@ public class Widgets {
             masterName = ".";
         } else if (lastDot == -1) {
             throw new TclException(interp,
-                "bad window path name \"" + widgetName + "\"");
+                    "bad window path name \"" + widgetName + "\"");
         } else {
             masterName = widgetName.substring(0, lastDot);
         }
@@ -203,7 +203,7 @@ public class Widgets {
     }
 
     public static String parent(Interp interp, String widgetName)
-        throws TclException {
+            throws TclException {
         Object object = get(interp, widgetName);
         SwkWidget swkWidget = swankParent(object);
 
@@ -233,11 +233,12 @@ public class Widgets {
     }
 
     public static Object getWidget(Interp interp, String widgetName) {
-         return getWidgetMap(interp).get(widgetName);
+        return getWidgetMap(interp).get(widgetName);
     }
     // Map a widget name to the Swing widget it represents
+
     public static Object get(Interp interp, String widgetName)
-        throws TclException {
+            throws TclException {
         TclObject tObj = null;
 
         if (widgetName.equals("any")) {
@@ -247,12 +248,12 @@ public class Widgets {
                 tObj = (TclObject) e.nextElement();
             }
         } else {
-            if (!Widgets.exists(interp,widgetName)) {
+            if (!Widgets.exists(interp, widgetName)) {
                 throw new TclException(interp,
-                    "bad window path name \"" + widgetName + "\"");
+                        "bad window path name \"" + widgetName + "\"");
             }
 
-            tObj = (TclObject) Widgets.getWidget(interp,widgetName);
+            tObj = (TclObject) Widgets.getWidget(interp, widgetName);
         }
 
         if (tObj == null) {
@@ -264,7 +265,7 @@ public class Widgets {
 
     // Get the swing Container object for the given window name
     public static Container getContainer(Interp interp, String widgetName)
-        throws TclException {
+            throws TclException {
         Object o = get(interp, widgetName);
 
         return (getContainer(o));
@@ -285,9 +286,10 @@ public class Widgets {
 
         return c;
     }
+
     public static void relayoutContainer(Container c) {
         Component component = (Component) c;
- 
+
         while (true) {
             if (component == null) {
                 break;
@@ -302,10 +304,10 @@ public class Widgets {
                 } else {
                     ((Window) component).validate();
                 }
- 
+
                 break;
             }
- 
+
             if (component instanceof JFrame) {
                 ((JFrame) component).validate();
                 break;

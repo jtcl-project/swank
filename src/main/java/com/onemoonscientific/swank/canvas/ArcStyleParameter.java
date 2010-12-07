@@ -4,8 +4,8 @@ import tcl.lang.*;
 
 import java.awt.geom.*;
 
-
 public class ArcStyleParameter extends CanvasParameter {
+
     private static String name = "style";
     private static String defValue = "arc";
     private int newValue = Arc2D.OPEN;
@@ -27,7 +27,7 @@ public class ArcStyleParameter extends CanvasParameter {
     }
 
     public TclObject getValue(Interp interp, SwkShape swkShape)
-        throws TclException {
+            throws TclException {
         if (swkShape == null) {
             throw new TclException(interp, "shape doesn't exist");
         }
@@ -38,20 +38,20 @@ public class ArcStyleParameter extends CanvasParameter {
             String arcType = null;
 
             switch (arc2D.getArcType()) {
-            case Arc2D.PIE:
-                arcType = "pie";
+                case Arc2D.PIE:
+                    arcType = "pie";
 
-                break;
+                    break;
 
-            case Arc2D.CHORD:
-                arcType = "chord";
+                case Arc2D.CHORD:
+                    arcType = "chord";
 
-                break;
+                    break;
 
-            case Arc2D.OPEN:
-                arcType = "arc";
+                case Arc2D.OPEN:
+                    arcType = "arc";
 
-                break;
+                    break;
             }
 
             return TclString.newInstance(arcType);
@@ -61,7 +61,7 @@ public class ArcStyleParameter extends CanvasParameter {
     }
 
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
-        throws TclException {
+            throws TclException {
         if (arg.toString().startsWith("pie")) {
             newValue = Arc2D.PIE;
         } else if (arg.toString().startsWith("cho")) {

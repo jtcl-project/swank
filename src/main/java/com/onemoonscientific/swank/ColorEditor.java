@@ -16,9 +16,9 @@ import javax.swing.JDialog;
 import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
 
-
 public class ColorEditor extends AbstractCellEditor implements TableCellEditor,
-    ActionListener {
+        ActionListener {
+
     protected static final String EDIT = "edit";
     Color currentColor;
     JButton button;
@@ -68,7 +68,7 @@ public class ColorEditor extends AbstractCellEditor implements TableCellEditor,
 
     //Implement the one method defined by TableCellEditor.
     public Component getTableCellEditorComponent(JTable table, Object value,
-        boolean isSelected, int row, int column) {
+            boolean isSelected, int row, int column) {
         currentColor = (Color) value;
 
         return button;

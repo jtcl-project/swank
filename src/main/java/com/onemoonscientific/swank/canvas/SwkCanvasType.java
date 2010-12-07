@@ -28,6 +28,5 @@ import com.onemoonscientific.swank.*;
 
 import tcl.lang.*;
 
-
 public interface SwkCanvasType {
 }

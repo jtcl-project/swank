@@ -4,7 +4,7 @@
  * See the file "LICENSE" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
-*/
+ */
 package com.onemoonscientific.swank;
 
 import tcl.lang.*;
@@ -24,104 +24,104 @@ import javax.swing.*;
 import javax.swing.text.*;
 import javax.swing.tree.*;
 
-
 class SwkJMenuBarWidgetCmd implements Command {
+
     static final private String[] validCmds = {
-        "cget", "configure","add"
+        "cget", "configure", "add"
     };
     static final private int OPT_CGET = 0;
     static final private int OPT_CONFIGURE = 1;
     static final private int OPT_ADD = 2;
     static boolean gotDefaults = false;
     Interp interp = null;
+
     public static String[] getValidCmds() {
         return validCmds;
     }
 
     public void cmdProc(final Interp interp, final TclObject[] argv)
-        throws TclException {
+            throws TclException {
         this.interp = interp;
         int i;
 
         if (argv.length < 2) {
             throw new TclNumArgsException(interp, 1, argv,
-                "option ?arg arg ...?");
+                    "option ?arg arg ...?");
         }
 
         int opt = TclIndex.get(interp, argv[1], validCmds, "option", 0);
-        TclObject tObj = (TclObject) Widgets.getWidget(interp,argv[0].toString());
+        TclObject tObj = (TclObject) Widgets.getWidget(interp, argv[0].toString());
 
         if (tObj == null) {
             throw new TclException(interp,
-                "bad window path name \"" + argv[0].toString() + "\"");
+                    "bad window path name \"" + argv[0].toString() + "\"");
         }
 
         SwkJMenuBar swkjmenubar = (SwkJMenuBar) ReflectObject.get(interp, tObj);
 
         switch (opt) {
-        case OPT_CGET:
+            case OPT_CGET:
 
-            if (argv.length != 3) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-
-            interp.setResult(swkjmenubar.jget(interp, argv[2]));
-
-            break;
-
-        case OPT_CONFIGURE:
-
-            if (!gotDefaults) {
-                swkjmenubar.setResourceDefaults();
-                gotDefaults = true;
-            }
-
-            if (argv.length == 2) {
-                swkjmenubar.jgetAll(interp);
-            } else if (argv.length == 3) {
-                String result = swkjmenubar.jget(interp, argv[2]);
-                ResourceObject ro = (ResourceObject) SwkJMenuBar.resourceDB.get(argv[2].toString());
-
-                if (ro == null) {
-                    throw new TclException(interp,
-                        "unknown option \"" + argv[2].toString() + "\"");
+                if (argv.length != 3) {
+                    throw new TclNumArgsException(interp, 2, argv, "option");
                 }
 
-                TclObject list = TclList.newInstance();
-                TclList.append(interp, list,
-                    TclString.newInstance(argv[2].toString()));
-                TclList.append(interp, list, TclString.newInstance(ro.resource));
-                TclList.append(interp, list, TclString.newInstance(ro.className));
-                TclList.append(interp, list,
-                    TclString.newInstance(ro.defaultVal));
-                TclList.append(interp, list, TclString.newInstance(result));
-                interp.setResult(list);
-            } else {
-                swkjmenubar.configure(interp, argv, 2);
-            }
+                interp.setResult(swkjmenubar.jget(interp, argv[2]));
 
-            break;
+                break;
 
-        case OPT_ADD:
-            if (argv.length < 3) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-            addmenu(interp,swkjmenubar,argv);
-            break;
+            case OPT_CONFIGURE:
 
-        default:
-            throw new TclRuntimeError("TclIndex.get() error");
+                if (!gotDefaults) {
+                    swkjmenubar.setResourceDefaults();
+                    gotDefaults = true;
+                }
+
+                if (argv.length == 2) {
+                    swkjmenubar.jgetAll(interp);
+                } else if (argv.length == 3) {
+                    String result = swkjmenubar.jget(interp, argv[2]);
+                    ResourceObject ro = (ResourceObject) SwkJMenuBar.resourceDB.get(argv[2].toString());
+
+                    if (ro == null) {
+                        throw new TclException(interp,
+                                "unknown option \"" + argv[2].toString() + "\"");
+                    }
+
+                    TclObject list = TclList.newInstance();
+                    TclList.append(interp, list,
+                            TclString.newInstance(argv[2].toString()));
+                    TclList.append(interp, list, TclString.newInstance(ro.resource));
+                    TclList.append(interp, list, TclString.newInstance(ro.className));
+                    TclList.append(interp, list,
+                            TclString.newInstance(ro.defaultVal));
+                    TclList.append(interp, list, TclString.newInstance(result));
+                    interp.setResult(list);
+                } else {
+                    swkjmenubar.configure(interp, argv, 2);
+                }
+
+                break;
+
+            case OPT_ADD:
+                if (argv.length < 3) {
+                    throw new TclNumArgsException(interp, 2, argv, "option");
+                }
+                addmenu(interp, swkjmenubar, argv);
+                break;
+
+            default:
+                throw new TclRuntimeError("TclIndex.get() error");
         }
     }
 
-
     public void addmenu(Interp interp, SwkJMenuBar swkjmenubar, TclObject[] argv)
-        throws TclException {
+            throws TclException {
         int i;
 
         if (argv.length < 3) {
             throw new TclNumArgsException(interp, 1, argv,
-                "option ?arg arg ...?");
+                    "option ?arg arg ...?");
         }
 
         String itemType = argv[2].toString();
@@ -132,7 +132,7 @@ class SwkJMenuBarWidgetCmd implements Command {
 
             if (((argv.length - 3) % 2) != 0) {
                 throw new TclNumArgsException(interp, 1, argv,
-                    "arguments not multiple of 2");
+                        "arguments not multiple of 2");
             }
 
             TclObject[] argNew = new TclObject[argv.length - 5];
@@ -147,7 +147,7 @@ class SwkJMenuBarWidgetCmd implements Command {
                 }
             }
 
-            TclObject tObj = (TclObject) Widgets.getWidget(interp,menuName);
+            TclObject tObj = (TclObject) Widgets.getWidget(interp, menuName);
 
             if (tObj == null) {
                 SwkJMenu cascade = (new Add()).exec(swkjmenubar, menuName);
@@ -165,7 +165,7 @@ class SwkJMenuBarWidgetCmd implements Command {
                 cascade.configure(interp, argNew, 0);
             }
         } else {
-            throw new TclException(interp,"invalid menu option \""+itemType+"\"");
+            throw new TclException(interp, "invalid menu option \"" + itemType + "\"");
         }
 
         swkjmenubar.revalidate();
@@ -173,8 +173,8 @@ class SwkJMenuBarWidgetCmd implements Command {
         return;
     }
 
-
     class Add extends GetValueOnEventThread {
+
         SwkJMenuBar swkjmenubar = null;
         JComponent jcomp = null;
         String menuName = "";

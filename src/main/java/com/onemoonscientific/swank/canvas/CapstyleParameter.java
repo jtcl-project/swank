@@ -4,8 +4,8 @@ import tcl.lang.*;
 
 import java.awt.BasicStroke;
 
-
 public class CapstyleParameter extends CanvasParameter {
+
     private static String name = "capstyle";
     private static String defValue = "butt";
     private int newValue = BasicStroke.CAP_BUTT;
@@ -27,7 +27,7 @@ public class CapstyleParameter extends CanvasParameter {
     }
 
     public TclObject getValue(Interp interp, SwkShape swkShape)
-        throws TclException {
+            throws TclException {
         if (swkShape == null) {
             throw new TclException(interp, "shape doesn't exist");
         }
@@ -35,27 +35,27 @@ public class CapstyleParameter extends CanvasParameter {
         String cap = "butt";
 
         switch (swkShape.getCap()) {
-        case BasicStroke.CAP_BUTT:
-            cap = "butt";
+            case BasicStroke.CAP_BUTT:
+                cap = "butt";
 
-            break;
+                break;
 
-        case BasicStroke.CAP_SQUARE:
-            cap = "projecting";
+            case BasicStroke.CAP_SQUARE:
+                cap = "projecting";
 
-            break;
+                break;
 
-        case BasicStroke.CAP_ROUND:
-            cap = "round";
+            case BasicStroke.CAP_ROUND:
+                cap = "round";
 
-            break;
+                break;
         }
 
         return TclString.newInstance(cap);
     }
 
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
-        throws TclException {
+            throws TclException {
         if (arg.toString().startsWith("butt")) {
             newValue = BasicStroke.CAP_BUTT;
         } else if (arg.toString().startsWith("projecting")) {

@@ -7,8 +7,8 @@ import java.awt.event.*;
 
 import java.util.*;
 
-
 public abstract class SetVarEvent extends TclEvent {
+
     Interp interp = null;
     String var1 = null;
     String var2 = null;

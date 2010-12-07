@@ -158,7 +158,7 @@ public class ItemLine extends SwkShape {
     static CanvasParameter[] parameters = {
         new FillParameter(), new SmoothParameter(), new DashParameter(),
         new DashPhaseParameter(), new WidthParameter(), new RotateParameter(),
-        new ShearParameter(), new TagsParameter(), new StateParameter(),new NodeParameter(),
+        new ShearParameter(), new TagsParameter(), new StateParameter(), new NodeParameter(),
         new TransformerParameter(), new CapstyleParameter(),
         new JoinstyleParameter(), new ArrowParameter(), new ArrowShapeParameter(), new EndstyleParameter(), new StartstyleParameter()
     };
@@ -283,7 +283,7 @@ public class ItemLine extends SwkShape {
             } else {
                 System.arraycopy(storeCoords, 0, tempCoords, 0, storeCoords.length);
             }
-            aT.transform(tempCoords,0,tempCoords,0,tempCoords.length/2);
+            aT.transform(tempCoords, 0, tempCoords, 0, tempCoords.length / 2);
             double[] arrowFirstCoords = null;
             double[] arrowLastCoords = null;
             if (endPointStyle1 != EndPointStyle.NONE) {
@@ -318,7 +318,7 @@ public class ItemLine extends SwkShape {
                 genSmoothPath(tempCoords);
             }
             shape = gPath;
-           // shape = aT.createTransformedShape(gPath);
+            // shape = aT.createTransformedShape(gPath);
 
             if (endPointStyle1 != EndPointStyle.NONE) {
                 if (endPointStyle1 == EndPointStyle.CIRCLE) {
@@ -575,27 +575,27 @@ public class ItemLine extends SwkShape {
 
     public void drawHandles(Graphics2D g2) {
         if (shape != null) {
-            double[] xy = {storeCoords[0],storeCoords[1],storeCoords[2],storeCoords[3]};
+            double[] xy = {storeCoords[0], storeCoords[1], storeCoords[2], storeCoords[3]};
             AffineTransform shapeTransform = getTransform();
             if (shapeTransform != null) {
-                shapeTransform.transform(xy,0,xy,0,xy.length/2);
+                shapeTransform.transform(xy, 0, xy, 0, xy.length / 2);
             }
-            drawHandle(g2, (int) xy[0],(int) xy[1]);
-            drawHandle(g2, (int) xy[2],(int) xy[3]);
+            drawHandle(g2, (int) xy[0], (int) xy[1]);
+            drawHandle(g2, (int) xy[2], (int) xy[3]);
         }
     }
 
     public int hitHandles(double testX, double testY) {
         int hitIndex = -1;
         if (shape != null) {
-            double[] xy = {storeCoords[0],storeCoords[1],storeCoords[2],storeCoords[3]};
+            double[] xy = {storeCoords[0], storeCoords[1], storeCoords[2], storeCoords[3]};
             AffineTransform shapeTransform = getTransform();
             if (shapeTransform != null) {
-                shapeTransform.transform(xy,0,xy,0,xy.length/2);
+                shapeTransform.transform(xy, 0, xy, 0, xy.length / 2);
             }
-            if (hitHandle((int) xy[0],(int) xy[1], testX, testY)) {
+            if (hitHandle((int) xy[0], (int) xy[1], testX, testY)) {
                 hitIndex = 0;
-            } else if (hitHandle((int) xy[2],(int) xy[3], testX, testY)) {
+            } else if (hitHandle((int) xy[2], (int) xy[3], testX, testY)) {
                 hitIndex = 1;
             }
         }

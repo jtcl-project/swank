@@ -40,14 +40,13 @@ import com.onemoonscientific.swank.*;
 import java.awt.*;
 import java.awt.geom.*;
 
-
 public class ItemConnector extends ItemLine implements TextInterface {
 
     TextParameters textPar = TextParameters.getDefault();
     static CanvasParameter[] parameters = {
         new FillParameter(), new SmoothParameter(), new DashParameter(),
         new DashPhaseParameter(), new WidthParameter(),
-        new TagsParameter(), new StateParameter(),new NodeParameter(),
+        new TagsParameter(), new StateParameter(), new NodeParameter(),
         new TransformerParameter(), new CapstyleParameter(),
         new JoinstyleParameter(), new ArrowParameter(), new ArrowShapeParameter(), new EndstyleParameter(), new StartstyleParameter(),
         new TextParameter(), new FontParameter(), new AnchorParameter(), new TextcolorParameter(),};
@@ -176,7 +175,7 @@ public class ItemConnector extends ItemLine implements TextInterface {
             System.out.println(swkE.getMessage());
             return;
         }
-        double x1,y1,x2,y2;
+        double x1, y1, x2, y2;
         if ((shape1.shape != null) && (shape2.shape != null)) {
             Rectangle2D bounds1 = shape1.shape.getBounds2D();
             Rectangle2D bounds2 = shape2.shape.getBounds2D();
@@ -190,30 +189,30 @@ public class ItemConnector extends ItemLine implements TextInterface {
         double[] tempCoords;
         boolean segmented = true;
         if (segmented) {
-            if (x2 > (x1+10)) {
-                double xm = (x1+x2)/2;
-                double ym = (y1+y2)/2;
-                double[] coords = {x1,y1,xm,y1,xm,y2,x2,y2};
+            if (x2 > (x1 + 10)) {
+                double xm = (x1 + x2) / 2;
+                double ym = (y1 + y2) / 2;
+                double[] coords = {x1, y1, xm, y1, xm, y2, x2, y2};
                 tempCoords = coords;
                 textX = xm;
                 textY = ym;
             } else {
                 double dX = 15;
-                double x1a = x1+dX;
+                double x1a = x1 + dX;
                 double y1a = y1;
-                double x2a = x2-dX;
-                double ym = (y1+y2)/2.0;
-                double[] coords = {x1,y1,x1a,y1a,x1a,ym,x2a,ym,x2a,y2,x2,y2};
+                double x2a = x2 - dX;
+                double ym = (y1 + y2) / 2.0;
+                double[] coords = {x1, y1, x1a, y1a, x1a, ym, x2a, ym, x2a, y2, x2, y2};
                 tempCoords = coords;
-                textX = (x1a+x2a) / 2.0;
+                textX = (x1a + x2a) / 2.0;
                 textY = ym;
             }
-       } else {
-             double[] coords = {x1,y1,x2,y2};
-             tempCoords = coords;
+        } else {
+            double[] coords = {x1, y1, x2, y2};
+            tempCoords = coords;
             textX = (tempCoords[0] + tempCoords[2]) / 2.0;
             textY = (tempCoords[1] + tempCoords[3]) / 2.0;
-      }
+        }
 
 
         if ((smooth == null) || smooth.equals("")) {

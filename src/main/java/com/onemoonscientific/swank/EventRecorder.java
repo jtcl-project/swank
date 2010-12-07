@@ -9,8 +9,8 @@ import java.util.*;
 
 import javax.swing.JPopupMenu;
 
-
 public class EventRecorder implements AWTEventListener {
+
     static EventRecorder eventRecorder = null;
     static ArrayList eventList = new ArrayList();
     static long startTime = -1;
@@ -26,8 +26,8 @@ public class EventRecorder implements AWTEventListener {
         eventList.clear();
         eventRecorder = new EventRecorder();
 
-        long flags = AWTEvent.MOUSE_EVENT_MASK |
-            AWTEvent.MOUSE_MOTION_EVENT_MASK | AWTEvent.KEY_EVENT_MASK;
+        long flags = AWTEvent.MOUSE_EVENT_MASK
+                | AWTEvent.MOUSE_MOTION_EVENT_MASK | AWTEvent.KEY_EVENT_MASK;
         Toolkit.getDefaultToolkit().addAWTEventListener(eventRecorder, flags);
     }
 
@@ -74,19 +74,19 @@ public class EventRecorder implements AWTEventListener {
                 return;
             }
 
-            int button = (mouseEvent.getModifiers() &
-                (InputEvent.BUTTON1_MASK | InputEvent.BUTTON2_MASK |
-                InputEvent.BUTTON3_MASK));
+            int button = (mouseEvent.getModifiers()
+                    & (InputEvent.BUTTON1_MASK | InputEvent.BUTTON2_MASK
+                    | InputEvent.BUTTON3_MASK));
 
             /*
             if (button == MouseEvent.BUTTON1) {
-                sbuf.append("1 ");
+            sbuf.append("1 ");
             } else if (button == MouseEvent.BUTTON2) {
-                sbuf.append("2 ");
+            sbuf.append("2 ");
             } else if (button == MouseEvent.BUTTON3) {
-                sbuf.append("3 ");
+            sbuf.append("3 ");
             } else {
-                sbuf.append("{} ");
+            sbuf.append("{} ");
             }
              */
             sbuf.append(button);
@@ -171,7 +171,7 @@ public class EventRecorder implements AWTEventListener {
 
         for (int i = 0, n = eventList.size(); i < n; i++) {
             TclList.append(interp, list,
-                TclString.newInstance((String) eventList.get(i)));
+                    TclString.newInstance((String) eventList.get(i)));
         }
 
         interp.setResult(list);

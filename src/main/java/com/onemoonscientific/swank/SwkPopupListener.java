@@ -38,8 +38,8 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
-
 public class SwkPopupListener extends MouseAdapter implements SwkListener {
+
     Interp interp;
     String popupName;
     SwkSMenu popup = null;
@@ -90,7 +90,7 @@ public class SwkPopupListener extends MouseAdapter implements SwkListener {
         if (e.isPopupTrigger() || true) {
             System.out.println("popuptrigger");
 
-            TclObject tObj = (TclObject) Widgets.getWidget(interp,popupName);
+            TclObject tObj = (TclObject) Widgets.getWidget(interp, popupName);
             System.out.println(popupName);
 
             if (tObj == null) {

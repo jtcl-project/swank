@@ -37,9 +37,9 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
-
 public class SwkScrollAdjustmentListener implements AdjustmentListener,
-    SwkListener {
+        SwkListener {
+
     Interp interp;
     String command = null;
     Component component;
@@ -62,8 +62,8 @@ public class SwkScrollAdjustmentListener implements AdjustmentListener,
 
         if (!swkjscrollbar.lastSetFromSet) {
             final int value = e.getValue();
-            double fx1 = (1.0 * value) / (((SwkJScrollBar) component).getMaximum() -
-                ((SwkJScrollBar) component).getMinimum());
+            double fx1 = (1.0 * value) / (((SwkJScrollBar) component).getMaximum()
+                    - ((SwkJScrollBar) component).getMinimum());
             Double fxd = new Double(fx1);
             BindEvent bEvent = new BindEvent(interp, (SwkListener) this,
                     (EventObject) e, fxd, 0);

@@ -34,14 +34,14 @@ import java.util.*;
 
 import javax.swing.*;
 
-
 public class WidgetsMap implements AssocData {
-     Hashtable theWidgets = new Hashtable();
-     
-     Hashtable getWidgets() {
-         return theWidgets;
-     }
-     
-     public void disposeAssocData(Interp interp) {
-     }
+
+    Hashtable theWidgets = new Hashtable();
+
+    Hashtable getWidgets() {
+        return theWidgets;
+    }
+
+    public void disposeAssocData(Interp interp) {
+    }
 }

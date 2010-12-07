@@ -26,8 +26,8 @@ package com.onemoonscientific.swank;
 
 import tcl.lang.*;
 
-
 public class ResourceObject {
+
     public String resource = null;
     public String className = null;
     public String defaultVal = null;
@@ -45,7 +45,7 @@ public class ResourceObject {
     }
 
     public ResourceObject(String resource, String className, int optNum,
-        String defaultVal) {
+            String defaultVal) {
         this.resource = resource;
         this.className = className;
         this.optNum = optNum;

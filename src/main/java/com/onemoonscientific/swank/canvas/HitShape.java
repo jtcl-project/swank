@@ -37,20 +37,25 @@ package com.onemoonscientific.swank.canvas;
 import com.onemoonscientific.swank.*;
 
 public class HitShape {
+
     final int handle;
     final SwkShape swkShape;
+
     HitShape(SwkShape shape, int handle) {
-       this.swkShape = shape;
-       this.handle = handle;
+        this.swkShape = shape;
+        this.handle = handle;
     }
+
     HitShape(SwkShape shape) {
-       this.swkShape = shape;
-       this.handle = -1;
+        this.swkShape = shape;
+        this.handle = -1;
     }
+
     public SwkShape getShape() {
-       return swkShape;
+        return swkShape;
     }
+
     public int getHandle() {
-       return handle;
+        return handle;
     }
 }

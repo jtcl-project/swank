@@ -36,8 +36,8 @@ import java.util.*;
 
 import javax.swing.*;
 
-
 public interface SwkWidget {
+
     public static final String NORMAL = "normal";
     public static final String DISABLED = "disabled";
     public static final String ACTIVE = "active";
@@ -70,7 +70,7 @@ public interface SwkWidget {
     public Vector getTagList();
 
     public void setTagList(Interp interp, TclObject tagListObj)
-        throws TclException;
+            throws TclException;
 
     public SwkMouseListener getMouseListener();
 
@@ -105,5 +105,5 @@ public interface SwkWidget {
     public void setValues(Setter setter, int iOpt);
 
     public void configure(Interp interp, TclObject[] argv, int start)
-        throws TclException;
+            throws TclException;
 }

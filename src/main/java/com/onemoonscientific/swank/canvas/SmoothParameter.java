@@ -4,8 +4,8 @@ import tcl.lang.*;
 
 import java.awt.geom.*;
 
-
 public class SmoothParameter extends CanvasParameter {
+
     private static String name = "smooth";
     private static String defValue = "";
     private String newValue = defValue;
@@ -27,7 +27,7 @@ public class SmoothParameter extends CanvasParameter {
     }
 
     public TclObject getValue(Interp interp, SwkShape swkShape)
-        throws TclException {
+            throws TclException {
         if (swkShape == null) {
             throw new TclException(interp, "shape doesn't exist");
         }
@@ -38,7 +38,7 @@ public class SmoothParameter extends CanvasParameter {
     }
 
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
-        throws TclException {
+            throws TclException {
         boolean doSmooth = false;
 
         if (!arg.toString().equals("")) {

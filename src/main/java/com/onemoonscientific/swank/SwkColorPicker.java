@@ -24,7 +24,7 @@ public class SwkColorPicker implements Command {
     Interp interp = null;
 
     public void cmdProc(final Interp interp, final TclObject[] argv)
-        throws TclException {
+            throws TclException {
         int i;
         this.interp = interp;
 
@@ -34,12 +34,12 @@ public class SwkColorPicker implements Command {
     }
 
     void option(final Interp interp, final TclObject[] argv)
-        throws TclException {
+            throws TclException {
         String[] options = null;
 
         if (((argv.length - 1) % 2) != 0) {
             throw new TclException(interp,
-                "tk_messageBox:  number of args must be a multiple of 2");
+                    "tk_messageBox:  number of args must be a multiple of 2");
         }
 
         String title = "Choose Color";
@@ -64,8 +64,8 @@ public class SwkColorPicker implements Command {
                 showOpacity = TclBoolean.get(interp, argv[i + 1]);
             } else {
                 throw new TclException(interp,
-                    "bad option \"" + option
-                    + "\": must be -initialcolor, -parent, -showopacity, -title");
+                        "bad option \"" + option
+                        + "\": must be -initialcolor, -parent, -showopacity, -title");
             }
         }
 
@@ -143,7 +143,7 @@ public class SwkColorPicker implements Command {
                 }
                 try {
                     if (method != null) {
-                        color = (Color) method.invoke(cl.newInstance(),(Window) dParent, title, initialColor, showOpacity);
+                        color = (Color) method.invoke(cl.newInstance(), (Window) dParent, title, initialColor, showOpacity);
                     }
 
 

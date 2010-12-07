@@ -17,12 +17,12 @@ import java.util.Vector;
 
 import javax.swing.SwingUtilities;
 
-
 /**
  *
  * @author brucejohnson
  */
 public class SwkShapeItemGet implements Runnable {
+
     String tag = null;
     String parString = null;
     CanvasParameter[] parameters = null;
@@ -32,7 +32,7 @@ public class SwkShapeItemGet implements Runnable {
 
     /** Creates a new instance of SwkShapeRunnable */
     public SwkShapeItemGet(final Interp interp, final SwkImageCanvas swkCanvas,
-        final String tag, final String parString) {
+            final String tag, final String parString) {
         this.interp = interp;
         this.swkCanvas = swkCanvas;
         this.tag = tag;
@@ -47,7 +47,7 @@ public class SwkShapeItemGet implements Runnable {
 
         if (swkShape == null) {
             throw new TclException(interp,
-                "Swank item  \"" + tag + "\" doesn't exist");
+                    "Swank item  \"" + tag + "\" doesn't exist");
         }
         if (parString != null) {
             CanvasParameter par = swkShape.getPar(parString);
@@ -56,8 +56,8 @@ public class SwkShapeItemGet implements Runnable {
         } else {
             CanvasParameter[] pars = swkShape.getParameters();
             if (pars == null) {
-               throw new TclException(interp,
-                "Canvas Parameter doesn't exist for Swank Item \"" +tag +"\"");
+                throw new TclException(interp,
+                        "Canvas Parameter doesn't exist for Swank Item \"" + tag + "\"");
             }
             TclObject result = TclList.newInstance();
 
@@ -86,7 +86,7 @@ public class SwkShapeItemGet implements Runnable {
     }
 
     TclObject getParValue(CanvasParameter par, boolean configStyle)
-        throws TclException {
+            throws TclException {
         if (par != null) {
             TclObject value = par.getValue(interp, swkShape);
 
@@ -95,11 +95,11 @@ public class SwkShapeItemGet implements Runnable {
             } else {
                 TclObject list = TclList.newInstance();
                 TclList.append(interp, list,
-                    TclString.newInstance("-" + par.getName()));
+                        TclString.newInstance("-" + par.getName()));
                 TclList.append(interp, list, TclString.newInstance(""));
                 TclList.append(interp, list, TclString.newInstance(""));
                 TclList.append(interp, list,
-                    TclString.newInstance(par.getDefault()));
+                        TclString.newInstance(par.getDefault()));
                 TclList.append(interp, list, value);
 
                 return (list);

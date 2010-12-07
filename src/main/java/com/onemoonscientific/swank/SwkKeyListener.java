@@ -37,8 +37,8 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
-
 public class SwkKeyListener implements KeyListener, SwkListener {
+
     Interp interp;
     String command = "puts key";
     ArrayList<SwkBinding> bindings;
@@ -60,7 +60,7 @@ public class SwkKeyListener implements KeyListener, SwkListener {
     }
 
     public void setBinding(SwkBinding newBinding) {
-        SwkBind.setBinding(bindings,newBinding);
+        SwkBind.setBinding(bindings, newBinding);
     }
 
     public String getCommand() {
@@ -179,12 +179,12 @@ public class SwkKeyListener implements KeyListener, SwkListener {
                     continue;
                 }
 
-                if (!((binding.subtype == SwkBinding.PRESS) &&
-                        (binding.detail == 0))) {
-                    if (!((binding.subtype == SwkBinding.RELEASE) &&
-                            (binding.detail == 0))) {
-                        if (!((binding.subtype == SwkBinding.TYPE) &&
-                                (binding.detail == 0))) {
+                if (!((binding.subtype == SwkBinding.PRESS)
+                        && (binding.detail == 0))) {
+                    if (!((binding.subtype == SwkBinding.RELEASE)
+                            && (binding.detail == 0))) {
+                        if (!((binding.subtype == SwkBinding.TYPE)
+                                && (binding.detail == 0))) {
                             //System.out.println("event mods "+mods+" binding mods "+binding.mod);
                             if (binding.keyStroke == null) {
                                 //System.out.println("chars "+(keyChar+0)+" "+binding.detail);
@@ -193,8 +193,8 @@ public class SwkKeyListener implements KeyListener, SwkListener {
                                 }
 
                                 if (binding.mod != mods) {
-                                    if ((binding.mod |
-                                            InputEvent.SHIFT_DOWN_MASK) != mods) {
+                                    if ((binding.mod
+                                            | InputEvent.SHIFT_DOWN_MASK) != mods) {
                                         continue;
                                     }
                                 }
@@ -217,8 +217,8 @@ public class SwkKeyListener implements KeyListener, SwkListener {
                     }
                 }
 
-                if ((binding.command != null) &&
-                        (binding.command.length() != 0)) {
+                if ((binding.command != null)
+                        && (binding.command.length() != 0)) {
                     try {
                         //System.out.println("dokey "+binding.command);
                         BindCmd.doCmd(interp, binding.command, e);
@@ -252,14 +252,14 @@ public class SwkKeyListener implements KeyListener, SwkListener {
 
         /*
         if (!nativeProcessEvent) {
-            //System.out.println("don't processNative");
+        //System.out.println("don't processNative");
         }
 
         if (nativeProcessEvent && (subtype == SwkBinding.TYPE) && (component instanceof SwkJTextPane)) {
-            if (!consumeNextType) {
-                 //System.out.println("processNative");
-                ((SwkJTextPane) component).doKeyBinding(keyStroke,e,JComponent.WHEN_FOCUSED,true);
-            }
+        if (!consumeNextType) {
+        //System.out.println("processNative");
+        ((SwkJTextPane) component).doKeyBinding(keyStroke,e,JComponent.WHEN_FOCUSED,true);
+        }
         }
          */
     }

@@ -14,8 +14,8 @@ import java.awt.*;
 
 import javax.swing.*;
 
-
 class SwkJSliderWidgetCmd implements Command {
+
     static final private String[] validCmds = {
         "cget", "configure", "coords", "get", "identify",
         "set"
@@ -33,96 +33,96 @@ class SwkJSliderWidgetCmd implements Command {
     }
 
     public void cmdProc(final Interp interp, final TclObject[] argv)
-        throws TclException {
+            throws TclException {
         int i;
 
         if (argv.length < 2) {
             throw new TclNumArgsException(interp, 1, argv,
-                "option ?arg arg ...?");
+                    "option ?arg arg ...?");
         }
 
         final int opt = TclIndex.get(interp, argv[1], validCmds, "option", 0);
-        final TclObject tObj = (TclObject) Widgets.getWidget(interp,argv[0].toString());
+        final TclObject tObj = (TclObject) Widgets.getWidget(interp, argv[0].toString());
 
         if (tObj == null) {
             throw new TclException(interp,
-                "bad window path name \"" + argv[0].toString() + "\"");
+                    "bad window path name \"" + argv[0].toString() + "\"");
         }
 
         final SwkJSlider swkjslider = (SwkJSlider) ReflectObject.get(interp,
                 tObj);
 
         switch (opt) {
-        case OPT_CGET:
+            case OPT_CGET:
 
-            if (argv.length != 3) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-
-            interp.setResult(swkjslider.jget(interp, argv[2]));
-
-            break;
-
-        case OPT_CONFIGURE:
-
-            if (!gotDefaults) {
-                swkjslider.setResourceDefaults();
-                gotDefaults = true;
-            }
-
-            if (argv.length == 2) {
-                swkjslider.jgetAll(interp);
-            } else if (argv.length == 3) {
-                String result = swkjslider.jget(interp, argv[2]);
-                ResourceObject ro = (ResourceObject) SwkJSlider.resourceDB.get(argv[2].toString());
-
-                if (ro == null) {
-                    throw new TclException(interp,
-                        "unknown option \"" + argv[2].toString() + "\"");
+                if (argv.length != 3) {
+                    throw new TclNumArgsException(interp, 2, argv, "option");
                 }
 
-                TclObject list = TclList.newInstance();
-                TclList.append(interp, list,
-                    TclString.newInstance(argv[2].toString()));
-                TclList.append(interp, list, TclString.newInstance(ro.resource));
-                TclList.append(interp, list, TclString.newInstance(ro.className));
-                TclList.append(interp, list,
-                    TclString.newInstance(ro.defaultVal));
-                TclList.append(interp, list, TclString.newInstance(result));
-                interp.setResult(list);
-            } else {
-                swkjslider.configure(interp, argv, 2);
-            }
+                interp.setResult(swkjslider.jget(interp, argv[2]));
 
-            break;
+                break;
 
-        case OPT_COORDS:
-            coords(interp, swkjslider, argv);
+            case OPT_CONFIGURE:
 
-            break;
+                if (!gotDefaults) {
+                    swkjslider.setResourceDefaults();
+                    gotDefaults = true;
+                }
 
-        case OPT_GET:
-            get(interp, swkjslider, argv);
+                if (argv.length == 2) {
+                    swkjslider.jgetAll(interp);
+                } else if (argv.length == 3) {
+                    String result = swkjslider.jget(interp, argv[2]);
+                    ResourceObject ro = (ResourceObject) SwkJSlider.resourceDB.get(argv[2].toString());
 
-            break;
+                    if (ro == null) {
+                        throw new TclException(interp,
+                                "unknown option \"" + argv[2].toString() + "\"");
+                    }
 
-        case OPT_IDENTIFY:
-            identify(interp, swkjslider, argv);
+                    TclObject list = TclList.newInstance();
+                    TclList.append(interp, list,
+                            TclString.newInstance(argv[2].toString()));
+                    TclList.append(interp, list, TclString.newInstance(ro.resource));
+                    TclList.append(interp, list, TclString.newInstance(ro.className));
+                    TclList.append(interp, list,
+                            TclString.newInstance(ro.defaultVal));
+                    TclList.append(interp, list, TclString.newInstance(result));
+                    interp.setResult(list);
+                } else {
+                    swkjslider.configure(interp, argv, 2);
+                }
 
-            break;
+                break;
 
-        case OPT_SET:
-            set(interp, swkjslider, argv);
+            case OPT_COORDS:
+                coords(interp, swkjslider, argv);
 
-            break;
+                break;
 
-        default:
-            throw new TclRuntimeError("TclIndex.get() error");
+            case OPT_GET:
+                get(interp, swkjslider, argv);
+
+                break;
+
+            case OPT_IDENTIFY:
+                identify(interp, swkjslider, argv);
+
+                break;
+
+            case OPT_SET:
+                set(interp, swkjslider, argv);
+
+                break;
+
+            default:
+                throw new TclRuntimeError("TclIndex.get() error");
         }
     }
 
     void coords(final Interp interp, final SwkJSlider swkjslider,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if (argv.length != 2) {
             throw new TclNumArgsException(interp, 2, argv, "");
         }
@@ -144,7 +144,7 @@ class SwkJSliderWidgetCmd implements Command {
     }
 
     void get(final Interp interp, final SwkJSlider swkjslider,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if ((argv.length != 2) && (argv.length != 4)) {
             throw new TclNumArgsException(interp, 2, argv, "?x y?");
         }
@@ -167,7 +167,7 @@ class SwkJSliderWidgetCmd implements Command {
     }
 
     void identify(final Interp interp, final SwkJSlider swkjslider,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if (argv.length != 4) {
             throw new TclNumArgsException(interp, 2, argv, "x y");
         }
@@ -179,7 +179,7 @@ class SwkJSliderWidgetCmd implements Command {
     }
 
     void set(final Interp interp, final SwkJSlider swkjslider,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if (argv.length != 3) {
             throw new TclNumArgsException(interp, 2, argv, "value");
         }
@@ -189,6 +189,7 @@ class SwkJSliderWidgetCmd implements Command {
     }
 
     class Coords extends GetValueOnEventThread {
+
         SwkJSlider swkjslider = null;
         int size = 0;
         double value = 0.0;
@@ -196,7 +197,7 @@ class SwkJSliderWidgetCmd implements Command {
         Point pt = new Point();
 
         Point exec(final SwkJSlider swkjslider, final boolean hasValue,
-            final double value) {
+                final double value) {
             this.swkjslider = swkjslider;
             this.value = value;
             this.hasValue = hasValue;
@@ -221,11 +222,11 @@ class SwkJSliderWidgetCmd implements Command {
 
             if (swkjslider.jslider.getOrientation() == JSlider.VERTICAL) {
                 x = size.width / 2;
-                y = (int) (((value - from) / (to - from) * (size.height -
-                    halfWid)) + halfWid);
+                y = (int) (((value - from) / (to - from) * (size.height
+                        - halfWid)) + halfWid);
             } else {
-                x = (int) (((value - from) / (to - from) * (size.width -
-                    halfWid)) + halfWid);
+                x = (int) (((value - from) / (to - from) * (size.width
+                        - halfWid)) + halfWid);
                 y = size.height / 2;
             }
 
@@ -235,6 +236,7 @@ class SwkJSliderWidgetCmd implements Command {
     }
 
     class Get extends GetValueOnEventThread {
+
         SwkJSlider swkjslider = null;
         int size = 0;
         int x = 0;
@@ -244,7 +246,7 @@ class SwkJSliderWidgetCmd implements Command {
         TclObject result = null;
 
         TclObject exec(final SwkJSlider swkjslider, final boolean hasValue,
-            final int x, final int y) {
+                final int x, final int y) {
             this.swkjslider = swkjslider;
             this.x = x;
             this.y = y;
@@ -269,15 +271,15 @@ class SwkJSliderWidgetCmd implements Command {
                 double value;
 
                 if (swkjslider.jslider.getOrientation() == JSlider.VERTICAL) {
-                    value = ((((double) (y - halfWid)) / (size.height -
-                        halfWid)) * (to - from)) + from;
+                    value = ((((double) (y - halfWid)) / (size.height
+                            - halfWid)) * (to - from)) + from;
                 } else {
-                    value = ((((double) (x - halfWid)) / (size.width - halfWid)) * (to -
-                        from)) + from;
+                    value = ((((double) (x - halfWid)) / (size.width - halfWid)) * (to
+                            - from)) + from;
                 }
 
-                if ((swkjslider.resolution == 0) ||
-                        (swkjslider.resolution >= 1.0)) {
+                if ((swkjslider.resolution == 0)
+                        || (swkjslider.resolution >= 1.0)) {
                     int iValue = (int) Math.round(value);
                     result = TclInteger.newInstance(iValue);
                 } else {
@@ -289,6 +291,7 @@ class SwkJSliderWidgetCmd implements Command {
     }
 
     class Set extends UpdateOnEventThread {
+
         SwkJSlider swkjslider = null;
         double value = 0.0;
 

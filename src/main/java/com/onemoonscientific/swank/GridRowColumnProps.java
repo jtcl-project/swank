@@ -5,12 +5,12 @@
  */
 package com.onemoonscientific.swank;
 
-
 /**
  *
  * @author  bruce
  */
 public class GridRowColumnProps implements Cloneable {
+
     int minSize = 0;
     int weight = 0;
     int pad = 0;

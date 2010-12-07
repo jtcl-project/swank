@@ -4,8 +4,8 @@ import tcl.lang.*;
 
 import java.awt.geom.*;
 
-
 public class AngleStartParameter extends CanvasParameter {
+
     private static String name = "start";
     private static double defValue = 0.0;
     private double newValue = defValue;
@@ -27,7 +27,7 @@ public class AngleStartParameter extends CanvasParameter {
     }
 
     public TclObject getValue(Interp interp, SwkShape swkShape)
-        throws TclException {
+            throws TclException {
         if (swkShape == null) {
             throw new TclException(interp, "shape doesn't exist");
         }
@@ -42,7 +42,7 @@ public class AngleStartParameter extends CanvasParameter {
     }
 
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
-        throws TclException {
+            throws TclException {
         newValue = TclDouble.get(interp, arg);
     }
 

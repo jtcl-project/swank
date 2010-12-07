@@ -7,12 +7,12 @@ package com.onemoonscientific.swank.canvas;
 
 import tcl.lang.*;
 
-
 /**
  *
  * @author brucejohnson
  */
 public abstract class StringParameter extends CanvasParameter {
+
     private static String defValue = "";
     String newValue = defValue;
 
@@ -39,7 +39,7 @@ public abstract class StringParameter extends CanvasParameter {
     }
 
     public TclObject getValue(Interp interp, SwkShape swkShape)
-        throws TclException {
+            throws TclException {
         if (swkShape == null) {
             throw new TclException(interp, "shape doesn't exist");
         }
@@ -48,7 +48,7 @@ public abstract class StringParameter extends CanvasParameter {
     }
 
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
-        throws TclException {
+            throws TclException {
         newValue = arg.toString();
     }
 }

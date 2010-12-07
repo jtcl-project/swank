@@ -27,7 +27,6 @@
  *
  * Created on February 19, 2000, 3:02 PM
  */
-
 /**
  *
  * @author  JOHNBRUC
@@ -46,32 +45,31 @@ import java.lang.*;
 
 import java.util.*;
 
-
 public class ItemNode extends SwkShape {
+
     static CanvasParameter[] parameters = {
         new WidthParameter(), new TextureParameter(), new GradientParameter(),
         new FillParameter(), new OutlineParameter(), new TagsParameter(),
         new TransformerParameter(), new RotateParameter(), new ShearParameter(),
-        new StateParameter(),new NodeParameter(),
-    };
+        new StateParameter(), new NodeParameter(),};
     static Map parameterMap = new TreeMap();
 
     static {
         initializeParameters(parameters, parameterMap);
     }
     TextParameters textPar = TextParameters.getDefault();
-
     Rectangle2D rect2D = null;
 
     ItemNode(Shape shape, SwkImageCanvas canvas) {
         super(shape, canvas);
         rect2D = (Rectangle2D) shape;
     }
+
     public void coords(SwkImageCanvas canvas, double[] coords)
-        throws SwkException {
+            throws SwkException {
         if (coords.length != 2) {
-            throw new SwkException("wrong # coordinates: expected 2, got " +
-                coords.length);
+            throw new SwkException("wrong # coordinates: expected 2, got "
+                    + coords.length);
         }
 
         if ((storeCoords == null) || (storeCoords.length != coords.length)) {
@@ -88,9 +86,11 @@ public class ItemNode extends SwkShape {
         genGradient(aT);
         //shape = aT.createTransformedShape(rect2D);
     }
+
     public void paintShape(Graphics2D g2) {
         super.paintShape(g2);
-  }
+    }
+
     public CanvasParameter[] getParameters() {
         return parameters;
     }

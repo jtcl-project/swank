@@ -39,26 +39,26 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.text.*;
 
-
 public class SelectionCmd implements Command {
+
     static protected String getCommand = null;
     static protected Hashtable hasSelection = new Hashtable();
 
     public void cmdProc(Interp interp, TclObject[] argv)
-        throws TclException {
+            throws TclException {
         int i;
 
         if (argv.length < 2) {
             throw new TclNumArgsException(interp, 1, argv,
-                "option ?arg arg ...?");
+                    "option ?arg arg ...?");
         }
 
         if (argv[1].toString().equals("own")) {
             Object windowObject = Widgets.get(interp, FocusCmd.getFocusWindow());
             interp.resetResult();
 
-            if ((windowObject != null) &&
-                    (windowObject instanceof JTextComponent)) {
+            if ((windowObject != null)
+                    && (windowObject instanceof JTextComponent)) {
                 interp.setResult(FocusCmd.getFocusWindow());
             }
 
@@ -66,8 +66,7 @@ public class SelectionCmd implements Command {
         } else if (argv[1].toString().equals("get")) {
             System.out.println("getting");
 
-            Clipboard clipboard = Toolkit.getDefaultToolkit()
-                                         .getSystemSelection();
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemSelection();
             System.out.println("got clip");
 
             if (clipboard == null) {
@@ -99,16 +98,16 @@ public class SelectionCmd implements Command {
         }
 
         /*
-                    interp.resetResult();
-                    if (FocusCmd.getFocusWindow() != null) {
-                        Object windowObject = Widgets.get(interp, FocusCmd.getFocusWindow());
-                        if ((windowObject != null) && (windowObject instanceof JTextComponent)) {
-                            interp.setResult(((JTextComponent) windowObject).getSelectedText());
-                            return;
-                        }
-                    }
-                }
-        */
+        interp.resetResult();
+        if (FocusCmd.getFocusWindow() != null) {
+        Object windowObject = Widgets.get(interp, FocusCmd.getFocusWindow());
+        if ((windowObject != null) && (windowObject instanceof JTextComponent)) {
+        interp.setResult(((JTextComponent) windowObject).getSelectedText());
+        return;
+        }
+        }
+        }
+         */
     }
 
     static void addSelectionWindow(String window) {

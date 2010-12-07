@@ -41,6 +41,7 @@ public class CanvasExt extends Extension {
     /*
      * Create all the commands in the Simple package.
      */
+
     public void init(Interp interp) {
         interp.createCommand("canvas", new SwkCanvasCmd());
     }

@@ -11,12 +11,12 @@ import java.util.Vector;
 
 import javax.swing.SwingUtilities;
 
-
 /**
  *
  * @author brucejohnson
  */
 public class SwkShapeRunnable implements Runnable {
+
     String tag = null;
     CanvasParameter[] parameters = null;
     SwkImageCanvas swkCanvas = null;
@@ -24,14 +24,14 @@ public class SwkShapeRunnable implements Runnable {
 
     /** Creates a new instance of SwkShapeRunnable */
     public SwkShapeRunnable(final SwkImageCanvas swkCanvas, final String tag,
-        final CanvasParameter[] parameters) {
+            final CanvasParameter[] parameters) {
         this.swkCanvas = swkCanvas;
         this.tag = tag;
         this.parameters = parameters;
     }
 
     public SwkShapeRunnable(final SwkImageCanvas swkCanvas, SwkShape swkShape,
-        final CanvasParameter[] parameters) {
+            final CanvasParameter[] parameters) {
         this.swkCanvas = swkCanvas;
         this.tag = null;
         this.swkShape = swkShape;
@@ -77,9 +77,9 @@ public class SwkShapeRunnable implements Runnable {
         for (int j = 0; j < parameters.length; j++) {
             if (parameters[j] != null) {
                 try {
-                parameters[j].exec(swkCanvas, swkShape);
+                    parameters[j].exec(swkCanvas, swkShape);
                 } catch (Exception e) {
-                   e.printStackTrace();
+                    e.printStackTrace();
                 }
             }
         }

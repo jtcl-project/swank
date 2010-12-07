@@ -37,6 +37,7 @@ import javax.swing.*;
 import java.lang.reflect.*;
 
 public class WmCmd implements Command {
+
     static final private String[] validCmds = {"alwaysontop",
         "aspect", "client", "colormapwindows", "command", "deiconify",
         "focusmodel", "frame", "geometry", "grid", "group", "iconbitmap",
@@ -74,51 +75,52 @@ public class WmCmd implements Command {
     static final private int OPT_WITHDRAW = 27;
 
     public void cmdProc(final Interp interp, final TclObject[] argv)
-        throws TclException {
+            throws TclException {
         if (argv.length < 3) {
             throw new TclNumArgsException(interp, 1, argv,
-                "option window ?arg arg ...?");
+                    "option window ?arg arg ...?");
         }
 
         int opt = TclIndex.get(interp, argv[1], validCmds, "option", 0);
-        TclObject tObj = (TclObject) Widgets.getWidget(interp,argv[2].toString());
+        TclObject tObj = (TclObject) Widgets.getWidget(interp, argv[2].toString());
 
         if (tObj == null) {
             throw new TclException(interp,
-                "bad window path name \"" + argv[2].toString() + "\"");
+                    "bad window path name \"" + argv[2].toString() + "\"");
         }
 
         final Object object = (Object) ReflectObject.get(interp, tObj);
 
         if (!(object instanceof JFrame) && !(object instanceof Window)) {
             throw new TclException(interp,
-                "must be toplevel window " + argv[2].toString() + " for " +
-                argv[1].toString());
+                    "must be toplevel window " + argv[2].toString() + " for "
+                    + argv[1].toString());
         }
 
         switch (opt) {
-        case OPT_ALWAYSONTOP:
-            setAlwaysOnTop(interp, object, argv);
-            break;
-        case OPT_ASPECT:
-            break;
+            case OPT_ALWAYSONTOP:
+                setAlwaysOnTop(interp, object, argv);
+                break;
+            case OPT_ASPECT:
+                break;
 
-        case OPT_CLIENT:
-            break;
+            case OPT_CLIENT:
+                break;
 
-        case OPT_COLORMAPWINDOWS:
-            break;
+            case OPT_COLORMAPWINDOWS:
+                break;
 
-        case OPT_COMMAND:
-            break;
+            case OPT_COMMAND:
+                break;
 
-        case OPT_DEICONIFY:
+            case OPT_DEICONIFY:
 
-            if (argv.length != 3) {
-                throw new TclNumArgsException(interp, 2, argv, "window");
-            }
+                if (argv.length != 3) {
+                    throw new TclNumArgsException(interp, 2, argv, "window");
+                }
 
-            (new UpdateOnEventThread() {
+                (new UpdateOnEventThread() {
+
                     public void run() {
                         if (object instanceof Frame) {
                             ((Frame) object).setExtendedState(Frame.NORMAL);
@@ -129,129 +131,133 @@ public class WmCmd implements Command {
                     }
                 }).execOnThread();
 
-            break;
+                break;
 
-        case OPT_FOCUSMODEL:
-            break;
+            case OPT_FOCUSMODEL:
+                break;
 
-        case OPT_FRAME:
-            break;
+            case OPT_FRAME:
+                break;
 
-        case OPT_GEOMETRY:
+            case OPT_GEOMETRY:
 
-            if (argv.length == 3) {
-                getGeometry(interp, object, argv);
-            } else {
-                setGeometry(interp, object, argv);
-            }
+                if (argv.length == 3) {
+                    getGeometry(interp, object, argv);
+                } else {
+                    setGeometry(interp, object, argv);
+                }
 
-            break;
+                break;
 
-        case OPT_GRID:
-            break;
+            case OPT_GRID:
+                break;
 
-        case OPT_GROUP:
-            break;
+            case OPT_GROUP:
+                break;
 
-        case OPT_ICONBITMAP:
-            break;
+            case OPT_ICONBITMAP:
+                break;
 
-        case OPT_ICONIFY:
+            case OPT_ICONIFY:
 
-            if (argv.length != 3) {
-                throw new TclNumArgsException(interp, 2, argv, "window");
-            }
+                if (argv.length != 3) {
+                    throw new TclNumArgsException(interp, 2, argv, "window");
+                }
 
-            (new UpdateOnEventThread() {
+                (new UpdateOnEventThread() {
+
                     public void run() {
                         if (object instanceof Frame) {
-                            ((Frame) object).setExtendedState(Frame.ICONIFIED |
-                                ((Frame) object).getExtendedState());
+                            ((Frame) object).setExtendedState(Frame.ICONIFIED
+                                    | ((Frame) object).getExtendedState());
                         }
                     }
                 }).execOnThread();
 
-            break;
+                break;
 
-        case OPT_ICONMASK:
-            break;
+            case OPT_ICONMASK:
+                break;
 
-        case OPT_ICONNAME:
-            break;
+            case OPT_ICONNAME:
+                break;
 
-        case OPT_ICONCOMPOSITION:
-            break;
+            case OPT_ICONCOMPOSITION:
+                break;
 
-        case OPT_ICONWINDOW:
-            break;
+            case OPT_ICONWINDOW:
+                break;
 
-        case OPT_MAXSIZE:
-            break;
+            case OPT_MAXSIZE:
+                break;
 
-        case OPT_MINSIZE:
-            break;
+            case OPT_MINSIZE:
+                break;
 
-        case OPT_OVERRIDEREDIRECT:
-            break;
+            case OPT_OVERRIDEREDIRECT:
+                break;
 
-        case OPT_POSITIONFROM:
-            break;
+            case OPT_POSITIONFROM:
+                break;
 
-        case OPT_PROTOCOL:
-            setProtocol(interp, object, argv);
+            case OPT_PROTOCOL:
+                setProtocol(interp, object, argv);
 
-            break;
+                break;
 
-        case OPT_RESIZABLE:
-            break;
+            case OPT_RESIZABLE:
+                break;
 
-        case OPT_SIZEFROM:
-            break;
+            case OPT_SIZEFROM:
+                break;
 
-        case OPT_STATE:
-            break;
+            case OPT_STATE:
+                break;
 
-        case OPT_TITLE:
+            case OPT_TITLE:
 
-            if (!(object instanceof JFrame)) {
-                return;
-            }
+                if (!(object instanceof JFrame)) {
+                    return;
+                }
 
-            if (argv.length != 4) {
-                throw new TclNumArgsException(interp, 2, argv, "window");
-            }
+                if (argv.length != 4) {
+                    throw new TclNumArgsException(interp, 2, argv, "window");
+                }
 
-            final String title = argv[3].toString().intern();
-            (new UpdateOnEventThread() {
+                final String title = argv[3].toString().intern();
+                (new UpdateOnEventThread() {
+
                     public void run() {
                         ((JFrame) object).setTitle(title);
                     }
                 }).execOnThread();
 
-            break;
+                break;
 
-        case OPT_TRANSIENT:
-            break;
+            case OPT_TRANSIENT:
+                break;
 
-        case OPT_WITHDRAW:
+            case OPT_WITHDRAW:
 
-            if (argv.length != 3) {
-                throw new TclNumArgsException(interp, 2, argv, "window");
-            }
+                if (argv.length != 3) {
+                    throw new TclNumArgsException(interp, 2, argv, "window");
+                }
 
-            (new UpdateOnEventThread() {
+                (new UpdateOnEventThread() {
+
                     public void run() {
                         ((Window) object).setVisible(false);
                     }
                 }).execOnThread();
 
-            break;
+                break;
 
-        default:}
+            default:
+        }
     }
 
     void getGeometry(final Interp interp, final Object object,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if (argv.length != 3) {
             throw new TclNumArgsException(interp, 2, argv, "window");
         }
@@ -260,16 +266,16 @@ public class WmCmd implements Command {
 
         if (!(object instanceof JFrame) && !(object instanceof JWindow)) {
             throw new TclException(interp,
-                "invalid object type \"" + widgetName + "\"");
+                    "invalid object type \"" + widgetName + "\"");
         }
 
         Rectangle rectangle = (new GeometryGet()).exec(object);
-        interp.setResult(rectangle.width + "x" + rectangle.height + "+" +
-            rectangle.x + "+" + rectangle.y);
+        interp.setResult(rectangle.width + "x" + rectangle.height + "+"
+                + rectangle.x + "+" + rectangle.y);
     }
 
     void setGeometry(final Interp interp, final Object object,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if (argv.length != 4) {
             throw new TclNumArgsException(interp, 2, argv, "window geometry");
         }
@@ -282,7 +288,7 @@ public class WmCmd implements Command {
 
         if (!(object instanceof JFrame) && !(object instanceof JWindow)) {
             throw new TclException(interp,
-                "invalid object type \"" + widgetName + "\"");
+                    "invalid object type \"" + widgetName + "\"");
         }
 // FIXME doesn't work properly for negative locations values
         String geometry = argv[3].toString();
@@ -328,7 +334,7 @@ public class WmCmd implements Command {
     }
 
     void setProtocol(final Interp interp, final Object object,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if (argv.length != 5) {
             throw new TclNumArgsException(interp, 2, argv, "window name command");
         }
@@ -339,7 +345,7 @@ public class WmCmd implements Command {
 
         if (!(object instanceof JFrame) && !(object instanceof JWindow)) {
             throw new TclException(interp,
-                "invalid object type \"" + widgetName + "\"");
+                    "invalid object type \"" + widgetName + "\"");
         }
 
         int closeMode = 0;
@@ -356,6 +362,7 @@ public class WmCmd implements Command {
     }
 
     class GeometryGet extends GetValueOnEventThread {
+
         Object object = null;
         Rectangle rectangle = null;
 
@@ -406,6 +413,7 @@ public class WmCmd implements Command {
     }
 
     class GeometrySet extends UpdateOnEventThread {
+
         boolean setLocation = false;
         boolean setSize = false;
         Object object = null;
@@ -416,8 +424,8 @@ public class WmCmd implements Command {
         SwkJRadioButton swkjradiobutton;
 
         void exec(final Object object, final boolean setLocation,
-            final boolean setSize, final int x, final int y, final int w,
-            final int h) {
+                final boolean setSize, final int x, final int y, final int w,
+                final int h) {
             this.setLocation = setLocation;
             this.setSize = setSize;
             this.object = object;
@@ -464,6 +472,7 @@ public class WmCmd implements Command {
     }
 
     class ProtocolSet extends UpdateOnEventThread {
+
         Object object = null;
         int closeOp = 0;
         String command = "";
@@ -484,7 +493,9 @@ public class WmCmd implements Command {
             }
         }
     }
+
     class AlwaysOnTop extends UpdateOnEventThread {
+
         Object object = null;
         boolean value = false;
 
@@ -499,27 +510,26 @@ public class WmCmd implements Command {
                 JFrame jframe = (JFrame) object;
                 Class jfClass = jframe.getClass();
                 try {
-                    Method m = jfClass.getMethod("setAlwaysOnTop",new Class[] {boolean.class});
-                    m.invoke(jframe,value);
+                    Method m = jfClass.getMethod("setAlwaysOnTop", new Class[]{boolean.class});
+                    m.invoke(jframe, value);
                 } catch (Exception e) {
-                      System.out.println("always on top failed "+e.getMessage());
+                    System.out.println("always on top failed " + e.getMessage());
                 }
             }
         }
     }
 
     void setAlwaysOnTop(final Interp interp, final Object object,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if (argv.length != 4) {
             throw new TclNumArgsException(interp, 2, argv, "window 0|1");
         }
 
         if (!(object instanceof JFrame) && !(object instanceof JWindow)) {
             throw new TclException(interp,
-                "invalid object type \"" + argv[2].toString() + "\"");
+                    "invalid object type \"" + argv[2].toString() + "\"");
         }
-        boolean value = TclBoolean.get(interp,argv[3]);
+        boolean value = TclBoolean.get(interp, argv[3]);
         (new AlwaysOnTop()).exec(object, value);
     }
-
 }

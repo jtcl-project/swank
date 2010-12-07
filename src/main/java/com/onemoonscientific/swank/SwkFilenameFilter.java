@@ -9,12 +9,14 @@ import java.util.Hashtable;
 import java.io.FilenameFilter;
 
 public class SwkFilenameFilter implements FilenameFilter {
+
     private static String TYPE_UNKNOWN = "Type Unknown";
     private static String HIDDEN_FILE = "Hidden File";
     private Hashtable filters = null;
     private String description = null;
     private String fullDescription = null;
     private boolean useExtensionsInDescription = true;
+
     public SwkFilenameFilter() {
         this.filters = new Hashtable();
     }
@@ -36,7 +38,7 @@ public class SwkFilenameFilter implements FilenameFilter {
     }
 
     public SwkFilenameFilter(Interp interp, TclObject extensions, String description)
-        throws TclException {
+            throws TclException {
         this();
 
         TclObject[] argv = TclList.getElements(interp, extensions);
@@ -101,8 +103,8 @@ public class SwkFilenameFilter implements FilenameFilter {
     public String getDescription() {
         if (fullDescription == null) {
             if ((description == null) || isExtensionListInDescription()) {
-                fullDescription = (description == null) ? "(" : (description +
-                    " (");
+                fullDescription = (description == null) ? "(" : (description
+                        + " (");
 
                 // build the description from the extension list
                 Enumeration extensions = filters.keys();
@@ -111,8 +113,8 @@ public class SwkFilenameFilter implements FilenameFilter {
                     fullDescription += (String) extensions.nextElement();
 
                     while (extensions.hasMoreElements()) {
-                        fullDescription += (", " +
-                        (String) extensions.nextElement());
+                        fullDescription += (", "
+                                + (String) extensions.nextElement());
                     }
                 }
 

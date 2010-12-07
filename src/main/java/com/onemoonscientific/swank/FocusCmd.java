@@ -33,12 +33,12 @@ import java.awt.*;
 
 import javax.swing.*;
 
-
 public class FocusCmd implements Command {
+
     static String focusWindow = null;
 
     public void cmdProc(Interp interp, TclObject[] argv)
-        throws TclException {
+            throws TclException {
         int i;
 
         if (argv.length == 1) {
@@ -52,6 +52,7 @@ public class FocusCmd implements Command {
             final Component comp = (Component) Widgets.get(interp, windowName);
             if (comp != null) {
                 SwingUtilities.invokeLater(new Runnable() {
+
                     public void run() {
                         comp.requestFocusInWindow();
 

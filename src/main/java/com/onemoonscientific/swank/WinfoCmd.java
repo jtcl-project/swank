@@ -37,8 +37,8 @@ import java.util.*;
 
 import javax.swing.*;
 
-
 public class WinfoCmd implements Command {
+
     static final private String[] validCmds = {
         "children", "class", "exists", "geometry", "height", "toplevel", "width",
         "x", "y", "parent", "depth", "fpixels", "pixels", "viewable",
@@ -73,7 +73,7 @@ public class WinfoCmd implements Command {
     Interp interp;
 
     public void cmdProc(Interp interp, TclObject[] argv)
-        throws TclException {
+            throws TclException {
         int i;
         int index = 0;
         this.interp = interp;
@@ -83,11 +83,11 @@ public class WinfoCmd implements Command {
 
         if (argv.length < 3) {
             throw new TclNumArgsException(interp, 1, argv,
-                "option window ?arg arg ...?");
+                    "option window ?arg arg ...?");
         }
 
         int opt = TclIndex.get(interp, argv[1], validCmds, "option", 0);
-        TclObject tObj = (TclObject) Widgets.getWidget(interp,argv[2].toString());
+        TclObject tObj = (TclObject) Widgets.getWidget(interp, argv[2].toString());
 
         if (opt == OPT_EXISTS) {
             if (tObj == null) {
@@ -100,7 +100,7 @@ public class WinfoCmd implements Command {
         } else {
             if (tObj == null) {
                 throw new TclException(interp,
-                    "bad window path name \"" + argv[2].toString() + "\"");
+                        "bad window path name \"" + argv[2].toString() + "\"");
             }
         }
 
@@ -108,256 +108,257 @@ public class WinfoCmd implements Command {
         Rectangle rectangle = null;
 
         switch (opt) {
-        case OPT_CHILDREN:
-            String widgetName = argv[2].toString();
-            getChildrenByName(interp, widgetName);
+            case OPT_CHILDREN:
+                String widgetName = argv[2].toString();
+                getChildrenByName(interp, widgetName);
 
-            break;
+                break;
 
-        case OPT_PARENT:
-            widgetName = argv[2].toString();
+            case OPT_PARENT:
+                widgetName = argv[2].toString();
 
-            if (!Widgets.exists(interp,widgetName)) {
-                throw new TclException(interp,
-                    "bad window path name \"" + widgetName + "\"");
+                if (!Widgets.exists(interp, widgetName)) {
+                    throw new TclException(interp,
+                            "bad window path name \"" + widgetName + "\"");
+                }
+
+                interp.setResult(Widgets.pathParent(interp, widgetName));
+
+                break;
+
+            case OPT_CLASS:
+                widget = (SwkWidget) ReflectObject.get(interp, tObj);
+                interp.setResult(widget.getClassName());
+
+                break;
+
+            case OPT_GEOMETRY:
+                widgetName = argv[2].toString();
+
+                if (!Widgets.exists(interp, widgetName)) {
+                    throw new TclException(interp,
+                            "bad window path name \"" + widgetName + "\"");
+                }
+
+                rectangle = getGeometry(interp, object, argv);
+                interp.setResult(rectangle.width + "x" + rectangle.height + "+"
+                        + rectangle.x + "+" + rectangle.y);
+
+                break;
+
+            case OPT_HEIGHT:
+                rectangle = getGeometry(interp, object, argv);
+                interp.setResult(rectangle.height);
+
+                break;
+
+            case OPT_DEPTH:
+
+                int pixelSize = (new Depth()).exec(object);
+                interp.setResult(pixelSize);
+
+                break;
+
+            case OPT_TOPLEVEL: {
+                widgetName = argv[2].toString().intern();
+                index = widgetName.indexOf(".", 1);
+
+                if (index < 0) {
+                    checkTL = widgetName;
+                } else {
+                    checkTL = widgetName.substring(0, index);
+                }
+
+                TclObject tObj2 = (TclObject) Widgets.getWidget(interp, checkTL);
+
+                if (tObj2 == null) {
+                    throw new TclException(interp,
+                            "bad window path name \"" + checkTL + "\"");
+                }
+
+                Object object2 = ReflectObject.get(interp, tObj2);
+
+                if (object2 == null) {
+                    throw new TclException(interp,
+                            "bad window path name \"" + checkTL + "\"");
+                }
+
+                if (object2 instanceof Window) {
+                    interp.setResult(checkTL);
+                } else {
+                    interp.setResult(".");
+                }
+
+                break;
             }
 
-            interp.setResult(Widgets.pathParent(interp, widgetName));
+            case OPT_WIDTH:
+                rectangle = getGeometry(interp, object, argv);
+                interp.setResult(rectangle.width);
 
-            break;
+                break;
 
-        case OPT_CLASS:
-            widget = (SwkWidget) ReflectObject.get(interp, tObj);
-            interp.setResult(widget.getClassName());
+            case OPT_X:
+                rectangle = getGeometry(interp, object, argv);
+                interp.setResult(rectangle.x);
 
-            break;
+                break;
 
-        case OPT_GEOMETRY:
-            widgetName = argv[2].toString();
+            case OPT_Y:
+                rectangle = getGeometry(interp, object, argv);
+                interp.setResult(rectangle.y);
 
-            if (!Widgets.exists(interp,widgetName)) {
-                throw new TclException(interp,
-                    "bad window path name \"" + widgetName + "\"");
-            }
+                break;
 
-            rectangle = getGeometry(interp, object, argv);
-            interp.setResult(rectangle.width + "x" + rectangle.height + "+" +
-                rectangle.x + "+" + rectangle.y);
+            case OPT_FPIXELS:
 
-            break;
+                if (argv.length != 4) {
+                    throw new TclNumArgsException(interp, 2, argv,
+                            "option ?arg arg ...?");
+                }
 
-        case OPT_HEIGHT:
-            rectangle = getGeometry(interp, object, argv);
-            interp.setResult(rectangle.height);
+                interp.setResult(SwankUtil.getTkSizeD(interp, (Component) object,
+                        argv[3]));
 
-            break;
+                break;
 
-        case OPT_DEPTH:
+            case OPT_PIXELS:
 
-            int pixelSize = (new Depth()).exec(object);
-            interp.setResult(pixelSize);
+                if (argv.length != 4) {
+                    throw new TclNumArgsException(interp, 2, argv,
+                            "option ?arg arg ...?");
+                }
 
-            break;
+                interp.setResult(SwankUtil.getTkSize(interp, (Component) object,
+                        argv[3]));
 
-        case OPT_TOPLEVEL: {
-            widgetName = argv[2].toString().intern();
-            index = widgetName.indexOf(".", 1);
+                break;
 
-            if (index < 0) {
-                checkTL = widgetName;
-            } else {
-                checkTL = widgetName.substring(0, index);
-            }
+            case OPT_VIEWABLE:
 
-            TclObject tObj2 = (TclObject) Widgets.getWidget(interp,checkTL);
+                Winfo winfo = new Winfo();
+                winfo.exec(object);
+                interp.setResult(winfo.viewable);
 
-            if (tObj2 == null) {
-                throw new TclException(interp,
-                    "bad window path name \"" + checkTL + "\"");
-            }
+                break;
 
-            Object object2 = ReflectObject.get(interp, tObj2);
+            case OPT_SCREENWIDTH:
+                interp.setResult(((Component) object).getToolkit().getScreenSize().width);
 
-            if (object2 == null) {
-                throw new TclException(interp,
-                    "bad window path name \"" + checkTL + "\"");
-            }
+                break;
 
-            if (object2 instanceof Window) {
-                interp.setResult(checkTL);
-            } else {
-                interp.setResult(".");
-            }
+            case OPT_SCREENHEIGHT:
+                interp.setResult(((Component) object).getToolkit().getScreenSize().height);
 
-            break;
+                break;
+
+            case OPT_REQWIDTH:
+                winfo = new Winfo();
+                winfo.exec(object);
+                interp.setResult(winfo.preferredSize.width);
+
+                break;
+
+            case OPT_REQHEIGHT:
+                winfo = new Winfo();
+                winfo.exec(object);
+                interp.setResult(winfo.preferredSize.height);
+
+                break;
+
+            case OPT_ROOTX:
+                winfo = new Winfo();
+                winfo.exec(object);
+
+                if (!winfo.showing) {
+                    throw new TclException(interp, "component is not showing");
+                }
+
+                interp.setResult(winfo.locationOnScreen.x);
+
+                break;
+
+            case OPT_ROOTY:
+                winfo = new Winfo();
+                winfo.exec(object);
+
+                if (!winfo.showing) {
+                    throw new TclException(interp, "component is not showing");
+                }
+
+                interp.setResult(winfo.locationOnScreen.y);
+
+                break;
+
+            case OPT_VROOTX:
+                winfo = new Winfo();
+                winfo.exec(object);
+                /*
+                if (!winfo.showing) {
+                throw new TclException(interp, "component is not showing");
+                }
+
+                interp.setResult(winfo.locationOnScreen.x);
+                 */
+                interp.setResult(0);
+                break;
+
+            case OPT_VROOTY:
+                winfo = new Winfo();
+                winfo.exec(object);
+                /*
+                if (!winfo.showing) {
+                throw new TclException(interp, "component is not showing");
+                }
+
+                interp.setResult(winfo.locationOnScreen.y);
+                 */
+                interp.setResult(0);
+
+                break;
+
+            case OPT_VISUAL:
+
+                if (argv.length != 3) {
+                    throw new TclNumArgsException(interp, 2, argv,
+                            "option ?arg arg ...?");
+                }
+
+                if (!Widgets.exists(interp, argv[2].toString())) {
+                    throw new TclException(interp,
+                            "bad window path name \"" + argv[2].toString() + "\"");
+                }
+
+                interp.setResult("truecolor");
+
+                break;
+
+            case OPT_ISMAPPED:
+                winfo = new Winfo();
+                winfo.exec(object);
+                interp.setResult(winfo.isMapped);
+
+                break;
+
+            case OPT_NAME:
+
+                int lastDot = argv[2].toString().lastIndexOf('.');
+
+                if (lastDot == -1) {
+                    throw new TclException(interp,
+                            "bad window path name \"" + argv[2].toString() + "\"");
+                }
+
+                interp.setResult(argv[2].toString().substring(lastDot + 1));
+
+                break;
+
+            default:
         }
-
-        case OPT_WIDTH:
-            rectangle = getGeometry(interp, object, argv);
-            interp.setResult(rectangle.width);
-
-            break;
-
-        case OPT_X:
-            rectangle = getGeometry(interp, object, argv);
-            interp.setResult(rectangle.x);
-
-            break;
-
-        case OPT_Y:
-            rectangle = getGeometry(interp, object, argv);
-            interp.setResult(rectangle.y);
-
-            break;
-
-        case OPT_FPIXELS:
-
-            if (argv.length != 4) {
-                throw new TclNumArgsException(interp, 2, argv,
-                    "option ?arg arg ...?");
-            }
-
-            interp.setResult(SwankUtil.getTkSizeD(interp, (Component) object,
-                    argv[3]));
-
-            break;
-
-        case OPT_PIXELS:
-
-            if (argv.length != 4) {
-                throw new TclNumArgsException(interp, 2, argv,
-                    "option ?arg arg ...?");
-            }
-
-            interp.setResult(SwankUtil.getTkSize(interp, (Component) object,
-                    argv[3]));
-
-            break;
-
-        case OPT_VIEWABLE:
-
-            Winfo winfo = new Winfo();
-            winfo.exec(object);
-            interp.setResult(winfo.viewable);
-
-            break;
-
-        case OPT_SCREENWIDTH:
-            interp.setResult(((Component) object).getToolkit().getScreenSize().width);
-
-            break;
-
-        case OPT_SCREENHEIGHT:
-            interp.setResult(((Component) object).getToolkit().getScreenSize().height);
-
-            break;
-
-        case OPT_REQWIDTH:
-            winfo = new Winfo();
-            winfo.exec(object);
-            interp.setResult(winfo.preferredSize.width);
-
-            break;
-
-        case OPT_REQHEIGHT:
-            winfo = new Winfo();
-            winfo.exec(object);
-            interp.setResult(winfo.preferredSize.height);
-
-            break;
-
-        case OPT_ROOTX:
-            winfo = new Winfo();
-            winfo.exec(object);
-
-            if (!winfo.showing) {
-                throw new TclException(interp, "component is not showing");
-            }
-
-            interp.setResult(winfo.locationOnScreen.x);
-
-            break;
-
-        case OPT_ROOTY:
-            winfo = new Winfo();
-            winfo.exec(object);
-
-            if (!winfo.showing) {
-                throw new TclException(interp, "component is not showing");
-            }
-
-            interp.setResult(winfo.locationOnScreen.y);
-
-            break;
-
-        case OPT_VROOTX:
-            winfo = new Winfo();
-            winfo.exec(object);
-/*
-            if (!winfo.showing) {
-                throw new TclException(interp, "component is not showing");
-            }
-
-            interp.setResult(winfo.locationOnScreen.x);
-*/
-            interp.setResult(0);
-            break;
-
-        case OPT_VROOTY:
-            winfo = new Winfo();
-            winfo.exec(object);
-/*
-            if (!winfo.showing) {
-                throw new TclException(interp, "component is not showing");
-            }
-
-            interp.setResult(winfo.locationOnScreen.y);
-*/
-            interp.setResult(0);
-
-            break;
-
-        case OPT_VISUAL:
-
-            if (argv.length != 3) {
-                throw new TclNumArgsException(interp, 2, argv,
-                    "option ?arg arg ...?");
-            }
-
-            if (!Widgets.exists(interp,argv[2].toString())) {
-                throw new TclException(interp,
-                    "bad window path name \"" + argv[2].toString() + "\"");
-            }
-
-            interp.setResult("truecolor");
-
-            break;
-
-        case OPT_ISMAPPED:
-            winfo = new Winfo();
-            winfo.exec(object);
-            interp.setResult(winfo.isMapped);
-
-            break;
-
-        case OPT_NAME:
-
-            int lastDot = argv[2].toString().lastIndexOf('.');
-
-            if (lastDot == -1) {
-                throw new TclException(interp,
-                    "bad window path name \"" + argv[2].toString() + "\"");
-            }
-
-            interp.setResult(argv[2].toString().substring(lastDot + 1));
-
-            break;
-
-        default:}
     }
 
     static void getChildrenByName(Interp interp, String parentName)
-        throws TclException {
+            throws TclException {
         Vector children = Widgets.children(interp, parentName);
         TclObject list = TclList.newInstance();
         for (int i = 0; i < children.size(); i++) {
@@ -368,19 +369,20 @@ public class WinfoCmd implements Command {
     }
 
     final void getChildren(final Interp interp, final Component component, final TclObject list)
-        throws TclException {
+            throws TclException {
         final ArrayList<String> childList = (new GetChildren()).exec(component);
-        for (String compName:childList) {
+        for (String compName : childList) {
             TclList.append(interp, list, TclString.newInstance(compName));
         }
     }
 
-  class GetChildren extends GetValueOnEventThread {
+    class GetChildren extends GetValueOnEventThread {
+
         Component comp = null;
         ArrayList<String> childList = new ArrayList<String>();
 
         ArrayList<String> exec(final Component comp)
-            throws TclException {
+                throws TclException {
             this.comp = comp;
             execOnThread();
             return childList;
@@ -389,6 +391,7 @@ public class WinfoCmd implements Command {
         public void run() {
             getChildren(comp);
         }
+
         void getChildren(Component component) {
             Container master = null;
             if (component instanceof JFrame) {
@@ -442,13 +445,12 @@ public class WinfoCmd implements Command {
             } else if (object instanceof Component) {
                 Component comp = (Component) object;
                 String parent = Widgets.pathParent(interp, widgetName);
-                TclObject pObj = (TclObject) Widgets.getWidget(interp,parent);
+                TclObject pObj = (TclObject) Widgets.getWidget(interp, parent);
                 Object pObject = (Object) ReflectObject.get(interp, pObj);
 
                 if (pObject instanceof Window) {
                     Window pWindow = (Window) pObject;
-                    pLocation = Widgets.getContainer(pWindow)
-                                       .getLocationOnScreen();
+                    pLocation = Widgets.getContainer(pWindow).getLocationOnScreen();
                 } else {
                     Component pComp = (Component) pObject;
                     pLocation = Widgets.getContainer(pComp).getLocationOnScreen();
@@ -459,7 +461,7 @@ public class WinfoCmd implements Command {
                 location = comp.getLocation();
             } else {
                 throw new TclException(interp,
-                    "invalid object type \"" + widgetName + "\"");
+                        "invalid object type \"" + widgetName + "\"");
             }
 
             if ((pLocation != null) && (wLocation != null)) {
@@ -480,36 +482,37 @@ public class WinfoCmd implements Command {
     }
 
     Rectangle getGeometry(final Interp interp, final Object object,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if (argv.length != 3) {
             throw new TclNumArgsException(interp, 2, argv, "window");
         }
 
         String widgetName = argv[2].toString().intern();
 
-        if (!(object instanceof JFrame) && !(object instanceof JWindow) &&
-                !(object instanceof Component)) {
+        if (!(object instanceof JFrame) && !(object instanceof JWindow)
+                && !(object instanceof Component)) {
             throw new TclException(interp,
-                "invalid object type \"" + widgetName + "\"");
+                    "invalid object type \"" + widgetName + "\"");
         }
 
         Rectangle rectangle = (new GeometryGet()).exec(object, widgetName);
 
         if (rectangle == null) {
             throw new TclException(interp,
-                "Can't get geometry for object \"" + widgetName + "\"");
+                    "Can't get geometry for object \"" + widgetName + "\"");
         }
 
         return rectangle;
     }
 
     class GeometryGet extends GetValueOnEventThread {
+
         Object object = null;
         Rectangle rectangle = null;
         String widgetName = null;
 
         Rectangle exec(final Object object, final String widgetName)
-            throws TclException {
+                throws TclException {
             this.object = object;
             this.widgetName = widgetName;
             execOnThread();
@@ -554,6 +557,7 @@ public class WinfoCmd implements Command {
     }
 
     class Depth extends GetValueOnEventThread {
+
         Object object = null;
         int pixelSize;
 
@@ -570,6 +574,7 @@ public class WinfoCmd implements Command {
     }
 
     class Winfo extends GetValueOnEventThread {
+
         Object object = null;
         boolean viewable = false;
         boolean showing = false;
@@ -588,8 +593,8 @@ public class WinfoCmd implements Command {
             showing = ((Component) object).isShowing();
             locationOnScreen = ((Component) object).getLocationOnScreen();
 
-            if ((object instanceof Frame) &&
-                    ((((Frame) object).getExtendedState() & Frame.ICONIFIED) == Frame.ICONIFIED)) {
+            if ((object instanceof Frame)
+                    && ((((Frame) object).getExtendedState() & Frame.ICONIFIED) == Frame.ICONIFIED)) {
                 isMapped = false;
             } else {
                 isMapped = ((Component) object).isDisplayable();

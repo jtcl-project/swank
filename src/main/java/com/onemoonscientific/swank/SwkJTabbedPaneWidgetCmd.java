@@ -15,8 +15,8 @@ import java.awt.Color;
 
 import javax.swing.*;
 
-
 class SwkJTabbedPaneWidgetCmd implements Command {
+
     static final private String[] validCmds = {
         "cget", "configure", "add", "select", "tabconfigure",
         "tabcget", "tabcount", "index"
@@ -37,117 +37,117 @@ class SwkJTabbedPaneWidgetCmd implements Command {
     }
 
     public void cmdProc(final Interp interp, final TclObject[] argv)
-        throws TclException {
+            throws TclException {
         int i;
 
         if (argv.length < 2) {
             throw new TclNumArgsException(interp, 1, argv,
-                "option ?arg arg ...?");
+                    "option ?arg arg ...?");
         }
 
         this.interp = interp;
 
         final int opt = TclIndex.get(interp, argv[1], validCmds, "option", 0);
-        final TclObject tObj = (TclObject) Widgets.getWidget(interp,argv[0].toString());
+        final TclObject tObj = (TclObject) Widgets.getWidget(interp, argv[0].toString());
 
         if (tObj == null) {
             throw new TclException(interp,
-                "bad window path name \"" + argv[0].toString() + "\"");
+                    "bad window path name \"" + argv[0].toString() + "\"");
         }
 
         final SwkJTabbedPane swkjtabbedpane = (SwkJTabbedPane) ReflectObject.get(interp,
                 tObj);
 
         switch (opt) {
-        case OPT_CGET:
+            case OPT_CGET:
 
-            if (argv.length != 3) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-
-            interp.setResult(swkjtabbedpane.jget(interp, argv[2]));
-
-            break;
-
-        case OPT_CONFIGURE:
-
-            if (!gotDefaults) {
-                swkjtabbedpane.setResourceDefaults();
-                gotDefaults = true;
-            }
-
-            if (argv.length == 2) {
-                swkjtabbedpane.jgetAll(interp);
-            } else if (argv.length == 3) {
-                String result = swkjtabbedpane.jget(interp, argv[2]);
-                ResourceObject ro = (ResourceObject) SwkJTabbedPane.resourceDB.get(argv[2].toString());
-
-                if (ro == null) {
-                    throw new TclException(interp,
-                        "unknown option \"" + argv[2].toString() + "\"");
+                if (argv.length != 3) {
+                    throw new TclNumArgsException(interp, 2, argv, "option");
                 }
 
-                TclObject list = TclList.newInstance();
-                TclList.append(interp, list,
-                    TclString.newInstance(argv[2].toString()));
-                TclList.append(interp, list, TclString.newInstance(ro.resource));
-                TclList.append(interp, list, TclString.newInstance(ro.className));
-                TclList.append(interp, list,
-                    TclString.newInstance(ro.defaultVal));
-                TclList.append(interp, list, TclString.newInstance(result));
-                interp.setResult(list);
-            } else {
-                swkjtabbedpane.configure(interp, argv, 2);
-            }
+                interp.setResult(swkjtabbedpane.jget(interp, argv[2]));
 
-            break;
+                break;
 
-        case OPT_ADD:
-            add(interp, swkjtabbedpane, argv);
+            case OPT_CONFIGURE:
 
-            break;
+                if (!gotDefaults) {
+                    swkjtabbedpane.setResourceDefaults();
+                    gotDefaults = true;
+                }
 
-        case OPT_SELECT:
-            select(interp, swkjtabbedpane, argv);
+                if (argv.length == 2) {
+                    swkjtabbedpane.jgetAll(interp);
+                } else if (argv.length == 3) {
+                    String result = swkjtabbedpane.jget(interp, argv[2]);
+                    ResourceObject ro = (ResourceObject) SwkJTabbedPane.resourceDB.get(argv[2].toString());
 
-            break;
+                    if (ro == null) {
+                        throw new TclException(interp,
+                                "unknown option \"" + argv[2].toString() + "\"");
+                    }
 
-        case OPT_TABCONFIGURE:
-            tabConfigure(interp, swkjtabbedpane, argv);
+                    TclObject list = TclList.newInstance();
+                    TclList.append(interp, list,
+                            TclString.newInstance(argv[2].toString()));
+                    TclList.append(interp, list, TclString.newInstance(ro.resource));
+                    TclList.append(interp, list, TclString.newInstance(ro.className));
+                    TclList.append(interp, list,
+                            TclString.newInstance(ro.defaultVal));
+                    TclList.append(interp, list, TclString.newInstance(result));
+                    interp.setResult(list);
+                } else {
+                    swkjtabbedpane.configure(interp, argv, 2);
+                }
 
-            break;
+                break;
 
-        case OPT_TABCGET:
-            tabCGet(interp, swkjtabbedpane, argv);
+            case OPT_ADD:
+                add(interp, swkjtabbedpane, argv);
 
-            break;
+                break;
 
-        case OPT_TABCOUNT:
-            getTabCount(interp, swkjtabbedpane, argv);
+            case OPT_SELECT:
+                select(interp, swkjtabbedpane, argv);
 
-            break;
+                break;
 
-        case OPT_INDEX:
-            getIndex(interp, swkjtabbedpane, argv);
+            case OPT_TABCONFIGURE:
+                tabConfigure(interp, swkjtabbedpane, argv);
 
-            break;
+                break;
 
-        default:
-            throw new TclRuntimeError("TclIndex.get() error");
+            case OPT_TABCGET:
+                tabCGet(interp, swkjtabbedpane, argv);
+
+                break;
+
+            case OPT_TABCOUNT:
+                getTabCount(interp, swkjtabbedpane, argv);
+
+                break;
+
+            case OPT_INDEX:
+                getIndex(interp, swkjtabbedpane, argv);
+
+                break;
+
+            default:
+                throw new TclRuntimeError("TclIndex.get() error");
         }
     }
 
     void add(final Interp interp, final SwkJTabbedPane swkjtabbedpane,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if (argv.length != 4) {
             throw new TclNumArgsException(interp, 2, argv, "window title");
         }
 
-        final TclObject tObj2 = (TclObject) Widgets.getWidget(interp,argv[2].toString());
+        final TclObject tObj2 = (TclObject) Widgets.getWidget(interp, argv[2].toString());
 
         if (tObj2 == null) {
             throw new TclException(interp,
-                "bad window path name \"" + argv[2].toString() + "\"");
+                    "bad window path name \"" + argv[2].toString() + "\"");
         }
 
         final JComponent jcomp = (JComponent) ReflectObject.get(interp, tObj2);
@@ -155,7 +155,7 @@ class SwkJTabbedPaneWidgetCmd implements Command {
     }
 
     void select(final Interp interp, final SwkJTabbedPane swkjtabbedpane,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if ((argv.length != 2) && (argv.length != 3)) {
             throw new TclNumArgsException(interp, 2, argv, "index");
         }
@@ -170,10 +170,10 @@ class SwkJTabbedPaneWidgetCmd implements Command {
     }
 
     void tabConfigure(final Interp interp, final SwkJTabbedPane swkjtabbedpane,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if (argv.length < 5) {
             throw new TclNumArgsException(interp, 2, argv,
-                "index item value ? item value ...?");
+                    "index item value ? item value ...?");
         }
 
         int index = TclInteger.get(interp, argv[2]);
@@ -181,7 +181,7 @@ class SwkJTabbedPaneWidgetCmd implements Command {
     }
 
     void tabCGet(final Interp interp, final SwkJTabbedPane swkjtabbedpane,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if ((argv.length != 4)) {
             throw new TclNumArgsException(interp, 2, argv, "index");
         }
@@ -191,7 +191,7 @@ class SwkJTabbedPaneWidgetCmd implements Command {
     }
 
     void getTabCount(final Interp interp, final SwkJTabbedPane swkjtabbedpane,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if ((argv.length != 2)) {
             throw new TclNumArgsException(interp, 2, argv, "");
         }
@@ -201,7 +201,7 @@ class SwkJTabbedPaneWidgetCmd implements Command {
     }
 
     void getIndex(final Interp interp, final SwkJTabbedPane swkjtabbedpane,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if ((argv.length != 3)) {
             throw new TclNumArgsException(interp, 2, argv, "selected");
         }
@@ -211,12 +211,13 @@ class SwkJTabbedPaneWidgetCmd implements Command {
     }
 
     class Add extends UpdateOnEventThread {
+
         SwkJTabbedPane swkjtabbedpane = null;
         JComponent jcomp = null;
         String label = null;
 
         void exec(final SwkJTabbedPane swkjtabbedpane, final JComponent jcomp,
-            final String label) {
+                final String label) {
             this.jcomp = jcomp;
             this.label = label;
             this.swkjtabbedpane = swkjtabbedpane;
@@ -230,6 +231,7 @@ class SwkJTabbedPaneWidgetCmd implements Command {
     }
 
     class GetSelected extends GetValueOnEventThread {
+
         SwkJTabbedPane swkjtabbedpane = null;
         int index = -1;
 
@@ -246,6 +248,7 @@ class SwkJTabbedPaneWidgetCmd implements Command {
     }
 
     class SetSelected extends UpdateOnEventThread {
+
         SwkJTabbedPane swkjtabbedpane = null;
         int index = -1;
 
@@ -261,26 +264,27 @@ class SwkJTabbedPaneWidgetCmd implements Command {
     }
 
     class TabConfigure extends UpdateOnEventThread {
+
         SwkJTabbedPane swkjtabbedpane = null;
         int index = -1;
         TclObject[] argv = null;
         Color foreground = null;
         Color background = null;
-        String title=null;
-        String toolTipText=null;
+        String title = null;
+        String toolTipText = null;
         ImageIcon icon = null;
         String iconName = null;
-        Integer underline = null; 
+        Integer underline = null;
         String state = null;
 
         void exec(final SwkJTabbedPane swkjtabbedpane, final int index, final int start,
-            final TclObject[] argv) throws TclException {
+                final TclObject[] argv) throws TclException {
             this.swkjtabbedpane = swkjtabbedpane;
             this.index = index;
             this.argv = new TclObject[argv.length];
             if (((argv.length - start) % 2) != 0) {
                 throw new TclNumArgsException(interp, 0, argv,
-                    "-option value ? -option value? ...");
+                        "-option value ? -option value? ...");
             }
 
             for (int i = start; i < argv.length; i += 2) {
@@ -289,16 +293,16 @@ class SwkJTabbedPaneWidgetCmd implements Command {
                 } else if (argv[i].toString().equals("-background")) {
                     background = SwankUtil.getColor(interp, argv[i + 1]);
                 } else if (argv[i].toString().startsWith("-text")) {
-                    title =  argv[i + 1].toString();
+                    title = argv[i + 1].toString();
                 } else if (argv[i].toString().startsWith("-tooltiptext")) {
-                    toolTipText =  argv[i + 1].toString();
+                    toolTipText = argv[i + 1].toString();
                 } else if (argv[i].toString().startsWith("-state")) {
-                    state =  argv[i + 1].toString();
+                    state = argv[i + 1].toString();
                     if (!state.equals("normal") && !state.equals("disabled")) {
-                        throw new TclException(interp,"state must be \"normal\" or \"disabled\"");
+                        throw new TclException(interp, "state must be \"normal\" or \"disabled\"");
                     }
                 } else if (argv[i].toString().startsWith("-underline")) {
-                    underline =  TclInteger.get(interp,argv[i + 1]);
+                    underline = TclInteger.get(interp, argv[i + 1]);
                 } else if (argv[i].toString().startsWith("-image")) {
                     iconName = argv[i + 1].toString();
                     icon = SwankUtil.getImageIcon(interp, argv[i + 1]);
@@ -340,17 +344,18 @@ class SwkJTabbedPaneWidgetCmd implements Command {
                 swkjtabbedpane.setDisplayedMnemonicIndexAt(index, underline.intValue());
             }
             if (state != null) {
-                 if (state.equals("normal")) {
-                      swkjtabbedpane.setEnabledAt(index, true);
-                 } else {
-                      swkjtabbedpane.setEnabledAt(index, false);
-                 }
-                      
+                if (state.equals("normal")) {
+                    swkjtabbedpane.setEnabledAt(index, true);
+                } else {
+                    swkjtabbedpane.setEnabledAt(index, false);
+                }
+
+            }
         }
-    }
     }
 
     class TabCGet extends GetValueOnEventThread {
+
         SwkJTabbedPane swkjtabbedpane = null;
         TclObject item = null;
         int index = -1;
@@ -359,7 +364,7 @@ class SwkJTabbedPaneWidgetCmd implements Command {
         String result = null;
 
         void exec(final SwkJTabbedPane swkjtabbedpane, final TclObject item,
-            final int index) throws TclException {
+                final int index) throws TclException {
             this.swkjtabbedpane = swkjtabbedpane;
             this.item = item;
             this.index = index;
@@ -381,6 +386,7 @@ class SwkJTabbedPaneWidgetCmd implements Command {
     }
 
     class GetTabCount extends GetValueOnEventThread {
+
         SwkJTabbedPane swkjtabbedpane = null;
         int count = -1;
 

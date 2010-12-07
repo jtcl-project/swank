@@ -24,8 +24,8 @@ import javax.swing.*;
 import javax.swing.text.*;
 import javax.swing.tree.*;
 
-
 class SwkJTextPaneWidgetCmd implements Command {
+
     static final private String[] validCmds = {
         "cget", "configure", "elem", "insert", "tag", "celem",
         "index", "delete", "mark", "compare", "get", "see", "window", "bbox",
@@ -55,147 +55,147 @@ class SwkJTextPaneWidgetCmd implements Command {
     }
 
     public void cmdProc(final Interp interp, final TclObject[] argv)
-        throws TclException {
+            throws TclException {
         int i = 0;
         this.interp = interp;
 
         if (argv.length < 2) {
             throw new TclNumArgsException(interp, 1, argv,
-                "option ?arg arg ...?");
+                    "option ?arg arg ...?");
         }
 
         int opt = TclIndex.get(interp, argv[1], validCmds, "option", 0);
-        TclObject tObj = (TclObject) Widgets.getWidget(interp,argv[0].toString());
+        TclObject tObj = (TclObject) Widgets.getWidget(interp, argv[0].toString());
 
         if (tObj == null) {
             throw new TclException(interp,
-                "bad window path name \"" + argv[0].toString() + "\"");
+                    "bad window path name \"" + argv[0].toString() + "\"");
         }
 
         SwkJTextPane swkjtextpane = (SwkJTextPane) ReflectObject.get(interp,
                 tObj);
 
         switch (opt) {
-        case OPT_CGET:
+            case OPT_CGET:
 
-            if (argv.length != 3) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-
-            interp.setResult(swkjtextpane.jget(interp, argv[2]));
-
-            break;
-
-        case OPT_CONFIGURE:
-
-            if (!gotDefaults) {
-                swkjtextpane.setResourceDefaults();
-                gotDefaults = true;
-            }
-
-            if (argv.length == 2) {
-                swkjtextpane.jgetAll(interp);
-            } else if (argv.length == 3) {
-                String result = swkjtextpane.jget(interp, argv[2]);
-                ResourceObject ro = (ResourceObject) SwkJTextPane.resourceDB.get(argv[2].toString());
-
-                if (ro == null) {
-                    throw new TclException(interp,
-                        "unknown option \"" + argv[2].toString() + "\"");
+                if (argv.length != 3) {
+                    throw new TclNumArgsException(interp, 2, argv, "option");
                 }
 
-                TclObject list = TclList.newInstance();
-                TclList.append(interp, list,
-                    TclString.newInstance(argv[2].toString()));
-                TclList.append(interp, list, TclString.newInstance(ro.resource));
-                TclList.append(interp, list, TclString.newInstance(ro.className));
-                TclList.append(interp, list,
-                    TclString.newInstance(ro.defaultVal));
-                TclList.append(interp, list, TclString.newInstance(result));
-                interp.setResult(list);
-            } else {
-                swkjtextpane.configure(interp, argv, 2);
-            }
+                interp.setResult(swkjtextpane.jget(interp, argv[2]));
 
-            break;
+                break;
 
-        case OPT_ELEM:
-            elem(interp, swkjtextpane, argv);
+            case OPT_CONFIGURE:
 
-            break;
+                if (!gotDefaults) {
+                    swkjtextpane.setResourceDefaults();
+                    gotDefaults = true;
+                }
 
-        case OPT_CELEM:
-            celem(interp, swkjtextpane, argv);
+                if (argv.length == 2) {
+                    swkjtextpane.jgetAll(interp);
+                } else if (argv.length == 3) {
+                    String result = swkjtextpane.jget(interp, argv[2]);
+                    ResourceObject ro = (ResourceObject) SwkJTextPane.resourceDB.get(argv[2].toString());
 
-            break;
+                    if (ro == null) {
+                        throw new TclException(interp,
+                                "unknown option \"" + argv[2].toString() + "\"");
+                    }
 
-        case OPT_INDEX:
-            index(interp, swkjtextpane, argv);
+                    TclObject list = TclList.newInstance();
+                    TclList.append(interp, list,
+                            TclString.newInstance(argv[2].toString()));
+                    TclList.append(interp, list, TclString.newInstance(ro.resource));
+                    TclList.append(interp, list, TclString.newInstance(ro.className));
+                    TclList.append(interp, list,
+                            TclString.newInstance(ro.defaultVal));
+                    TclList.append(interp, list, TclString.newInstance(result));
+                    interp.setResult(list);
+                } else {
+                    swkjtextpane.configure(interp, argv, 2);
+                }
 
-            break;
+                break;
 
-        case OPT_INSERT:
-            insert(interp, swkjtextpane, argv);
+            case OPT_ELEM:
+                elem(interp, swkjtextpane, argv);
 
-            break;
+                break;
 
-        case OPT_DELETE:
-            delete(interp, swkjtextpane, argv);
+            case OPT_CELEM:
+                celem(interp, swkjtextpane, argv);
 
-            break;
+                break;
 
-        case OPT_TAG:
-            tag(interp, swkjtextpane, argv);
+            case OPT_INDEX:
+                index(interp, swkjtextpane, argv);
 
-            break;
+                break;
 
-        case OPT_MARK:
-            mark(interp, swkjtextpane, argv);
+            case OPT_INSERT:
+                insert(interp, swkjtextpane, argv);
 
-            break;
+                break;
 
-        case OPT_COMPARE:
-            compare(interp, swkjtextpane, argv);
+            case OPT_DELETE:
+                delete(interp, swkjtextpane, argv);
 
-            break;
+                break;
 
-        case OPT_DEBUG:
-            debug(interp, swkjtextpane, argv);
+            case OPT_TAG:
+                tag(interp, swkjtextpane, argv);
 
-            break;
+                break;
 
-        case OPT_SEARCH:
-            search(interp, swkjtextpane, argv);
+            case OPT_MARK:
+                mark(interp, swkjtextpane, argv);
 
-            break;
+                break;
 
-        case OPT_SEE:
-            see(interp, swkjtextpane, argv);
+            case OPT_COMPARE:
+                compare(interp, swkjtextpane, argv);
 
-            break;
+                break;
 
-        case OPT_BBOX:
-            bbox(interp, swkjtextpane, argv);
+            case OPT_DEBUG:
+                debug(interp, swkjtextpane, argv);
 
-            break;
+                break;
 
-        case OPT_WINDOW:
-            window(interp, swkjtextpane, argv);
+            case OPT_SEARCH:
+                search(interp, swkjtextpane, argv);
 
-            break;
+                break;
 
-        case OPT_GET:
-            get(interp, swkjtextpane, argv);
+            case OPT_SEE:
+                see(interp, swkjtextpane, argv);
 
-            break;
+                break;
 
-        default:
-            throw new TclRuntimeError("TclIndex.get() error");
+            case OPT_BBOX:
+                bbox(interp, swkjtextpane, argv);
+
+                break;
+
+            case OPT_WINDOW:
+                window(interp, swkjtextpane, argv);
+
+                break;
+
+            case OPT_GET:
+                get(interp, swkjtextpane, argv);
+
+                break;
+
+            default:
+                throw new TclRuntimeError("TclIndex.get() error");
         }
     }
 
     void elem(Interp interp, SwkJTextPane swkjtextpane, TclObject[] argv)
-        throws TclException {
+            throws TclException {
         ElementIterator elIter = new ElementIterator(swkjtextpane.doc);
         Element elem;
         Element elem2;
@@ -234,22 +234,22 @@ class SwkJTextPaneWidgetCmd implements Command {
     }
 
     void celem(Interp interp, SwkJTextPane swkjtextpane, TclObject[] argv)
-        throws TclException {
+            throws TclException {
         if (argv.length != 3) {
             throw new TclNumArgsException(interp, 2, argv, "index");
         }
 
         Element elem = swkjtextpane.doc.getCharacterElement(TclInteger.get(
-                    interp, argv[2]));
+                interp, argv[2]));
 
         if (elem != null) {
-            interp.setResult(elem.getName() + " " + elem.getElementCount() +
-                " " + elem.getStartOffset() + " " + elem.getEndOffset());
+            interp.setResult(elem.getName() + " " + elem.getElementCount()
+                    + " " + elem.getStartOffset() + " " + elem.getEndOffset());
         }
     }
 
     void index(Interp interp, SwkJTextPane swkjtextpane, TclObject[] argv)
-        throws TclException {
+            throws TclException {
         if (argv.length != 3) {
             throw new TclNumArgsException(interp, 2, argv, "index");
         }
@@ -260,16 +260,16 @@ class SwkJTextPaneWidgetCmd implements Command {
     }
 
     void tag(Interp interp, SwkJTextPane swkjtextpane, TclObject[] argv)
-        throws TclException {
+            throws TclException {
         if (argv.length < 3) {
             throw new TclNumArgsException(interp, 1, argv,
-                "option ?arg arg ...?");
+                    "option ?arg arg ...?");
         }
 
         if (argv[2].toString().equals("configure")) {
             if (argv.length < 4) {
                 throw new TclNumArgsException(interp, 1, argv,
-                    "option ?arg arg ...?");
+                        "option ?arg arg ...?");
             }
 
             if (argv.length < 6) {
@@ -278,7 +278,7 @@ class SwkJTextPaneWidgetCmd implements Command {
 
                 if (style == null) {
                     throw new TclException(interp,
-                        "coudn't find style " + argv[3].toString());
+                            "coudn't find style " + argv[3].toString());
                 }
 
                 if (argv.length > 4) {
@@ -296,7 +296,7 @@ class SwkJTextPaneWidgetCmd implements Command {
         } else if (argv[2].toString().equals("cget")) {
             if (argv.length != 5) {
                 throw new TclNumArgsException(interp, 1, argv,
-                    "option ?arg arg ...?");
+                        "option ?arg arg ...?");
             }
 
             Style style = swkjtextpane.getStyle(argv[3].toString());
@@ -305,12 +305,12 @@ class SwkJTextPaneWidgetCmd implements Command {
                 swkjtextpane.getStyleStuff(interp, style, argv[4], false);
             } else {
                 throw new TclException(interp,
-                    "coudn't find style " + argv[3].toString());
+                        "coudn't find style " + argv[3].toString());
             }
         } else if (argv[2].toString().equals("add")) {
             if (argv.length < 5) {
                 throw new TclNumArgsException(interp, 1, argv,
-                    "option ?arg arg ...?");
+                        "option ?arg arg ...?");
             }
 
             String arg5 = null;
@@ -320,11 +320,11 @@ class SwkJTextPaneWidgetCmd implements Command {
             }
 
             (new Add()).exec(swkjtextpane, argv[0].toString(),
-                argv[3].toString(), argv[4].toString(), arg5);
+                    argv[3].toString(), argv[4].toString(), arg5);
         } else if (argv[2].toString().equals("bind")) {
             if (argv.length < 4) {
                 throw new TclNumArgsException(interp, 1, argv,
-                    "option ?arg arg ...?");
+                        "option ?arg arg ...?");
             }
 
             Style style = (new StyleGet()).exec(swkjtextpane,
@@ -332,7 +332,7 @@ class SwkJTextPaneWidgetCmd implements Command {
 
             if (style == null) {
                 throw new TclException(interp,
-                    "style " + argv[3].toString() + " doesn't exist");
+                        "style " + argv[3].toString() + " doesn't exist");
             }
 
             if (argv.length > 4) {
@@ -340,7 +340,7 @@ class SwkJTextPaneWidgetCmd implements Command {
 
                 if (binding != null) {
                     swkjtextpane.setupBinding(interp, binding,
-                        argv[3].toString());
+                            argv[3].toString());
                     SwkBind.updateBindingCommand(interp, binding, argv, 4);
                 }
             }
@@ -361,7 +361,7 @@ class SwkJTextPaneWidgetCmd implements Command {
 
                     for (int i = 0; i < arrayResult.size(); i++) {
                         TclList.append(interp, list,
-                            TclString.newInstance((String) arrayResult.get(i)));
+                                TclString.newInstance((String) arrayResult.get(i)));
                     }
 
                     interp.setResult(list);
@@ -370,7 +370,7 @@ class SwkJTextPaneWidgetCmd implements Command {
         } else if (argv[2].toString().equals("ranges")) {
             if (argv.length != 4) {
                 throw new TclNumArgsException(interp, 1, argv,
-                    "option ?arg arg ... ?");
+                        "option ?arg arg ... ?");
             }
 
             String ranges = (new TagGet()).ranges(swkjtextpane,
@@ -379,44 +379,44 @@ class SwkJTextPaneWidgetCmd implements Command {
         } else if (argv[2].toString().equals("delete")) {
             if (argv.length != 4) {
                 throw new TclNumArgsException(interp, 1, argv,
-                    "option ?arg arg ...?");
+                        "option ?arg arg ...?");
             }
 
             (new StyleRemove()).removeStyle(swkjtextpane, argv[3].toString());
         } else if (argv[2].toString().equals("remove")) {
             if (argv.length != 6) {
                 throw new TclNumArgsException(interp, 1, argv,
-                    "option ?arg arg ...?");
+                        "option ?arg arg ...?");
             }
 
             (new StyleRemove()).removeStyleFromRange(swkjtextpane,
-                argv[3].toString(), argv[4].toString(), argv[5].toString());
+                    argv[3].toString(), argv[4].toString(), argv[5].toString());
         }
     }
 
     void mark(Interp interp, SwkJTextPane swkjtextpane, TclObject[] argv)
-        throws TclException {
+            throws TclException {
         if ((argv.length < 3)) {
             throw new TclNumArgsException(interp, 1, argv,
-                "option ?arg arg ...?");
+                    "option ?arg arg ...?");
         }
 
         if (argv[2].toString().equals("set")) {
             if (argv.length != 5) {
                 throw new TclNumArgsException(interp, 1, argv,
-                    "option ?arg arg ...?");
+                        "option ?arg arg ...?");
             }
 
             (new MarkSet()).exec(swkjtextpane, argv[3].toString(),
-                argv[4].toString());
+                    argv[4].toString());
         } else if (argv[2].toString().equals("gravity")) {
             if (argv.length != 5) {
                 throw new TclNumArgsException(interp, 1, argv,
-                    "option ?arg arg ...?");
+                        "option ?arg arg ...?");
             }
 
             (new MarkSet()).execGravity(swkjtextpane, argv[3].toString(),
-                argv[4].toString());
+                    argv[4].toString());
         } else if (argv[2].toString().equals("unset")) {
             String[] marks = new String[argv.length - 3];
 
@@ -432,7 +432,7 @@ class SwkJTextPaneWidgetCmd implements Command {
             if (arrayResult != null) {
                 for (int i = 0; i < arrayResult.size(); i++) {
                     TclList.append(interp, list,
-                        TclString.newInstance((String) arrayResult.get(i)));
+                            TclString.newInstance((String) arrayResult.get(i)));
                 }
             }
 
@@ -441,7 +441,7 @@ class SwkJTextPaneWidgetCmd implements Command {
     }
 
     void debug(Interp interp, SwkJTextPane swkjtextpane, TclObject[] argv)
-        throws TclException {
+            throws TclException {
         if ((argv.length != 2) && (argv.length != 3)) {
             throw new TclNumArgsException(interp, 2, argv, "boolean");
         }
@@ -454,7 +454,7 @@ class SwkJTextPaneWidgetCmd implements Command {
     }
 
     void compare(Interp interp, SwkJTextPane swkjtextpane, TclObject[] argv)
-        throws TclException {
+            throws TclException {
         if (argv.length != 5) {
             throw new TclNumArgsException(interp, 2, argv, "index1 op index2");
         }
@@ -466,10 +466,10 @@ class SwkJTextPaneWidgetCmd implements Command {
     }
 
     void search(Interp interp, SwkJTextPane swkjtextpane, TclObject[] argv)
-        throws TclException {
+            throws TclException {
         if (argv.length < 4) {
             throw new TclNumArgsException(interp, 2, argv,
-                "?switches? pattern index ?stopIndex?");
+                    "?switches? pattern index ?stopIndex?");
         }
 
         int searchFlags = 0;
@@ -493,12 +493,12 @@ class SwkJTextPaneWidgetCmd implements Command {
                     endIndex = i;
                 } else {
                     throw new TclNumArgsException(interp, 2, argv,
-                        "?switches? pattern index ?stopIndex?");
+                            "?switches? pattern index ?stopIndex?");
                 }
             } else {
                 if (patternIndex != -1) {
                     throw new TclNumArgsException(interp, 2, argv,
-                        "?switches? pattern index ?stopIndex?");
+                            "?switches? pattern index ?stopIndex?");
                 }
 
                 if ("--".equals(argv[i].toString())) {
@@ -520,26 +520,26 @@ class SwkJTextPaneWidgetCmd implements Command {
 
                     if (i >= argv.length) {
                         throw new TclNumArgsException(interp, 2, argv,
-                            "?switches? pattern index ?stopIndex?");
+                                "?switches? pattern index ?stopIndex?");
                     }
 
                     countVar = argv[i].toString();
                 } else {
                     throw new TclException(interp,
-                        "bad switch \"" + argv[i].toString() +
-                        "\": must be --, -backward, -count, -elide, -exact, -forward, -nocase, or -regexp");
+                            "bad switch \"" + argv[i].toString()
+                            + "\": must be --, -backward, -count, -elide, -exact, -forward, -nocase, or -regexp");
                 }
             }
         }
 
         if (patternIndex == -1) {
             throw new TclNumArgsException(interp, 2, argv,
-                "?switches? pattern index ?stopIndex?");
+                    "?switches? pattern index ?stopIndex?");
         }
 
         if (startIndex == -1) {
             throw new TclNumArgsException(interp, 2, argv,
-                "?switches? pattern index ?stopIndex?");
+                    "?switches? pattern index ?stopIndex?");
         }
 
         String index1Arg = argv[startIndex].toString();
@@ -563,7 +563,7 @@ class SwkJTextPaneWidgetCmd implements Command {
     }
 
     void get(Interp interp, SwkJTextPane swkjtextpane, TclObject[] argv)
-        throws TclException {
+            throws TclException {
         if ((argv.length != 3) && (argv.length != 4)) {
             throw new TclNumArgsException(interp, 2, argv, "index1 ?index2?");
         }
@@ -581,10 +581,10 @@ class SwkJTextPaneWidgetCmd implements Command {
     }
 
     void insert(final Interp interp, final SwkJTextPane swkjtextpane,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if (argv.length < 4) {
             throw new TclNumArgsException(interp, 2, argv,
-                "index chars ?tagList chars tagList ...?");
+                    "index chars ?tagList chars tagList ...?");
         }
 
         int nPairs = (argv.length - 2) / 2;
@@ -609,11 +609,11 @@ class SwkJTextPaneWidgetCmd implements Command {
         }
 
         (new Insert()).exec(swkjtextpane, argv[2].toString(),
-            groupedStyleStrings, tagStrings, insertStrings);
+                groupedStyleStrings, tagStrings, insertStrings);
     }
 
     void delete(Interp interp, SwkJTextPane swkjtextpane, TclObject[] argv)
-        throws TclException {
+            throws TclException {
         if ((argv.length != 3) && (argv.length != 4)) {
             throw new TclNumArgsException(interp, 2, argv, "index1 ?index2?");
         }
@@ -629,10 +629,10 @@ class SwkJTextPaneWidgetCmd implements Command {
     }
 
     void see(Interp interp, SwkJTextPane swkjtextpane, TclObject[] argv)
-        throws TclException {
+            throws TclException {
         if ((argv.length != 3)) {
             throw new TclNumArgsException(interp, 1, argv,
-                "option ?arg arg ...?");
+                    "option ?arg arg ...?");
         }
 
         String indexArg = argv[2].toString();
@@ -640,7 +640,7 @@ class SwkJTextPaneWidgetCmd implements Command {
     }
 
     void bbox(Interp interp, SwkJTextPane swkjtextpane, TclObject[] argv)
-        throws TclException {
+            throws TclException {
         if ((argv.length != 3)) {
             throw new TclNumArgsException(interp, 2, argv, "index");
         }
@@ -656,10 +656,10 @@ class SwkJTextPaneWidgetCmd implements Command {
     }
 
     void window(Interp interp, SwkJTextPane swkjtextpane, TclObject[] argv)
-        throws TclException {
+            throws TclException {
         if ((argv.length < 6)) {
             throw new TclNumArgsException(interp, 1, argv,
-                "create ?arg arg ...?");
+                    "create ?arg arg ...?");
         }
 
         if ("create".startsWith(argv[2].toString())) {
@@ -674,15 +674,15 @@ class SwkJTextPaneWidgetCmd implements Command {
 
                     if (i == argv.length) {
                         throw new TclException(interp,
-                            "value for \"-window\" missing");
+                                "value for \"-window\" missing");
                     } else {
                         windowName = argv[i].toString();
                         windowObject = Widgets.get(interp, windowName);
 
-                        if ((windowObject == null) ||
-                                (!(windowObject instanceof Component))) {
+                        if ((windowObject == null)
+                                || (!(windowObject instanceof Component))) {
                             throw new TclException(interp,
-                                "bad window path name \"" + windowName + "\"");
+                                    "bad window path name \"" + windowName + "\"");
                         }
                     }
                 }
@@ -694,6 +694,7 @@ class SwkJTextPaneWidgetCmd implements Command {
     }
 
     class Index extends GetValueOnEventThread {
+
         SwkJTextPane swkjtextpane = null;
         String indexArg = null;
         String index = "";
@@ -712,6 +713,7 @@ class SwkJTextPaneWidgetCmd implements Command {
     }
 
     class Add extends UpdateOnEventThread {
+
         SwkJTextPane swkjtextpane = null;
         String arg0 = null;
         String arg1 = null;
@@ -719,7 +721,7 @@ class SwkJTextPaneWidgetCmd implements Command {
         String arg3 = null;
 
         void exec(final SwkJTextPane swkjtextpane, final String arg0,
-            final String arg1, final String arg2, final String arg3) {
+                final String arg1, final String arg2, final String arg3) {
             this.swkjtextpane = swkjtextpane;
             this.arg0 = arg0;
             this.arg1 = arg1;
@@ -757,6 +759,7 @@ class SwkJTextPaneWidgetCmd implements Command {
     }
 
     class StyleRemove extends UpdateOnEventThread {
+
         SwkJTextPane swkjtextpane = null;
         String arg1 = null;
         String arg2 = null;
@@ -772,7 +775,7 @@ class SwkJTextPaneWidgetCmd implements Command {
         }
 
         void removeStyleFromRange(final SwkJTextPane swkjtextpane,
-            final String arg1, final String arg2, final String arg3) {
+                final String arg1, final String arg2, final String arg3) {
             this.swkjtextpane = swkjtextpane;
             this.arg1 = arg1;
             this.arg2 = arg2;
@@ -788,12 +791,13 @@ class SwkJTextPaneWidgetCmd implements Command {
                 int index1 = swkjtextpane.doc.getIndexLC(swkjtextpane, arg2);
                 int index2 = swkjtextpane.doc.getIndexLC(swkjtextpane, arg3);
                 swkjtextpane.doc.removeStyleFromRange(swkjtextpane, index1,
-                    index2, arg1);
+                        index2, arg1);
             }
         }
     }
 
     class StyleSet extends UpdateOnEventThread {
+
         SwkJTextPane swkjtextpane = null;
         Style style = null;
 
@@ -809,13 +813,14 @@ class SwkJTextPaneWidgetCmd implements Command {
     }
 
     class StyleGet extends GetValueOnEventThread {
+
         SwkJTextPane swkjtextpane = null;
         String arg1 = null;
         Style style = null;
         boolean addIf = false;
 
         Style exec(final SwkJTextPane swkjtextpane, final String arg1,
-            final boolean addIf) {
+                final boolean addIf) {
             this.swkjtextpane = swkjtextpane;
             this.arg1 = arg1;
             this.addIf = addIf;
@@ -835,6 +840,7 @@ class SwkJTextPaneWidgetCmd implements Command {
     }
 
     class TagGet extends GetValueOnEventThread {
+
         static final int RANGES = 0;
         static final int NAMES = 1;
         SwkJTextPane swkjtextpane = null;
@@ -863,17 +869,18 @@ class SwkJTextPaneWidgetCmd implements Command {
 
         public void run() {
             switch (mode) {
-            case RANGES:
-                runRanges();
+                case RANGES:
+                    runRanges();
 
-                break;
+                    break;
 
-            case NAMES:
-                runNames();
+                case NAMES:
+                    runNames();
 
-                break;
+                    break;
 
-            default:}
+                default:
+            }
         }
 
         public void runRanges() {
@@ -901,6 +908,7 @@ class SwkJTextPaneWidgetCmd implements Command {
     }
 
     class MarkSet extends UpdateOnEventThread {
+
         SwkJTextPane swkjtextpane = null;
         String arg1 = null;
         String arg2 = null;
@@ -908,7 +916,7 @@ class SwkJTextPaneWidgetCmd implements Command {
         int mode = 0;
 
         void exec(final SwkJTextPane swkjtextpane, final String arg1,
-            final String arg2) {
+                final String arg2) {
             this.swkjtextpane = swkjtextpane;
             this.arg1 = arg1;
             this.arg2 = arg2;
@@ -916,7 +924,7 @@ class SwkJTextPaneWidgetCmd implements Command {
         }
 
         void execGravity(final SwkJTextPane swkjtextpane, final String arg1,
-            final String arg2) {
+                final String arg2) {
             this.swkjtextpane = swkjtextpane;
             this.arg1 = arg1;
             this.arg2 = arg2;
@@ -943,6 +951,7 @@ class SwkJTextPaneWidgetCmd implements Command {
     }
 
     class MarkGet extends GetValueOnEventThread {
+
         SwkJTextPane swkjtextpane = null;
         ArrayList result = null;
 
@@ -958,6 +967,7 @@ class SwkJTextPaneWidgetCmd implements Command {
     }
 
     class Compare extends GetValueOnEventThread {
+
         SwkJTextPane swkjtextpane = null;
         String arg1 = "";
         String op = "";
@@ -965,7 +975,7 @@ class SwkJTextPaneWidgetCmd implements Command {
         Result result = null;
 
         Result exec(final SwkJTextPane swkjtextpane, final String arg1,
-            final String op, final String arg2) {
+                final String op, final String arg2) {
             this.swkjtextpane = swkjtextpane;
             this.arg1 = arg1;
             this.op = op;
@@ -982,6 +992,7 @@ class SwkJTextPaneWidgetCmd implements Command {
     }
 
     class Search extends GetValueOnEventThread {
+
         SwkJTextPane swkjtextpane = null;
         String patternString = null;
         String index1Arg = null;
@@ -990,8 +1001,8 @@ class SwkJTextPaneWidgetCmd implements Command {
         Result result = null;
 
         Result exec(final SwkJTextPane swkjtextpane,
-            final String patternString, final String index1Arg,
-            final String index2Arg, final int searchFlags) {
+                final String patternString, final String index1Arg,
+                final String index2Arg, final int searchFlags) {
             this.swkjtextpane = swkjtextpane;
             this.patternString = patternString;
             this.index1Arg = index1Arg;
@@ -1023,13 +1034,14 @@ class SwkJTextPaneWidgetCmd implements Command {
     }
 
     class Get extends GetValueOnEventThread {
+
         SwkJTextPane swkjtextpane = null;
         String index1Arg = null;
         String index2Arg = null;
         Result result = new Result();
 
         Result exec(final SwkJTextPane swkjtextpane, final String index1Arg,
-            final String index2Arg) {
+                final String index2Arg) {
             this.swkjtextpane = swkjtextpane;
             this.index1Arg = index1Arg;
             this.index2Arg = index2Arg;
@@ -1054,8 +1066,8 @@ class SwkJTextPaneWidgetCmd implements Command {
 
             if (index2 >= index1) {
                 try {
-                    result.s = swkjtextpane.doc.getText(index1, index2 -
-                            index1);
+                    result.s = swkjtextpane.doc.getText(index1, index2
+                            - index1);
                 } catch (BadLocationException badLoc) {
                     result.setError(badLoc.toString());
                 }
@@ -1064,6 +1076,7 @@ class SwkJTextPaneWidgetCmd implements Command {
     }
 
     class Insert extends GetValueOnEventThread {
+
         SwkJTextPane swkjtextpane = null;
         String indexArg = null;
         String[] groupedStyleStrings = null;
@@ -1071,8 +1084,8 @@ class SwkJTextPaneWidgetCmd implements Command {
         String[] insertStrings = null;
 
         void exec(final SwkJTextPane swkjtextpane, final String indexArg,
-            final String[] groupedStyleStrings, final String[][] tagStrings,
-            final String[] insertStrings) {
+                final String[] groupedStyleStrings, final String[][] tagStrings,
+                final String[] insertStrings) {
             this.swkjtextpane = swkjtextpane;
             this.indexArg = indexArg;
             this.groupedStyleStrings = groupedStyleStrings;
@@ -1135,17 +1148,17 @@ class SwkJTextPaneWidgetCmd implements Command {
                         }
 
                         groupedStyle.addAttribute("tagName",
-                            groupedStyleStrings[i]);
+                                groupedStyleStrings[i]);
                     }
                 }
 
                 try {
                     if (groupedStyle == null) {
                         swkjtextpane.doc.insertString(index, insertStrings[i],
-                            swkjtextpane.defaultStyle);
+                                swkjtextpane.defaultStyle);
                     } else {
                         swkjtextpane.doc.insertString(index, insertStrings[i],
-                            groupedStyle);
+                                groupedStyle);
                     }
 
                     int index2 = insertStrings[i].length() + index;
@@ -1189,12 +1202,13 @@ class SwkJTextPaneWidgetCmd implements Command {
     }
 
     class Delete extends GetValueOnEventThread {
+
         SwkJTextPane swkjtextpane = null;
         String firstArg = null;
         String endArg = null;
 
         void exec(final SwkJTextPane swkjtextpane, final String firstArg,
-            final String endArg) {
+                final String endArg) {
             this.swkjtextpane = swkjtextpane;
             this.firstArg = firstArg;
             this.endArg = endArg;
@@ -1258,6 +1272,7 @@ class SwkJTextPaneWidgetCmd implements Command {
     }
 
     class See extends UpdateOnEventThread {
+
         SwkJTextPane swkjtextpane = null;
         String indexArg = null;
 
@@ -1299,6 +1314,7 @@ class SwkJTextPaneWidgetCmd implements Command {
     }
 
     class BBox extends GetValueOnEventThread {
+
         SwkJTextPane swkjtextpane = null;
         String indexArg = null;
         Rectangle rect = null;
@@ -1340,13 +1356,14 @@ class SwkJTextPaneWidgetCmd implements Command {
     }
 
     class Window extends GetValueOnEventThread {
+
         SwkJTextPane swkjtextpane = null;
         String indexArg = null;
         String windowName = null;
         Object windowObject = null;
 
         void exec(final SwkJTextPane swkjtextpane, final String indexArg,
-            final String windowName, final Object windowObject) {
+                final String windowName, final Object windowObject) {
             this.swkjtextpane = swkjtextpane;
             this.indexArg = indexArg;
             this.windowObject = windowObject;

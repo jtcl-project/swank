@@ -30,7 +30,8 @@ public class UpdateCmd implements Command {
     /*
      * Valid command options.
      */
-    static final private String[] validOpts = { "idletasks", };
+
+    static final private String[] validOpts = {"idletasks",};
     static final int OPT_IDLETASKS = 0;
 
     /*
@@ -51,9 +52,9 @@ public class UpdateCmd implements Command {
      *----------------------------------------------------------------------
      */
     public void cmdProc(Interp interp, // Current interpreter.
-        TclObject[] argv) // Argument list.
-        throws TclException // A standard Tcl exception.
-     {
+            TclObject[] argv) // Argument list.
+            throws TclException // A standard Tcl exception.
+    {
         int flags;
 
         if (argv.length == 1) {
@@ -76,10 +77,11 @@ public class UpdateCmd implements Command {
 
         try {
             SwingUtilities.invokeAndWait(new Runnable() {
-                    public void run() {
-                        LayoutHandler.doRepaintsNow();
-                    }
-                });
+
+                public void run() {
+                    LayoutHandler.doRepaintsNow();
+                }
+            });
         } catch (Exception e) {
         }
 
@@ -95,3 +97,4 @@ public class UpdateCmd implements Command {
 
 
 // end UpdateCmds
+

@@ -35,21 +35,21 @@ import java.util.*;
 
 import javax.swing.*;
 
-
 public class LowerCmd implements Command {
+
     public void cmdProc(Interp interp, TclObject[] argv)
-        throws TclException {
+            throws TclException {
         int i;
 
         if ((argv.length < 2) || (argv.length > 3)) {
             throw new TclNumArgsException(interp, 1, argv, "?belowThis?");
         }
 
-        TclObject tObj = (TclObject) Widgets.getWidget(interp,argv[1].toString());
+        TclObject tObj = (TclObject) Widgets.getWidget(interp, argv[1].toString());
 
         if (tObj == null) {
             throw new TclException(interp,
-                "bad window path name \"" + argv[2].toString() + "\"");
+                    "bad window path name \"" + argv[2].toString() + "\"");
         }
 
         SwkWidget swkwidget = (SwkWidget) ReflectObject.get(interp, tObj);
@@ -59,15 +59,16 @@ public class LowerCmd implements Command {
 
     public static void lower(final Component component) {
         (new UpdateOnEventThread() {
-                public void run() {
-                    if (component instanceof JFrame) {
-                        ((JFrame) component).toBack();
-                    } else if (component instanceof JWindow) {
-                        ((JWindow) component).toBack();
-                    } else if (component instanceof JInternalFrame) {
-                        ((JInternalFrame) component).toBack();
-                    }
+
+            public void run() {
+                if (component instanceof JFrame) {
+                    ((JFrame) component).toBack();
+                } else if (component instanceof JWindow) {
+                    ((JWindow) component).toBack();
+                } else if (component instanceof JInternalFrame) {
+                    ((JInternalFrame) component).toBack();
                 }
-            }).execOnThread();
+            }
+        }).execOnThread();
     }
 }

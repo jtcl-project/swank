@@ -37,9 +37,9 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
-
 public class SwkCheckButtonListener implements ActionListener, VarTrace,
-    SwkListener {
+        SwkListener {
+
     Interp interp;
     String command = "";
     String onValue = "1";
@@ -54,10 +54,10 @@ public class SwkCheckButtonListener implements ActionListener, VarTrace,
     }
 
     public void traceProc(Interp interp, String string1, String string2,
-        int flags) throws TclException {
+            int flags) throws TclException {
         if (EventQueue.isDispatchThread()) {
             System.out.println(
-                "SwkCheckButtonListener: traceProc on event thread");
+                    "SwkCheckButtonListener: traceProc on event thread");
         }
 
         setFromVar(interp);
@@ -66,7 +66,7 @@ public class SwkCheckButtonListener implements ActionListener, VarTrace,
     public void setFromVar(Interp interp) throws TclException {
         if (EventQueue.isDispatchThread()) {
             System.out.println(
-                "SwkCheckButtonListener: setFromVar on event thread");
+                    "SwkCheckButtonListener: setFromVar on event thread");
         }
 
         if (!traceLock && (varName != null) && (!varName.equals(""))) {
@@ -81,10 +81,11 @@ public class SwkCheckButtonListener implements ActionListener, VarTrace,
                 }
 
                 SwingUtilities.invokeLater(new Runnable() {
-                        public void run() {
-                            component.setSelected(state);
-                        }
-                    });
+
+                    public void run() {
+                        component.setSelected(state);
+                    }
+                });
             }
         }
 
@@ -92,10 +93,10 @@ public class SwkCheckButtonListener implements ActionListener, VarTrace,
     }
 
     public void setVarName(Interp interp, String name)
-        throws TclException {
+            throws TclException {
         if (EventQueue.isDispatchThread()) {
             System.out.println(
-                "SwkCheckButtonListener: setVarName on event thread");
+                    "SwkCheckButtonListener: setVarName on event thread");
         }
 
         TclObject tObj = null;
@@ -107,18 +108,20 @@ public class SwkCheckButtonListener implements ActionListener, VarTrace,
                 if (tObj.toString().equals(onValue)) {
                     final boolean state = true;
                     SwingUtilities.invokeLater(new Runnable() {
-                            public void run() {
-                                component.setSelected(state);
-                            }
-                        });
+
+                        public void run() {
+                            component.setSelected(state);
+                        }
+                    });
                 }
                 if (tObj.toString().equals(offValue)) { //Added for the configure case where checkbutton should become disabled
                     final boolean state = false;
                     SwingUtilities.invokeLater(new Runnable() {
-                            public void run() {
-                                component.setSelected(state);
-                            }
-                        });
+
+                        public void run() {
+                            component.setSelected(state);
+                        }
+                    });
                 }
             } catch (TclException tclException) {
                 interp.resetResult();
@@ -134,8 +137,8 @@ public class SwkCheckButtonListener implements ActionListener, VarTrace,
         }
 
         if ((varName != null) && (!varName.equals(""))) {
-            interp.untraceVar(varName, this, TCL.TRACE_WRITES |
-                TCL.GLOBAL_ONLY);
+            interp.untraceVar(varName, this, TCL.TRACE_WRITES
+                    | TCL.GLOBAL_ONLY);
         }
 
         if (!name.equals("")) {
@@ -152,13 +155,13 @@ public class SwkCheckButtonListener implements ActionListener, VarTrace,
     public void setOnValue(String value) {
         if (!EventQueue.isDispatchThread()) {
             System.out.println(
-                "SwkCheckButtonListener: setOnValue not on event thread");
+                    "SwkCheckButtonListener: setOnValue not on event thread");
         }
 
         TclObject tObj;
 
-        if (((SwkJCheckBox) component).isSelected() &&
-                !(value.equals(onValue))) {
+        if (((SwkJCheckBox) component).isSelected()
+                && !(value.equals(onValue))) {
             actionPerformed(null);
         }
 
@@ -172,11 +175,11 @@ public class SwkCheckButtonListener implements ActionListener, VarTrace,
     public void setOffValue(String value) {
         if (!EventQueue.isDispatchThread()) {
             System.out.println(
-                "SwkCheckButtonListener: setOffValue not on event thread");
+                    "SwkCheckButtonListener: setOffValue not on event thread");
         }
 
-        if (!((SwkJCheckBox) component).isSelected() &&
-                !(value.equals(offValue))) {
+        if (!((SwkJCheckBox) component).isSelected()
+                && !(value.equals(offValue))) {
             actionPerformed(null);
         }
 
@@ -198,7 +201,7 @@ public class SwkCheckButtonListener implements ActionListener, VarTrace,
     public void actionPerformed(ActionEvent e) {
         if (!EventQueue.isDispatchThread()) {
             System.out.println(
-                "SwkCheckButtonListener: actionPerformed not on event thread");
+                    "SwkCheckButtonListener: actionPerformed not on event thread");
         }
 
         String value;
@@ -236,7 +239,7 @@ public class SwkCheckButtonListener implements ActionListener, VarTrace,
     public void processEvent(EventObject eventObject, Object obj, int subtype) {
         if (EventQueue.isDispatchThread()) {
             System.out.println(
-                "SwkCheckButtonListener: processEvent on event thread");
+                    "SwkCheckButtonListener: processEvent on event thread");
         }
 
         tclAction();

@@ -36,36 +36,30 @@ import java.util.*;
 
 import javax.swing.*;
 
-
 /** This class implements the Jacl bind command.
  * @author Bruce A. Johnson
  * @version %I%, %G%
  */
 public class BindCmd implements Command {
     // This Hashtable stores class level virtual bindings.
-    public static Hashtable virtualTable = new Hashtable();
 
+    public static Hashtable virtualTable = new Hashtable();
     // This Hashtable stores class level focus bindings.
     public static Hashtable focusTable = new Hashtable();
-
     // This Hashtable stores class level configure bindings.
     public static Hashtable configureTable = new Hashtable();
-
     // This Hashtable stores class level activation bindings.
     public static Hashtable activationTable = new Hashtable();
-
     // This Hashtable stores class level key bindings.
     public static Hashtable keyTable = new Hashtable();
-
     // This Hashtable stores class level mouse bindings.
     public static Hashtable mouseTable = new Hashtable();
     public static Hashtable stateChangeTable = new Hashtable();
     public static Hashtable selectionChangeTable = new Hashtable();
     public static Hashtable appChangeTable = new Hashtable();
-
     // This Hashtable stores class level mousemotion bindings.
     public static Hashtable mouseMotionTable = new Hashtable();
-    public static  SwkAppListener swkAppListener = null;
+    public static SwkAppListener swkAppListener = null;
 
     /** Method called to process the bind command.
      * @param interp The interpreter in which this command is active.
@@ -73,15 +67,15 @@ public class BindCmd implements Command {
      * @throws TclException .
      */
     public void cmdProc(Interp interp, TclObject[] argv)
-        throws TclException {
+            throws TclException {
         if (argv.length < 2) {
             throw new TclNumArgsException(interp, 1, argv,
-                "option ?arg arg ...?");
+                    "option ?arg arg ...?");
         }
         String tag = argv[1].toString();
 
         if (argv.length == 2) {
-            getBinding(interp, null,  tag);
+            getBinding(interp, null, tag);
             return;
         } else if (argv.length == 3) {
             SwkBinding binding = SwkBind.getBinding(interp, argv, 2);
@@ -116,7 +110,7 @@ public class BindCmd implements Command {
     }
 
     void addBinding(Interp interp, SwkBinding binding, String tag)
-        throws TclException {
+            throws TclException {
         SwkWidget swkWidget = null;
         ArrayList<SwkBinding> bindingVector = null;
         Hashtable currentTable = null;
@@ -142,8 +136,8 @@ public class BindCmd implements Command {
                 currentTable = appChangeTable;
             } else {
                 throw new TclException(interp,
-                    "invalid binding type \"" + binding.type +
-                    "\" in bind cmd");
+                        "invalid binding type \"" + binding.type
+                        + "\" in bind cmd");
             }
 
             bindingVector = (ArrayList<SwkBinding>) currentTable.get(tag);
@@ -153,18 +147,18 @@ public class BindCmd implements Command {
                 currentTable.put(tag, bindingVector);
             }
         } else {
-            TclObject tObj = (TclObject) Widgets.getWidget(interp,tag);
+            TclObject tObj = (TclObject) Widgets.getWidget(interp, tag);
 
             if (tObj == null) {
                 throw new TclException(interp,
-                    "bad window path name \"" + tag + "\"");
+                        "bad window path name \"" + tag + "\"");
             }
 
             swkWidget = (SwkWidget) ReflectObject.get(interp, tObj);
 
             if (swkWidget == null) {
                 throw new TclException(interp,
-                    "Can't find widget " + tObj.toString());
+                        "Can't find widget " + tObj.toString());
             }
         }
 
@@ -172,66 +166,66 @@ public class BindCmd implements Command {
     }
 
     void getBinding(Interp interp, SwkBinding binding, String tag)
-        throws TclException {
+            throws TclException {
         SwkWidget swkWidget = null;
         ArrayList<SwkBinding> bindingVector = null;
         Hashtable currentTable = null;
         if (tag.charAt(0) != '.') {
             if (binding != null) {
-            if (binding.type == SwkBinding.FOCUS) {
-                currentTable = focusTable;
-            } else if (binding.type == SwkBinding.COMPONENT) {
-                currentTable = configureTable;
-            } else if (binding.type == SwkBinding.ACTIVATION) {
-                currentTable = activationTable;
-            } else if (binding.type == SwkBinding.KEY) {
-                currentTable = keyTable;
-            } else if (binding.type == SwkBinding.MOUSE) {
-                currentTable = mouseTable;
-            } else if (binding.type == SwkBinding.MOUSEMOTION) {
-                currentTable = mouseMotionTable;
-            } else if (binding.type == SwkBinding.STATECHANGED) {
-                currentTable = stateChangeTable;
-            } else if (binding.type == SwkBinding.SELECTIONCHANGED) {
-                currentTable = selectionChangeTable;
-            } else if (binding.type == SwkBinding.APP) {
-                currentTable = appChangeTable;
-            } else {
-                throw new TclException(interp,
-                    "invalid binding type \"" + binding.type +
-                    "\" in bind cmd");
-            }
+                if (binding.type == SwkBinding.FOCUS) {
+                    currentTable = focusTable;
+                } else if (binding.type == SwkBinding.COMPONENT) {
+                    currentTable = configureTable;
+                } else if (binding.type == SwkBinding.ACTIVATION) {
+                    currentTable = activationTable;
+                } else if (binding.type == SwkBinding.KEY) {
+                    currentTable = keyTable;
+                } else if (binding.type == SwkBinding.MOUSE) {
+                    currentTable = mouseTable;
+                } else if (binding.type == SwkBinding.MOUSEMOTION) {
+                    currentTable = mouseMotionTable;
+                } else if (binding.type == SwkBinding.STATECHANGED) {
+                    currentTable = stateChangeTable;
+                } else if (binding.type == SwkBinding.SELECTIONCHANGED) {
+                    currentTable = selectionChangeTable;
+                } else if (binding.type == SwkBinding.APP) {
+                    currentTable = appChangeTable;
+                } else {
+                    throw new TclException(interp,
+                            "invalid binding type \"" + binding.type
+                            + "\" in bind cmd");
+                }
 
-            bindingVector = (ArrayList<SwkBinding>) currentTable.get(tag);
-            if (bindingVector == null) {
-                bindingVector = new ArrayList<SwkBinding>();
-                currentTable.put(tag, bindingVector);
-            }
+                bindingVector = (ArrayList<SwkBinding>) currentTable.get(tag);
+                if (bindingVector == null) {
+                    bindingVector = new ArrayList<SwkBinding>();
+                    currentTable.put(tag, bindingVector);
+                }
             }
         } else {
-            TclObject tObj = (TclObject) Widgets.getWidget(interp,tag);
+            TclObject tObj = (TclObject) Widgets.getWidget(interp, tag);
 
             if (tObj == null) {
                 throw new TclException(interp,
-                    "bad window path name \"" + tag + "\"");
+                        "bad window path name \"" + tag + "\"");
             }
 
             swkWidget = (SwkWidget) ReflectObject.get(interp, tObj);
 
             if (swkWidget == null) {
                 throw new TclException(interp,
-                    "Can't find widget " + tObj.toString());
+                        "Can't find widget " + tObj.toString());
             }
         }
-            if (binding == null) {
-                if (tag.charAt(0) != '.') {
-                    getBindings(interp,tag);
-                } else {
-                    getBindings(interp,swkWidget);
-                }
-            }  else {
-                setupBinding(interp, binding, swkWidget, bindingVector,true);
+        if (binding == null) {
+            if (tag.charAt(0) != '.') {
+                getBindings(interp, tag);
+            } else {
+                getBindings(interp, swkWidget);
             }
+        } else {
+            setupBinding(interp, binding, swkWidget, bindingVector, true);
+        }
     }
 
     public static ArrayList<SwkBinding> getMouseBindings(String tag) {
@@ -257,6 +251,7 @@ public class BindCmd implements Command {
 
         return bindingVector;
     }
+
     public static ArrayList<SwkBinding> getActivationBindings(String tag) {
         ArrayList<SwkBinding> bindingVector = (ArrayList<SwkBinding>) activationTable.get(tag);
 
@@ -288,7 +283,7 @@ public class BindCmd implements Command {
         if (swkWidget instanceof SwkJFrame) {
             if (((SwkJFrame) swkWidget).getWindowListener() == null) {
                 SwkWindowListener windowListener = new SwkWindowListener(interp,
-                    (SwkJFrame) swkWidget);
+                        (SwkJFrame) swkWidget);
                 ((SwkJFrame) swkWidget).addWindowStateListener(windowListener);
                 ((SwkJFrame) swkWidget).addWindowListener(windowListener);
                 ((SwkJFrame) swkWidget).setWindowListener(windowListener);
@@ -357,8 +352,8 @@ public class BindCmd implements Command {
      * @param bindingVector This Vector stores all the bindings of this type.
      */
     public static void setupBinding(Interp interp, SwkBinding binding,
-        SwkWidget swkWidget, ArrayList<SwkBinding> bindingVector) throws TclException {
-        setupBinding(interp,binding,swkWidget,bindingVector,false);
+            SwkWidget swkWidget, ArrayList<SwkBinding> bindingVector) throws TclException {
+        setupBinding(interp, binding, swkWidget, bindingVector, false);
     }
 
     /** Stores bindings and sets up listeners appropriate for binding type.
@@ -372,7 +367,7 @@ public class BindCmd implements Command {
      * @param bindingVector This Vector stores all the bindings of this type.
      */
     public static void setupBinding(Interp interp, SwkBinding binding,
-        SwkWidget swkWidget, ArrayList<SwkBinding> bindingVector,boolean queryBinding) throws TclException {
+            SwkWidget swkWidget, ArrayList<SwkBinding> bindingVector, boolean queryBinding) throws TclException {
         if (binding.type == SwkBinding.APP) {
             if (swkAppListener == null) {
                 KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
@@ -385,7 +380,7 @@ public class BindCmd implements Command {
         } else if (binding.type == SwkBinding.FOCUS) {
             if (swkWidget == null) {
                 if (!queryBinding) {
-                    setClassBinding(bindingVector,binding);
+                    setClassBinding(bindingVector, binding);
                 }
             } else {
                 if (swkWidget.getFocusListener() == null) {
@@ -395,16 +390,16 @@ public class BindCmd implements Command {
                     swkWidget.setFocusListener(focusListener);
                 }
 
-            if (!queryBinding) {
-                swkWidget.getFocusListener().setBinding(binding);
-            } else {
-                bindingVector = swkWidget.getFocusListener().getBindings();
-            }
+                if (!queryBinding) {
+                    swkWidget.getFocusListener().setBinding(binding);
+                } else {
+                    bindingVector = swkWidget.getFocusListener().getBindings();
+                }
             }
         } else if (binding.type == SwkBinding.COMPONENT) {
             if (swkWidget == null) {
                 if (!queryBinding) {
-                    setClassBinding(bindingVector,binding);
+                    setClassBinding(bindingVector, binding);
                 }
             } else {
                 if (swkWidget.getComponentListener() == null) {
@@ -414,38 +409,38 @@ public class BindCmd implements Command {
                     swkWidget.setComponentListener(componentListener);
                 }
 
-            if (!queryBinding) {
-                swkWidget.getComponentListener().setBinding(binding);
-            } else {
-                bindingVector = swkWidget.getComponentListener().getBindings();
+                if (!queryBinding) {
+                    swkWidget.getComponentListener().setBinding(binding);
+                } else {
+                    bindingVector = swkWidget.getComponentListener().getBindings();
+                }
             }
-            }
-       } else if (binding.type == SwkBinding.ACTIVATION) {
+        } else if (binding.type == SwkBinding.ACTIVATION) {
             if (swkWidget == null) {
                 if (!queryBinding) {
-                    setClassBinding(bindingVector,binding);
+                    setClassBinding(bindingVector, binding);
                 }
             } else {
                 if (swkWidget instanceof SwkJFrame) {
-                     if (((SwkJFrame) swkWidget).getWindowListener() == null) {
-                         SwkWindowListener windowListener = new SwkWindowListener(interp,
-                             (SwkJFrame) swkWidget);
-                         ((SwkJFrame) swkWidget).addWindowStateListener(windowListener);
-                         ((SwkJFrame) swkWidget).addWindowListener(windowListener);
-                         ((SwkJFrame) swkWidget).setWindowListener(windowListener);
-                     }
-                     if (!queryBinding) {
-                         ((SwkJFrame) swkWidget).getWindowListener().setBinding(binding);
-                     } else {
-                          bindingVector = ((SwkJFrame) swkWidget).getWindowListener().getBindings();
-                     }
-                 }
+                    if (((SwkJFrame) swkWidget).getWindowListener() == null) {
+                        SwkWindowListener windowListener = new SwkWindowListener(interp,
+                                (SwkJFrame) swkWidget);
+                        ((SwkJFrame) swkWidget).addWindowStateListener(windowListener);
+                        ((SwkJFrame) swkWidget).addWindowListener(windowListener);
+                        ((SwkJFrame) swkWidget).setWindowListener(windowListener);
+                    }
+                    if (!queryBinding) {
+                        ((SwkJFrame) swkWidget).getWindowListener().setBinding(binding);
+                    } else {
+                        bindingVector = ((SwkJFrame) swkWidget).getWindowListener().getBindings();
+                    }
+                }
             }
- 
+
         } else if (binding.type == SwkBinding.STATECHANGED) {
             if (swkWidget == null) {
                 if (!queryBinding) {
-                    setClassBinding(bindingVector,binding);
+                    setClassBinding(bindingVector, binding);
                 }
             } else {
                 if (swkWidget instanceof JTabbedPane) {
@@ -458,14 +453,14 @@ public class BindCmd implements Command {
                     if (!queryBinding) {
                         swkWidget.getChangeListener().setBinding(binding);
                     } else {
-                       bindingVector = swkWidget.getChangeListener().getBindings();
+                        bindingVector = swkWidget.getChangeListener().getBindings();
                     }
                 }
             }
         } else if (binding.type == SwkBinding.SELECTIONCHANGED) {
             if (swkWidget == null) {
                 if (!queryBinding) {
-                    setClassBinding(bindingVector,binding);
+                    setClassBinding(bindingVector, binding);
                 }
             } else {
                 if (swkWidget instanceof SwkListListener) {
@@ -487,7 +482,7 @@ public class BindCmd implements Command {
         } else if (binding.type == SwkBinding.MOUSE) {
             if (swkWidget == null) {
                 if (!queryBinding) {
-                    setClassBinding(bindingVector,binding);
+                    setClassBinding(bindingVector, binding);
                 }
             } else {
                 if (swkWidget.getMouseListener() == null) {
@@ -504,16 +499,16 @@ public class BindCmd implements Command {
                     swkWidget.setMouseListener(mouseListener);
                 }
 
-                    if (!queryBinding) {
-                swkWidget.getMouseListener().setBinding(binding);
-                    } else {
-                        bindingVector = swkWidget.getMouseListener().getBindings();
-            }
+                if (!queryBinding) {
+                    swkWidget.getMouseListener().setBinding(binding);
+                } else {
+                    bindingVector = swkWidget.getMouseListener().getBindings();
+                }
             }
         } else if (binding.type == SwkBinding.MOUSEMOTION) {
             if (swkWidget == null) {
                 if (!queryBinding) {
-                    setClassBinding(bindingVector,binding);
+                    setClassBinding(bindingVector, binding);
                 }
             } else {
                 if (swkWidget.getMouseMotionListener() == null) {
@@ -523,16 +518,16 @@ public class BindCmd implements Command {
                     swkWidget.setMouseListener(mouseMotionListener);
                 }
 
-                    if (!queryBinding) {
-                swkWidget.getMouseMotionListener().setBinding(binding);
-                    } else {
-                        bindingVector = swkWidget.getMouseMotionListener().getBindings();
-            }
+                if (!queryBinding) {
+                    swkWidget.getMouseMotionListener().setBinding(binding);
+                } else {
+                    bindingVector = swkWidget.getMouseMotionListener().getBindings();
+                }
             }
         } else if (binding.type == SwkBinding.KEY) {
             if (swkWidget == null) {
                 if (!queryBinding) {
-                    setClassBinding(bindingVector,binding);
+                    setClassBinding(bindingVector, binding);
                 }
             } else {
                 if (swkWidget instanceof JFrame) {
@@ -559,7 +554,7 @@ public class BindCmd implements Command {
                     }
 
                     if (!queryBinding) {
-                    swkWidget.getKeyListener().setBinding(binding);
+                        swkWidget.getKeyListener().setBinding(binding);
                     } else {
                         bindingVector = swkWidget.getKeyListener().getBindings();
                     }
@@ -572,132 +567,135 @@ public class BindCmd implements Command {
                     }
 
                     if (!queryBinding) {
-                    swkWidget.getKeyListener().setBinding(binding);
+                        swkWidget.getKeyListener().setBinding(binding);
                     } else {
                         bindingVector = swkWidget.getKeyListener().getBindings();
                     }
 
                     /*
-                                    SwkKeyCommandListener keyCommandListener = new SwkKeyCommandListener (interp, binding,(Component) swkWidget);
-                                   ((JComponent) swkWidget).registerKeyboardAction(keyCommandListener,binding.keyStroke,JComponent.WHEN_FOCUSED);
-                    */
+                    SwkKeyCommandListener keyCommandListener = new SwkKeyCommandListener (interp, binding,(Component) swkWidget);
+                    ((JComponent) swkWidget).registerKeyboardAction(keyCommandListener,binding.keyStroke,JComponent.WHEN_FOCUSED);
+                     */
                 }
             }
         }
         if (queryBinding) {
-            getBindings(interp,binding, bindingVector);
+            getBindings(interp, binding, bindingVector);
         }
     }
+
     public static void getBindings(Interp interp, SwkBinding binding, ArrayList<SwkBinding> bindingVector) throws TclException {
-         TclObject results = TclList.newInstance();
-         for (SwkBinding swkBinding:bindingVector) {
-             if (binding == null) {
-                 TclList.append(interp,results,TclString.newInstance(swkBinding.getEvent()));
-             } else if (binding.equals(swkBinding)) {
-                 interp.setResult(swkBinding.getCommand());
-                 return;
-             }
-         }
-         interp.setResult(results);
+        TclObject results = TclList.newInstance();
+        for (SwkBinding swkBinding : bindingVector) {
+            if (binding == null) {
+                TclList.append(interp, results, TclString.newInstance(swkBinding.getEvent()));
+            } else if (binding.equals(swkBinding)) {
+                interp.setResult(swkBinding.getCommand());
+                return;
+            }
+        }
+        interp.setResult(results);
     }
+
     public static void getBindings(Interp interp, SwkWidget swkWidget) throws TclException {
-         TclObject results = TclList.newInstance();
-         ArrayList<ArrayList<SwkBinding>> bindingVectors = getBindings(swkWidget);
-         for (ArrayList<SwkBinding> bindingVector:bindingVectors) {
-             for (SwkBinding swkBinding:bindingVector) {
-                 TclList.append(interp,results,TclString.newInstance(swkBinding.getEvent()));
-             }
-         }
-         interp.setResult(results);
+        TclObject results = TclList.newInstance();
+        ArrayList<ArrayList<SwkBinding>> bindingVectors = getBindings(swkWidget);
+        for (ArrayList<SwkBinding> bindingVector : bindingVectors) {
+            for (SwkBinding swkBinding : bindingVector) {
+                TclList.append(interp, results, TclString.newInstance(swkBinding.getEvent()));
+            }
+        }
+        interp.setResult(results);
     }
+
     public static void getBindings(Interp interp, String tag) throws TclException {
-         TclObject results = TclList.newInstance();
-         ArrayList<ArrayList<SwkBinding>> bindingVectors = getBindings(tag);
-         for (ArrayList<SwkBinding> bindingVector:bindingVectors) {
-             for (SwkBinding swkBinding:bindingVector) {
-                 TclList.append(interp,results,TclString.newInstance(swkBinding.getEvent()));
-             }
-         }
-         interp.setResult(results);
+        TclObject results = TclList.newInstance();
+        ArrayList<ArrayList<SwkBinding>> bindingVectors = getBindings(tag);
+        for (ArrayList<SwkBinding> bindingVector : bindingVectors) {
+            for (SwkBinding swkBinding : bindingVector) {
+                TclList.append(interp, results, TclString.newInstance(swkBinding.getEvent()));
+            }
+        }
+        interp.setResult(results);
     }
 
     public static ArrayList<ArrayList<SwkBinding>> getBindings(String tag) {
-             ArrayList<Hashtable> currentTables = new ArrayList<Hashtable>();
-         ArrayList<ArrayList<SwkBinding>>  bindingVectors = new ArrayList<ArrayList<SwkBinding>>();
-            currentTables.add(focusTable);
-            currentTables.add(configureTable);
-            currentTables.add(activationTable);
-            currentTables.add(keyTable);
-            currentTables.add(mouseTable);
-            currentTables.add(mouseMotionTable);
-            currentTables.add(stateChangeTable);
-            currentTables.add(selectionChangeTable);
-            currentTables.add(appChangeTable);
-            for (Hashtable currentTable:currentTables) {
-                ArrayList<SwkBinding> bindingVector = (ArrayList<SwkBinding>) currentTable.get(tag);
+        ArrayList<Hashtable> currentTables = new ArrayList<Hashtable>();
+        ArrayList<ArrayList<SwkBinding>> bindingVectors = new ArrayList<ArrayList<SwkBinding>>();
+        currentTables.add(focusTable);
+        currentTables.add(configureTable);
+        currentTables.add(activationTable);
+        currentTables.add(keyTable);
+        currentTables.add(mouseTable);
+        currentTables.add(mouseMotionTable);
+        currentTables.add(stateChangeTable);
+        currentTables.add(selectionChangeTable);
+        currentTables.add(appChangeTable);
+        for (Hashtable currentTable : currentTables) {
+            ArrayList<SwkBinding> bindingVector = (ArrayList<SwkBinding>) currentTable.get(tag);
+            if (bindingVector != null) {
+                bindingVectors.add(bindingVector);
+            }
+        }
+        return bindingVectors;
+    }
+
+    public static ArrayList<ArrayList<SwkBinding>> getBindings(SwkWidget swkWidget) {
+        ArrayList<SwkBinding> bindingVector = null;
+        ArrayList<ArrayList<SwkBinding>> bindingVectors = new ArrayList<ArrayList<SwkBinding>>();
+        if (swkWidget.getFocusListener() != null) {
+            bindingVector = swkWidget.getFocusListener().getBindings();
+            if (bindingVector != null) {
+                bindingVectors.add(bindingVector);
+            }
+        }
+        if (swkWidget.getComponentListener() != null) {
+            bindingVector = swkWidget.getComponentListener().getBindings();
+            if (bindingVector != null) {
+                bindingVectors.add(bindingVector);
+            }
+        }
+
+        if (swkWidget instanceof SwkJFrame) {
+            if (((SwkJFrame) swkWidget).getWindowListener() != null) {
+                bindingVector = ((SwkJFrame) swkWidget).getWindowListener().getBindings();
                 if (bindingVector != null) {
                     bindingVectors.add(bindingVector);
                 }
             }
-            return bindingVectors;
+        }
+        if (swkWidget.getChangeListener() != null) {
+            bindingVector = swkWidget.getChangeListener().getBindings();
+            if (bindingVector != null) {
+                bindingVectors.add(bindingVector);
+            }
+        }
+        if (swkWidget instanceof SwkListListener) {
+            SwkListListener swkListListener = (SwkListListener) swkWidget;
+            if (swkListListener.getListSelectionListener() != null) {
+                bindingVector = swkListListener.getListSelectionListener().getBindings();
+                if (bindingVector != null) {
+                    bindingVectors.add(bindingVector);
+                }
+            }
+        }
+        if (swkWidget.getMouseListener() != null) {
+            bindingVector = swkWidget.getMouseListener().getBindings();
+            if (bindingVector != null) {
+                bindingVectors.add(bindingVector);
+            }
+        }
+        if (swkWidget.getMouseMotionListener() != null) {
+            bindingVector = swkWidget.getMouseMotionListener().getBindings();
+        }
+        if (swkWidget.getKeyListener() != null) {
+            bindingVector = swkWidget.getKeyListener().getBindings();
+            if (bindingVector != null) {
+                bindingVectors.add(bindingVector);
+            }
+        }
+        return bindingVectors;
     }
-    public static ArrayList<ArrayList<SwkBinding>> getBindings(SwkWidget swkWidget) {
-         ArrayList<SwkBinding>  bindingVector = null;
-         ArrayList<ArrayList<SwkBinding>>  bindingVectors = new ArrayList<ArrayList<SwkBinding>>();
-         if (swkWidget.getFocusListener() != null) {
-              bindingVector = swkWidget.getFocusListener().getBindings();
-              if (bindingVector != null) {
-                 bindingVectors.add(bindingVector);
-              }
-         }
-         if (swkWidget.getComponentListener() != null) {
-             bindingVector = swkWidget.getComponentListener().getBindings();
-              if (bindingVector != null) {
-                 bindingVectors.add(bindingVector);
-              }
-         }
-          
-         if (swkWidget instanceof SwkJFrame) {
-             if (((SwkJFrame) swkWidget).getWindowListener() != null) {
-                 bindingVector = ((SwkJFrame) swkWidget).getWindowListener().getBindings();
-              if (bindingVector != null) {
-                 bindingVectors.add(bindingVector);
-              }
-             }
-         }
-         if (swkWidget.getChangeListener() != null) {
-             bindingVector = swkWidget.getChangeListener().getBindings();
-              if (bindingVector != null) {
-                 bindingVectors.add(bindingVector);
-              }
-         }
-         if (swkWidget instanceof SwkListListener) {
-             SwkListListener swkListListener = (SwkListListener) swkWidget;
-             if (swkListListener.getListSelectionListener() != null) {
-                 bindingVector = swkListListener.getListSelectionListener().getBindings();
-              if (bindingVector != null) {
-                 bindingVectors.add(bindingVector);
-              }
-             }
-         }
-         if (swkWidget.getMouseListener() != null) {
-             bindingVector = swkWidget.getMouseListener().getBindings();
-              if (bindingVector != null) {
-                 bindingVectors.add(bindingVector);
-              }
-         }
-         if (swkWidget.getMouseMotionListener() != null) {
-             bindingVector = swkWidget.getMouseMotionListener().getBindings();
-         }
-         if (swkWidget.getKeyListener() != null) {
-             bindingVector = swkWidget.getKeyListener().getBindings();
-              if (bindingVector != null) {
-                 bindingVectors.add(bindingVector);
-              }
-         }
-         return bindingVectors;
-     }
-
 
     /** Called when a new widget is created to apply bindings specific to the widgets class.
      * @param interp The interpreter in which the widget was created.
@@ -706,7 +704,7 @@ public class BindCmd implements Command {
      * @throws TclException If widget corresponding to tObj can't be found.
      */
     public static void applyBindings(Interp interp, SwkWidget swkWidget,
-        String className) throws TclException {
+            String className) throws TclException {
         int i;
         if (swkWidget == null) {
             throw new TclException(interp, "bad window path name ");
@@ -717,7 +715,7 @@ public class BindCmd implements Command {
         if (bindingVector != null) {
             for (i = 0; i < bindingVector.size(); i++) {
                 setupBinding(interp, (SwkBinding) bindingVector.get(i),
-                    swkWidget, bindingVector);
+                        swkWidget, bindingVector);
             }
         }
 
@@ -726,7 +724,7 @@ public class BindCmd implements Command {
         if (bindingVector != null) {
             for (i = 0; i < bindingVector.size(); i++) {
                 setupBinding(interp, (SwkBinding) bindingVector.get(i),
-                    swkWidget, bindingVector);
+                        swkWidget, bindingVector);
             }
         }
 
@@ -735,7 +733,7 @@ public class BindCmd implements Command {
         if (bindingVector != null) {
             for (i = 0; i < bindingVector.size(); i++) {
                 setupBinding(interp, (SwkBinding) bindingVector.get(i),
-                    swkWidget, bindingVector);
+                        swkWidget, bindingVector);
             }
         }
 
@@ -744,16 +742,16 @@ public class BindCmd implements Command {
         if (bindingVector != null) {
             for (i = 0; i < bindingVector.size(); i++) {
                 setupBinding(interp, (SwkBinding) bindingVector.get(i),
-                    swkWidget, bindingVector);
+                        swkWidget, bindingVector);
             }
         }
-       bindingVector = (ArrayList<SwkBinding>) BindCmd.activationTable.get(className);
+        bindingVector = (ArrayList<SwkBinding>) BindCmd.activationTable.get(className);
 
         if (bindingVector != null) {
             for (i = 0; i < bindingVector.size(); i++) {
 
                 setupBinding(interp, (SwkBinding) bindingVector.get(i),
-                    swkWidget, bindingVector);
+                        swkWidget, bindingVector);
             }
         }
 
@@ -767,12 +765,12 @@ public class BindCmd implements Command {
      * @throws TclException if exception is thrown when evaluating the command.
      */
     public static void doCmd(Interp interp, SwkBinding binding,
-        Component component, ComponentEvent e) throws TclException {
+            Component component, ComponentEvent e) throws TclException {
         doCmd(interp, binding, component, (ActionEvent) null);
     }
 
     public static void doCmd(Interp interp, SwkBinding binding,
-        Component component, ActionEvent e) throws TclException {
+            Component component, ActionEvent e) throws TclException {
         int i;
         char type;
         final StringBuffer sbuf = new StringBuffer();
@@ -787,43 +785,43 @@ public class BindCmd implements Command {
                 type = binding.command.charAt(i);
 
                 switch (type) {
-                case 'x':
-                    sbuf.append("0");
+                    case 'x':
+                        sbuf.append("0");
 
-                    break;
+                        break;
 
-                case 'y':
-                    sbuf.append("0");
+                    case 'y':
+                        sbuf.append("0");
 
-                    break;
+                        break;
 
-                case 'W':
-                    sbuf.append(component.getName());
+                    case 'W':
+                        sbuf.append(component.getName());
 
-                    break;
+                        break;
 
-                case 'K':
-                    sbuf.append(binding.name);
+                    case 'K':
+                        sbuf.append(binding.name);
 
-                    break;
+                        break;
 
-                case 'w':
-                    sbuf.append(component.getWidth());
+                    case 'w':
+                        sbuf.append(component.getWidth());
 
-                    break;
+                        break;
 
-                case 'h':
-                    sbuf.append(component.getHeight());
+                    case 'h':
+                        sbuf.append(component.getHeight());
 
-                    break;
+                        break;
 
-                case 's':
+                    case 's':
 
-                    if (component instanceof JTabbedPane) {
-                        sbuf.append(((JTabbedPane) component).getSelectedIndex());
-                    }
+                        if (component instanceof JTabbedPane) {
+                            sbuf.append(((JTabbedPane) component).getSelectedIndex());
+                        }
 
-                    break;
+                        break;
                 }
             }
         }
@@ -833,15 +831,16 @@ public class BindCmd implements Command {
         //interp.eval(sbuf.toString());
         SwkExceptionCmd.doExceptionCmd(interp, sbuf.toString());
     }
-   /** Substitutes values into event fields and then executes command.
+
+    /** Substitutes values into event fields and then executes command.
      * @param interp The interpreter in which command is executing.
      * @param command String containing the command to evaluate.
      * @param e The Input Event that occured to trigger this binding response.
      * @throws TclException if exception is thrown when evaluating the command.
      */
     public static void doCmd(Interp interp, String command, InputEvent e)
-        throws TclException {
-        doCmd(interp, command, e,null);
+            throws TclException {
+        doCmd(interp, command, e, null);
 
     }
 
@@ -852,7 +851,7 @@ public class BindCmd implements Command {
      * @throws TclException if exception is thrown when evaluating the command.
      */
     public static void doCmd(Interp interp, String command, InputEvent e, HitShape hitShape)
-        throws TclException {
+            throws TclException {
         int i;
         char type;
         StringBuffer sbuf = new StringBuffer();
@@ -871,129 +870,130 @@ public class BindCmd implements Command {
                 type = command.charAt(i);
 
                 switch (type) {
-                  case 'b':
-                    if (e instanceof MouseEvent) {
-                        MouseEvent mE = (MouseEvent) e;
-                        switch (mE.getButton()) {
-                            case MouseEvent.BUTTON1:
-                            sbuf.append('1');
-                            break;
-                            case MouseEvent.BUTTON2:
-                            sbuf.append('2');
-                            break;
-                            case MouseEvent.BUTTON3:
-                            sbuf.append('3');
-                            break;
-                            default:
-                                sbuf.append('0');
+                    case 'b':
+                        if (e instanceof MouseEvent) {
+                            MouseEvent mE = (MouseEvent) e;
+                            switch (mE.getButton()) {
+                                case MouseEvent.BUTTON1:
+                                    sbuf.append('1');
+                                    break;
+                                case MouseEvent.BUTTON2:
+                                    sbuf.append('2');
+                                    break;
+                                case MouseEvent.BUTTON3:
+                                    sbuf.append('3');
+                                    break;
+                                default:
+                                    sbuf.append('0');
+                            }
+                        } else {
+                            sbuf.append("??");
                         }
-                    } else {
-                        sbuf.append("??");
-                    }
-                    break;
-                case 'd':
-                    if ((hitShape != null) && (hitShape.getShape() != null)) {
+                        break;
+                    case 'd':
+                        if ((hitShape != null) && (hitShape.getShape() != null)) {
                             sbuf.append(hitShape.getShape().getId());
                             if (hitShape.getHandle() >= 0) {
                                 sbuf.append('.');
                                 sbuf.append(hitShape.getHandle());
                             }
-                    } else {
-                        sbuf.append("??");
-                    }
-                    break;
-                case 't':
-                    sbuf.append(System.currentTimeMillis());
-                    break;
-                case 'x':
-                case 'X':
-
-                    if (e instanceof MouseEvent) {
-                        x = ((MouseEvent) e).getX();
-                    } else {
-                        comp = e.getComponent();
-
-                        if (comp instanceof SwkWidget) {
-                            x = ((SwkWidget) comp).getMouseX();
-                        }
-                    }
-
-                    if (type == 'X') {
-                        x += e.getComponent().getLocationOnScreen().getX();
-                    }
-
-                    sbuf.append(x);
-
-                    break;
-
-                case 'y':
-                case 'Y':
-
-                    if (e instanceof MouseEvent) {
-                        y = ((MouseEvent) e).getY();
-                    } else {
-                        comp = e.getComponent();
-
-                        if (comp instanceof SwkWidget) {
-                            y = ((SwkWidget) comp).getMouseY();
-                        }
-                    }
-
-                    if (type == 'Y') {
-                        y += e.getComponent().getLocationOnScreen().getY();
-                    }
-
-                    sbuf.append(y);
-
-                    break;
-
-                case 'W':
-                    sbuf.append(e.getComponent().getName());
-
-                    break;
-
-                case 'k':
-                    if (e instanceof KeyEvent) {
-                        sbuf.append(((KeyEvent) e).getKeyCode());
-                    } else {
-                        sbuf.append("??");
-                    }
-
-                    break;
-
-                case 'K':
-
-                    if (e instanceof KeyEvent) {
-                        char ch = ((KeyEvent) e).getKeyChar();
-
-                        if ((ch != KeyEvent.CHAR_UNDEFINED) &&
-                                !Character.isISOControl(ch) &&
-                                !Character.isWhitespace(ch)) {
-                            sbuf.append(ch);
                         } else {
-                            int keyCode = ((KeyEvent) e).getKeyCode();
-                            sbuf.append(((KeyEvent) e).getKeyText(keyCode));
+                            sbuf.append("??");
                         }
-                    }
+                        break;
+                    case 't':
+                        sbuf.append(System.currentTimeMillis());
+                        break;
+                    case 'x':
+                    case 'X':
 
-                    break;
-
-                case 'A':
-
-                    if (e instanceof KeyEvent) {
-                        char keyChar = ((KeyEvent) e).getKeyChar();
-
-                        if ((keyChar == '{') || (keyChar == '}')) {
-                            sbuf.append("\\" + keyChar);
-                        } else if ((keyChar == '\\')) {
-                            sbuf.append("\\\\");
+                        if (e instanceof MouseEvent) {
+                            x = ((MouseEvent) e).getX();
                         } else {
-                            sbuf.append("{" + keyChar + "}");
-                        }
-                    }
+                            comp = e.getComponent();
 
-                    break;
-                    default:sbuf.append("??");
+                            if (comp instanceof SwkWidget) {
+                                x = ((SwkWidget) comp).getMouseX();
+                            }
+                        }
+
+                        if (type == 'X') {
+                            x += e.getComponent().getLocationOnScreen().getX();
+                        }
+
+                        sbuf.append(x);
+
+                        break;
+
+                    case 'y':
+                    case 'Y':
+
+                        if (e instanceof MouseEvent) {
+                            y = ((MouseEvent) e).getY();
+                        } else {
+                            comp = e.getComponent();
+
+                            if (comp instanceof SwkWidget) {
+                                y = ((SwkWidget) comp).getMouseY();
+                            }
+                        }
+
+                        if (type == 'Y') {
+                            y += e.getComponent().getLocationOnScreen().getY();
+                        }
+
+                        sbuf.append(y);
+
+                        break;
+
+                    case 'W':
+                        sbuf.append(e.getComponent().getName());
+
+                        break;
+
+                    case 'k':
+                        if (e instanceof KeyEvent) {
+                            sbuf.append(((KeyEvent) e).getKeyCode());
+                        } else {
+                            sbuf.append("??");
+                        }
+
+                        break;
+
+                    case 'K':
+
+                        if (e instanceof KeyEvent) {
+                            char ch = ((KeyEvent) e).getKeyChar();
+
+                            if ((ch != KeyEvent.CHAR_UNDEFINED)
+                                    && !Character.isISOControl(ch)
+                                    && !Character.isWhitespace(ch)) {
+                                sbuf.append(ch);
+                            } else {
+                                int keyCode = ((KeyEvent) e).getKeyCode();
+                                sbuf.append(((KeyEvent) e).getKeyText(keyCode));
+                            }
+                        }
+
+                        break;
+
+                    case 'A':
+
+                        if (e instanceof KeyEvent) {
+                            char keyChar = ((KeyEvent) e).getKeyChar();
+
+                            if ((keyChar == '{') || (keyChar == '}')) {
+                                sbuf.append("\\" + keyChar);
+                            } else if ((keyChar == '\\')) {
+                                sbuf.append("\\\\");
+                            } else {
+                                sbuf.append("{" + keyChar + "}");
+                            }
+                        }
+
+                        break;
+                    default:
+                        sbuf.append("??");
                 }
             }
         }
@@ -1005,11 +1005,11 @@ public class BindCmd implements Command {
     }
 
     public static void setClassBinding(ArrayList<SwkBinding> bindings, SwkBinding newBinding) {
-        SwkBind.setBinding(bindings,newBinding);
+        SwkBind.setBinding(bindings, newBinding);
     }
 
     public static void setVirtualBinding(SwkWidget swkWidget,
-        SwkBinding newBinding) {
+            SwkBinding newBinding) {
         SwkBinding binding = null;
         ArrayList<SwkBinding> bindings = swkWidget.getVirtualBindings();
 
@@ -1023,7 +1023,7 @@ public class BindCmd implements Command {
                 binding = (SwkBinding) bindings.get(i);
 
                 if (binding.equals(newBinding)) {
-                    bindings.set(i,newBinding);
+                    bindings.set(i, newBinding);
 
                     return;
                 }

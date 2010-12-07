@@ -37,8 +37,8 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
-
 public class SwkMouseMotionListener implements MouseMotionListener, SwkListener {
+
     Interp interp;
     String command = "puts mouse";
     ArrayList<SwkBinding> bindings;
@@ -54,12 +54,13 @@ public class SwkMouseMotionListener implements MouseMotionListener, SwkListener 
     public void setCommand(String name) {
         command = name.intern();
     }
+
     public ArrayList<SwkBinding> getBindings() {
         return bindings;
     }
 
     public void setBinding(SwkBinding newBinding) {
-        SwkBind.setBinding(bindings,newBinding);
+        SwkBind.setBinding(bindings, newBinding);
     }
 
     public String getCommand() {
@@ -139,8 +140,8 @@ public class SwkMouseMotionListener implements MouseMotionListener, SwkListener 
                         continue;
                     }
 
-                    if ((binding.command != null) &&
-                            (binding.command.length() != 0)) {
+                    if ((binding.command != null)
+                            && (binding.command.length() != 0)) {
                         try {
                             //   System.out.println("doCmd "+binding.command);
                             processing = true;
@@ -152,7 +153,7 @@ public class SwkMouseMotionListener implements MouseMotionListener, SwkListener 
                                 return;
                             } else {
                                 interp.addErrorInfo(
-                                    "\n    (\"binding\" script)");
+                                        "\n    (\"binding\" script)");
                                 interp.backgroundError();
                             }
                         }
@@ -166,8 +167,8 @@ public class SwkMouseMotionListener implements MouseMotionListener, SwkListener 
 
     public static boolean checkMods(int bmod, int emod) {
         //   System.out.println("buttonstate "+bmod+" "+emod);
-        int buttonsOn = InputEvent.BUTTON1_DOWN_MASK |
-            InputEvent.BUTTON2_DOWN_MASK | InputEvent.BUTTON3_DOWN_MASK;
+        int buttonsOn = InputEvent.BUTTON1_DOWN_MASK
+                | InputEvent.BUTTON2_DOWN_MASK | InputEvent.BUTTON3_DOWN_MASK;
         bmod = bmod | buttonsOn;
         emod = emod | buttonsOn;
 
@@ -177,8 +178,8 @@ public class SwkMouseMotionListener implements MouseMotionListener, SwkListener 
     public static boolean checkButtonState(InputEvent e, int bmod, int emod) {
         //  System.out.println("buttonstate "+bmod+" "+emod);
         boolean result = true;
-        int buttonsOn = InputEvent.BUTTON1_DOWN_MASK |
-            InputEvent.BUTTON2_DOWN_MASK | InputEvent.BUTTON3_DOWN_MASK;
+        int buttonsOn = InputEvent.BUTTON1_DOWN_MASK
+                | InputEvent.BUTTON2_DOWN_MASK | InputEvent.BUTTON3_DOWN_MASK;
         bmod = bmod & buttonsOn;
         emod = emod & buttonsOn;
 
@@ -193,14 +194,14 @@ public class SwkMouseMotionListener implements MouseMotionListener, SwkListener 
         boolean result = true;
 
         // System.out.println("buttons "+detail+" "+button);
-        if ((detail == InputEvent.BUTTON1_MASK) &&
-                (button != MouseEvent.BUTTON1)) {
+        if ((detail == InputEvent.BUTTON1_MASK)
+                && (button != MouseEvent.BUTTON1)) {
             result = false;
-        } else if ((detail == InputEvent.BUTTON2_MASK) &&
-                (button != MouseEvent.BUTTON2)) {
+        } else if ((detail == InputEvent.BUTTON2_MASK)
+                && (button != MouseEvent.BUTTON2)) {
             result = false;
-        } else if ((detail == InputEvent.BUTTON3_MASK) &&
-                (button != MouseEvent.BUTTON3)) {
+        } else if ((detail == InputEvent.BUTTON3_MASK)
+                && (button != MouseEvent.BUTTON3)) {
             result = false;
         } else {
             result = true;

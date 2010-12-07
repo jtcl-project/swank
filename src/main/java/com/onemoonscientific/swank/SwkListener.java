@@ -37,7 +37,7 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
-
 public interface SwkListener {
+
     public void processEvent(EventObject eventObject, Object obj, int subtype);
 }

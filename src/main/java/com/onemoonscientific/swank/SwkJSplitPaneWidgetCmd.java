@@ -14,8 +14,8 @@ import java.awt.Component;
 
 import javax.swing.*;
 
-
 class SwkJSplitPaneWidgetCmd implements Command {
+
     static final private String[] validCmds = {
         "cget", "configure", "add", "forget", "panes"
     };
@@ -31,91 +31,91 @@ class SwkJSplitPaneWidgetCmd implements Command {
     }
 
     public void cmdProc(final Interp interp, final TclObject[] argv)
-        throws TclException {
+            throws TclException {
         int i;
 
         if (argv.length < 2) {
             throw new TclNumArgsException(interp, 1, argv,
-                "option ?arg arg ...?");
+                    "option ?arg arg ...?");
         }
 
         final int opt = TclIndex.get(interp, argv[1], validCmds, "option", 0);
-        final TclObject tObj = (TclObject) Widgets.getWidget(interp,argv[0].toString());
+        final TclObject tObj = (TclObject) Widgets.getWidget(interp, argv[0].toString());
 
         if (tObj == null) {
             throw new TclException(interp,
-                "bad window path name \"" + argv[0].toString() + "\"");
+                    "bad window path name \"" + argv[0].toString() + "\"");
         }
 
         final SwkJSplitPane swkjsplitpane = (SwkJSplitPane) ReflectObject.get(interp,
                 tObj);
 
         switch (opt) {
-        case OPT_CGET:
+            case OPT_CGET:
 
-            if (argv.length != 3) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-
-            interp.setResult(swkjsplitpane.jget(interp, argv[2]));
-
-            break;
-
-        case OPT_CONFIGURE:
-
-            if (!gotDefaults) {
-                swkjsplitpane.setResourceDefaults();
-                gotDefaults = true;
-            }
-
-            if (argv.length == 2) {
-                swkjsplitpane.jgetAll(interp);
-            } else if (argv.length == 3) {
-                String result = swkjsplitpane.jget(interp, argv[2]);
-                ResourceObject ro = (ResourceObject) SwkJSplitPane.resourceDB.get(argv[2].toString());
-
-                if (ro == null) {
-                    throw new TclException(interp,
-                        "unknown option \"" + argv[2].toString() + "\"");
+                if (argv.length != 3) {
+                    throw new TclNumArgsException(interp, 2, argv, "option");
                 }
 
-                TclObject list = TclList.newInstance();
-                TclList.append(interp, list,
-                    TclString.newInstance(argv[2].toString()));
-                TclList.append(interp, list, TclString.newInstance(ro.resource));
-                TclList.append(interp, list, TclString.newInstance(ro.className));
-                TclList.append(interp, list,
-                    TclString.newInstance(ro.defaultVal));
-                TclList.append(interp, list, TclString.newInstance(result));
-                interp.setResult(list);
-            } else {
-                swkjsplitpane.configure(interp, argv, 2);
-            }
+                interp.setResult(swkjsplitpane.jget(interp, argv[2]));
 
-            break;
+                break;
 
-        case OPT_ADD:
-            add(interp, swkjsplitpane, argv);
+            case OPT_CONFIGURE:
 
-            break;
+                if (!gotDefaults) {
+                    swkjsplitpane.setResourceDefaults();
+                    gotDefaults = true;
+                }
 
-        case OPT_FORGET:
-            forget(interp, swkjsplitpane, argv);
+                if (argv.length == 2) {
+                    swkjsplitpane.jgetAll(interp);
+                } else if (argv.length == 3) {
+                    String result = swkjsplitpane.jget(interp, argv[2]);
+                    ResourceObject ro = (ResourceObject) SwkJSplitPane.resourceDB.get(argv[2].toString());
 
-            break;
+                    if (ro == null) {
+                        throw new TclException(interp,
+                                "unknown option \"" + argv[2].toString() + "\"");
+                    }
 
-        case OPT_PANES:
-            panes(interp, swkjsplitpane, argv);
+                    TclObject list = TclList.newInstance();
+                    TclList.append(interp, list,
+                            TclString.newInstance(argv[2].toString()));
+                    TclList.append(interp, list, TclString.newInstance(ro.resource));
+                    TclList.append(interp, list, TclString.newInstance(ro.className));
+                    TclList.append(interp, list,
+                            TclString.newInstance(ro.defaultVal));
+                    TclList.append(interp, list, TclString.newInstance(result));
+                    interp.setResult(list);
+                } else {
+                    swkjsplitpane.configure(interp, argv, 2);
+                }
 
-            break;
+                break;
 
-        default:
-            throw new TclRuntimeError("TclIndex.get() error");
+            case OPT_ADD:
+                add(interp, swkjsplitpane, argv);
+
+                break;
+
+            case OPT_FORGET:
+                forget(interp, swkjsplitpane, argv);
+
+                break;
+
+            case OPT_PANES:
+                panes(interp, swkjsplitpane, argv);
+
+                break;
+
+            default:
+                throw new TclRuntimeError("TclIndex.get() error");
         }
     }
 
     void add(final Interp interp, final SwkJSplitPane swkjsplitpane,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if ((argv.length < 3) || (argv.length > 5)) {
             throw new TclNumArgsException(interp, 2, argv, "option");
         }
@@ -123,7 +123,7 @@ class SwkJSplitPaneWidgetCmd implements Command {
         int iComp = 0;
         int mode = Add.NONE;
         int relativeMode = Add.NONE;
-        final JComponent[] jcomps = { null, null };
+        final JComponent[] jcomps = {null, null};
         JComponent relativeComp = null;
 
         for (int i = 2; i < argv.length; i++) {
@@ -149,21 +149,21 @@ class SwkJSplitPaneWidgetCmd implements Command {
                         relativeMode = Add.BEFORE;
                     } else {
                         throw new TclException(interp,
-                            "unknown option \"" + argv[i].toString() + "\"");
+                                "unknown option \"" + argv[i].toString() + "\"");
                     }
 
                     if (i >= argv.length) {
                         throw new TclException(interp,
-                            "missing value for \"" + argv[i].toString() + "\"");
+                                "missing value for \"" + argv[i].toString() + "\"");
                     }
 
-                    final TclObject winObj = (TclObject) Widgets.getWidget(interp,argv[i +
-                            1].toString());
+                    final TclObject winObj = (TclObject) Widgets.getWidget(interp, argv[i
+                            + 1].toString());
 
                     if (winObj == null) {
                         throw new TclException(interp,
-                            "bad window path name \"" + argv[i + 1].toString() +
-                            "\"");
+                                "bad window path name \"" + argv[i + 1].toString()
+                                + "\"");
                     }
 
                     relativeComp = (JComponent) ReflectObject.get(interp, winObj);
@@ -171,15 +171,15 @@ class SwkJSplitPaneWidgetCmd implements Command {
                 } else {
                     if (relativeMode != Add.NONE) {
                         throw new TclException(interp,
-                            "unknown option \"" + argv[i].toString() + "\"");
+                                "unknown option \"" + argv[i].toString() + "\"");
                     }
 
-                    final TclObject winObj = (TclObject) Widgets.getWidget(interp,argv[i].toString());
+                    final TclObject winObj = (TclObject) Widgets.getWidget(interp, argv[i].toString());
 
                     if (winObj == null) {
                         throw new TclException(interp,
-                            "bad window path name \"" + argv[i + 2].toString() +
-                            "\"");
+                                "bad window path name \"" + argv[i + 2].toString()
+                                + "\"");
                     }
 
                     jcomps[iComp] = (JComponent) ReflectObject.get(interp,
@@ -193,24 +193,24 @@ class SwkJSplitPaneWidgetCmd implements Command {
     }
 
     void forget(final Interp interp, final SwkJSplitPane swkjsplitpane,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if ((argv.length < 3) || (argv.length > 4)) {
             throw new TclNumArgsException(interp, 2, argv, "win ?win?");
         }
 
-        final JComponent[] jcomps = { null, null };
+        final JComponent[] jcomps = {null, null};
 
         for (int i = 0; i < 2; i++) {
             if (i >= (argv.length - 2)) {
                 break;
             }
 
-            final TclObject winObj = (TclObject) Widgets.getWidget(interp,argv[i +
-                    2].toString());
+            final TclObject winObj = (TclObject) Widgets.getWidget(interp, argv[i
+                    + 2].toString());
 
             if (winObj == null) {
                 throw new TclException(interp,
-                    "bad window path name \"" + argv[i + 2].toString() + "\"");
+                        "bad window path name \"" + argv[i + 2].toString() + "\"");
             }
 
             jcomps[i] = (JComponent) ReflectObject.get(interp, winObj);
@@ -220,7 +220,7 @@ class SwkJSplitPaneWidgetCmd implements Command {
     }
 
     void panes(final Interp interp, final SwkJSplitPane swkjsplitpane,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if (argv.length != 2) {
             throw new TclNumArgsException(interp, 2, argv, "");
         }
@@ -238,6 +238,7 @@ class SwkJSplitPaneWidgetCmd implements Command {
     }
 
     class Add extends UpdateOnEventThread {
+
         static final int LEFT = 0;
         static final int TOP = 1;
         static final int BOTTOM = 2;
@@ -252,7 +253,7 @@ class SwkJSplitPaneWidgetCmd implements Command {
         int relMode = NONE;
 
         void exec(final SwkJSplitPane swkjsplitpane, JComponent[] jcomps,
-            final int mode, JComponent relComp, final int relMode) {
+                final int mode, JComponent relComp, final int relMode) {
             this.swkjsplitpane = swkjsplitpane;
             this.mode = mode;
             this.jcomps = jcomps;
@@ -309,23 +310,23 @@ class SwkJSplitPaneWidgetCmd implements Command {
             }
 
             switch (mode) {
-            case RIGHT:
-                jcomps[1] = jcomps[0];
-                jcomps[0] = null;
+                case RIGHT:
+                    jcomps[1] = jcomps[0];
+                    jcomps[0] = null;
 
-            case LEFT:
-                swkjsplitpane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+                case LEFT:
+                    swkjsplitpane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
 
-                break;
+                    break;
 
-            case BOTTOM:
-                jcomps[1] = jcomps[0];
-                jcomps[0] = null;
+                case BOTTOM:
+                    jcomps[1] = jcomps[0];
+                    jcomps[0] = null;
 
-            case TOP:
-                swkjsplitpane.setOrientation(JSplitPane.VERTICAL_SPLIT);
+                case TOP:
+                    swkjsplitpane.setOrientation(JSplitPane.VERTICAL_SPLIT);
 
-                break;
+                    break;
             }
 
             int iComp = 0;
@@ -345,6 +346,7 @@ class SwkJSplitPaneWidgetCmd implements Command {
     }
 
     class Forget extends UpdateOnEventThread {
+
         SwkJSplitPane swkjsplitpane = null;
         JComponent[] jcomps = null;
 
@@ -364,9 +366,10 @@ class SwkJSplitPaneWidgetCmd implements Command {
     }
 
     class Panes extends GetValueOnEventThread {
+
         SwkJSplitPane swkjsplitpane = null;
         JComponent[] jcomps = null;
-        String[] names = { null, null };
+        String[] names = {null, null};
 
         String[] exec(final SwkJSplitPane swkjsplitpane) {
             this.swkjsplitpane = swkjsplitpane;

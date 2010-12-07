@@ -2,8 +2,8 @@ package com.onemoonscientific.swank.canvas;
 
 import tcl.lang.*;
 
-
 public class DashPhaseParameter extends CanvasParameter {
+
     private static String name = "dashphase";
     private static float defValue = 90.0f;
     private float newValue = defValue;
@@ -25,7 +25,7 @@ public class DashPhaseParameter extends CanvasParameter {
     }
 
     public TclObject getValue(Interp interp, SwkShape swkShape)
-        throws TclException {
+            throws TclException {
         if (swkShape == null) {
             throw new TclException(interp, "shape doesn't exist");
         }
@@ -34,7 +34,7 @@ public class DashPhaseParameter extends CanvasParameter {
     }
 
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
-        throws TclException {
+            throws TclException {
         newValue = (float) TclDouble.get(interp, arg);
     }
 

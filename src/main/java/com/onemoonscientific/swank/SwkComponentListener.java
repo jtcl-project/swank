@@ -37,8 +37,8 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
-
 public class SwkComponentListener implements ComponentListener, SwkListener {
+
     Interp interp;
     String command = "puts component";
     ArrayList<SwkBinding> bindings;
@@ -54,12 +54,13 @@ public class SwkComponentListener implements ComponentListener, SwkListener {
     public void setCommand(String name) {
         command = name;
     }
+
     public ArrayList<SwkBinding> getBindings() {
         return bindings;
     }
 
     public void setBinding(SwkBinding newBinding) {
-        SwkBind.setBinding(bindings,newBinding);
+        SwkBind.setBinding(bindings, newBinding);
     }
 
     public String getCommand() {
@@ -85,8 +86,8 @@ public class SwkComponentListener implements ComponentListener, SwkListener {
                 SwkJFrame jframe = (SwkJFrame) component;
                 Dimension dim = jframe.getRootPane().getSize();
 
-                if ((dim.width != jframe.swkwidth) ||
-                        (dim.height != jframe.swkheight)) {
+                if ((dim.width != jframe.swkwidth)
+                        || (dim.height != jframe.swkheight)) {
                     shown = true;
                 }
 

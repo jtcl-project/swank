@@ -7,12 +7,12 @@ package com.onemoonscientific.swank;
 
 import tcl.lang.*;
 
-
 /**
  *
  * @author brucejohnson
  */
 public class Result {
+
     int i = 0;
     float f = 0.0f;
     double d = 0.0;

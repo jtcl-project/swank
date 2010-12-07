@@ -37,9 +37,9 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
-
 public class SwkValueCommandListener implements ActionListener, VarTrace,
-    SwkListener {
+        SwkListener {
+
     Interp interp;
     String command = "";
     String value = "";
@@ -53,10 +53,10 @@ public class SwkValueCommandListener implements ActionListener, VarTrace,
     }
 
     public void traceProc(Interp interp, String string1, String string2,
-        int flags) throws TclException {
+            int flags) throws TclException {
         if (EventQueue.isDispatchThread()) {
             System.out.println(
-                "SwkValueCommandListener: traceProc on event thread");
+                    "SwkValueCommandListener: traceProc on event thread");
         }
 
         setFromVar(interp);
@@ -65,7 +65,7 @@ public class SwkValueCommandListener implements ActionListener, VarTrace,
     public void setFromVar(Interp interp) throws TclException {
         if (EventQueue.isDispatchThread()) {
             System.out.println(
-                "SwkValueCommandListener: setFromVar on event thread");
+                    "SwkValueCommandListener: setFromVar on event thread");
         }
 
         if (!traceLock) {
@@ -98,8 +98,8 @@ public class SwkValueCommandListener implements ActionListener, VarTrace,
 
     public void setVarName(String name) throws TclException {
         if ((varName != null) && (!varName.equals(""))) {
-            interp.untraceVar(varName, this, TCL.TRACE_WRITES |
-                TCL.GLOBAL_ONLY);
+            interp.untraceVar(varName, this, TCL.TRACE_WRITES
+                    | TCL.GLOBAL_ONLY);
         }
 
         if (!name.equals("")) {

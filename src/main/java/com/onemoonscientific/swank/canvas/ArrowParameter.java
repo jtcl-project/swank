@@ -4,8 +4,8 @@ import tcl.lang.*;
 
 import java.awt.BasicStroke;
 
-
 public class ArrowParameter extends CanvasParameter {
+
     private static String name = "arrow";
     private static String defValue = "none";
     private int newValue = 0;
@@ -27,35 +27,35 @@ public class ArrowParameter extends CanvasParameter {
     }
 
     public TclObject getValue(Interp interp, SwkShape swkShape)
-        throws TclException {
+            throws TclException {
         if (swkShape == null) {
             throw new TclException(interp, "shape doesn't exist");
         }
         ItemLine swkLine = (ItemLine) swkShape;
         String arrow = "none";
         if ((swkLine.arrowFirst) && (swkLine.arrowLast)) {
-           arrow = "both";
+            arrow = "both";
         } else if (swkLine.arrowFirst) {
-           arrow = "first";
+            arrow = "first";
         } else if (swkLine.arrowLast) {
-           arrow = "last";
+            arrow = "last";
         } else {
-           arrow = "none";
+            arrow = "none";
         }
-        
+
         return TclString.newInstance(arrow);
     }
 
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
-        throws TclException {
+            throws TclException {
         if (arg.toString().startsWith("both")) {
             newValue = 3;
         } else if (arg.toString().startsWith("first")) {
-            newValue = 1; 
+            newValue = 1;
         } else if (arg.toString().equals("last")) {
-            newValue = 2; 
+            newValue = 2;
         } else {
-            newValue = 0; 
+            newValue = 0;
         }
     }
 
@@ -63,25 +63,25 @@ public class ArrowParameter extends CanvasParameter {
         if ((swkShape != null) && (swkShape instanceof ItemLine)) {
             ItemLine swkLine = (ItemLine) swkShape;
             switch (newValue) {
-               case 0: 
-                  swkLine.arrowFirst = false;
-                  swkLine.arrowLast = false;
-               break;
-               case 1: 
-                  swkLine.arrowFirst = true;
-                  swkLine.arrowLast = false;
-               break;
-               case 2: 
-                  swkLine.arrowFirst = false;
-                  swkLine.arrowLast = true;
-               break;
-               case 3: 
-                  swkLine.arrowFirst = true;
-                  swkLine.arrowLast = true;
-               break;
-               default:
-                  swkLine.arrowFirst = false;
-                  swkLine.arrowLast = false;
+                case 0:
+                    swkLine.arrowFirst = false;
+                    swkLine.arrowLast = false;
+                    break;
+                case 1:
+                    swkLine.arrowFirst = true;
+                    swkLine.arrowLast = false;
+                    break;
+                case 2:
+                    swkLine.arrowFirst = false;
+                    swkLine.arrowLast = true;
+                    break;
+                case 3:
+                    swkLine.arrowFirst = true;
+                    swkLine.arrowLast = true;
+                    break;
+                default:
+                    swkLine.arrowFirst = false;
+                    swkLine.arrowLast = false;
             }
         }
     }

@@ -7,8 +7,8 @@ import java.awt.event.*;
 
 import java.util.*;
 
-
 class BindEvent extends TclEvent {
+
     Interp interp = null;
     String cmd = null;
     SwkCanvas swkCanvas = null;
@@ -20,8 +20,8 @@ class BindEvent extends TclEvent {
     HitShape currentShape = null;
 
     BindEvent(Interp interp, SwkCanvas swkCanvas, EventObject event, int type,
-        int subtype, String currentTag, String previousTag,
-        HitShape currentShape) {
+            int subtype, String currentTag, String previousTag,
+            HitShape currentShape) {
         this.interp = interp;
         this.swkCanvas = swkCanvas;
         this.event = event;
@@ -44,7 +44,7 @@ class BindEvent extends TclEvent {
     public int processEvent(int flags) {
         if ((interp != null) && (swkCanvas != null)) {
             swkCanvas.processEvent(event, type, subtype, currentTag,
-                previousTag, currentShape);
+                    previousTag, currentShape);
         }
 
         return 1;

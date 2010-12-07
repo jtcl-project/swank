@@ -35,24 +35,24 @@ import java.util.*;
 
 import javax.swing.*;
 
-
 public class OptionCmd implements Command {
+
     static Vector uniqueOptions = new Vector();
     static Hashtable classHash = new Hashtable();
 
     public void cmdProc(Interp interp, TclObject[] argv)
-        throws TclException {
+            throws TclException {
         int i;
 
         if (argv.length < 2) {
             throw new TclNumArgsException(interp, 1, argv,
-                "option ?arg arg ...?");
+                    "option ?arg arg ...?");
         }
 
         if (argv[1].toString().equals("add")) {
             if (argv.length < 4) {
                 throw new TclNumArgsException(interp, 1, argv,
-                    "option ?arg arg ...?");
+                        "option ?arg arg ...?");
             }
 
             StreamTokenizer tokenizer = null;
@@ -121,7 +121,7 @@ public class OptionCmd implements Command {
         } else if (argv[1].toString().equals("get")) {
             if (argv.length < 3) {
                 throw new TclNumArgsException(interp, 1, argv,
-                    "option ?arg arg ...?");
+                        "option ?arg arg ...?");
             }
 
             Vector classVec = (Vector) classHash.get(argv[2].toString());

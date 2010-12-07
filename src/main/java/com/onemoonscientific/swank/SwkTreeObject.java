@@ -30,8 +30,8 @@ import java.lang.*;
 
 import java.util.*;
 
-
 public class SwkTreeObject {
+
     private Interp interp = null;
     protected String string = null;
 

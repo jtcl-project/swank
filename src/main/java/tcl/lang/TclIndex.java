@@ -13,7 +13,6 @@
  * 
  * RCS: @(#) $Id: TclIndex.java,v 1.6 2005/10/11 20:03:23 mdejong Exp $
  */
-
 package tcl.lang;
 
 import java.util.*;
@@ -24,25 +23,23 @@ public class TclIndex implements InternalRep {
      * The variable slots for this object.
      */
     private int index;
-
     /**
      * Table of valid options.
      */
-
     private String[] table;
-    
     TreeMap TM;
 
     /**
      * Construct a TclIndex representation with the given index & table.
      */
     private TclIndex(int i, String[] tab) {
-	index = i;
-	table = tab;
+        index = i;
+        table = tab;
     }
-  private TclIndex(int i, TreeMap TM) {
-	index = i;
-	TM = TM;
+
+    private TclIndex(int i, TreeMap TM) {
+        index = i;
+        TM = TM;
     }
 
     /**
@@ -50,14 +47,14 @@ public class TclIndex implements InternalRep {
      * @param obj the TclObject that contains this internalRep.
      */
     public InternalRep duplicate() {
-	return new TclIndex(index, table);
+        return new TclIndex(index, table);
     }
 
     /**
      * Implement this no-op for the InternalRep interface.
      */
-
-    public void dispose() {}
+    public void dispose() {
+    }
 
     /**
      * Called to query the string representation of the Tcl object. This
@@ -67,7 +64,7 @@ public class TclIndex implements InternalRep {
      * @return the string representation of the Tcl object.
      */
     public String toString() {
-	return table[index];
+        return table[index];
     }
 
     /**
@@ -83,161 +80,161 @@ public class TclIndex implements InternalRep {
      * @paran msg used as part of any error messages
      * @paran flags may be TCL.EXACT.
      */
-
     public static int get(Interp interp, TclObject tobj, String[] table,
-	    String msg, int flags) throws TclException {
-	InternalRep rep = tobj.getInternalRep();
+            String msg, int flags) throws TclException {
+        InternalRep rep = tobj.getInternalRep();
 
-	if (rep instanceof TclIndex) {
-	    if (((TclIndex) rep).table == table) {
-		return ((TclIndex) rep).index;
-	    }
-	}
+        if (rep instanceof TclIndex) {
+            if (((TclIndex) rep).table == table) {
+                return ((TclIndex) rep).index;
+            }
+        }
 
-	String str = tobj.toString();
-	int strLen = str.length();
-	int tableLen = table.length;
-	int index = -1;
-	int numAbbrev = 0;
+        String str = tobj.toString();
+        int strLen = str.length();
+        int tableLen = table.length;
+        int index = -1;
+        int numAbbrev = 0;
 
-	checking: {
-	    if (strLen > 0) {
+        checking:
+        {
+            if (strLen > 0) {
 
-		for (int i = 0; i < tableLen; i++) {
-		    String option = table[i];
+                for (int i = 0; i < tableLen; i++) {
+                    String option = table[i];
 
-		    if (((flags & TCL.EXACT) == TCL.EXACT) && 
-		            (option.length() != strLen)) {
-			continue;
-		    }
-		    if (option.equals(str)) {
-			// Found an exact match already. Return it.
+                    if (((flags & TCL.EXACT) == TCL.EXACT)
+                            && (option.length() != strLen)) {
+                        continue;
+                    }
+                    if (option.equals(str)) {
+                        // Found an exact match already. Return it.
 
-			index = i;
-			break checking;
-		    }
-		    if (option.startsWith(str)) {
-			numAbbrev++;
-			index = i;
-		    }
-		}
-	    }
-	    if (numAbbrev != 1) {
-		StringBuffer sbuf = new StringBuffer();
-		if (numAbbrev > 1) {
-		    sbuf.append("ambiguous ");
-		} else {
-		    sbuf.append("bad ");
-		}
-		sbuf.append(msg);
-		sbuf.append(" \"");
-		sbuf.append(str);
-		sbuf.append("\"");
-		sbuf.append(": must be ");
-		sbuf.append(table[0]);
-		for (int i = 1; i < tableLen; i++) {
-		    if (i == (tableLen - 1)) {
-			sbuf.append((i>1) ? ", or " : " or ");
-		    } else {
-			sbuf.append(", ");
-		    }
-		    sbuf.append(table[i]);
-		}
-		throw new TclException(interp, sbuf.toString());
-	    }
-	}
+                        index = i;
+                        break checking;
+                    }
+                    if (option.startsWith(str)) {
+                        numAbbrev++;
+                        index = i;
+                    }
+                }
+            }
+            if (numAbbrev != 1) {
+                StringBuffer sbuf = new StringBuffer();
+                if (numAbbrev > 1) {
+                    sbuf.append("ambiguous ");
+                } else {
+                    sbuf.append("bad ");
+                }
+                sbuf.append(msg);
+                sbuf.append(" \"");
+                sbuf.append(str);
+                sbuf.append("\"");
+                sbuf.append(": must be ");
+                sbuf.append(table[0]);
+                for (int i = 1; i < tableLen; i++) {
+                    if (i == (tableLen - 1)) {
+                        sbuf.append((i > 1) ? ", or " : " or ");
+                    } else {
+                        sbuf.append(", ");
+                    }
+                    sbuf.append(table[i]);
+                }
+                throw new TclException(interp, sbuf.toString());
+            }
+        }
 
-	// Create a new index object.
+        // Create a new index object.
 
-	tobj.setInternalRep(new TclIndex(index, table));
-	return index;
+        tobj.setInternalRep(new TclIndex(index, table));
+        return index;
     }
 
-    
-        public static int get(Interp interp, TclObject tobj, TreeMap TM,
-	    String msg, int flags) throws TclException {
-            
-	InternalRep rep = tobj.getInternalRep();
+    public static int get(Interp interp, TclObject tobj, TreeMap TM,
+            String msg, int flags) throws TclException {
 
-	if (rep instanceof TclIndex) {
-	    if (((TclIndex) rep).TM == TM) {
-		return ((TclIndex) rep).index;
-	    }
-	}
+        InternalRep rep = tobj.getInternalRep();
 
-	String str = tobj.toString();
-	int strLen = str.length();
-	int tableLen = TM.size();
-	int index = -1;
-	int numAbbrev = 0;
-        
-        checking: {
+        if (rep instanceof TclIndex) {
+            if (((TclIndex) rep).TM == TM) {
+                return ((TclIndex) rep).index;
+            }
+        }
+
+        String str = tobj.toString();
+        int strLen = str.length();
+        int tableLen = TM.size();
+        int index = -1;
+        int numAbbrev = 0;
+
+        checking:
+        {
             Integer IObj = (Integer) TM.get(str);
-            
-            if ( IObj != null) {
-                index =  IObj.intValue();
+
+            if (IObj != null) {
+                index = IObj.intValue();
                 break checking;
             }
-            if ( (flags & TCL.EXACT) != TCL.EXACT) {
+            if ((flags & TCL.EXACT) != TCL.EXACT) {
                 Iterator it = TM.keySet().iterator();
                 Object obj;
                 while (it.hasNext()) {
                     obj = it.next();
                     String option = (String) obj;
-                    if(option.startsWith(str)) {
+                    if (option.startsWith(str)) {
                         numAbbrev++;
                         index = ((Integer) TM.get(option)).intValue();
                     }
-                    if(option.compareTo(str) >0 ) {   //option > str
+                    if (option.compareTo(str) > 0) {   //option > str
                         break checking;
                         //System.out.println(obj + ": " + TM.get(obj));
                     }
                 }
             }
-            
-             if (numAbbrev != 1) {
-		StringBuffer sbuf = new StringBuffer();
-		if (numAbbrev > 1) {
-		    sbuf.append("ambiguous ");
-		} else {
-		    sbuf.append("bad ");
-		}
-		sbuf.append(msg);
-		sbuf.append(" \"");
-		sbuf.append(str);
-		sbuf.append("\"");
-		sbuf.append(": must be ");
-                
+
+            if (numAbbrev != 1) {
+                StringBuffer sbuf = new StringBuffer();
+                if (numAbbrev > 1) {
+                    sbuf.append("ambiguous ");
+                } else {
+                    sbuf.append("bad ");
+                }
+                sbuf.append(msg);
+                sbuf.append(" \"");
+                sbuf.append(str);
+                sbuf.append("\"");
+                sbuf.append(": must be ");
+
                 Iterator it = TM.keySet().iterator();
                 Object obj;
- 
+
                 while (it.hasNext()) {
                     obj = it.next();
                     String option = (String) obj;
-                   sbuf.append(option);
-                   
+                    sbuf.append(option);
+
                     if (it.hasNext()) {
 
                         sbuf.append(", ");
-                    } 
+                    }
 
-                 }                
+                }
 
-		throw new TclException(interp, sbuf.toString());
-	    }
+                throw new TclException(interp, sbuf.toString());
+            }
         }
-       
- 	// Create a new index object.
 
-	tobj.setInternalRep(new TclIndex(index, TM));
-	return index;
+        // Create a new index object.
+
+        tobj.setInternalRep(new TclIndex(index, TM));
+        return index;
     }
+
     /**
      * Invoked only when testing the TclIndex implementation in TestObjCmd.java
      */
     void testUpdateIndex(int index) {
         this.index = index;
     }
-
 }
 

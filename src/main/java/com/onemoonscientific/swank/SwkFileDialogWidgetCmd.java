@@ -38,8 +38,8 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.text.*;
 
-
 class SwkFileDialogWidgetCmd implements Command {
+
     static final private String[] validCmds = {
         "configure", "cget", "open", "save", "filter"
     };
@@ -55,20 +55,20 @@ class SwkFileDialogWidgetCmd implements Command {
     }
 
     public void cmdProc(final Interp interp, final TclObject[] argv)
-        throws TclException {
+            throws TclException {
         int i;
 
         if (argv.length < 2) {
             throw new TclNumArgsException(interp, 1, argv,
-                "option ?arg arg ...?");
+                    "option ?arg arg ...?");
         }
 
         int opt = TclIndex.get(interp, argv[1], validCmds, "option", 0);
-        TclObject tObj = (TclObject) Widgets.getWidget(interp,argv[0].toString());
+        TclObject tObj = (TclObject) Widgets.getWidget(interp, argv[0].toString());
 
         if (tObj == null) {
             throw new TclException(interp,
-                "bad window path name \"" + argv[0].toString() + "\"");
+                    "bad window path name \"" + argv[0].toString() + "\"");
         }
 
         final SwkFileDialog swkfiledialog = (SwkFileDialog) ReflectObject.get(interp,
@@ -76,71 +76,71 @@ class SwkFileDialogWidgetCmd implements Command {
 
         switch (opt) {
 
-        case OPT_CGET:
+            case OPT_CGET:
 
-            if (argv.length != 3) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-
-            interp.setResult(swkfiledialog.jget(interp, argv[2]));
-
-            break;
-
-        case OPT_CONFIGURE:
-
-            if (!gotDefaults) {
-                swkfiledialog.setResourceDefaults();
-                gotDefaults = true;
-            }
-
-            if (argv.length == 2) {
-                swkfiledialog.jgetAll(interp);
-            } else if (argv.length == 3) {
-                String result = swkfiledialog.jget(interp, argv[2]);
-                ResourceObject ro = (ResourceObject) SwkFileDialog.resourceDB.get(argv[2].toString());
-
-                if (ro == null) {
-                    throw new TclException(interp,
-                        "unknown option \"" + argv[2].toString() + "\"");
+                if (argv.length != 3) {
+                    throw new TclNumArgsException(interp, 2, argv, "option");
                 }
 
-                TclObject list = TclList.newInstance();
-                TclList.append(interp, list,
-                    TclString.newInstance(argv[2].toString()));
-                TclList.append(interp, list, TclString.newInstance(ro.resource));
-                TclList.append(interp, list, TclString.newInstance(ro.className));
-                TclList.append(interp, list,
-                    TclString.newInstance(ro.defaultVal));
-                TclList.append(interp, list, TclString.newInstance(result));
-                interp.setResult(list);
-            } else {
-                swkfiledialog.configure(interp, argv, 2);
-            }
+                interp.setResult(swkfiledialog.jget(interp, argv[2]));
 
-            break;
+                break;
 
-        case OPT_OPEN:
-            open(interp, swkfiledialog, argv);
+            case OPT_CONFIGURE:
 
-            break;
+                if (!gotDefaults) {
+                    swkfiledialog.setResourceDefaults();
+                    gotDefaults = true;
+                }
 
-        case OPT_SAVE:
-            save(interp, swkfiledialog, argv);
+                if (argv.length == 2) {
+                    swkfiledialog.jgetAll(interp);
+                } else if (argv.length == 3) {
+                    String result = swkfiledialog.jget(interp, argv[2]);
+                    ResourceObject ro = (ResourceObject) SwkFileDialog.resourceDB.get(argv[2].toString());
 
-            break;
+                    if (ro == null) {
+                        throw new TclException(interp,
+                                "unknown option \"" + argv[2].toString() + "\"");
+                    }
 
-        case OPT_FILTER:
-            filter(interp, swkfiledialog, argv);
+                    TclObject list = TclList.newInstance();
+                    TclList.append(interp, list,
+                            TclString.newInstance(argv[2].toString()));
+                    TclList.append(interp, list, TclString.newInstance(ro.resource));
+                    TclList.append(interp, list, TclString.newInstance(ro.className));
+                    TclList.append(interp, list,
+                            TclString.newInstance(ro.defaultVal));
+                    TclList.append(interp, list, TclString.newInstance(result));
+                    interp.setResult(list);
+                } else {
+                    swkfiledialog.configure(interp, argv, 2);
+                }
 
-            break;
+                break;
 
-        default:
-            throw new TclRuntimeError("TclIndex.get() error");
+            case OPT_OPEN:
+                open(interp, swkfiledialog, argv);
+
+                break;
+
+            case OPT_SAVE:
+                save(interp, swkfiledialog, argv);
+
+                break;
+
+            case OPT_FILTER:
+                filter(interp, swkfiledialog, argv);
+
+                break;
+
+            default:
+                throw new TclRuntimeError("TclIndex.get() error");
         }
     }
 
     void open(Interp interp, SwkFileDialog swkfiledialog, TclObject[] argv)
-        throws TclException {
+            throws TclException {
         if (argv.length != 2) {
             throw new TclNumArgsException(interp, 2, argv, "");
         }
@@ -154,7 +154,7 @@ class SwkFileDialogWidgetCmd implements Command {
                 try {
                     for (int iFile = 0; iFile < files.length; iFile++) {
                         TclList.append(interp, list,
-                            TclString.newInstance(
+                                TclString.newInstance(
                                 files[iFile].getAbsolutePath()));
                     }
                 } catch (TclException tclE) {
@@ -170,7 +170,7 @@ class SwkFileDialogWidgetCmd implements Command {
     }
 
     void save(Interp interp, SwkFileDialog swkfiledialog, TclObject[] argv)
-        throws TclException {
+            throws TclException {
         if (argv.length != 2) {
             throw new TclNumArgsException(interp, 2, argv, "");
         }
@@ -183,7 +183,7 @@ class SwkFileDialogWidgetCmd implements Command {
     }
 
     void filter(Interp interp, SwkFileDialog swkfiledialog, TclObject[] argv)
-        throws TclException {
+            throws TclException {
         if (argv.length != 4) {
             throw new TclNumArgsException(interp, 2, argv, "option");
         }
@@ -194,6 +194,7 @@ class SwkFileDialogWidgetCmd implements Command {
     }
 
     class Open extends GetValueOnEventThread {
+
         int index = -1;
         String item = null;
         SwkFileDialog swkfiledialog;
@@ -224,6 +225,7 @@ class SwkFileDialogWidgetCmd implements Command {
     }
 
     class Save extends GetValueOnEventThread {
+
         int index = -1;
         String item = null;
         SwkFileDialog swkfiledialog;
@@ -246,18 +248,19 @@ class SwkFileDialogWidgetCmd implements Command {
     }
 
     class Filter extends UpdateOnEventThread {
+
         SwkFilenameFilter filter = null;
         SwkFileDialog swkfiledialog = null;
 
         void exec(final SwkFileDialog swkfiledialog,
-            final SwkFilenameFilter filter) {
+                final SwkFilenameFilter filter) {
             this.swkfiledialog = swkfiledialog;
             this.filter = filter;
             execOnThread();
         }
 
         public void run() {
-           swkfiledialog.setFilenameFilter(filter);
+            swkfiledialog.setFilenameFilter(filter);
         }
     }
 }

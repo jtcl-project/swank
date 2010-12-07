@@ -6,8 +6,8 @@ import tcl.lang.*;
 
 import java.awt.*;
 
-
 public class OutlineParameter extends CanvasParameter {
+
     private static String name = "outline";
     private static Color defValue = null;
     private Color newValue = defValue;
@@ -29,7 +29,7 @@ public class OutlineParameter extends CanvasParameter {
     }
 
     public TclObject getValue(Interp interp, SwkShape swkShape)
-        throws TclException {
+            throws TclException {
         if (swkShape == null) {
             throw new TclException(interp, "shape doesn't exist");
         }
@@ -38,7 +38,7 @@ public class OutlineParameter extends CanvasParameter {
     }
 
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
-        throws TclException {
+            throws TclException {
         newValue = SwankUtil.getColor(interp, arg);
     }
 

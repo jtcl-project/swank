@@ -18,8 +18,8 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
-
 class SwkJTableWidgetCmd implements Command {
+
     static final private String[] validCmds = {
         "cget", "configure", "sort", "column", "rowforindex",
         "indexforrow", "update", "set", "get", "mset", "mget", "setmodel",
@@ -54,164 +54,164 @@ class SwkJTableWidgetCmd implements Command {
     }
 
     public void cmdProc(final Interp interp, final TclObject[] argv)
-        throws TclException {
+            throws TclException {
         int i;
 
         if (argv.length < 2) {
             throw new TclNumArgsException(interp, 1, argv,
-                "option ?arg arg ...?");
+                    "option ?arg arg ...?");
         }
 
         final int opt = TclIndex.get(interp, argv[1], validCmds, "option", 0);
-        final TclObject tObj = (TclObject) Widgets.getWidget(interp,argv[0].toString());
+        final TclObject tObj = (TclObject) Widgets.getWidget(interp, argv[0].toString());
         this.interp = interp;
 
         if (tObj == null) {
             throw new TclException(interp,
-                "bad window path name \"" + argv[0].toString() + "\"");
+                    "bad window path name \"" + argv[0].toString() + "\"");
         }
 
         final SwkJTable swkjtable = (SwkJTable) ReflectObject.get(interp, tObj);
 
         switch (opt) {
-        case OPT_CGET:
+            case OPT_CGET:
 
-            if (argv.length != 3) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-
-            interp.setResult(swkjtable.jget(interp, argv[2]));
-
-            break;
-
-        case OPT_CONFIGURE:
-
-            if (!gotDefaults) {
-                swkjtable.setResourceDefaults();
-                gotDefaults = true;
-            }
-
-            if (argv.length == 2) {
-                swkjtable.jgetAll(interp);
-            } else if (argv.length == 3) {
-                String result = swkjtable.jget(interp, argv[2]);
-                ResourceObject ro = (ResourceObject) SwkJTable.resourceDB.get(argv[2].toString());
-
-                if (ro == null) {
-                    throw new TclException(interp,
-                        "unknown option \"" + argv[2].toString() + "\"");
+                if (argv.length != 3) {
+                    throw new TclNumArgsException(interp, 2, argv, "option");
                 }
 
-                TclObject list = TclList.newInstance();
-                TclList.append(interp, list,
-                    TclString.newInstance(argv[2].toString()));
-                TclList.append(interp, list, TclString.newInstance(ro.resource));
-                TclList.append(interp, list, TclString.newInstance(ro.className));
-                TclList.append(interp, list,
-                    TclString.newInstance(ro.defaultVal));
-                TclList.append(interp, list, TclString.newInstance(result));
-                interp.setResult(list);
-            } else {
-                swkjtable.configure(interp, argv, 2);
-            }
+                interp.setResult(swkjtable.jget(interp, argv[2]));
 
-            break;
+                break;
 
-        case OPT_SORT:
-            sort(interp, swkjtable, argv);
+            case OPT_CONFIGURE:
 
-            break;
+                if (!gotDefaults) {
+                    swkjtable.setResourceDefaults();
+                    gotDefaults = true;
+                }
 
-        case OPT_COLUMN:
-            column(interp, swkjtable, argv);
+                if (argv.length == 2) {
+                    swkjtable.jgetAll(interp);
+                } else if (argv.length == 3) {
+                    String result = swkjtable.jget(interp, argv[2]);
+                    ResourceObject ro = (ResourceObject) SwkJTable.resourceDB.get(argv[2].toString());
 
-            break;
+                    if (ro == null) {
+                        throw new TclException(interp,
+                                "unknown option \"" + argv[2].toString() + "\"");
+                    }
 
-        case OPT_ROWFORINDEX:
-            rowForIndex(interp, swkjtable, argv);
+                    TclObject list = TclList.newInstance();
+                    TclList.append(interp, list,
+                            TclString.newInstance(argv[2].toString()));
+                    TclList.append(interp, list, TclString.newInstance(ro.resource));
+                    TclList.append(interp, list, TclString.newInstance(ro.className));
+                    TclList.append(interp, list,
+                            TclString.newInstance(ro.defaultVal));
+                    TclList.append(interp, list, TclString.newInstance(result));
+                    interp.setResult(list);
+                } else {
+                    swkjtable.configure(interp, argv, 2);
+                }
 
-            break;
+                break;
 
-        case OPT_INDEXFORROW:
-            indexForRow(interp, swkjtable, argv);
+            case OPT_SORT:
+                sort(interp, swkjtable, argv);
 
-            break;
+                break;
 
-        case OPT_UPDATE:
-            update(interp, swkjtable, argv);
+            case OPT_COLUMN:
+                column(interp, swkjtable, argv);
 
-            break;
+                break;
 
-        case OPT_SET:
-            set(interp, swkjtable, argv, true);
+            case OPT_ROWFORINDEX:
+                rowForIndex(interp, swkjtable, argv);
 
-            break;
+                break;
 
-        case OPT_MSET:
-            set(interp, swkjtable, argv, false);
+            case OPT_INDEXFORROW:
+                indexForRow(interp, swkjtable, argv);
 
-            break;
+                break;
 
-        case OPT_GET:
-            get(interp, swkjtable, argv, true);
+            case OPT_UPDATE:
+                update(interp, swkjtable, argv);
 
-            break;
+                break;
 
-        case OPT_MGET:
-            get(interp, swkjtable, argv, false);
+            case OPT_SET:
+                set(interp, swkjtable, argv, true);
 
-            break;
+                break;
 
-        case OPT_SETMODEL:
-            setModel(interp, swkjtable, argv);
+            case OPT_MSET:
+                set(interp, swkjtable, argv, false);
 
-            break;
+                break;
 
-        case OPT_SELECTION:
-            selection(interp, swkjtable, argv);
+            case OPT_GET:
+                get(interp, swkjtable, argv, true);
 
-            break;
+                break;
 
-        case OPT_SHOWROW:
-            showRow(interp, swkjtable, argv);
+            case OPT_MGET:
+                get(interp, swkjtable, argv, false);
 
-            break;
+                break;
 
-        case OPT_COLUMNATPOINT:
-            rowOrColumnAtPoint(interp, swkjtable, argv, false);
+            case OPT_SETMODEL:
+                setModel(interp, swkjtable, argv);
 
-            break;
+                break;
 
-        case OPT_ROWATPOINT:
-            rowOrColumnAtPoint(interp, swkjtable, argv, true);
+            case OPT_SELECTION:
+                selection(interp, swkjtable, argv);
 
-            break;
+                break;
 
-        case OPT_CONVERTCOLUMNINDEXTOMODEL:
-            convertColumnIndexToModel(interp, swkjtable, argv);
+            case OPT_SHOWROW:
+                showRow(interp, swkjtable, argv);
 
-            break;
+                break;
 
-        case OPT_COLUMNWIDTH:
-            columnWidth(interp, swkjtable, argv);
+            case OPT_COLUMNATPOINT:
+                rowOrColumnAtPoint(interp, swkjtable, argv, false);
 
-            break;
+                break;
 
-        case OPT_COLUMNRESIZABLE:
-            columnResizable(interp, swkjtable, argv);
+            case OPT_ROWATPOINT:
+                rowOrColumnAtPoint(interp, swkjtable, argv, true);
 
-            break;
+                break;
 
-        default:
-            throw new TclRuntimeError("TclIndex.get() error");
+            case OPT_CONVERTCOLUMNINDEXTOMODEL:
+                convertColumnIndexToModel(interp, swkjtable, argv);
+
+                break;
+
+            case OPT_COLUMNWIDTH:
+                columnWidth(interp, swkjtable, argv);
+
+                break;
+
+            case OPT_COLUMNRESIZABLE:
+                columnResizable(interp, swkjtable, argv);
+
+                break;
+
+            default:
+                throw new TclRuntimeError("TclIndex.get() error");
         }
     }
 
     void sort(final Interp interp, final SwkJTable swkjtable,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if (argv.length < 3) {
             throw new TclNumArgsException(interp, 2, argv,
-                "?-descending|-ascending? ?-date? column");
+                    "?-descending|-ascending? ?-date? column");
         }
 
         int iCol = 0;
@@ -235,7 +235,7 @@ class SwkJTableWidgetCmd implements Command {
     }
 
     void column(final Interp interp, final SwkJTable swkjtable,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if (argv.length != 4) {
             throw new TclNumArgsException(interp, 2, argv, "option");
         }
@@ -251,7 +251,7 @@ class SwkJTableWidgetCmd implements Command {
     }
 
     void rowForIndex(final Interp interp, final SwkJTable swkjtable,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if (argv.length != 3) {
             throw new TclNumArgsException(interp, 2, argv, "option");
         }
@@ -262,7 +262,7 @@ class SwkJTableWidgetCmd implements Command {
     }
 
     void indexForRow(final Interp interp, final SwkJTable swkjtable,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if (argv.length != 3) {
             throw new TclNumArgsException(interp, 2, argv, "option");
         }
@@ -273,7 +273,7 @@ class SwkJTableWidgetCmd implements Command {
     }
 
     void update(final Interp interp, final SwkJTable swkjtable,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if (argv.length > 3) {
             throw new TclNumArgsException(interp, 2, argv, "?data?");
         }
@@ -286,8 +286,8 @@ class SwkJTableWidgetCmd implements Command {
     }
 
     void set(final Interp interp, final SwkJTable swkjtable,
-        final TclObject[] argv, final boolean useSorted)
-        throws TclException {
+            final TclObject[] argv, final boolean useSorted)
+            throws TclException {
         if (argv.length != 5) {
             throw new TclNumArgsException(interp, 2, argv, "option");
         }
@@ -298,8 +298,8 @@ class SwkJTableWidgetCmd implements Command {
     }
 
     void get(final Interp interp, final SwkJTable swkjtable,
-        final TclObject[] argv, final boolean useSorted)
-        throws TclException {
+            final TclObject[] argv, final boolean useSorted)
+            throws TclException {
         if (argv.length != 4) {
             throw new TclNumArgsException(interp, 2, argv, "option");
         }
@@ -322,7 +322,7 @@ class SwkJTableWidgetCmd implements Command {
     }
 
     void setModel(final Interp interp, final SwkJTable swkjtable,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if (argv.length != 3) {
             throw new TclNumArgsException(interp, 2, argv, "model");
         }
@@ -335,18 +335,19 @@ class SwkJTableWidgetCmd implements Command {
         }
 
         try {
-        SwingUtilities.invokeAndWait(new Runnable() {
-         public void run()  {
-            TableModel currentModel = swkjtable.getModel();
+            SwingUtilities.invokeAndWait(new Runnable() {
 
-            if (currentModel instanceof TableSorter) {
-                ((TableSorter) currentModel).setTableModel(tableModel);
-            } else {
-                swkjtable.setModel(tableModel);
-            }
-            swkjtable.swkTableModel = tableModel;
-         } 
-        });
+                public void run() {
+                    TableModel currentModel = swkjtable.getModel();
+
+                    if (currentModel instanceof TableSorter) {
+                        ((TableSorter) currentModel).setTableModel(tableModel);
+                    } else {
+                        swkjtable.setModel(tableModel);
+                    }
+                    swkjtable.swkTableModel = tableModel;
+                }
+            });
         } catch (Exception e) {
             throw new TclException(interp, e.getMessage());
         }
@@ -354,7 +355,7 @@ class SwkJTableWidgetCmd implements Command {
     }
 
     void selection(final Interp interp, final SwkJTable swkjtable,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if ((argv.length < 3) || (argv.length > 5)) {
             throw new TclNumArgsException(interp, 2, argv, "");
         }
@@ -384,7 +385,7 @@ class SwkJTableWidgetCmd implements Command {
             if (srows != null) {
                 for (int i = 0; i < srows.length; i++) {
                     TclList.append(interp, tList,
-                        TclInteger.newInstance(srows[i]));
+                            TclInteger.newInstance(srows[i]));
                 }
             }
 
@@ -393,7 +394,7 @@ class SwkJTableWidgetCmd implements Command {
     }
 
     void showRow(final Interp interp, final SwkJTable swkjtable,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if ((argv.length < 3) || (argv.length > 4)) {
             throw new TclNumArgsException(interp, 2, argv, "index1 ?index2?");
         }
@@ -409,8 +410,8 @@ class SwkJTableWidgetCmd implements Command {
     }
 
     void rowOrColumnAtPoint(final Interp interp, final SwkJTable swkjtable,
-        final TclObject[] argv, final boolean rowMode)
-        throws TclException {
+            final TclObject[] argv, final boolean rowMode)
+            throws TclException {
         if (argv.length != 4) {
             throw new TclNumArgsException(interp, 2, argv, "x y");
         }
@@ -422,8 +423,8 @@ class SwkJTableWidgetCmd implements Command {
     }
 
     void convertColumnIndexToModel(final Interp interp,
-        final SwkJTable swkjtable, final TclObject[] argv)
-        throws TclException {
+            final SwkJTable swkjtable, final TclObject[] argv)
+            throws TclException {
         if (argv.length != 3) {
             throw new TclNumArgsException(interp, 2, argv, "column");
         }
@@ -434,7 +435,7 @@ class SwkJTableWidgetCmd implements Command {
     }
 
     void columnWidth(final Interp interp, final SwkJTable swkjtable,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if ((argv.length != 3) && (argv.length != 4)) {
             throw new TclNumArgsException(interp, 2, argv, "column");
         }
@@ -453,7 +454,7 @@ class SwkJTableWidgetCmd implements Command {
     }
 
     void columnResizable(final Interp interp, final SwkJTable swkjtable,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if ((argv.length != 3) && (argv.length != 4)) {
             throw new TclNumArgsException(interp, 2, argv, "column");
         }
@@ -472,13 +473,14 @@ class SwkJTableWidgetCmd implements Command {
     }
 
     class Sort extends UpdateOnEventThread {
+
         SwkJTable swkjtable = null;
         int iCol = 0;
         int status = TableSorter.NOT_SORTED;
         String sortMode = null;
 
         void exec(final SwkJTable swkjtable, final int iCol, final int status,
-            final String sortMode) {
+                final String sortMode) {
             this.swkjtable = swkjtable;
             this.iCol = iCol;
             this.status = status;
@@ -492,12 +494,13 @@ class SwkJTableWidgetCmd implements Command {
     }
 
     class Column extends UpdateOnEventThread {
+
         SwkJTable swkjtable = null;
         int iCol = 0;
         Object colClass = null;
 
         void exec(final SwkJTable swkjtable, final int iCol,
-            final Object colClass) {
+                final Object colClass) {
             this.swkjtable = swkjtable;
             this.iCol = iCol;
             this.colClass = colClass;
@@ -506,18 +509,19 @@ class SwkJTableWidgetCmd implements Command {
 
         public void run() {
             swkjtable.swkTableModel.setColumnClass(interp, iCol,
-                (Class) colClass);
+                    (Class) colClass);
         }
     }
 
     class Row extends GetValueOnEventThread {
+
         SwkJTable swkjtable = null;
         int inVal = 0;
         boolean rowForIndex = false;
         int result = 0;
 
         int exec(final SwkJTable swkjtable, final int inVal,
-            final boolean rowForIndex) {
+                final boolean rowForIndex) {
             this.inVal = inVal;
             this.rowForIndex = rowForIndex;
             this.swkjtable = swkjtable;
@@ -536,6 +540,7 @@ class SwkJTableWidgetCmd implements Command {
     }
 
     class Update extends UpdateOnEventThread {
+
         static final int DATA = 0;
         static final int STRUCTURE = 1;
         SwkJTable swkjtable = null;
@@ -564,6 +569,7 @@ class SwkJTableWidgetCmd implements Command {
     }
 
     class Set extends UpdateOnEventThread {
+
         SwkJTable swkjtable = null;
         int iRow = 0;
         int iCol = 0;
@@ -571,7 +577,7 @@ class SwkJTableWidgetCmd implements Command {
         TclObject value = null;
 
         void exec(final SwkJTable swkjtable, final int iRow, final int iCol,
-            final boolean useSorted, final TclObject value) {
+                final boolean useSorted, final TclObject value) {
             this.iRow = iRow;
             this.iCol = iCol;
             this.value = value.duplicate();
@@ -597,6 +603,7 @@ class SwkJTableWidgetCmd implements Command {
     }
 
     class Get extends GetValueOnEventThread {
+
         SwkJTable swkjtable = null;
         int iRow = 0;
         int iCol = 0;
@@ -604,7 +611,7 @@ class SwkJTableWidgetCmd implements Command {
         Object tblObject = null;
 
         Object exec(final SwkJTable swkjtable, final int iRow, final int iCol,
-            final boolean useSorted) {
+                final boolean useSorted) {
             this.iRow = iRow;
             this.iCol = iCol;
             this.useSorted = useSorted;
@@ -631,6 +638,7 @@ class SwkJTableWidgetCmd implements Command {
     }
 
     class SelectionSet extends UpdateOnEventThread {
+
         final static int CLEAR = 0;
         final static int SET = 1;
         SwkJTable swkjtable = null;
@@ -697,6 +705,7 @@ class SwkJTableWidgetCmd implements Command {
     }
 
     class SelectionGet extends GetValueOnEventThread {
+
         final static int COUNT_ROWS = 0;
         final static int GET_ROWS = 1;
         SwkJTable swkjtable = null;
@@ -733,6 +742,7 @@ class SwkJTableWidgetCmd implements Command {
     }
 
     class ShowRow extends UpdateOnEventThread {
+
         SwkJTable swkjtable = null;
         int row1 = 0;
         int row2 = 0;
@@ -753,6 +763,7 @@ class SwkJTableWidgetCmd implements Command {
     }
 
     class ConvertColumn extends GetValueOnEventThread {
+
         SwkJTable swkjtable = null;
         int column = 0;
         int result = 0;
@@ -771,6 +782,7 @@ class SwkJTableWidgetCmd implements Command {
     }
 
     class RowOrColumnAtPoint extends GetValueOnEventThread {
+
         SwkJTable swkjtable = null;
         int x = 0;
         int y = 0;
@@ -778,7 +790,7 @@ class SwkJTableWidgetCmd implements Command {
         int result = 0;
 
         int exec(final SwkJTable swkjtable, final int x, final int y,
-            final boolean rowMode) {
+                final boolean rowMode) {
             this.x = x;
             this.y = y;
             this.rowMode = rowMode;
@@ -799,6 +811,7 @@ class SwkJTableWidgetCmd implements Command {
     }
 
     class SetColumnWidth extends UpdateOnEventThread {
+
         SwkJTable swkjtable = null;
         int column = 0;
         int width = 0;
@@ -822,11 +835,12 @@ class SwkJTableWidgetCmd implements Command {
                 }
 
                 tableColumn.setWidth(width);
-           }
+            }
         }
     }
 
     class GetColumnWidth extends GetValueOnEventThread {
+
         SwkJTable swkjtable = null;
         int column = 0;
         int width = 0;
@@ -849,12 +863,13 @@ class SwkJTableWidgetCmd implements Command {
     }
 
     class SetColumnResizable extends UpdateOnEventThread {
+
         SwkJTable swkjtable = null;
         int column = 0;
         boolean resizable = false;
 
         void exec(final SwkJTable swkjtable, final int column,
-            final boolean resizable) {
+                final boolean resizable) {
             this.column = column;
             this.resizable = resizable;
             this.swkjtable = swkjtable;
@@ -871,6 +886,7 @@ class SwkJTableWidgetCmd implements Command {
     }
 
     class GetColumnResizable extends UpdateOnEventThread {
+
         SwkJTable swkjtable = null;
         int column = 0;
         boolean resizable = false;

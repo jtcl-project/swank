@@ -7,12 +7,12 @@ package com.onemoonscientific.swank.canvas;
 
 import java.awt.geom.AffineTransform;
 
-
 /**
  *
  * @author brucejohnson
  */
 public class Transformer {
+
     /** Creates a new instance of Transformer */
     private AffineTransform aT = new AffineTransform();
     private boolean valid = false;

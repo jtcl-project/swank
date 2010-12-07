@@ -37,8 +37,8 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
-
 public class SwkFocusListener implements FocusListener, SwkListener {
+
     Interp interp;
     String command = "puts Focus";
     Component component;
@@ -49,10 +49,10 @@ public class SwkFocusListener implements FocusListener, SwkListener {
         this.component = component;
         bindings = new ArrayList<SwkBinding>();
     }
+
     public ArrayList<SwkBinding> getBindings() {
         return bindings;
     }
-
 
     public void setCommand(String name) {
         command = name;
@@ -63,13 +63,13 @@ public class SwkFocusListener implements FocusListener, SwkListener {
     }
 
     public void setBinding(SwkBinding newBinding) {
-        SwkBind.setBinding(bindings,newBinding);
+        SwkBind.setBinding(bindings, newBinding);
     }
 
     public void focusGained(FocusEvent e) {
         if (interp != null) {
             BindEvent bEvent = new BindEvent(interp, (SwkListener) this,
-                (EventObject) e, SwkBinding.IN);
+                    (EventObject) e, SwkBinding.IN);
             interp.getNotifier().queueEvent(bEvent, TCL.QUEUE_TAIL);
         }
     }
@@ -77,18 +77,18 @@ public class SwkFocusListener implements FocusListener, SwkListener {
     public void focusLost(FocusEvent e) {
         if (interp != null) {
             BindEvent bEvent = new BindEvent(interp, (SwkListener) this,
-                (EventObject) e, SwkBinding.OUT);
+                    (EventObject) e, SwkBinding.OUT);
             interp.getNotifier().queueEvent(bEvent, TCL.QUEUE_TAIL);
         }
     }
 
-  public void processEvent(EventObject eventObject, Object obj, int subtype) {
+    public void processEvent(EventObject eventObject, Object obj, int subtype) {
         FocusEvent e = (FocusEvent) eventObject;
         ArrayList<SwkBinding> bindings = null;
         Vector tagList = ((SwkWidget) component).getTagList();
 
         SwkBinding binding;
-      for (int j = 0; j < tagList.size(); j++) {
+        for (int j = 0; j < tagList.size(); j++) {
             bindings = null;
 
             String tag = (String) tagList.elementAt(j);
@@ -107,27 +107,26 @@ public class SwkFocusListener implements FocusListener, SwkListener {
                 continue;
             }
 
-        for (int i = 0; i < bindings.size(); i++) {
-            binding = (SwkBinding) bindings.get(i);
-            if (binding.subtype != subtype) {
-                continue;
-            }
+            for (int i = 0; i < bindings.size(); i++) {
+                binding = (SwkBinding) bindings.get(i);
+                if (binding.subtype != subtype) {
+                    continue;
+                }
 
 
-            if ((binding.command != null) && (binding.command.length() != 0)) {
-                try {
-                    BindCmd.doCmd(interp, binding, component, e);
-                } catch (TclException tclE) {
-                    if (tclE.getCompletionCode() == TCL.BREAK) {
-                        return;
-                    } else {
-                        interp.addErrorInfo("\n    (\"binding\" script)");
-                        interp.backgroundError();
+                if ((binding.command != null) && (binding.command.length() != 0)) {
+                    try {
+                        BindCmd.doCmd(interp, binding, component, e);
+                    } catch (TclException tclE) {
+                        if (tclE.getCompletionCode() == TCL.BREAK) {
+                            return;
+                        } else {
+                            interp.addErrorInfo("\n    (\"binding\" script)");
+                            interp.backgroundError();
+                        }
                     }
                 }
             }
         }
     }
-    }
-
 }

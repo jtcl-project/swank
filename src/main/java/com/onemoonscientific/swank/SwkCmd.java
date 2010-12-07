@@ -37,8 +37,8 @@ import java.util.*;
 
 import javax.swing.*;
 
-
 public class SwkCmd implements Command {
+
     int interpResult = 0;
     String errorString = null;
 
@@ -47,7 +47,7 @@ public class SwkCmd implements Command {
      * @param argv
      * @throws TclException  */
     public void cmdProc(Interp interp, TclObject[] argv)
-        throws TclException {
+            throws TclException {
         if (!EventQueue.isDispatchThread()) {
             WidgetCmd widgetCmd = new WidgetCmd(interp, argv);
             interpResult = 0;
@@ -72,6 +72,7 @@ public class SwkCmd implements Command {
     }
 
     class WidgetCmd implements Runnable {
+
         Interp interp;
         TclObject[] argv = null;
 

@@ -18,7 +18,6 @@ import java.io.*;
 
 import java.util.*;
 
-
 /**
  * The Shell class is similar to the Tclsh program: you can use it to
  * execute a Tcl script or enter Tcl command interactively at the
@@ -42,8 +41,9 @@ public class SwkShell extends Shell {
      *
      *----------------------------------------------------------------------
      */
+
     public static void main(String[] args) // Array of command-line argument strings.
-     {
+    {
         String fileName = null;
 
         // Create the interpreter. This will also create the built-in
@@ -54,7 +54,7 @@ public class SwkShell extends Shell {
             interp.evalResource("/com/onemoonscientific/swank/library/init.tcl");
         } catch (TclException e) {
             System.out.println(
-                "could not open /com/onemoonscientific/swank/library/init.tcl");
+                    "could not open /com/onemoonscientific/swank/library/init.tcl");
             System.exit(1);
         }
 
@@ -75,14 +75,14 @@ public class SwkShell extends Shell {
 
             if (fileName == null) {
                 interp.setVar("argv0", TclString.newInstance("tcl.lang.Shell"),
-                    TCL.GLOBAL_ONLY);
+                        TCL.GLOBAL_ONLY);
                 interp.setVar("tcl_interactive", TclBoolean.newInstance(true),
-                    TCL.GLOBAL_ONLY);
+                        TCL.GLOBAL_ONLY);
             } else {
                 interp.setVar("argv0", TclString.newInstance(fileName),
-                    TCL.GLOBAL_ONLY);
+                        TCL.GLOBAL_ONLY);
                 interp.setVar("tcl_interactive", TclBoolean.newInstance(false),
-                    TCL.GLOBAL_ONLY);
+                        TCL.GLOBAL_ONLY);
                 i++;
                 argc--;
             }
@@ -113,7 +113,7 @@ public class SwkShell extends Shell {
                 Notifier notifier = interp.getNotifier();
 
                 while (true) {
-                // process events until "exit" is called.
+                    // process events until "exit" is called.
                     notifier.doOneEvent(TCL.ALL_EVENTS);
                 }
             } catch (TclException e) {
@@ -123,8 +123,8 @@ public class SwkShell extends Shell {
                     code = interp.updateReturnInfo();
 
                     if (code != TCL.OK) {
-                        System.err.println("command returned bad code: " +
-                            code);
+                        System.err.println("command returned bad code: "
+                                + code);
                     }
                 } else if (code == TCL.ERROR) {
                     System.err.println(interp.getResult().toString());
@@ -152,7 +152,7 @@ public class SwkShell extends Shell {
             try {
                 interp.eval("::swank::cmdLineArgs");
             } catch (TclException e) {
-                System.out.println("error "+e.getMessage());
+                System.out.println("error " + e.getMessage());
             }
             // We are running in interactive mode. Start the ConsoleThread
             // that loops, grabbing stdin and passing it to the interp.
@@ -172,3 +172,4 @@ public class SwkShell extends Shell {
 
 
 // end class Shell
+

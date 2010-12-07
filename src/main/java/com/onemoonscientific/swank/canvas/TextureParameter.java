@@ -14,8 +14,8 @@ import java.util.*;
 
 import javax.swing.*;
 
-
 public class TextureParameter extends CanvasParameter {
+
     private static String name = "texture";
     private static TexturePaint defValue = null;
     private String newName = "";
@@ -38,19 +38,19 @@ public class TextureParameter extends CanvasParameter {
     }
 
     public static TexturePaint getFromImage(Interp interp, TclObject arg)
-        throws TclException {
+            throws TclException {
         ImageIcon image = SwankUtil.getImageIcon(interp, arg);
 
         if (image == null) {
             throw new TclException(interp,
-                "image \"" + arg.toString() + "\" doesn't exist");
+                    "image \"" + arg.toString() + "\" doesn't exist");
         }
 
         BufferedImage bufferedImage = new BufferedImage(image.getIconWidth(),
                 image.getIconHeight(), BufferedImage.TYPE_INT_RGB);
         Graphics g2 = bufferedImage.createGraphics();
         g2.drawImage(image.getImage(), 0, 0, image.getIconWidth(),
-            image.getIconHeight(), null);
+                image.getIconHeight(), null);
 
         // g2.setColor(Color.orange);
         //g2.drawOval(0,0,50,50);
@@ -61,7 +61,7 @@ public class TextureParameter extends CanvasParameter {
     }
 
     public TclObject getValue(Interp interp, SwkShape swkShape)
-        throws TclException {
+            throws TclException {
         if (swkShape == null) {
             throw new TclException(interp, "shape doesn't exist");
         }
@@ -70,7 +70,7 @@ public class TextureParameter extends CanvasParameter {
     }
 
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
-        throws TclException {
+            throws TclException {
         newName = arg.toString();
         if (newName.equals("")) {
             newValue = null;

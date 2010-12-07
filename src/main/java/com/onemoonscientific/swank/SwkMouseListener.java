@@ -33,9 +33,8 @@ import java.lang.*;
 
 import java.util.*;
 
-
-
 public class SwkMouseListener implements MouseListener, SwkListener {
+
     Interp interp;
     String command = "puts mouse";
     ArrayList<SwkBinding> bindings;
@@ -56,7 +55,7 @@ public class SwkMouseListener implements MouseListener, SwkListener {
     }
 
     public void setBinding(SwkBinding newBinding) {
-        SwkBind.setBinding(bindings,newBinding);
+        SwkBind.setBinding(bindings, newBinding);
         Collections.sort(bindings);
     }
 
@@ -118,8 +117,7 @@ public class SwkMouseListener implements MouseListener, SwkListener {
                 bindings = this.bindings;
             } else if (tag.startsWith(".")) {
                 try {
-                    bindings = ((SwkWidget) Widgets.get(interp, tag)).getMouseListener()
-                                .getBindings();
+                    bindings = ((SwkWidget) Widgets.get(interp, tag)).getMouseListener().getBindings();
                 } catch (TclException tclE) {
                 }
             } else {
@@ -140,15 +138,15 @@ public class SwkMouseListener implements MouseListener, SwkListener {
                 if (binding.subtype != subtype) {
                     continue;
                 }
-                if ((subtype != SwkBinding.ENTER) &&
-                        (subtype != SwkBinding.EXIT)) {
-                    if ((e.getClickCount() > 0) &&
-                            (binding.count > e.getClickCount())) {
+                if ((subtype != SwkBinding.ENTER)
+                        && (subtype != SwkBinding.EXIT)) {
+                    if ((e.getClickCount() > 0)
+                            && (binding.count > e.getClickCount())) {
                         continue;
                     }
 
                     if (!SwkMouseMotionListener.checkButtons(binding.detail,
-                                button)) {
+                            button)) {
                         continue;
                     }
 
@@ -160,8 +158,8 @@ public class SwkMouseListener implements MouseListener, SwkListener {
                     continue;
                 }
 
-                if ((binding.command != null) &&
-                        (binding.command.length() != 0)) {
+                if ((binding.command != null)
+                        && (binding.command.length() != 0)) {
                     try {
                         //System.out.println("doCmdMouse "+eventObject.toString()+" "+binding.command);
                         BindCmd.doCmd(interp, binding.command, e);

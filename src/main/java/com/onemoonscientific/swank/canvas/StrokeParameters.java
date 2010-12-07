@@ -33,7 +33,7 @@ public class StrokeParameters {
             if (isDashIntPattern() || (width == 1.0f) || (width == 0.0f)) {
                 stroke = new BasicStroke(width, getCap(), getJoin(), getMiterLimit(), getDash(), getDashPhase());
             } else {
-               float[] dashTemp = new float[getDash().length];
+                float[] dashTemp = new float[getDash().length];
                 for (int i = 0; i < getDash().length; i++) {
                     dashTemp[i] = getDash()[i] * width;
                 }
@@ -42,7 +42,7 @@ public class StrokeParameters {
         }
         return stroke;
     }
-  
+
     /**
      * @return the cap
      */
@@ -53,8 +53,8 @@ public class StrokeParameters {
     /**
      * @param cap the cap to set
      */
-    public static StrokeParameters  setCap(StrokeParameters strokePar, int newValue) {
-      if (newValue != strokePar.cap) {
+    public static StrokeParameters setCap(StrokeParameters strokePar, int newValue) {
+        if (newValue != strokePar.cap) {
             if (strokePar == defaultPar) {
                 strokePar = new StrokeParameters();
             }
@@ -62,7 +62,7 @@ public class StrokeParameters {
 
         }
         return strokePar;
-     }
+    }
 
     /**
      * @return the join
@@ -92,8 +92,8 @@ public class StrokeParameters {
     /**
      * @param miterLimit the miterLimit to set
      */
-    public static StrokeParameters  setMiterLimit(StrokeParameters strokePar, float newValue) {
-      if (newValue != strokePar.miterLimit) {
+    public static StrokeParameters setMiterLimit(StrokeParameters strokePar, float newValue) {
+        if (newValue != strokePar.miterLimit) {
             if (strokePar == defaultPar) {
                 strokePar = new StrokeParameters();
             }
@@ -101,7 +101,7 @@ public class StrokeParameters {
 
         }
         return strokePar;
-     }
+    }
 
     /**
      * @return the dashString
@@ -113,8 +113,8 @@ public class StrokeParameters {
     /**
      * @param dashString the dashString to set
      */
-    public static StrokeParameters  setDashString(StrokeParameters strokePar, String newValue) {
-      if (!newValue.equals(strokePar.dashString)) {
+    public static StrokeParameters setDashString(StrokeParameters strokePar, String newValue) {
+        if (!newValue.equals(strokePar.dashString)) {
             if (strokePar == defaultPar) {
                 strokePar = new StrokeParameters();
             }
@@ -122,7 +122,7 @@ public class StrokeParameters {
 
         }
         return strokePar;
-     }
+    }
 
     /**
      * @return the dash
@@ -134,19 +134,19 @@ public class StrokeParameters {
     /**
      * @param dash the dash to set
      */
-    public static StrokeParameters  setDash(StrokeParameters strokePar, float[] newValue) {
-      boolean change = false;
-      if (newValue.length != strokePar.dash.length) {
-          change = true;
-      } else {
-          for (int i=0;i<newValue.length;i++) {
-              if (newValue[i] != strokePar.dash[i]) {
-                  change = true;
-                  break;
-              }
-          }
-      }
-      if (change) {
+    public static StrokeParameters setDash(StrokeParameters strokePar, float[] newValue) {
+        boolean change = false;
+        if (newValue.length != strokePar.dash.length) {
+            change = true;
+        } else {
+            for (int i = 0; i < newValue.length; i++) {
+                if (newValue[i] != strokePar.dash[i]) {
+                    change = true;
+                    break;
+                }
+            }
+        }
+        if (change) {
             if (strokePar == defaultPar) {
                 strokePar = new StrokeParameters();
             }
@@ -154,7 +154,7 @@ public class StrokeParameters {
 
         }
         return strokePar;
-     }
+    }
 
     /**
      * @return the dashPhase
@@ -166,8 +166,8 @@ public class StrokeParameters {
     /**
      * @param dashPhase the dashPhase to set
      */
-    public static StrokeParameters  setDashPhase(StrokeParameters strokePar, float newValue) {
-      if (newValue != strokePar.dashPhase) {
+    public static StrokeParameters setDashPhase(StrokeParameters strokePar, float newValue) {
+        if (newValue != strokePar.dashPhase) {
             if (strokePar == defaultPar) {
                 strokePar = new StrokeParameters();
             }
@@ -175,7 +175,7 @@ public class StrokeParameters {
 
         }
         return strokePar;
-     }
+    }
 
     /**
      * @return the dashIntPattern
@@ -187,8 +187,8 @@ public class StrokeParameters {
     /**
      * @param dashIntPattern the dashIntPattern to set
      */
-    public static StrokeParameters  setDashIntPattern(StrokeParameters strokePar, boolean newValue) {
-      if (newValue != strokePar.dashIntPattern) {
+    public static StrokeParameters setDashIntPattern(StrokeParameters strokePar, boolean newValue) {
+        if (newValue != strokePar.dashIntPattern) {
             if (strokePar == defaultPar) {
                 strokePar = new StrokeParameters();
             }
@@ -196,6 +196,5 @@ public class StrokeParameters {
 
         }
         return strokePar;
-     }
-
+    }
 }

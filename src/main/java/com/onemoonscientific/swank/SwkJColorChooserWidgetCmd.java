@@ -38,8 +38,8 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.text.*;
 
-
 class SwkJColorChooserWidgetCmd implements Command {
+
     static final private String[] validCmds = {
         "configure", "cget", "choose"
     };
@@ -53,20 +53,20 @@ class SwkJColorChooserWidgetCmd implements Command {
     }
 
     public void cmdProc(final Interp interp, final TclObject[] argv)
-        throws TclException {
+            throws TclException {
         int i;
 
         if (argv.length < 2) {
             throw new TclNumArgsException(interp, 1, argv,
-                "option ?arg arg ...?");
+                    "option ?arg arg ...?");
         }
 
         int opt = TclIndex.get(interp, argv[1], validCmds, "option", 0);
-        TclObject tObj = (TclObject) Widgets.getWidget(interp,argv[0].toString());
+        TclObject tObj = (TclObject) Widgets.getWidget(interp, argv[0].toString());
 
         if (tObj == null) {
             throw new TclException(interp,
-                "bad window path name \"" + argv[0].toString() + "\"");
+                    "bad window path name \"" + argv[0].toString() + "\"");
         }
 
         final SwkJColorChooser swkjcolorchooser = (SwkJColorChooser) ReflectObject.get(interp,
@@ -74,61 +74,61 @@ class SwkJColorChooserWidgetCmd implements Command {
 
         switch (opt) {
 
-        case OPT_CGET:
+            case OPT_CGET:
 
-            if (argv.length != 3) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-
-            interp.setResult(swkjcolorchooser.jget(interp, argv[2]));
-
-            break;
-
-        case OPT_CONFIGURE:
-
-            if (!gotDefaults) {
-                swkjcolorchooser.setResourceDefaults();
-                gotDefaults = true;
-            }
-
-            if (argv.length == 2) {
-                swkjcolorchooser.jgetAll(interp);
-            } else if (argv.length == 3) {
-                String result = swkjcolorchooser.jget(interp, argv[2]);
-                ResourceObject ro = (ResourceObject) SwkJColorChooser.resourceDB.get(argv[2].toString());
-
-                if (ro == null) {
-                    throw new TclException(interp,
-                        "unknown option \"" + argv[2].toString() + "\"");
+                if (argv.length != 3) {
+                    throw new TclNumArgsException(interp, 2, argv, "option");
                 }
 
-                TclObject list = TclList.newInstance();
-                TclList.append(interp, list,
-                    TclString.newInstance(argv[2].toString()));
-                TclList.append(interp, list, TclString.newInstance(ro.resource));
-                TclList.append(interp, list, TclString.newInstance(ro.className));
-                TclList.append(interp, list,
-                    TclString.newInstance(ro.defaultVal));
-                TclList.append(interp, list, TclString.newInstance(result));
-                interp.setResult(list);
-            } else {
-                swkjcolorchooser.configure(interp, argv, 2);
-            }
+                interp.setResult(swkjcolorchooser.jget(interp, argv[2]));
 
-            break;
+                break;
 
-        case OPT_CHOOSE:
-            choose(interp, swkjcolorchooser, argv);
+            case OPT_CONFIGURE:
 
-            break;
+                if (!gotDefaults) {
+                    swkjcolorchooser.setResourceDefaults();
+                    gotDefaults = true;
+                }
 
-        default:
-            throw new TclRuntimeError("TclIndex.get() error");
+                if (argv.length == 2) {
+                    swkjcolorchooser.jgetAll(interp);
+                } else if (argv.length == 3) {
+                    String result = swkjcolorchooser.jget(interp, argv[2]);
+                    ResourceObject ro = (ResourceObject) SwkJColorChooser.resourceDB.get(argv[2].toString());
+
+                    if (ro == null) {
+                        throw new TclException(interp,
+                                "unknown option \"" + argv[2].toString() + "\"");
+                    }
+
+                    TclObject list = TclList.newInstance();
+                    TclList.append(interp, list,
+                            TclString.newInstance(argv[2].toString()));
+                    TclList.append(interp, list, TclString.newInstance(ro.resource));
+                    TclList.append(interp, list, TclString.newInstance(ro.className));
+                    TclList.append(interp, list,
+                            TclString.newInstance(ro.defaultVal));
+                    TclList.append(interp, list, TclString.newInstance(result));
+                    interp.setResult(list);
+                } else {
+                    swkjcolorchooser.configure(interp, argv, 2);
+                }
+
+                break;
+
+            case OPT_CHOOSE:
+                choose(interp, swkjcolorchooser, argv);
+
+                break;
+
+            default:
+                throw new TclRuntimeError("TclIndex.get() error");
         }
     }
 
     void choose(Interp interp, SwkJColorChooser swkjcolorchooser,
-        TclObject[] argv) throws TclException {
+            TclObject[] argv) throws TclException {
         if (argv.length != 4) {
             throw new TclNumArgsException(interp, 2, argv, "title color");
         }
@@ -143,13 +143,14 @@ class SwkJColorChooserWidgetCmd implements Command {
     }
 
     class Choose extends GetValueOnEventThread {
+
         SwkJColorChooser swkjcolorchooser;
         Color color = null;
         Color initialColor = null;
         String title = "";
 
         Color exec(final SwkJColorChooser swkjcolorchooser, final String title,
-            final Color initialColor) {
+                final Color initialColor) {
             this.swkjcolorchooser = swkjcolorchooser;
             this.title = title;
             this.initialColor = initialColor;

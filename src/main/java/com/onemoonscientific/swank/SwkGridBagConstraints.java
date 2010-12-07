@@ -36,8 +36,8 @@ import java.util.*;
 
 import javax.swing.*;
 
-
 class SwkGridBagConstraints extends GridBagConstraints {
+
     public String side = "top";
     public String parent = null;
     public String geometryType = null;

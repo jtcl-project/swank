@@ -14,26 +14,26 @@
  */
 package tcl.lang;
 
-
 /**
  * The SwkShell class is similar to the Tclsh program: you can use it to
  * execute a Tcl script or enter Tcl command interactively at the
  * command prompt.
  */
 public class SwkExceptionCmd {
+
     public static void doExceptionCmd(Interp interp, String cmd)
-        throws TclException {
+            throws TclException {
         interp.allowExceptions();
 
         try {
             interp.eval(cmd);
         } catch (TclException tclE) {
             throw new TclException(interp, tclE.getMessage(),
-                tclE.getCompletionCode());
+                    tclE.getCompletionCode());
         } catch (Exception e) {
             e.printStackTrace();
             throw new TclException(interp,
-                "Error executing:\n" + cmd + "\n" + e.getMessage());
+                    "Error executing:\n" + cmd + "\n" + e.getMessage());
         }
     }
 
@@ -59,7 +59,7 @@ public class SwkExceptionCmd {
     }
 
     public static void setVar(Interp interp, String var1, String var2,
-        double value) {
+            double value) {
         TclObject tObj = TclDouble.newInstance(value);
         setVar(interp, var1, var2, tObj);
     }
@@ -70,19 +70,19 @@ public class SwkExceptionCmd {
     }
 
     public static void setVar(Interp interp, String var1, String var2,
-        boolean value) {
+            boolean value) {
         TclObject tObj = TclBoolean.newInstance(value);
         setVar(interp, var1, var2, tObj);
     }
 
     public static void setVar(Interp interp, String var1, String var2,
-        String value) {
+            String value) {
         TclObject tObj = TclString.newInstance(value);
         setVar(interp, var1, var2, tObj);
     }
 
     public static void setVar(Interp interp, String var1, String var2,
-        TclObject tObj) {
+            TclObject tObj) {
         interp.allowExceptions();
 
         try {

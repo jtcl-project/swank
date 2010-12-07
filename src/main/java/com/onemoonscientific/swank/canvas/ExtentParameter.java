@@ -4,8 +4,8 @@ import tcl.lang.*;
 
 import java.awt.geom.*;
 
-
 public class ExtentParameter extends CanvasParameter {
+
     private static String name = "extent";
     private static double defValue = 90.0;
     private double newValue = defValue;
@@ -27,7 +27,7 @@ public class ExtentParameter extends CanvasParameter {
     }
 
     public TclObject getValue(Interp interp, SwkShape swkShape)
-        throws TclException {
+            throws TclException {
         if (swkShape == null) {
             throw new TclException(interp, "shape doesn't exist");
         }
@@ -42,13 +42,13 @@ public class ExtentParameter extends CanvasParameter {
     }
 
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
-        throws TclException {
+            throws TclException {
         newValue = TclDouble.get(interp, arg);
     }
 
     public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
-        if ((swkShape != null) && (swkShape.shape != null) &&
-                (swkShape instanceof ItemArc)) {
+        if ((swkShape != null) && (swkShape.shape != null)
+                && (swkShape instanceof ItemArc)) {
             Arc2D arc2D = ((ItemArc) swkShape).arc2D;
             arc2D.setAngleExtent(newValue);
             swkShape.applyCoordinates();

@@ -6,8 +6,8 @@ import tcl.lang.*;
 
 import java.awt.image.BufferedImage;
 
-
 public class ImageParameter extends CanvasParameter {
+
     private static String name = "image";
     private static String defValue = "";
     private BufferedImage newImage = null;
@@ -30,7 +30,7 @@ public class ImageParameter extends CanvasParameter {
     }
 
     public TclObject getValue(Interp interp, SwkShape swkShape)
-        throws TclException {
+            throws TclException {
         if (swkShape == null) {
             throw new TclException(interp, "shape doesn't exist");
         }
@@ -43,7 +43,7 @@ public class ImageParameter extends CanvasParameter {
     }
 
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
-        throws TclException {
+            throws TclException {
         newImage = SwankUtil.getBufferedImage(interp, arg);
         newName = arg.toString();
     }

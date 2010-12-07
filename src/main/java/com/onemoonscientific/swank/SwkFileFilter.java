@@ -10,8 +10,8 @@ import java.util.Hashtable;
 import javax.swing.*;
 import javax.swing.filechooser.*;
 
-
 public class SwkFileFilter extends FileFilter {
+
     private static String TYPE_UNKNOWN = "Type Unknown";
     private static String HIDDEN_FILE = "Hidden File";
     private Hashtable filters = null;
@@ -40,7 +40,7 @@ public class SwkFileFilter extends FileFilter {
     }
 
     public SwkFileFilter(Interp interp, TclObject extensions, String description)
-        throws TclException {
+            throws TclException {
         this();
 
         TclObject[] argv = TclList.getElements(interp, extensions);
@@ -105,8 +105,8 @@ public class SwkFileFilter extends FileFilter {
     public String getDescription() {
         if (fullDescription == null) {
             if ((description == null) || isExtensionListInDescription()) {
-                fullDescription = (description == null) ? "(" : (description +
-                    " (");
+                fullDescription = (description == null) ? "(" : (description
+                        + " (");
 
                 // build the description from the extension list
                 Enumeration extensions = filters.keys();
@@ -115,8 +115,8 @@ public class SwkFileFilter extends FileFilter {
                     fullDescription += (String) extensions.nextElement();
 
                     while (extensions.hasMoreElements()) {
-                        fullDescription += (", " +
-                        (String) extensions.nextElement());
+                        fullDescription += (", "
+                                + (String) extensions.nextElement());
                     }
                 }
 

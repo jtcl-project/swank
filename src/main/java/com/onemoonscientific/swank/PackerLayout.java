@@ -13,7 +13,6 @@
  * RCS: @(#) $Id: PackerLayout.java,v 1.4 2005/11/07 03:20:21 bruce_johnson Exp $
  *
  */
-
 /**
  * PackerLayout is used to lay out widget components.
  *
@@ -34,17 +33,15 @@ import java.util.*;
 
 import javax.swing.*;
 
-
 public class PackerLayout implements LayoutManager2 {
     //this hashtable will do the mapping between
     //options and the actual option object
-    private static Hashtable option_table;
 
+    private static Hashtable option_table;
     //this hashtable will do the mapping between
     //option arguments and the option that they
     //are valid for
     private static Hashtable value_table;
-
     //if the option_table hash returns a ref to the
     //INT_MAP object then we know that this option
     //just takes an integer
@@ -108,20 +105,15 @@ public class PackerLayout implements LayoutManager2 {
     private static final int DEFAULT_PADX = 0;
     private static final int DEFAULT_PADY = 0;
     private static final Object DEFAULT_SIDE = SIDE_OBJ_TOP;
-
     //place holder for mapping int values to options
     private static final Object INT_MAP = new Object();
-
     //this exception is throws if the number that is passes in on
     //number options is less than zero
     private static final NumberFormatException NFE = new NumberFormatException();
-
     //place holder for mapping boolean values to options
     private static final Object BOOLEAN_MAP = new Object();
-
     //place holder for mapping Tk size values to options
     private static final Object SIZE_MAP = new Object();
-
     //this dimension will be returned from our class in calls to
     //minimumLayoutSize. It is allocated once here so that it does
     //not have to get allocated every time minimumLayoutSize is called
@@ -219,11 +211,9 @@ public class PackerLayout implements LayoutManager2 {
         value_object_table.put(SIDE_OPT_LEFT, SIDE_OBJ_LEFT);
         value_object_table.put(SIDE_OPT_RIGHT, SIDE_OBJ_RIGHT);
     }
-
     private Hashtable component_table;
     private Component firstcomp;
     private Component lastcomp;
-
     // This is kind of wacky, but there does not seem to
     // be any way to "update" the options of a component
     // in a Java layout manager. To implement "update",
@@ -350,7 +340,7 @@ public class PackerLayout implements LayoutManager2 {
         //an element be added to the hash table
         if ((argv.length % 2) != 0) {
             throw new PackingException(
-                "Fatal error in PackerLayout string spec, must have even number of arguments");
+                    "Fatal error in PackerLayout string spec, must have even number of arguments");
         }
 
         max = argv.length;
@@ -382,9 +372,9 @@ public class PackerLayout implements LayoutManager2 {
                         throw NFE;
                     }
                 } catch (NumberFormatException e) {
-                    throw new PackingException("error : value of the " +
-                        argv[i].toString() +
-                        " option must be a non negative integer");
+                    throw new PackingException("error : value of the "
+                            + argv[i].toString()
+                            + " option must be a non negative integer");
                 }
             } else if (option == SIZE_MAP) {
                 TclObject[] size_args = null;
@@ -409,9 +399,9 @@ public class PackerLayout implements LayoutManager2 {
                     }
 
                     if (num < 0) {
-                        throw new PackingException("error : value of the " +
-                            argv[i].toString() +
-                            " option must be a non negative integer");
+                        throw new PackingException("error : value of the "
+                                + argv[i].toString()
+                                + " option must be a non negative integer");
                     }
 
                     //this is an int option so we need to find out which
@@ -422,9 +412,9 @@ public class PackerLayout implements LayoutManager2 {
                     //temp check for fatal case
                     if (value == null) {
                         String str =
-                            "null value object for int parser on option \"" +
-                            argv[i].toString() + "\" : \"" +
-                            argv[i + 1].toString() + "\"";
+                                "null value object for int parser on option \""
+                                + argv[i].toString() + "\" : \""
+                                + argv[i + 1].toString() + "\"";
 
                         throw new RuntimeException(str);
 
@@ -486,12 +476,12 @@ public class PackerLayout implements LayoutManager2 {
                     } else if (s.equals("1")) {
                         bool = true;
                     } else {
-                        throw new PackingException("error : value of the " +
-                            argv[i].toString() + " option must be a boolean");
+                        throw new PackingException("error : value of the "
+                                + argv[i].toString() + " option must be a boolean");
                     }
                 } else {
-                    throw new PackingException("error : value of the " +
-                        argv[i].toString() + " option must be a boolean");
+                    throw new PackingException("error : value of the "
+                            + argv[i].toString() + " option must be a boolean");
                 }
 
                 //this is an int option so we need to find out which
@@ -501,9 +491,9 @@ public class PackerLayout implements LayoutManager2 {
 
                 //temp check for fatal case
                 if (value == null) {
-                    String str = "null value object for int parser on option \"" +
-                        argv[i].toString() + "\" : \"" +
-                        argv[i + 1].toString() + "\"";
+                    String str = "null value object for int parser on option \""
+                            + argv[i].toString() + "\" : \""
+                            + argv[i + 1].toString() + "\"";
 
                     throw new RuntimeException(str);
 
@@ -523,18 +513,18 @@ public class PackerLayout implements LayoutManager2 {
                 //that was just given does not match
                 //any of the predefined option types
                 // unknown or ambiguous option "-foll": must be -after, -anchor, -before, -expand, -fill, -in, -ipadx, -ipady, -padx, -pady, or -side
-                throw new PackingException("bad option \"" +
-                    argv[i].toString() + "\": must be " + "-after" + ", " +
-                    OPT_ANCHOR + ", " + "-before" + ", " + OPT_EXPAND + ", " +
-                    OPT_FILL + ", " + "-in" + ", " + OPT_IPADX + ", " +
-                    OPT_IPADY + ", " + OPT_PADX + ", " + OPT_PADY + ", or " +
-                    OPT_SIDE);
+                throw new PackingException("bad option \""
+                        + argv[i].toString() + "\": must be " + "-after" + ", "
+                        + OPT_ANCHOR + ", " + "-before" + ", " + OPT_EXPAND + ", "
+                        + OPT_FILL + ", " + "-in" + ", " + OPT_IPADX + ", "
+                        + OPT_IPADY + ", " + OPT_PADX + ", " + OPT_PADY + ", or "
+                        + OPT_SIDE);
             } else if (option != value_table.get(argv[i + 1].toString())) {
                 //in this case the given value for the option
                 //did not match one of the possible option values
-                throw new PackingException("error : option \"" +
-                    argv[i].toString() + "\" can not take the value \"" +
-                    argv[i + 1].toString() + "\"");
+                throw new PackingException("error : option \""
+                        + argv[i].toString() + "\" can not take the value \""
+                        + argv[i + 1].toString() + "\"");
             } else {
                 //if no other conditions are true then we
                 //must have matched both the option and the value
@@ -545,9 +535,9 @@ public class PackerLayout implements LayoutManager2 {
                 //temp check
                 if (value == null) {
                     String str =
-                        "null value object for option parser on option \"" +
-                        argv[i].toString() + "\" : \"" +
-                        argv[i + 1].toString() + "\"";
+                            "null value object for option parser on option \""
+                            + argv[i].toString() + "\" : \""
+                            + argv[i + 1].toString() + "\"";
 
                     throw new RuntimeException(str);
                 }
@@ -581,7 +571,7 @@ public class PackerLayout implements LayoutManager2 {
      * @param comp the the component to be added
      */
     public static void checkPackArgs(Interp interp, String spec, Component comp)
-        throws TclException {
+            throws TclException {
         int i;
         int max;
 
@@ -597,10 +587,10 @@ public class PackerLayout implements LayoutManager2 {
         //to the hash table, only if an argument is given will
         //an element be added to the hash table
         /*  if ((argv.length % 2) != 0) {
-              throw new TclException(interp,
-                  "Error in pack configure command, must have even number of arguments");
-          }
-        */
+        throw new TclException(interp,
+        "Error in pack configure command, must have even number of arguments");
+        }
+         */
         max = argv.length;
 
         Object option;
@@ -616,16 +606,16 @@ public class PackerLayout implements LayoutManager2 {
                 //any of the predefined option types
                 // unknown or ambiguous option "-foll": must be -after, -anchor, -before, -expand, -fill, -in, -ipadx, -ipady, -padx, -pady, or -side
                 throw new TclException(interp,
-                    "bad option \"" + argv[i].toString() + "\": must be " +
-                    "-after" + ", " + OPT_ANCHOR + ", " + "-before" + ", " +
-                    OPT_EXPAND + ", " + OPT_FILL + ", " + "-in" + ", " +
-                    OPT_IPADX + ", " + OPT_IPADY + ", " + OPT_PADX + ", " +
-                    OPT_PADY + ", or " + OPT_SIDE);
+                        "bad option \"" + argv[i].toString() + "\": must be "
+                        + "-after" + ", " + OPT_ANCHOR + ", " + "-before" + ", "
+                        + OPT_EXPAND + ", " + OPT_FILL + ", " + "-in" + ", "
+                        + OPT_IPADX + ", " + OPT_IPADY + ", " + OPT_PADX + ", "
+                        + OPT_PADY + ", or " + OPT_SIDE);
             }
 
             if ((i + 1) >= max) {
                 throw new TclException(interp,
-                    "no value for argument \"" + argv[i].toString() + "\"");
+                        "no value for argument \"" + argv[i].toString() + "\"");
             }
 
             //see if the option returned is the INT_MAP
@@ -643,8 +633,8 @@ public class PackerLayout implements LayoutManager2 {
                     }
                 } catch (NumberFormatException e) {
                     throw new TclException(interp,
-                        "error : value of the " + argv[i].toString() +
-                        " option must be a non negative integer");
+                            "error : value of the " + argv[i].toString()
+                            + " option must be a non negative integer");
                 }
             } else if (option == SIZE_MAP) {
                 //this is an int option so we need to find out which
@@ -653,9 +643,9 @@ public class PackerLayout implements LayoutManager2 {
 
                 //temp check for fatal case
                 if (value == null) {
-                    String str = "null value object for int parser on option \"" +
-                        argv[i].toString() + "\" : \"" +
-                        argv[i + 1].toString() + "\"";
+                    String str = "null value object for int parser on option \""
+                            + argv[i].toString() + "\" : \""
+                            + argv[i + 1].toString() + "\"";
 
                     throw new TclException(interp, str);
                 }
@@ -678,7 +668,7 @@ public class PackerLayout implements LayoutManager2 {
                         throw new TclException(interp, "must be 1 or 2 elements");
                     }
 
-                    String[] padError = { "", "2nd " };
+                    String[] padError = {"", "2nd "};
 
                     for (int iArg = 0; iArg < size_args.length; iArg++) {
                         try {
@@ -686,20 +676,20 @@ public class PackerLayout implements LayoutManager2 {
                                     size_args[iArg].toString());
                         } catch (TclException tclE) {
                             throw new TclException(interp,
-                                "bad " + padError[iArg] + "pad value \"" +
-                                size_args[iArg].toString() +
-                                "\": must be positive screen distance");
+                                    "bad " + padError[iArg] + "pad value \""
+                                    + size_args[iArg].toString()
+                                    + "\": must be positive screen distance");
                         }
 
                         if (num < 0) {
                             throw new TclException(interp,
-                                "bad " + padError[iArg] + "pad value \"" +
-                                size_args[iArg].toString() +
-                                "\": must be positive screen distance");
+                                    "bad " + padError[iArg] + "pad value \""
+                                    + size_args[iArg].toString()
+                                    + "\": must be positive screen distance");
                         }
                     }
                 } else {
-                    String[] padError = { "ipadx", "ipady" };
+                    String[] padError = {"ipadx", "ipady"};
                     int xy = 0;
 
                     if (value == OPT_IPADY) {
@@ -711,16 +701,16 @@ public class PackerLayout implements LayoutManager2 {
                                 argv[i + 1].toString());
                     } catch (TclException tclE) {
                         throw new TclException(interp,
-                            "bad " + padError[xy] + " value \"" +
-                            argv[i + 1].toString() +
-                            "\": must be positive screen distance");
+                                "bad " + padError[xy] + " value \""
+                                + argv[i + 1].toString()
+                                + "\": must be positive screen distance");
                     }
 
                     if (num < 0) {
                         throw new TclException(interp,
-                            "bad " + padError[xy] + " value \"" +
-                            argv[i + 1].toString() +
-                            "\": must be positive screen distance");
+                                "bad " + padError[xy] + " value \""
+                                + argv[i + 1].toString()
+                                + "\": must be positive screen distance");
                     }
                 }
             } else if (option == BOOLEAN_MAP) {
@@ -748,12 +738,12 @@ public class PackerLayout implements LayoutManager2 {
                         bool = true;
                     } else {
                         throw new TclException(interp,
-                            "expected boolean value but got \"" + s + "\"");
+                                "expected boolean value but got \"" + s + "\"");
                     }
                 } else {
                     throw new TclException(interp,
-                        "expected boolean value but got \"" +
-                        argv[i].toString() + "\"");
+                            "expected boolean value but got \""
+                            + argv[i].toString() + "\"");
                 }
 
                 //this is an int option so we need to find out which
@@ -762,9 +752,9 @@ public class PackerLayout implements LayoutManager2 {
 
                 //temp check for fatal case
                 if (value == null) {
-                    String str = "null value object for int parser on option \"" +
-                        argv[i].toString() + "\" : \"" +
-                        argv[i + 1].toString() + "\"";
+                    String str = "null value object for int parser on option \""
+                            + argv[i].toString() + "\" : \""
+                            + argv[i + 1].toString() + "\"";
 
                     throw new TclException(interp, str);
                 }
@@ -778,21 +768,21 @@ public class PackerLayout implements LayoutManager2 {
                 //did not match one of the possible option values
                 if (option == OPT_ANCHOR) {
                     throw new TclException(interp,
-                        "bad anchor \"" + argv[i + 1].toString() +
-                        "\": must be n, ne, e, se, s, sw, w, nw, or center");
+                            "bad anchor \"" + argv[i + 1].toString()
+                            + "\": must be n, ne, e, se, s, sw, w, nw, or center");
                 } else if (option == OPT_FILL) {
                     throw new TclException(interp,
-                        "bad fill style \"" + argv[i + 1].toString() +
-                        "\": must be none, x, y, or both");
+                            "bad fill style \"" + argv[i + 1].toString()
+                            + "\": must be none, x, y, or both");
                 } else if (option == OPT_SIDE) {
                     throw new TclException(interp,
-                        "bad side \"" + argv[i + 1].toString() +
-                        "\": must be top, bottom, left, or right");
+                            "bad side \"" + argv[i + 1].toString()
+                            + "\": must be top, bottom, left, or right");
                 } else {
                     throw new TclException(interp,
-                        "error : option \"" + argv[i].toString() +
-                        "\" can not take the value \"" +
-                        argv[i + 1].toString() + "\"");
+                            "error : option \"" + argv[i].toString()
+                            + "\" can not take the value \""
+                            + argv[i + 1].toString() + "\"");
                 }
             } else {
                 //if no other conditions are true then we
@@ -804,9 +794,9 @@ public class PackerLayout implements LayoutManager2 {
                 //temp check
                 if (value == null) {
                     String str =
-                        "null value object for option parser on option \"" +
-                        argv[i].toString() + "\" : \"" +
-                        argv[i + 1].toString() + "\"";
+                            "null value object for option parser on option \""
+                            + argv[i].toString() + "\" : \""
+                            + argv[i + 1].toString() + "\"";
 
                     throw new TclException(interp, str);
                 }
@@ -908,13 +898,13 @@ public class PackerLayout implements LayoutManager2 {
             SwkJFrame swkJFrame = (SwkJFrame) target2;
 
             /*  if (swkJFrame.geometryActive) {
-                  cdim = new Dimension(swkJFrame.geometry);
-                  cdim.width -= (insets.left + insets.right);
-                  cdim.height -= (insets.top + insets.bottom);
+            cdim = new Dimension(swkJFrame.geometry);
+            cdim.width -= (insets.left + insets.right);
+            cdim.height -= (insets.top + insets.bottom);
 
-                  return cdim;
+            return cdim;
 
-              }
+            }
              **/
             if (!((PackerLayout) (target.getLayout())).propagate) {
                 cdim.width -= (insets.left + insets.right);
@@ -962,10 +952,10 @@ public class PackerLayout implements LayoutManager2 {
                 //break;
             }
 
-            d.width += ((pr.padx[0] + pr.padx[1]) +
-            (pr.ipadx[0] + pr.ipadx[1]) + dim_width);
-            d.height += ((pr.pady[0] + pr.pady[1]) +
-            (pr.ipady[0] + pr.ipady[1]) + dim_height);
+            d.width += ((pr.padx[0] + pr.padx[1])
+                    + (pr.ipadx[0] + pr.ipadx[1]) + dim_width);
+            d.height += ((pr.pady[0] + pr.pady[1])
+                    + (pr.ipady[0] + pr.ipady[1]) + dim_height);
 
             if ((pr.side == SIDE_OBJ_TOP) || (pr.side == SIDE_OBJ_BOTTOM)) {
                 if (d.width > dmax.width) {
@@ -1058,8 +1048,8 @@ public class PackerLayout implements LayoutManager2 {
 
             if ((pr.side == SIDE_OBJ_TOP) || (pr.side == SIDE_OBJ_BOTTOM)) {
                 frameWidth = cavityWidth;
-                frameHeight = prefsize.height + pady +
-                    (pr.ipady[0] + pr.ipady[1]);
+                frameHeight = prefsize.height + pady
+                        + (pr.ipady[0] + pr.ipady[1]);
 
                 if (pr.expand == true) {
                     frameHeight += YExpansion(target, i, cavityHeight);
@@ -1082,8 +1072,8 @@ public class PackerLayout implements LayoutManager2 {
                 }
             } else {
                 frameHeight = cavityHeight;
-                frameWidth = prefsize.width + padx +
-                    (pr.ipadx[0] + pr.ipadx[1]);
+                frameWidth = prefsize.width + padx
+                        + (pr.ipadx[0] + pr.ipadx[1]);
 
                 if (pr.expand == true) {
                     frameWidth += XExpansion(target, i, cavityWidth);
@@ -1147,10 +1137,10 @@ public class PackerLayout implements LayoutManager2 {
                 x = frameX + pr.padx[0];
                 y = frameY + pr.pady[0];
             } else if (anchor == ANCHOR_OBJ_C) {
-                x = (frameX + (frameWidth / 2)) -
-                    ((width + pr.padx[0] + pr.padx[1]) / 2) + pr.padx[0];
-                y = (frameY + (frameHeight / 2)) -
-                    ((height + pr.pady[0] + pr.pady[1]) / 2) + pr.pady[0];
+                x = (frameX + (frameWidth / 2))
+                        - ((width + pr.padx[0] + pr.padx[1]) / 2) + pr.padx[0];
+                y = (frameY + (frameHeight / 2))
+                        - ((height + pr.pady[0] + pr.pady[1]) / 2) + pr.pady[0];
 
                 //y = frameY + ((frameHeight -height)/ 2)+pr.pady[0];
             } else {
@@ -1176,8 +1166,8 @@ public class PackerLayout implements LayoutManager2 {
             Component current = target.getComponent(i);
             PackRecord pr = (PackRecord) component_table.get(current);
 
-            childWidth = current.getPreferredSize().width +
-                (pr.padx[0] + pr.padx[1]) + (pr.ipadx[0] + pr.ipadx[1]);
+            childWidth = current.getPreferredSize().width
+                    + (pr.padx[0] + pr.padx[1]) + (pr.ipadx[0] + pr.ipadx[1]);
 
             if ((pr.side == SIDE_OBJ_TOP) || (pr.side == SIDE_OBJ_BOTTOM)) {
                 curExpand = (cavityWidth - childWidth) / numExpand;
@@ -1223,8 +1213,8 @@ public class PackerLayout implements LayoutManager2 {
 
             PackRecord pr = (PackRecord) component_table.get(current);
 
-            childHeight = current.getPreferredSize().height +
-                (pr.pady[0] + pr.pady[1]) + (pr.ipady[0] + pr.ipady[1]);
+            childHeight = current.getPreferredSize().height
+                    + (pr.pady[0] + pr.pady[1]) + (pr.ipady[0] + pr.ipady[1]);
 
             if ((pr.side == SIDE_OBJ_LEFT) || (pr.side == SIDE_OBJ_RIGHT)) {
                 curExpand = (cavityHeight - childHeight) / numExpand;
@@ -1407,12 +1397,13 @@ public class PackerLayout implements LayoutManager2 {
     //there is one of these records for each widget packed
     //into a window, it stores the pack info for that widget
     class PackRecord {
+
         Component prev = null;
         Component next = null;
-        public int[] padx = { DEFAULT_PADX, DEFAULT_PADX };
-        public int[] pady = { DEFAULT_PADY, DEFAULT_PADY };
-        public int[] ipadx = { DEFAULT_IPADX, DEFAULT_IPADX };
-        public int[] ipady = { DEFAULT_IPADY, DEFAULT_IPADY };
+        public int[] padx = {DEFAULT_PADX, DEFAULT_PADX};
+        public int[] pady = {DEFAULT_PADY, DEFAULT_PADY};
+        public int[] ipadx = {DEFAULT_IPADX, DEFAULT_IPADX};
+        public int[] ipady = {DEFAULT_IPADY, DEFAULT_IPADY};
         public Object side = DEFAULT_SIDE;
         public boolean expand = DEFAULT_EXPAND;
         public Object fill = DEFAULT_FILL;
@@ -1420,10 +1411,10 @@ public class PackerLayout implements LayoutManager2 {
     }
 }
 
-
 //this exception is thrown if invalid arguments are passed
 //to the packer layout
 class PackingException extends RuntimeException {
+
     public PackingException(String desc) {
         super(desc);
     }

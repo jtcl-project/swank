@@ -7,8 +7,8 @@ import java.awt.event.*;
 
 import java.util.*;
 
-
 public class BindEvent extends TclEvent {
+
     Interp interp = null;
     String cmd = null;
     String var1 = null;
@@ -32,7 +32,7 @@ public class BindEvent extends TclEvent {
     }
 
     public BindEvent(Interp interp, SwkListener swkListener, EventObject event,
-        int subtype) {
+            int subtype) {
         this.interp = interp;
         this.swkListener = swkListener;
         this.event = event;
@@ -40,7 +40,7 @@ public class BindEvent extends TclEvent {
     }
 
     public BindEvent(Interp interp, SwkListener swkListener, EventObject event,
-        Object obj, int subtype) {
+            Object obj, int subtype) {
         this.interp = interp;
         this.swkListener = swkListener;
         this.event = event;

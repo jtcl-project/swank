@@ -37,8 +37,8 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
-
 public class SwkKeyCommandListener implements ActionListener, SwkListener {
+
     Interp interp;
     Component component;
     SwkBinding binding;

@@ -38,9 +38,8 @@ import javax.swing.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-
-
 public class SwkAppListener implements PropertyChangeListener, SwkListener {
+
     Interp interp;
     String command = "puts App";
     ArrayList<SwkBinding> bindings;
@@ -59,7 +58,7 @@ public class SwkAppListener implements PropertyChangeListener, SwkListener {
     }
 
     public void setBinding(SwkBinding newBinding) {
-        SwkBind.setBinding(bindings,newBinding);
+        SwkBind.setBinding(bindings, newBinding);
     }
 
     public void processEvent(EventObject eventObject, Object obj, int subtype) {
@@ -85,20 +84,21 @@ public class SwkAppListener implements PropertyChangeListener, SwkListener {
             }
         }
     }
-        public void propertyChange(PropertyChangeEvent e) {
-            String prop = e.getPropertyName();
-            if (prop.equals("activeWindow")) {
-                  Component newComp = (Component) e.getNewValue();
-                  Component oldComp = (Component) e.getOldValue();
-                  BindEvent bEvent = null;
-                  if (newComp == null) {
-                       bEvent = new BindEvent(interp, (SwkListener) this, (EventObject) e, SwkBinding.OUT);
-                  } else if (oldComp == null) {
-                      bEvent = new BindEvent(interp, (SwkListener) this, (EventObject) e, SwkBinding.IN);
-                  }
-                 if (bEvent != null) {
-                     interp.getNotifier().queueEvent(bEvent, TCL.QUEUE_TAIL);
-                 }
-             }
+
+    public void propertyChange(PropertyChangeEvent e) {
+        String prop = e.getPropertyName();
+        if (prop.equals("activeWindow")) {
+            Component newComp = (Component) e.getNewValue();
+            Component oldComp = (Component) e.getOldValue();
+            BindEvent bEvent = null;
+            if (newComp == null) {
+                bEvent = new BindEvent(interp, (SwkListener) this, (EventObject) e, SwkBinding.OUT);
+            } else if (oldComp == null) {
+                bEvent = new BindEvent(interp, (SwkListener) this, (EventObject) e, SwkBinding.IN);
+            }
+            if (bEvent != null) {
+                interp.getNotifier().queueEvent(bEvent, TCL.QUEUE_TAIL);
+            }
         }
+    }
 }

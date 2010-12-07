@@ -27,7 +27,6 @@
  *
  * Created on February 19, 2000, 3:14 PM
  */
-
 /**
  *
  * @author  JOHNBRUC
@@ -46,19 +45,17 @@ import java.lang.*;
 
 import java.util.*;
 
-
 public class ItemSymbols extends SwkShape implements SymbolInterface {
+
     static CanvasParameter[] parameters = {
         new SymbolParameter(), new RadiusParameter(), new RotateParameter(),
-        new ShearParameter(), new TagsParameter(), new StateParameter(),new NodeParameter(),
-        new TransformerParameter(),
-    };
+        new ShearParameter(), new TagsParameter(), new StateParameter(), new NodeParameter(),
+        new TransformerParameter(),};
     static Map parameterMap = new TreeMap();
 
     static {
         initializeParameters(parameters, parameterMap);
     }
-
     float radius = 2.0f;
     int symbolType = 3;
     GeneralPath gPath = null;
@@ -87,17 +84,17 @@ public class ItemSymbols extends SwkShape implements SymbolInterface {
     }
 
     public void coords(SwkImageCanvas canvas, double[] coords)
-        throws SwkException {
+            throws SwkException {
         if (coords.length < 2) {
             throw new SwkException(
-                "wrong # coordinates: expected at least 2, got " +
-                coords.length);
+                    "wrong # coordinates: expected at least 2, got "
+                    + coords.length);
         }
 
         if ((coords.length % 2) != 0) {
             throw new SwkException(
-                "wrong # coordinates: expected even number, got " +
-                coords.length);
+                    "wrong # coordinates: expected even number, got "
+                    + coords.length);
         }
 
         gPath.reset();
@@ -120,7 +117,7 @@ public class ItemSymbols extends SwkShape implements SymbolInterface {
         aT.shear(xShear, yShear);
         aT.translate(-storeCoords[0], -storeCoords[1]);
         aT.rotate(rotate, ((storeCoords[0] + storeCoords[2]) / 2.0),
-            ((storeCoords[1] + storeCoords[3]) / 2.0));
+                ((storeCoords[1] + storeCoords[3]) / 2.0));
         shape = aT.createTransformedShape(gPath);
     }
 
@@ -129,69 +126,69 @@ public class ItemSymbols extends SwkShape implements SymbolInterface {
         float y2;
 
         /*
-          gPath.moveTo(x1-radius,y1);
-          gPath.lineTo(x1+radius,y1);
-          gPath.moveTo(x1,y1-radius);
-          gPath.lineTo(x1,y1+radius);
+        gPath.moveTo(x1-radius,y1);
+        gPath.lineTo(x1+radius,y1);
+        gPath.moveTo(x1,y1-radius);
+        gPath.lineTo(x1,y1+radius);
          */
 
         //System.out.println(symbolType+" "+radius);
         switch (symbolType) {
-        case 0: { //circle
+            case 0: { //circle
 
-            Ellipse2D ellipse = new Ellipse2D.Float(x1 - radius, y1 - radius,
-                    2 * radius, 2 * radius);
-            gPath.append(ellipse, false);
+                Ellipse2D ellipse = new Ellipse2D.Float(x1 - radius, y1 - radius,
+                        2 * radius, 2 * radius);
+                gPath.append(ellipse, false);
 
-            break;
-        }
+                break;
+            }
 
-        case 1: { //triangle up
-            gPath.moveTo(x1, y1 - radius);
-            gPath.lineTo(x1 - (radius * 0.67f), y1 + (radius * 0.66f));
-            gPath.lineTo(x1 + (radius * 0.67f), y1 + (radius * 0.66f));
-            gPath.closePath();
+            case 1: { //triangle up
+                gPath.moveTo(x1, y1 - radius);
+                gPath.lineTo(x1 - (radius * 0.67f), y1 + (radius * 0.66f));
+                gPath.lineTo(x1 + (radius * 0.67f), y1 + (radius * 0.66f));
+                gPath.closePath();
 
-            break;
-        }
+                break;
+            }
 
-        case 2: { //triangle down
-            gPath.moveTo(x1, y1 + radius);
-            gPath.lineTo(x1 - (radius * 0.67f), y1 - (radius * 0.66f));
-            gPath.lineTo(x1 + (radius * 0.67f), y1 - (radius * 0.66f));
-            gPath.closePath();
+            case 2: { //triangle down
+                gPath.moveTo(x1, y1 + radius);
+                gPath.lineTo(x1 - (radius * 0.67f), y1 - (radius * 0.66f));
+                gPath.lineTo(x1 + (radius * 0.67f), y1 - (radius * 0.66f));
+                gPath.closePath();
 
-            break;
-        }
+                break;
+            }
 
-        case 3: { //cross
-            gPath.moveTo(x1, y1 + radius);
-            gPath.lineTo(x1, y1 - radius);
-            gPath.moveTo(x1 - radius, y1);
-            gPath.lineTo(x1 + radius, y1);
+            case 3: { //cross
+                gPath.moveTo(x1, y1 + radius);
+                gPath.lineTo(x1, y1 - radius);
+                gPath.moveTo(x1 - radius, y1);
+                gPath.lineTo(x1 + radius, y1);
 
-            break;
-        }
+                break;
+            }
 
-        case 4: { //square
-            gPath.moveTo(x1 - radius, y1 - radius);
-            gPath.lineTo(x1 + radius, y1 - radius);
-            gPath.lineTo(x1 + radius, y1 + radius);
-            gPath.lineTo(x1 - radius, y1 + radius);
-            gPath.closePath();
+            case 4: { //square
+                gPath.moveTo(x1 - radius, y1 - radius);
+                gPath.lineTo(x1 + radius, y1 - radius);
+                gPath.lineTo(x1 + radius, y1 + radius);
+                gPath.lineTo(x1 - radius, y1 + radius);
+                gPath.closePath();
 
-            break;
-        }
+                break;
+            }
 
-        case 5: { //diamond
-            gPath.moveTo(x1, y1 - radius);
-            gPath.lineTo(x1 + radius, y1);
-            gPath.lineTo(x1, y1 + radius);
-            gPath.lineTo(x1 - radius, y1);
-            gPath.closePath();
+            case 5: { //diamond
+                gPath.moveTo(x1, y1 - radius);
+                gPath.lineTo(x1 + radius, y1);
+                gPath.lineTo(x1, y1 + radius);
+                gPath.lineTo(x1 - radius, y1);
+                gPath.closePath();
 
-            break;
-        }
+                break;
+            }
         }
     }
 

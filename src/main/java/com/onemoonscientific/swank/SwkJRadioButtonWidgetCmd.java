@@ -10,8 +10,8 @@ package com.onemoonscientific.swank;
 import tcl.lang.*;
 import tcl.pkg.java.ReflectObject;
 
-
 class SwkJRadioButtonWidgetCmd implements Command {
+
     static final private String[] validCmds = {
         "cget", "configure", "deselect", "flash", "invoke",
         "select"
@@ -30,115 +30,115 @@ class SwkJRadioButtonWidgetCmd implements Command {
     }
 
     public void cmdProc(final Interp interp, final TclObject[] argv)
-        throws TclException {
+            throws TclException {
         int i;
 
         if (argv.length < 2) {
             throw new TclNumArgsException(interp, 1, argv,
-                "option ?arg arg ...?");
+                    "option ?arg arg ...?");
         }
 
         int opt = TclIndex.get(interp, argv[1], validCmds, "option", 0);
-        TclObject tObj = (TclObject) Widgets.getWidget(interp,argv[0].toString());
+        TclObject tObj = (TclObject) Widgets.getWidget(interp, argv[0].toString());
 
         if (tObj == null) {
             throw new TclException(interp,
-                "bad window path name \"" + argv[0].toString() + "\"");
+                    "bad window path name \"" + argv[0].toString() + "\"");
         }
 
         final SwkJRadioButton swkjradiobutton = (SwkJRadioButton) ReflectObject.get(interp,
                 tObj);
 
         switch (opt) {
-        case OPT_CGET:
+            case OPT_CGET:
 
-            if (argv.length != 3) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-
-            interp.setResult(swkjradiobutton.jget(interp, argv[2]));
-
-            break;
-
-        case OPT_CONFIGURE:
-
-            if (!gotDefaults) {
-                swkjradiobutton.setResourceDefaults();
-                gotDefaults = true;
-            }
-
-            if (argv.length == 2) {
-                swkjradiobutton.jgetAll(interp);
-            } else if (argv.length == 3) {
-                String result = swkjradiobutton.jget(interp, argv[2]);
-                ResourceObject ro = (ResourceObject) SwkJRadioButton.resourceDB.get(argv[2].toString());
-
-                if (ro == null) {
-                    throw new TclException(interp,
-                        "unknown option \"" + argv[2].toString() + "\"");
+                if (argv.length != 3) {
+                    throw new TclNumArgsException(interp, 2, argv, "option");
                 }
 
-                TclObject list = TclList.newInstance();
-                TclList.append(interp, list,
-                    TclString.newInstance(argv[2].toString()));
-                TclList.append(interp, list, TclString.newInstance(ro.resource));
-                TclList.append(interp, list, TclString.newInstance(ro.className));
-                TclList.append(interp, list,
-                    TclString.newInstance(ro.defaultVal));
-                TclList.append(interp, list, TclString.newInstance(result));
-                interp.setResult(list);
-            } else {
-                swkjradiobutton.configure(interp, argv, 2);
-            }
+                interp.setResult(swkjradiobutton.jget(interp, argv[2]));
 
-            break;
+                break;
 
-        case OPT_DESELECT:
-            select(interp, swkjradiobutton, argv);
+            case OPT_CONFIGURE:
 
-            break;
-
-        case OPT_FLASH:
-
-            if (argv.length != 2) {
-                throw new TclNumArgsException(interp, 2, argv, "");
-            }
-
-            break;
-
-        case OPT_INVOKE:
-
-            if (argv.length != 2) {
-                throw new TclNumArgsException(interp, 2, argv, "");
-            }
-
-            if (!swkjradiobutton.isEnabled()) {
-                return;
-            }
-
-            if ((swkjradiobutton.commandListener.command != null) &&
-                    (swkjradiobutton.commandListener.command.length() != 0)) {
-                try {
-                    interp.eval(swkjradiobutton.commandListener.command);
-                } catch (TclException tclE) {
-                    System.out.println(interp.getResult());
+                if (!gotDefaults) {
+                    swkjradiobutton.setResourceDefaults();
+                    gotDefaults = true;
                 }
-            }
 
-            break;
+                if (argv.length == 2) {
+                    swkjradiobutton.jgetAll(interp);
+                } else if (argv.length == 3) {
+                    String result = swkjradiobutton.jget(interp, argv[2]);
+                    ResourceObject ro = (ResourceObject) SwkJRadioButton.resourceDB.get(argv[2].toString());
 
-        case OPT_SELECT:
-            select(interp, swkjradiobutton, argv);
+                    if (ro == null) {
+                        throw new TclException(interp,
+                                "unknown option \"" + argv[2].toString() + "\"");
+                    }
 
-            break;
+                    TclObject list = TclList.newInstance();
+                    TclList.append(interp, list,
+                            TclString.newInstance(argv[2].toString()));
+                    TclList.append(interp, list, TclString.newInstance(ro.resource));
+                    TclList.append(interp, list, TclString.newInstance(ro.className));
+                    TclList.append(interp, list,
+                            TclString.newInstance(ro.defaultVal));
+                    TclList.append(interp, list, TclString.newInstance(result));
+                    interp.setResult(list);
+                } else {
+                    swkjradiobutton.configure(interp, argv, 2);
+                }
 
-        default:
-            throw new TclRuntimeError("TclIndex.get() error");
+                break;
+
+            case OPT_DESELECT:
+                select(interp, swkjradiobutton, argv);
+
+                break;
+
+            case OPT_FLASH:
+
+                if (argv.length != 2) {
+                    throw new TclNumArgsException(interp, 2, argv, "");
+                }
+
+                break;
+
+            case OPT_INVOKE:
+
+                if (argv.length != 2) {
+                    throw new TclNumArgsException(interp, 2, argv, "");
+                }
+
+                if (!swkjradiobutton.isEnabled()) {
+                    return;
+                }
+
+                if ((swkjradiobutton.commandListener.command != null)
+                        && (swkjradiobutton.commandListener.command.length() != 0)) {
+                    try {
+                        interp.eval(swkjradiobutton.commandListener.command);
+                    } catch (TclException tclE) {
+                        System.out.println(interp.getResult());
+                    }
+                }
+
+                break;
+
+            case OPT_SELECT:
+                select(interp, swkjradiobutton, argv);
+
+                break;
+
+            default:
+                throw new TclRuntimeError("TclIndex.get() error");
         }
     }
 
     void deselect(final Interp interp, final SwkJRadioButton swkjradiobutton,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if (argv.length != 2) {
             throw new TclNumArgsException(interp, 2, argv, "");
         }
@@ -147,7 +147,7 @@ class SwkJRadioButtonWidgetCmd implements Command {
     }
 
     void select(final Interp interp, final SwkJRadioButton swkjradiobutton,
-        final TclObject[] argv) throws TclException {
+            final TclObject[] argv) throws TclException {
         if (argv.length != 2) {
             throw new TclNumArgsException(interp, 2, argv, "");
         }
@@ -156,6 +156,7 @@ class SwkJRadioButtonWidgetCmd implements Command {
     }
 
     class Select extends UpdateOnEventThread {
+
         boolean mode = false;
         SwkJRadioButton swkjradiobutton;
 

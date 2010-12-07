@@ -4,8 +4,8 @@ import tcl.lang.*;
 
 import java.awt.geom.*;
 
-
 public class RotateParameter extends CanvasParameter {
+
     private static String name = "rotate";
     private static double defValue = 0.0;
     private float newValue = 0.0f;
@@ -27,7 +27,7 @@ public class RotateParameter extends CanvasParameter {
     }
 
     public TclObject getValue(Interp interp, SwkShape swkShape)
-        throws TclException {
+            throws TclException {
         if (swkShape == null) {
             throw new TclException(interp, "shape doesn't exist");
         }
@@ -36,7 +36,7 @@ public class RotateParameter extends CanvasParameter {
     }
 
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
-        throws TclException {
+            throws TclException {
         newValue = (float) (TclDouble.get(interp, arg) / 180.0 * Math.PI);
     }
 

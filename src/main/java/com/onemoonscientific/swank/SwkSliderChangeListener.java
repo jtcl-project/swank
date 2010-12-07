@@ -37,8 +37,8 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
-
 public class SwkSliderChangeListener implements ChangeListener, VarTrace {
+
     Interp interp;
     String command = null;
     String varName = "";
@@ -60,22 +60,23 @@ public class SwkSliderChangeListener implements ChangeListener, VarTrace {
     }
 
     public void traceProc(Interp interp, String string1, String string2,
-        int flags) throws TclException {
+            int flags) throws TclException {
         if (EventQueue.isDispatchThread()) {
             System.out.println(
-                "tp is ettttttttttttttttttttttttttttttttttttttttttt");
+                    "tp is ettttttttttttttttttttttttttttttttttttttttttt");
         }
 
         // if the variable is removed restore it
         if ((flags & TCL.TRACE_UNSETS) != 0) {
             if ((varName != null) && (!varName.equals(""))) {
                 SwingUtilities.invokeLater(new Runnable() {
-                        public void run() {
-                            setVarValueET();
-                        }
-                    });
+
+                    public void run() {
+                        setVarValueET();
+                    }
+                });
                 interp.traceVar(varName, this,
-                    TCL.TRACE_UNSETS | TCL.TRACE_WRITES | TCL.GLOBAL_ONLY);
+                        TCL.TRACE_UNSETS | TCL.TRACE_WRITES | TCL.GLOBAL_ONLY);
             }
         } else {
             setFromVar(interp, false);
@@ -83,12 +84,12 @@ public class SwkSliderChangeListener implements ChangeListener, VarTrace {
     }
 
     public void setFromVar(Interp interp, boolean override)
-        throws TclException {
+            throws TclException {
         TclObject tobj = null;
 
         if (EventQueue.isDispatchThread()) {
             System.out.println(
-                "sfv is ettttttttttttttttttttttttttttttttttttttttttt");
+                    "sfv is ettttttttttttttttttttttttttttttttttttttttttt");
         }
 
         actionLock = true;
@@ -106,20 +107,22 @@ public class SwkSliderChangeListener implements ChangeListener, VarTrace {
                     value = TclDouble.get(interp, tobj);
 
                     SwingUtilities.invokeLater(new Runnable() {
-                            public void run() {
-                                ((SwkJSlider) component).setDValue(value);
-                            }
-                        });
+
+                        public void run() {
+                            ((SwkJSlider) component).setDValue(value);
+                        }
+                    });
                 } catch (TclException tclE) {
                     if (override) {
                         SwingUtilities.invokeLater(new Runnable() {
-                                public void run() {
-                                    setVarValueET();
-                                }
-                            });
+
+                            public void run() {
+                                setVarValueET();
+                            }
+                        });
                     } else {
                         interp.addErrorInfo(
-                            "\ncan't assign non-numeric value to scale variable");
+                                "\ncan't assign non-numeric value to scale variable");
                         interp.backgroundError();
                     }
                 }
@@ -128,22 +131,22 @@ public class SwkSliderChangeListener implements ChangeListener, VarTrace {
     }
 
     public void setVarName(Interp interp, String name)
-        throws TclException {
+            throws TclException {
         actionLock = true;
 
         if (EventQueue.isDispatchThread()) {
             System.out.println(
-                "svn is ettttttttttttttttttttttttttttttttttttttttttt");
+                    "svn is ettttttttttttttttttttttttttttttttttttttttttt");
         }
 
         if ((varName != null) && (!varName.equals(""))) {
-            interp.untraceVar(varName, this, TCL.TRACE_WRITES |
-                TCL.GLOBAL_ONLY);
+            interp.untraceVar(varName, this, TCL.TRACE_WRITES
+                    | TCL.GLOBAL_ONLY);
         }
 
         /*        double value = ((SwkJSlider) component).getDValue();
-           tobj = TclDouble.newInstance(value);
-           interp.setVar(name,tobj,TCL.GLOBAL_ONLY);
+        tobj = TclDouble.newInstance(value);
+        interp.setVar(name,tobj,TCL.GLOBAL_ONLY);
          */
         varName = name.intern();
 
@@ -159,7 +162,7 @@ public class SwkSliderChangeListener implements ChangeListener, VarTrace {
 
             setFromVar(interp, true);
             interp.traceVar(name, this,
-                TCL.TRACE_UNSETS | TCL.TRACE_WRITES | TCL.GLOBAL_ONLY);
+                    TCL.TRACE_UNSETS | TCL.TRACE_WRITES | TCL.GLOBAL_ONLY);
         }
 
         actionLock = false;
@@ -172,13 +175,13 @@ public class SwkSliderChangeListener implements ChangeListener, VarTrace {
     public void setVarValueET() {
         if (!EventQueue.isDispatchThread()) {
             System.out.println(
-                "svvet not ettttttttttttttttttttttttttttttttttttttttttt");
+                    "svvet not ettttttttttttttttttttttttttttttttttttttttttt");
         }
 
         actionLock = true;
 
-        if ((((SwkJSlider) component).resolution >= 1.0) &&
-                (((SwkJSlider) component).digits == 0)) {
+        if ((((SwkJSlider) component).resolution >= 1.0)
+                && (((SwkJSlider) component).digits == 0)) {
             SetIntVarEvent intEvent = new SetIntVarEvent(interp, varName, null,
                     (int) value);
             interp.getNotifier().queueEvent(intEvent, TCL.QUEUE_TAIL);
@@ -194,7 +197,7 @@ public class SwkSliderChangeListener implements ChangeListener, VarTrace {
     public void stateChanged(ChangeEvent e) {
         if (!EventQueue.isDispatchThread()) {
             System.out.println(
-                "sc not ettttttttttttttttttttttttttttttttttttttttttt");
+                    "sc not ettttttttttttttttttttttttttttttttttttttttttt");
         }
 
         if (!((SwkWidget) component).isCreated()) {
@@ -216,8 +219,8 @@ public class SwkSliderChangeListener implements ChangeListener, VarTrace {
         if (!actionLock && (command != null) && (command.length() != 0)) {
             String cmd = null;
 
-            if ((((SwkJSlider) component).resolution >= 1.0) &&
-                    (((SwkJSlider) component).digits == 0)) {
+            if ((((SwkJSlider) component).resolution >= 1.0)
+                    && (((SwkJSlider) component).digits == 0)) {
                 cmd = command + " " + ((int) value);
             } else {
                 cmd = command + " " + value;

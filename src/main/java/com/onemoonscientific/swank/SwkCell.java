@@ -1,10 +1,10 @@
 /*
-* Copyright (c) 2000 One Moon Scientfic, Inc. Inc., Westfield, N.J., USA
-*
-* See the file "LICENSE" for information on usage and redistribution
-* of this file, and for a DISCLAIMER OF ALL WARRANTIES.
-*
-*/
+ * Copyright (c) 2000 One Moon Scientfic, Inc. Inc., Westfield, N.J., USA
+ *
+ * See the file "LICENSE" for information on usage and redistribution
+ * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+ *
+ */
 package com.onemoonscientific.swank;
 
 import tcl.lang.*;
@@ -29,8 +29,8 @@ import javax.swing.text.*;
 import javax.swing.text.html.*;
 import javax.swing.tree.*;
 
-
 public class SwkCell implements TableCellRenderer {
+
     static Hashtable resourceDB = null;
     String command = null;
     String className = null;
@@ -49,7 +49,7 @@ public class SwkCell implements TableCellRenderer {
     }
 
     public Component getTableCellRendererComponent(JTable table, Object value,
-        boolean isSelected, boolean hasFocus, int row, int column) {
+            boolean isSelected, boolean hasFocus, int row, int column) {
         TclObject tObj = null;
         String evalString = null;
         String strValue = value.toString();
@@ -66,14 +66,13 @@ public class SwkCell implements TableCellRenderer {
         if (evalString != null) {
             try {
                 doCommand(interp, table, hasFocus, isSelected, row, column,
-                    strValue, evalString);
-                tObj = (TclObject) Widgets.getWidget(interp,interp.getResult()
-                                                                .toString());
+                        strValue, evalString);
+                tObj = (TclObject) Widgets.getWidget(interp, interp.getResult().toString());
             } catch (TclException tclE) {
                 System.out.println(tclE.toString());
             }
         } else {
-            tObj = (TclObject) Widgets.getWidget(interp,strValue.toString());
+            tObj = (TclObject) Widgets.getWidget(interp, strValue.toString());
         }
 
         if (tObj == null) {
@@ -94,8 +93,8 @@ public class SwkCell implements TableCellRenderer {
 
     // FIXME
     public void doCommand(Interp interp, JTable table, boolean hasFocus,
-        boolean isSelected, int row, int col, String strValue, String command)
-        throws TclException {
+            boolean isSelected, int row, int col, String strValue, String command)
+            throws TclException {
         int i;
         char type;
         int mCol = table.convertColumnIndexToModel(col);
@@ -112,70 +111,70 @@ public class SwkCell implements TableCellRenderer {
                 type = command.charAt(i);
 
                 switch (type) {
-                case 'w':
-                    sbuf.append(Integer.toString(rect.width));
+                    case 'w':
+                        sbuf.append(Integer.toString(rect.width));
 
-                    break;
+                        break;
 
-                case 'h':
-                    sbuf.append(Integer.toString(rect.height));
+                    case 'h':
+                        sbuf.append(Integer.toString(rect.height));
 
-                    break;
+                        break;
 
-                case 'c':
-                    sbuf.append(Integer.toString(mCol));
+                    case 'c':
+                        sbuf.append(Integer.toString(mCol));
 
-                    break;
+                        break;
 
-                case 'r':
-                    sbuf.append(Integer.toString(row));
+                    case 'r':
+                        sbuf.append(Integer.toString(row));
 
-                    break;
+                        break;
 
-                case 'C':
-                    sbuf.append(Integer.toString(row));
-                    sbuf.append(",");
-                    sbuf.append(Integer.toString(mCol));
+                    case 'C':
+                        sbuf.append(Integer.toString(row));
+                        sbuf.append(",");
+                        sbuf.append(Integer.toString(mCol));
 
-                    break;
+                        break;
 
-                case 'f':
+                    case 'f':
 
-                    if (hasFocus) {
-                        sbuf.append("1");
-                    } else {
-                        sbuf.append("0");
-                    }
+                        if (hasFocus) {
+                            sbuf.append("1");
+                        } else {
+                            sbuf.append("0");
+                        }
 
-                    break;
+                        break;
 
-                case 'S':
+                    case 'S':
 
-                    if (isSelected) {
-                        sbuf.append("1");
-                    } else {
-                        sbuf.append("0");
-                    }
+                        if (isSelected) {
+                            sbuf.append("1");
+                        } else {
+                            sbuf.append("0");
+                        }
 
-                    break;
+                        break;
 
-                case 'W':
-                    sbuf.append(((SwkJTable) table).getName());
+                    case 'W':
+                        sbuf.append(((SwkJTable) table).getName());
 
-                    break;
+                        break;
 
-                case 's':
+                    case 's':
 
-                    if (strValue != null) {
-                        TclObject list = TclList.newInstance();
-                        TclList.append(interp, list,
-                            TclString.newInstance(strValue));
-                        sbuf.append(list.toString());
-                    } else {
-                        sbuf.append("{}");
-                    }
+                        if (strValue != null) {
+                            TclObject list = TclList.newInstance();
+                            TclList.append(interp, list,
+                                    TclString.newInstance(strValue));
+                            sbuf.append(list.toString());
+                        } else {
+                            sbuf.append("{}");
+                        }
 
-                    break;
+                        break;
                 }
             }
         }

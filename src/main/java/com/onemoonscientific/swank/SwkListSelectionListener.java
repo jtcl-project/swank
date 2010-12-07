@@ -37,9 +37,9 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
-
 public class SwkListSelectionListener implements ListSelectionListener,
-    SwkListener {
+        SwkListener {
+
     Interp interp;
     String command = "puts component";
     ArrayList<SwkBinding> bindings;
@@ -55,12 +55,13 @@ public class SwkListSelectionListener implements ListSelectionListener,
     public void setCommand(String name) {
         command = name;
     }
+
     public ArrayList<SwkBinding> getBindings() {
         return bindings;
     }
 
     public void setBinding(SwkBinding newBinding) {
-        SwkBind.setBinding(bindings,newBinding);
+        SwkBind.setBinding(bindings, newBinding);
     }
 
     public String getCommand() {

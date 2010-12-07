@@ -4,8 +4,8 @@ import tcl.lang.*;
 
 import java.awt.geom.*;
 
-
 public class ShearParameter extends CanvasParameter {
+
     private static String name = "shear";
     private static String defValue = "0.0 0.0";
     private float xShear = 0.0f;
@@ -28,7 +28,7 @@ public class ShearParameter extends CanvasParameter {
     }
 
     public TclObject getValue(Interp interp, SwkShape swkShape)
-        throws TclException {
+            throws TclException {
         if (swkShape == null) {
             throw new TclException(interp, "shape doesn't exist");
         }
@@ -41,12 +41,12 @@ public class ShearParameter extends CanvasParameter {
     }
 
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
-        throws TclException {
+            throws TclException {
         TclObject[] shearList = TclList.getElements(interp, arg);
 
         if (shearList.length != 2) {
             throw new TclException(interp,
-                "bad shear value, must be \"xShear yShear\"");
+                    "bad shear value, must be \"xShear yShear\"");
         }
 
         xShear = (float) (TclDouble.get(interp, shearList[0]));

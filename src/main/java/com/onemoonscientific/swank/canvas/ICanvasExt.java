@@ -41,6 +41,7 @@ public class ICanvasExt extends Extension {
     /*
      * Create all the commands in the Simple package.
      */
+
     public void init(Interp interp) {
         interp.createCommand("icanvas", new SwkImageCanvasWidgetCmd());
     }

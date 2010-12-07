@@ -12,22 +12,22 @@ import tcl.pkg.java.ReflectObject;
 import java.awt.Component;
 import javax.swing.*;
 
-
 /**
  *
  * @author brucejohnson
  */
 public class TkMessageBox implements Command {
-    static String[] optionsARI = { "abort", "retry", "ignore" };
-    static String[] optionsOK = { "ok" };
-    static String[] optionsOC = { "ok", "cancel" };
-    static String[] optionsRC = { "retry", "cancel" };
-    static String[] optionsYN = { "yes", "no" };
-    static String[] optionsYNC = { "yes", "no", "cancel" };
+
+    static String[] optionsARI = {"abort", "retry", "ignore"};
+    static String[] optionsOK = {"ok"};
+    static String[] optionsOC = {"ok", "cancel"};
+    static String[] optionsRC = {"retry", "cancel"};
+    static String[] optionsYN = {"yes", "no"};
+    static String[] optionsYNC = {"yes", "no", "cancel"};
     Interp interp = null;
 
     public void cmdProc(final Interp interp, final TclObject[] argv)
-        throws TclException {
+            throws TclException {
         int i;
         this.interp = interp;
 
@@ -37,7 +37,7 @@ public class TkMessageBox implements Command {
     }
 
     void option(final Interp interp, final TclObject[] argv)
-        throws TclException {
+            throws TclException {
         String[] options = null;
 
         if (argv.length == 1) {
@@ -46,7 +46,7 @@ public class TkMessageBox implements Command {
 
         if (((argv.length - 1) % 2) != 0) {
             throw new TclException(interp,
-                "tk_messageBox:  number of args must be a multiple of 2");
+                    "tk_messageBox:  number of args must be a multiple of 2");
         }
 
         String title = "Message Box";
@@ -76,8 +76,8 @@ public class TkMessageBox implements Command {
                 type = argv[i + 1].toString();
             } else {
                 throw new TclException(interp,
-                    "bad option \"" + option +
-                    "\": must be -choices, -default, -icon, -message, -parent, -title, -type");
+                        "bad option \"" + option
+                        + "\": must be -choices, -default, -icon, -message, -parent, -title, -type");
             }
         }
 
@@ -129,7 +129,7 @@ public class TkMessageBox implements Command {
         }
         Component dParent = null;
         if ((dialogParent != null) && (dialogParent.length() != 0)) {
-            TclObject tObj = (TclObject) Widgets.getWidget(interp,dialogParent);
+            TclObject tObj = (TclObject) Widgets.getWidget(interp, dialogParent);
             if (tObj == null) {
                 throw new TclException(interp, "bad window path name \"" + dialogParent + "\"");
             }
@@ -137,13 +137,13 @@ public class TkMessageBox implements Command {
         } else {
             String focusWindow = FocusCmd.getFocusWindow();
             if ((focusWindow != null) && (focusWindow.length() != 0)) {
-                TclObject tObj = (TclObject) Widgets.getWidget(interp,focusWindow);
+                TclObject tObj = (TclObject) Widgets.getWidget(interp, focusWindow);
                 if (tObj != null) {
                     dParent = (Component) ReflectObject.get(interp, tObj);
                 }
             }
             if (dParent == null) {
-                TclObject tObj = (TclObject) Widgets.getWidget(interp,".");
+                TclObject tObj = (TclObject) Widgets.getWidget(interp, ".");
                 if (tObj != null) {
                     dParent = (Component) ReflectObject.get(interp, tObj);
                 }
@@ -151,10 +151,11 @@ public class TkMessageBox implements Command {
         }
 
         (new Option()).exec(title, message, messageType, options, optionMode,
-            defaultValue,dParent);
+                defaultValue, dParent);
     }
 
     class Option extends GetValueOnEventThread {
+
         int index = -1;
         String title = "";
         String message = "";
@@ -164,11 +165,10 @@ public class TkMessageBox implements Command {
         String strResult = "";
         int result = -1;
         boolean optionMode = false;
-        Component dParent=null;
-
+        Component dParent = null;
 
         void exec(String title, String message, int messageType,
-            String[] options, boolean optionMode, String defaultOption,Component dParent) {
+                String[] options, boolean optionMode, String defaultOption, Component dParent) {
             this.title = title;
             this.message = message;
             this.messageType = messageType;

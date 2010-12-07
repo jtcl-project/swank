@@ -24,8 +24,8 @@ import javax.swing.*;
 import javax.swing.text.*;
 import javax.swing.tree.*;
 
-
 class SwkJCheckBoxMenuItemWidgetCmd implements Command {
+
     static final private String[] validCmds = {
         "cget", "configure", "deselect", "flash", "invoke",
         "select"
@@ -44,109 +44,109 @@ class SwkJCheckBoxMenuItemWidgetCmd implements Command {
     }
 
     public void cmdProc(Interp interp, TclObject[] argv)
-        throws TclException {
+            throws TclException {
         int i;
 
         if (argv.length < 2) {
             throw new TclNumArgsException(interp, 1, argv,
-                "option ?arg arg ...?");
+                    "option ?arg arg ...?");
         }
 
         int opt = TclIndex.get(interp, argv[1], validCmds, "option", 0);
-        TclObject tObj = (TclObject) Widgets.getWidget(interp,argv[0].toString());
+        TclObject tObj = (TclObject) Widgets.getWidget(interp, argv[0].toString());
 
         if (tObj == null) {
             throw new TclException(interp,
-                "bad window path name \"" + argv[0].toString() + "\"");
+                    "bad window path name \"" + argv[0].toString() + "\"");
         }
 
         final SwkJCheckBoxMenuItem swkjcheckboxmenuitem = (SwkJCheckBoxMenuItem) ReflectObject.get(interp,
                 tObj);
 
         switch (opt) {
-        case OPT_CGET:
+            case OPT_CGET:
 
-            if (argv.length != 3) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-
-            interp.setResult(swkjcheckboxmenuitem.jget(interp, argv[2]));
-
-            break;
-
-        case OPT_CONFIGURE:
-
-            if (!gotDefaults) {
-                swkjcheckboxmenuitem.setResourceDefaults();
-                gotDefaults = true;
-            }
-
-            if (argv.length == 2) {
-                swkjcheckboxmenuitem.jgetAll(interp);
-            } else if (argv.length == 3) {
-                String result = swkjcheckboxmenuitem.jget(interp, argv[2]);
-                ResourceObject ro = (ResourceObject) SwkJCheckBoxMenuItem.resourceDB.get(argv[2].toString());
-
-                if (ro == null) {
-                    throw new TclException(interp,
-                        "unknown option \"" + argv[2].toString() + "\"");
+                if (argv.length != 3) {
+                    throw new TclNumArgsException(interp, 2, argv, "option");
                 }
 
-                TclObject list = TclList.newInstance();
-                TclList.append(interp, list,
-                    TclString.newInstance(argv[2].toString()));
-                TclList.append(interp, list, TclString.newInstance(ro.resource));
-                TclList.append(interp, list, TclString.newInstance(ro.className));
-                TclList.append(interp, list,
-                    TclString.newInstance(ro.defaultVal));
-                TclList.append(interp, list, TclString.newInstance(result));
-                interp.setResult(list);
-            } else {
-                swkjcheckboxmenuitem.configure(interp, argv, 2);
-            }
+                interp.setResult(swkjcheckboxmenuitem.jget(interp, argv[2]));
 
-            break;
+                break;
 
-        case OPT_DESELECT:
-            deselect(interp, swkjcheckboxmenuitem, argv);
+            case OPT_CONFIGURE:
 
-            break;
-
-        case OPT_FLASH:
-            break;
-
-        case OPT_INVOKE:
-
-            if (argv.length != 2) {
-                throw new TclNumArgsException(interp, 2, argv, "");
-            }
-
-            if (!swkjcheckboxmenuitem.isEnabled()) {
-                return;
-            }
-
-            if ((swkjcheckboxmenuitem.commandListener.command != null) &&
-                    (swkjcheckboxmenuitem.commandListener.command.length() != 0)) {
-                try {
-                    interp.eval(swkjcheckboxmenuitem.commandListener.command);
-                } catch (TclException tclE) {
-                    System.out.println(interp.getResult());
+                if (!gotDefaults) {
+                    swkjcheckboxmenuitem.setResourceDefaults();
+                    gotDefaults = true;
                 }
-            }
 
-        case OPT_SELECT:
-            select(interp, swkjcheckboxmenuitem, argv);
+                if (argv.length == 2) {
+                    swkjcheckboxmenuitem.jgetAll(interp);
+                } else if (argv.length == 3) {
+                    String result = swkjcheckboxmenuitem.jget(interp, argv[2]);
+                    ResourceObject ro = (ResourceObject) SwkJCheckBoxMenuItem.resourceDB.get(argv[2].toString());
 
-            break;
+                    if (ro == null) {
+                        throw new TclException(interp,
+                                "unknown option \"" + argv[2].toString() + "\"");
+                    }
 
-        default:
-            throw new TclRuntimeError("TclIndex.get() error");
+                    TclObject list = TclList.newInstance();
+                    TclList.append(interp, list,
+                            TclString.newInstance(argv[2].toString()));
+                    TclList.append(interp, list, TclString.newInstance(ro.resource));
+                    TclList.append(interp, list, TclString.newInstance(ro.className));
+                    TclList.append(interp, list,
+                            TclString.newInstance(ro.defaultVal));
+                    TclList.append(interp, list, TclString.newInstance(result));
+                    interp.setResult(list);
+                } else {
+                    swkjcheckboxmenuitem.configure(interp, argv, 2);
+                }
+
+                break;
+
+            case OPT_DESELECT:
+                deselect(interp, swkjcheckboxmenuitem, argv);
+
+                break;
+
+            case OPT_FLASH:
+                break;
+
+            case OPT_INVOKE:
+
+                if (argv.length != 2) {
+                    throw new TclNumArgsException(interp, 2, argv, "");
+                }
+
+                if (!swkjcheckboxmenuitem.isEnabled()) {
+                    return;
+                }
+
+                if ((swkjcheckboxmenuitem.commandListener.command != null)
+                        && (swkjcheckboxmenuitem.commandListener.command.length() != 0)) {
+                    try {
+                        interp.eval(swkjcheckboxmenuitem.commandListener.command);
+                    } catch (TclException tclE) {
+                        System.out.println(interp.getResult());
+                    }
+                }
+
+            case OPT_SELECT:
+                select(interp, swkjcheckboxmenuitem, argv);
+
+                break;
+
+            default:
+                throw new TclRuntimeError("TclIndex.get() error");
         }
     }
 
     void deselect(final Interp interp,
-        final SwkJCheckBoxMenuItem swkjcheckboxmenuitem, final TclObject[] argv)
-        throws TclException {
+            final SwkJCheckBoxMenuItem swkjcheckboxmenuitem, final TclObject[] argv)
+            throws TclException {
         if (argv.length != 2) {
             throw new TclNumArgsException(interp, 2, argv, "");
         }
@@ -155,8 +155,8 @@ class SwkJCheckBoxMenuItemWidgetCmd implements Command {
     }
 
     void select(final Interp interp,
-        final SwkJCheckBoxMenuItem swkjcheckboxmenuitem, final TclObject[] argv)
-        throws TclException {
+            final SwkJCheckBoxMenuItem swkjcheckboxmenuitem, final TclObject[] argv)
+            throws TclException {
         if (argv.length != 2) {
             throw new TclNumArgsException(interp, 2, argv, "");
         }
@@ -165,6 +165,7 @@ class SwkJCheckBoxMenuItemWidgetCmd implements Command {
     }
 
     class Select extends UpdateOnEventThread {
+
         boolean mode = false;
         SwkJCheckBoxMenuItem swkjcheckboxmenuitem;
 

@@ -13,8 +13,8 @@ import javax.swing.JTable;
 import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
 
-
 public class ColorRenderer extends JLabel implements TableCellRenderer {
+
     Border unselectedBorder = null;
     Border selectedBorder = null;
     boolean isBordered = true;
@@ -25,7 +25,7 @@ public class ColorRenderer extends JLabel implements TableCellRenderer {
     }
 
     public Component getTableCellRendererComponent(JTable table, Object color,
-        boolean isSelected, boolean hasFocus, int row, int column) {
+            boolean isSelected, boolean hasFocus, int row, int column) {
         Color newColor = (Color) color;
         setBackground(newColor);
 
@@ -47,8 +47,8 @@ public class ColorRenderer extends JLabel implements TableCellRenderer {
             }
         }
 
-        setToolTipText("RGB value: " + newColor.getRed() + ", " +
-            newColor.getGreen() + ", " + newColor.getBlue());
+        setToolTipText("RGB value: " + newColor.getRed() + ", "
+                + newColor.getGreen() + ", " + newColor.getBlue());
 
         return this;
     }

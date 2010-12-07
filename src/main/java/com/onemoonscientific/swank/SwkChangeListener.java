@@ -37,8 +37,8 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
-
 public class SwkChangeListener implements ChangeListener, SwkListener {
+
     Interp interp;
     String command = "puts component";
     ArrayList<SwkBinding> bindings;
@@ -54,12 +54,13 @@ public class SwkChangeListener implements ChangeListener, SwkListener {
     public void setCommand(String name) {
         command = name;
     }
+
     public ArrayList<SwkBinding> getBindings() {
         return bindings;
     }
 
     public void setBinding(SwkBinding newBinding) {
-        SwkBind.setBinding(bindings,newBinding);
+        SwkBind.setBinding(bindings, newBinding);
     }
 
     public String getCommand() {
@@ -73,7 +74,7 @@ public class SwkChangeListener implements ChangeListener, SwkListener {
     public void processChange(ChangeEvent e, int subtype) {
         if (!EventQueue.isDispatchThread()) {
             System.out.println(
-                "SwkChangeListener: processChange not on event thread");
+                    "SwkChangeListener: processChange not on event thread");
         }
 
         BindEvent bEvent = new BindEvent(interp, (SwkListener) this,
@@ -84,7 +85,7 @@ public class SwkChangeListener implements ChangeListener, SwkListener {
     public void processEvent(EventObject eventObject, Object obj, int subtype) {
         if (EventQueue.isDispatchThread()) {
             System.out.println(
-                "SwkChangeListener: processEvent on event thread");
+                    "SwkChangeListener: processEvent on event thread");
         }
 
         ChangeEvent e = (ChangeEvent) eventObject;

@@ -38,8 +38,8 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.text.*;
 
-
 class SwkJFileChooserWidgetCmd implements Command {
+
     static final private String[] validCmds = {
         "configure", "cget", "open", "save", "filter"
     };
@@ -55,20 +55,20 @@ class SwkJFileChooserWidgetCmd implements Command {
     }
 
     public void cmdProc(final Interp interp, final TclObject[] argv)
-        throws TclException {
+            throws TclException {
         int i;
 
         if (argv.length < 2) {
             throw new TclNumArgsException(interp, 1, argv,
-                "option ?arg arg ...?");
+                    "option ?arg arg ...?");
         }
 
         int opt = TclIndex.get(interp, argv[1], validCmds, "option", 0);
-        TclObject tObj = (TclObject) Widgets.getWidget(interp,argv[0].toString());
+        TclObject tObj = (TclObject) Widgets.getWidget(interp, argv[0].toString());
 
         if (tObj == null) {
             throw new TclException(interp,
-                "bad window path name \"" + argv[0].toString() + "\"");
+                    "bad window path name \"" + argv[0].toString() + "\"");
         }
 
         final SwkJFileChooser swkjfilechooser = (SwkJFileChooser) ReflectObject.get(interp,
@@ -76,71 +76,71 @@ class SwkJFileChooserWidgetCmd implements Command {
 
         switch (opt) {
 
-        case OPT_CGET:
+            case OPT_CGET:
 
-            if (argv.length != 3) {
-                throw new TclNumArgsException(interp, 2, argv, "option");
-            }
-
-            interp.setResult(swkjfilechooser.jget(interp, argv[2]));
-
-            break;
-
-        case OPT_CONFIGURE:
-
-            if (!gotDefaults) {
-                swkjfilechooser.setResourceDefaults();
-                gotDefaults = true;
-            }
-
-            if (argv.length == 2) {
-                swkjfilechooser.jgetAll(interp);
-            } else if (argv.length == 3) {
-                String result = swkjfilechooser.jget(interp, argv[2]);
-                ResourceObject ro = (ResourceObject) SwkJFileChooser.resourceDB.get(argv[2].toString());
-
-                if (ro == null) {
-                    throw new TclException(interp,
-                        "unknown option \"" + argv[2].toString() + "\"");
+                if (argv.length != 3) {
+                    throw new TclNumArgsException(interp, 2, argv, "option");
                 }
 
-                TclObject list = TclList.newInstance();
-                TclList.append(interp, list,
-                    TclString.newInstance(argv[2].toString()));
-                TclList.append(interp, list, TclString.newInstance(ro.resource));
-                TclList.append(interp, list, TclString.newInstance(ro.className));
-                TclList.append(interp, list,
-                    TclString.newInstance(ro.defaultVal));
-                TclList.append(interp, list, TclString.newInstance(result));
-                interp.setResult(list);
-            } else {
-                swkjfilechooser.configure(interp, argv, 2);
-            }
+                interp.setResult(swkjfilechooser.jget(interp, argv[2]));
 
-            break;
+                break;
 
-        case OPT_OPEN:
-            open(interp, swkjfilechooser, argv);
+            case OPT_CONFIGURE:
 
-            break;
+                if (!gotDefaults) {
+                    swkjfilechooser.setResourceDefaults();
+                    gotDefaults = true;
+                }
 
-        case OPT_SAVE:
-            save(interp, swkjfilechooser, argv);
+                if (argv.length == 2) {
+                    swkjfilechooser.jgetAll(interp);
+                } else if (argv.length == 3) {
+                    String result = swkjfilechooser.jget(interp, argv[2]);
+                    ResourceObject ro = (ResourceObject) SwkJFileChooser.resourceDB.get(argv[2].toString());
 
-            break;
+                    if (ro == null) {
+                        throw new TclException(interp,
+                                "unknown option \"" + argv[2].toString() + "\"");
+                    }
 
-        case OPT_FILTER:
-            filter(interp, swkjfilechooser, argv);
+                    TclObject list = TclList.newInstance();
+                    TclList.append(interp, list,
+                            TclString.newInstance(argv[2].toString()));
+                    TclList.append(interp, list, TclString.newInstance(ro.resource));
+                    TclList.append(interp, list, TclString.newInstance(ro.className));
+                    TclList.append(interp, list,
+                            TclString.newInstance(ro.defaultVal));
+                    TclList.append(interp, list, TclString.newInstance(result));
+                    interp.setResult(list);
+                } else {
+                    swkjfilechooser.configure(interp, argv, 2);
+                }
 
-            break;
+                break;
 
-        default:
-            throw new TclRuntimeError("TclIndex.get() error");
+            case OPT_OPEN:
+                open(interp, swkjfilechooser, argv);
+
+                break;
+
+            case OPT_SAVE:
+                save(interp, swkjfilechooser, argv);
+
+                break;
+
+            case OPT_FILTER:
+                filter(interp, swkjfilechooser, argv);
+
+                break;
+
+            default:
+                throw new TclRuntimeError("TclIndex.get() error");
         }
     }
 
     void open(Interp interp, SwkJFileChooser swkjfilechooser, TclObject[] argv)
-        throws TclException {
+            throws TclException {
         if (argv.length != 2) {
             throw new TclNumArgsException(interp, 2, argv, "");
         }
@@ -148,13 +148,13 @@ class SwkJFileChooserWidgetCmd implements Command {
         String dialogParent = swkjfilechooser.getDialogParent();
         Component dParent = null;
         if ((dialogParent != null) && (dialogParent.length() != 0)) {
-            TclObject tObj = (TclObject) Widgets.getWidget(interp,dialogParent);
+            TclObject tObj = (TclObject) Widgets.getWidget(interp, dialogParent);
             if (tObj == null) {
                 throw new TclException(interp, "bad window path name \"" + dialogParent + "\"");
             }
             dParent = (Component) ReflectObject.get(interp, tObj);
         }
-        File[] files = (new Open()).exec(swkjfilechooser,dParent);
+        File[] files = (new Open()).exec(swkjfilechooser, dParent);
 
         if (files != null) {
             if (swkjfilechooser.isMultiSelectionEnabled()) {
@@ -163,7 +163,7 @@ class SwkJFileChooserWidgetCmd implements Command {
                 try {
                     for (int iFile = 0; iFile < files.length; iFile++) {
                         TclList.append(interp, list,
-                            TclString.newInstance(
+                                TclString.newInstance(
                                 files[iFile].getAbsolutePath()));
                     }
                 } catch (TclException tclE) {
@@ -179,21 +179,21 @@ class SwkJFileChooserWidgetCmd implements Command {
     }
 
     void save(Interp interp, SwkJFileChooser swkjfilechooser, TclObject[] argv)
-        throws TclException {
+            throws TclException {
         if (argv.length != 2) {
             throw new TclNumArgsException(interp, 2, argv, "");
         }
         String dialogParent = swkjfilechooser.getDialogParent();
         Component dParent = null;
         if ((dialogParent != null) && (dialogParent.length() != 0)) {
-            TclObject tObj = (TclObject) Widgets.getWidget(interp,dialogParent);
+            TclObject tObj = (TclObject) Widgets.getWidget(interp, dialogParent);
             if (tObj == null) {
                 throw new TclException(interp, "bad window path name \"" + dialogParent + "\"");
             }
             dParent = (Component) ReflectObject.get(interp, tObj);
         }
 
-        File file = (new Save()).exec(swkjfilechooser,dParent);
+        File file = (new Save()).exec(swkjfilechooser, dParent);
 
         if (file != null) {
             interp.setResult(file.getAbsolutePath());
@@ -201,7 +201,7 @@ class SwkJFileChooserWidgetCmd implements Command {
     }
 
     void filter(Interp interp, SwkJFileChooser swkjfilechooser, TclObject[] argv)
-        throws TclException {
+            throws TclException {
         if (argv.length != 4) {
             throw new TclNumArgsException(interp, 2, argv, "option");
         }
@@ -212,10 +212,11 @@ class SwkJFileChooserWidgetCmd implements Command {
     }
 
     class Open extends GetValueOnEventThread {
+
         int index = -1;
         String item = null;
         SwkJFileChooser swkjfilechooser;
-        Component dParent=null;
+        Component dParent = null;
         File[] files = null;
 
         File[] exec(SwkJFileChooser swkjfilechooser, Component dParent) {
@@ -245,10 +246,11 @@ class SwkJFileChooserWidgetCmd implements Command {
     }
 
     class Save extends GetValueOnEventThread {
+
         int index = -1;
         String item = null;
         SwkJFileChooser swkjfilechooser;
-        Component dParent=null;
+        Component dParent = null;
         File file = null;
 
         File exec(SwkJFileChooser swkjfilechooser, Component dParent) {
@@ -271,11 +273,12 @@ class SwkJFileChooserWidgetCmd implements Command {
     }
 
     class Filter extends UpdateOnEventThread {
+
         SwkFileFilter filter = null;
         SwkJFileChooser swkjfilechooser = null;
 
         void exec(final SwkJFileChooser swkjfilechooser,
-            final SwkFileFilter filter) {
+                final SwkFileFilter filter) {
             this.swkjfilechooser = swkjfilechooser;
             this.filter = filter;
             execOnThread();

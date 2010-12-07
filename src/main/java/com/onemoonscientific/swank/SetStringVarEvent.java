@@ -7,12 +7,12 @@ import java.awt.event.*;
 
 import java.util.*;
 
-
 public class SetStringVarEvent extends SetVarEvent {
+
     String value = null;
 
     public SetStringVarEvent(Interp interp, TraceLock tlComp, String var1,
-        String var2, String value) {
+            String var2, String value) {
         this.interp = interp;
         this.var1 = var1;
         this.var2 = var2;
@@ -21,7 +21,7 @@ public class SetStringVarEvent extends SetVarEvent {
     }
 
     public SetStringVarEvent(Interp interp, String var1, String var2,
-        String value) {
+            String value) {
         this.interp = interp;
         this.var1 = var1;
         this.var2 = var2;
@@ -30,7 +30,7 @@ public class SetStringVarEvent extends SetVarEvent {
     }
 
     public SetStringVarEvent(Interp interp, String var1, String var2,
-        String value, boolean onlyIfVarNonExistant) {
+            String value, boolean onlyIfVarNonExistant) {
         this.interp = interp;
         this.var1 = var1;
         this.var2 = var2;

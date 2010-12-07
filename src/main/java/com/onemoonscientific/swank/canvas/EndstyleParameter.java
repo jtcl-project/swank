@@ -4,8 +4,8 @@ import tcl.lang.*;
 
 import java.awt.BasicStroke;
 
-
 public class EndstyleParameter extends CanvasParameter {
+
     private static String name = "endstyle";
     private static String defValue = "none";
     ItemLine.EndPointStyle newValue = ItemLine.EndPointStyle.NONE;
@@ -27,7 +27,7 @@ public class EndstyleParameter extends CanvasParameter {
     }
 
     public TclObject getValue(Interp interp, SwkShape swkShape)
-        throws TclException {
+            throws TclException {
         if (swkShape == null) {
             throw new TclException(interp, "shape doesn't exist");
         }
@@ -37,7 +37,7 @@ public class EndstyleParameter extends CanvasParameter {
     }
 
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
-        throws TclException {
+            throws TclException {
         if (arg.toString().startsWith("circle")) {
             newValue = ItemLine.EndPointStyle.CIRCLE;
         } else if (arg.toString().startsWith("arrow")) {

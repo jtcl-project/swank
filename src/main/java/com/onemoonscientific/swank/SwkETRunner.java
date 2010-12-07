@@ -36,8 +36,8 @@ import java.util.*;
 
 import javax.swing.*;
 
-
 public class SwkETRunner {
+
     int interpResult = 0;
     String errorString = null;
 
@@ -46,7 +46,7 @@ public class SwkETRunner {
      * @param argv
      * @throws TclException  */
     public void cmdProc(Interp interp, TclObject[] argv)
-        throws TclException {
+            throws TclException {
         if (!EventQueue.isDispatchThread()) {
             WidgetCmd widgetCmd = new WidgetCmd(interp, argv);
             interpResult = 0;
@@ -71,6 +71,7 @@ public class SwkETRunner {
     }
 
     class WidgetCmd implements Runnable {
+
         Interp interp;
         TclObject[] argv = null;
 

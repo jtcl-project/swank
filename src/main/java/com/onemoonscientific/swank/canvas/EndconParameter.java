@@ -6,8 +6,8 @@ import tcl.lang.*;
 
 import java.util.ArrayList;
 
-
 public class EndconParameter extends CanvasParameter {
+
     private static String name = "endcon";
     private static String defValue = "";
     private String newValue = null;
@@ -28,11 +28,11 @@ public class EndconParameter extends CanvasParameter {
         }
     }
 
-     public TclObject getValue(Interp interp, SwkShape swkShape)
+    public TclObject getValue(Interp interp, SwkShape swkShape)
             throws TclException {
         String value = "";
         if ((swkShape != null) && (swkShape instanceof ItemConnector)) {
-             value = ((ItemConnector) swkShape).endCon;
+            value = ((ItemConnector) swkShape).endCon;
 
         }
 
@@ -40,7 +40,7 @@ public class EndconParameter extends CanvasParameter {
     }
 
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
-        throws TclException {
+            throws TclException {
         newValue = arg.toString();
     }
 

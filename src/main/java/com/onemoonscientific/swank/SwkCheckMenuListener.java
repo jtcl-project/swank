@@ -37,9 +37,9 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
-
 public class SwkCheckMenuListener implements ActionListener, VarTrace,
-    SwkListener {
+        SwkListener {
+
     Interp interp;
     String command = "";
     String onValue = "1";
@@ -54,10 +54,10 @@ public class SwkCheckMenuListener implements ActionListener, VarTrace,
     }
 
     public void traceProc(Interp interp, String string1, String string2,
-        int flags) throws TclException {
+            int flags) throws TclException {
         if (EventQueue.isDispatchThread()) {
             System.out.println(
-                "SwkCheckMenuListener: traceProc on event thread");
+                    "SwkCheckMenuListener: traceProc on event thread");
         }
 
         setFromVar(interp);
@@ -66,7 +66,7 @@ public class SwkCheckMenuListener implements ActionListener, VarTrace,
     public void setFromVar(Interp interp) throws TclException {
         if (EventQueue.isDispatchThread()) {
             System.out.println(
-                "SwkCheckMenuListener: setFromVar on event thread");
+                    "SwkCheckMenuListener: setFromVar on event thread");
         }
 
         if (!traceLock && (varName != null) && (!varName.equals(""))) {
@@ -81,10 +81,11 @@ public class SwkCheckMenuListener implements ActionListener, VarTrace,
                 }
 
                 SwingUtilities.invokeLater(new Runnable() {
-                        public void run() {
-                            component.setSelected(state);
-                        }
-                    });
+
+                    public void run() {
+                        component.setSelected(state);
+                    }
+                });
             }
         }
 
@@ -92,10 +93,10 @@ public class SwkCheckMenuListener implements ActionListener, VarTrace,
     }
 
     public void setVarName(Interp interp, String name)
-        throws TclException {
+            throws TclException {
         if (EventQueue.isDispatchThread()) {
             System.out.println(
-                "SwkCheckMenuListener: setVarName on event thread");
+                    "SwkCheckMenuListener: setVarName on event thread");
         }
 
         TclObject tObj = null;
@@ -107,10 +108,11 @@ public class SwkCheckMenuListener implements ActionListener, VarTrace,
                 if (tObj.toString().equals(onValue)) {
                     final boolean state = true;
                     SwingUtilities.invokeLater(new Runnable() {
-                            public void run() {
-                                component.setSelected(state);
-                            }
-                        });
+
+                        public void run() {
+                            component.setSelected(state);
+                        }
+                    });
                 }
             } catch (TclException tclException) {
                 interp.resetResult();
@@ -126,8 +128,8 @@ public class SwkCheckMenuListener implements ActionListener, VarTrace,
         }
 
         if ((varName != null) && (!varName.equals(""))) {
-            interp.untraceVar(varName, this, TCL.TRACE_WRITES |
-                TCL.GLOBAL_ONLY);
+            interp.untraceVar(varName, this, TCL.TRACE_WRITES
+                    | TCL.GLOBAL_ONLY);
         }
 
         if (!name.equals("")) {
@@ -144,13 +146,13 @@ public class SwkCheckMenuListener implements ActionListener, VarTrace,
     public void setOnValue(String value) {
         if (!EventQueue.isDispatchThread()) {
             System.out.println(
-                "SwkCheckMenuListener: setOnValue not on event thread");
+                    "SwkCheckMenuListener: setOnValue not on event thread");
         }
 
         TclObject tObj;
 
-        if (((SwkJCheckBoxMenuItem) component).isSelected() &&
-                !(value.equals("onValue"))) {
+        if (((SwkJCheckBoxMenuItem) component).isSelected()
+                && !(value.equals("onValue"))) {
             actionPerformed(null);
         }
 
@@ -164,11 +166,11 @@ public class SwkCheckMenuListener implements ActionListener, VarTrace,
     public void setOffValue(String value) {
         if (!EventQueue.isDispatchThread()) {
             System.out.println(
-                "SwkCheckMenuListener: setOffValue not on event thread");
+                    "SwkCheckMenuListener: setOffValue not on event thread");
         }
 
-        if (!((SwkJCheckBoxMenuItem) component).isSelected() &&
-                !(value.equals("offValue"))) {
+        if (!((SwkJCheckBoxMenuItem) component).isSelected()
+                && !(value.equals("offValue"))) {
             actionPerformed(null);
         }
 
@@ -190,7 +192,7 @@ public class SwkCheckMenuListener implements ActionListener, VarTrace,
     public void actionPerformed(ActionEvent e) {
         if (!EventQueue.isDispatchThread()) {
             System.out.println(
-                "SwkCheckMenuListener: actionPerformed not on event thread");
+                    "SwkCheckMenuListener: actionPerformed not on event thread");
         }
 
         String value;
@@ -217,7 +219,7 @@ public class SwkCheckMenuListener implements ActionListener, VarTrace,
     public void processEvent(EventObject eventObject, Object obj, int subtype) {
         if (EventQueue.isDispatchThread()) {
             System.out.println(
-                "SwkCheckMenuListener: processEvent on event thread");
+                    "SwkCheckMenuListener: processEvent on event thread");
         }
 
         ActionEvent e = (ActionEvent) eventObject;

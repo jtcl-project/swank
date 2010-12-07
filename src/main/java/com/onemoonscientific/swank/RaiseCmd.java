@@ -37,19 +37,19 @@ import java.util.*;
 
 import javax.swing.*;
 
-
 public class RaiseCmd implements Command {
+
     public void cmdProc(Interp interp, TclObject[] argv)
-        throws TclException {
+            throws TclException {
         if ((argv.length < 2) || (argv.length > 3)) {
             throw new TclNumArgsException(interp, 1, argv, "?aboveThis?");
         }
 
-        TclObject tObj = (TclObject) Widgets.getWidget(interp,argv[1].toString());
+        TclObject tObj = (TclObject) Widgets.getWidget(interp, argv[1].toString());
 
         if (tObj == null) {
             throw new TclException(interp,
-                "bad window path name \"" + argv[1].toString() + "\"");
+                    "bad window path name \"" + argv[1].toString() + "\"");
         }
 
         SwkWidget swkwidget = (SwkWidget) ReflectObject.get(interp, tObj);
@@ -59,15 +59,16 @@ public class RaiseCmd implements Command {
 
     public static void raise(final Component component) {
         (new UpdateOnEventThread() {
-                public void run() {
-                    if (component instanceof JFrame) {
-                        ((JFrame) component).toFront();
-                    } else if (component instanceof JWindow) {
-                        ((JWindow) component).toFront();
-                    } else if (component instanceof JInternalFrame) {
-                        ((JInternalFrame) component).toFront();
-                    }
+
+            public void run() {
+                if (component instanceof JFrame) {
+                    ((JFrame) component).toFront();
+                } else if (component instanceof JWindow) {
+                    ((JWindow) component).toFront();
+                } else if (component instanceof JInternalFrame) {
+                    ((JInternalFrame) component).toFront();
                 }
-            }).execOnThread();
+            }
+        }).execOnThread();
     }
 }

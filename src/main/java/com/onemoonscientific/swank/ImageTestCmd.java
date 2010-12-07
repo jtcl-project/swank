@@ -38,49 +38,49 @@ import java.util.*;
 
 import javax.swing.*;
 
-
 public class ImageTestCmd implements Command {
+
     static Hashtable images = new Hashtable();
     static int iImage = 0;
-    static final private String[] validCmds = { "changed" };
+    static final private String[] validCmds = {"changed"};
     static final private int OPT_CHANGED = 0;
 
     public void cmdProc(Interp interp, TclObject[] argv)
-        throws TclException {
+            throws TclException {
         int i;
 
         if (argv.length < 2) {
             throw new TclNumArgsException(interp, 1, argv,
-                "option ?arg arg ...?");
+                    "option ?arg arg ...?");
         }
 
         int opt = TclIndex.get(interp, argv[1], validCmds, "option", 0);
 
         switch (opt) {
-        case OPT_CHANGED: {
-            if (argv.length != 8) {
-                throw new TclNumArgsException(interp, 1, argv,
-                    "option ?arg arg ...?");
+            case OPT_CHANGED: {
+                if (argv.length != 8) {
+                    throw new TclNumArgsException(interp, 1, argv,
+                            "option ?arg arg ...?");
+                }
+
+                int x = TclInteger.get(interp, argv[3]);
+                int y = TclInteger.get(interp, argv[3]);
+                int width = TclInteger.get(interp, argv[3]);
+                int height = TclInteger.get(interp, argv[3]);
+                int timWidth = TclInteger.get(interp, argv[3]);
+                int timHeight = TclInteger.get(interp, argv[3]);
+
+                break;
             }
 
-            int x = TclInteger.get(interp, argv[3]);
-            int y = TclInteger.get(interp, argv[3]);
-            int width = TclInteger.get(interp, argv[3]);
-            int height = TclInteger.get(interp, argv[3]);
-            int timWidth = TclInteger.get(interp, argv[3]);
-            int timHeight = TclInteger.get(interp, argv[3]);
-
-            break;
-        }
-
-        default:
-            throw new TclRuntimeError("TclIndex.get() error");
+            default:
+                throw new TclRuntimeError("TclIndex.get() error");
         }
     }
 
     public static BufferedImage edge(Interp interp, BufferedImage sourceImage,
-        BufferedImage destImage) {
-        float[] edge = { 0f, -1f, 0f, -1f, 4f, -1f, 0f, -1f, 0f };
+            BufferedImage destImage) {
+        float[] edge = {0f, -1f, 0f, -1f, 4f, -1f, 0f, -1f, 0f};
         ConvolveOp op = new ConvolveOp(new Kernel(3, 3, edge),
                 ConvolveOp.EDGE_NO_OP, null);
 
@@ -88,7 +88,7 @@ public class ImageTestCmd implements Command {
     }
 
     public static BufferedImage scale(Interp interp, BufferedImage sourceImage,
-        double scaleValue, double offsetValue) {
+            double scaleValue, double offsetValue) {
         RescaleOp op = new RescaleOp((float) scaleValue, (float) offsetValue,
                 null);
 
@@ -96,7 +96,7 @@ public class ImageTestCmd implements Command {
     }
 
     public static void configure(Interp interp, ImageIcon image,
-        TclObject[] argv, int start) throws TclException {
+            TclObject[] argv, int start) throws TclException {
         int i;
 
         if (argv.length <= start) {
@@ -111,8 +111,7 @@ public class ImageTestCmd implements Command {
                 String imageName = image.getDescription();
 
                 ImageIcon image2 = null;
-                URL url = Thread.currentThread().getContextClassLoader()
-                                .getResource(fileName);
+                URL url = Thread.currentThread().getContextClassLoader().getResource(fileName);
 
                 if (url != null) {
                     image2 = new ImageIcon(url, imageName);
@@ -122,7 +121,7 @@ public class ImageTestCmd implements Command {
 
                 if (image2 == null) {
                     throw new TclException(interp,
-                        "Couldn't create image from file " + fileName);
+                            "Couldn't create image from file " + fileName);
                 }
 
                 image.setImage(image2.getImage());

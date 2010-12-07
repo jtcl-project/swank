@@ -38,21 +38,20 @@ import java.util.*;
 
 import javax.swing.*;
 
-
 public class ClipboardCmd implements Command, ClipboardOwner {
+
     static final private String[] validCmds = {
-        "append", "clear", "get", "pastewidget",
-    };
+        "append", "clear", "get", "pastewidget",};
     static final private int OPT_APPEND = 0;
     static final private int OPT_CLEAR = 1;
     static final private int OPT_GET = 2;
     static final private int OPT_PASTEWIDGET = 3;
 
     public void cmdProc(Interp interp, TclObject[] argv)
-        throws TclException {
+            throws TclException {
         if (argv.length < 2) {
             throw new TclNumArgsException(interp, 1, argv,
-                "option ?arg arg ...?");
+                    "option ?arg arg ...?");
         }
 
         int opt = TclIndex.get(interp, argv[1], validCmds, "option", 0);
@@ -60,59 +59,59 @@ public class ClipboardCmd implements Command, ClipboardOwner {
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 
         switch (opt) {
-        case OPT_APPEND: {
-            String current = getClipboardAsText(interp, clipboard);
-            StringSelection stringSelection = new StringSelection(current +
-                    argv[argv.length - 1].toString());
-            clipboard.setContents(stringSelection, this);
+            case OPT_APPEND: {
+                String current = getClipboardAsText(interp, clipboard);
+                StringSelection stringSelection = new StringSelection(current
+                        + argv[argv.length - 1].toString());
+                clipboard.setContents(stringSelection, this);
 
-            break;
-        }
-
-        case OPT_CLEAR: {
-            interp.resetResult();
-
-            StringSelection stringSelection = new StringSelection("");
-            clipboard.setContents(stringSelection, this);
-
-            break;
-        }
-
-        case OPT_GET: {
-            interp.setResult(getClipboardAsText(interp, clipboard));
-
-            break;
-        }
-
-        case OPT_PASTEWIDGET: {
-            if (argv.length != 3) {
-                throw new TclNumArgsException(interp, 1, argv, "widgetName");
+                break;
             }
 
-            Component comp = null;
+            case OPT_CLEAR: {
+                interp.resetResult();
 
-            comp = (Component) Widgets.get(interp, argv[2].toString());
+                StringSelection stringSelection = new StringSelection("");
+                clipboard.setContents(stringSelection, this);
 
-            if (comp == null) {
-                throw new TclException(interp,
-                    "can't get component for font command");
+                break;
             }
 
-            if (comp instanceof SwkCanvas) {
-                SwkCanvas swkcanvas = (SwkCanvas) comp;
-                TransferHandler handler = swkcanvas.getTransferHandler();
-                System.out.println("exporting to clipboard");
-                handler.exportToClipboard((JComponent) comp, clipboard,
-                    TransferHandler.COPY);
-            } else {
-                throw new TclException(interp,
-                    "this widget can't be copied to clipboard yet");
+            case OPT_GET: {
+                interp.setResult(getClipboardAsText(interp, clipboard));
+
+                break;
             }
 
-            interp.setResult("");
+            case OPT_PASTEWIDGET: {
+                if (argv.length != 3) {
+                    throw new TclNumArgsException(interp, 1, argv, "widgetName");
+                }
 
-            break;
-        }
+                Component comp = null;
+
+                comp = (Component) Widgets.get(interp, argv[2].toString());
+
+                if (comp == null) {
+                    throw new TclException(interp,
+                            "can't get component for font command");
+                }
+
+                if (comp instanceof SwkCanvas) {
+                    SwkCanvas swkcanvas = (SwkCanvas) comp;
+                    TransferHandler handler = swkcanvas.getTransferHandler();
+                    System.out.println("exporting to clipboard");
+                    handler.exportToClipboard((JComponent) comp, clipboard,
+                            TransferHandler.COPY);
+                } else {
+                    throw new TclException(interp,
+                            "this widget can't be copied to clipboard yet");
+                }
+
+                interp.setResult("");
+
+                break;
+            }
         }
     }
 
@@ -120,7 +119,7 @@ public class ClipboardCmd implements Command, ClipboardOwner {
     }
 
     String getClipboardAsText(Interp interp, Clipboard clipboard)
-        throws TclException {
+            throws TclException {
         Transferable transferable = clipboard.getContents(null);
 
         if (transferable == null) {
@@ -130,11 +129,11 @@ public class ClipboardCmd implements Command, ClipboardOwner {
 
             /*
             for (int i=0;i<dataFlavors.length;i++) {
-                    System.out.println(dataFlavors[i].getMimeType());
-                    System.out.println(dataFlavors[i].getHumanPresentableName());
-                    interp.setResult("");
+            System.out.println(dataFlavors[i].getMimeType());
+            System.out.println(dataFlavors[i].getHumanPresentableName());
+            interp.setResult("");
             }
-            */
+             */
             try {
                 return transferable.getTransferData(DataFlavor.selectBestTextFlavor(
                         dataFlavors)).toString();
