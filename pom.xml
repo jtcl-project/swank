@@ -1,50 +1,201 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.onemoonscientific</groupId>
 	<artifactId>swank3</artifactId>
 	<packaging>jar</packaging>
-	<version>3.0.1-SNAPSHOT</version>
+	<version>3.0.0-a1</version>
 	<name>swank3</name>
 	<url>http://maven.apache.org</url>
 	<dependencies>
+                  <dependency>
+                      <groupId>javax.help</groupId>
+                      <artifactId>javahelp</artifactId>
+                      <version>2.0.05</version>
+                  </dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>3.8.1</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>jtcl</groupId>
+			<artifactId>jtcl</artifactId>
+			<version>2.0.0-a1</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>jfree</groupId>
+			<artifactId>jcommon</artifactId>
+			<version>1.0.16</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>jfree</groupId>
+			<artifactId>jfreechart</artifactId>
+			<version>1.0.13</version>
+			<scope>compile</scope>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.2</version>
+				<executions>
+					<execution>
+						<id>gensource</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<executable>java</executable>
+							<classpathScope>compile</classpathScope>
+							<arguments>
+								<argument>-classpath</argument>
+								<classpath/>
+								<argument>tcl.lang.Shell</argument>
+								<argument>src/main/swankgen/build.tcl</argument>
+							</arguments>
+						</configuration>
+					</execution>
+					<execution>
+						<id>cleansource</id>
+						<phase>clean</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<executable>java</executable>
+							<classpathScope>compile</classpathScope>
+							<arguments>
+								<argument>-classpath</argument>
+								<classpath/>
+								<argument>tcl.lang.Shell</argument>
+								<argument>src/main/swankgen/build.tcl</argument>
+								<argument>clean</argument>
+							</arguments>
+						</configuration>
+					</execution>
+
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
 					<source>1.5</source>
 					<target>1.5</target>
+                                        <excludes>
+<!--
+Adjust comment following to include or exclude
+     canvas3D src files which require the presence of Java3D
+     chart src files which require the presence of JFreeChart
+                                        <exclude>**/canvas3D/*.java</exclude>
+                                        <exclude>**/chart/*.java</exclude>
+-->
+                                        </excludes>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>unpack</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>jtcl</groupId>
+									<artifactId>jtcl</artifactId>
+									<version>2.0.0-a1</version>
+									<type>jar</type>
+									<outputDirectory>target/classes</outputDirectory>
+								</artifactItem>
+								</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copyjfree</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								
+								<artifactItem>
+									<groupId>jfree</groupId>
+									<artifactId>jcommon</artifactId>
+									<version>1.0.16</version>
+									<type>jar</type>
+									<outputDirectory>target/${project.build.finalName}</outputDirectory>
+								</artifactItem>
+								<artifactItem>
+									<groupId>jfree</groupId>
+									<artifactId>jfreechart</artifactId>
+									<version>1.0.13</version>
+									<type>jar</type>
+									<outputDirectory>target/${project.build.finalName}</outputDirectory>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
 				<version>2.2</version>
 				<configuration>
+					<includes>
+						<include>**</include>
+					</includes>
 					<archive>
 						<manifest>
 							<mainClass>tcl.lang.SwkShell</mainClass>
 						</manifest>
-						<manifestEntries>
-						</manifestEntries>
+						<manifestEntries> </manifestEntries>
 					</archive>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-ant-plugin</artifactId>
-				<version>2.3</version>
-			</plugin>
+                        <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-ant-plugin</artifactId>
+                                <version>2.3</version>
+                        </plugin>
+           <plugin>
+           <artifactId>maven-antrun-plugin</artifactId>
+           <executions>
+             <execution>
+               <phase>package</phase>
+               <goals>
+                 <goal>run</goal>
+               </goals>
+               <configuration>
+                 <tasks>
+                   <copy file="target/${project.build.finalName}.jar" tofile="target/${project.build.finalName}/${project.build.finalName}.jar"/>
+                   <copy todir="target/${project.build.finalName}"> <fileset dir="swank3base"> <include name="*"/> </fileset> </copy>
+                 </tasks>
+               </configuration>
+             </execution>
+           </executions>
+         </plugin>
+ 
 		</plugins>
 	</build>
 </project>
-
