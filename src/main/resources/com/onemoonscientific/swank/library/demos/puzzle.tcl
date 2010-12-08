@@ -50,13 +50,8 @@ button $w.buttons.dismiss -text Dismiss -command "destroy $w"
 button $w.buttons.code -text "See Code" -command "showCode $w"
 pack $w.buttons.dismiss $w.buttons.code -side left -expand 1
 
-# Special trick: select a darker color for the space 
-# by using the java.awt.Color darker method
 
-
-frame $w.frame -width 120 -height 120 -borderwidth 2 -relief sunken 
-set color [[[$w.frame object] getBackground] darker]
-[$w.frame object] setBackground $color
+frame $w.frame -width 120 -height 120 -borderwidth 2 -relief sunken -bg lightblue
 
 pack $w.frame -side top -pady 1c -padx 1c
 destroy $w.s
