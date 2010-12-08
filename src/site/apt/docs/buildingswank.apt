@@ -1,0 +1,23 @@
+ ----
+ Building Swank
+ ----
+ 
+Building Swank
+ 
+   Swank builds with  {{{http://maven.apache.org/}Maven}}.  
+   
+Building with Maven
+   
+------------------------
+mvn clean
+mvn -DskipTests package
+------------------------
+   
+Creating a development environment
+
+   Install Java JDK 1.5, if not already installed.
+   The Swank project uses the {{{http://mercurial.selenic.com/}Mercurial}} version control system. 
+
+------------------------
+hg clone https://hg.kenai.com/hg/swank~swank-main 
+------------------------
