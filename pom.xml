@@ -189,13 +189,40 @@ Adjust comment following to include or exclude
                <configuration>
                  <tasks>
                    <copy file="target/${project.build.finalName}.jar" tofile="target/${project.build.finalName}/${project.build.finalName}.jar"/>
-                   <copy todir="target/${project.build.finalName}"> <fileset dir="swank3base"> <include name="*"/> </fileset> </copy>
+                   <copy todir="target/${project.build.finalName}"> <fileset dir="swank3base"> <include name="*"/> </fileset>
+                   <filterset begintoken="%" endtoken="%">
+                   <filter token="VERSION" value="${project.version}"/>
+                   </filterset>
+                   </copy>
+                   <chmod file="target/${project.build.finalName}/wisk" perm="ugo+rx"/>
                  </tasks>
                </configuration>
              </execution>
            </executions>
          </plugin>
- 
+ <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+          <executions>
+            <execution>
+              <id>assembly:package</id>
+              <phase>package</phase>
+              <goals>
+                <!--
+                  Work around for http://jira.codehaus.org/browse/MASSEMBLY-97
+                  as the goal should be attached.
+                -->
+                <goal>single</goal>
+              </goals>
+              <configuration>
+                <descriptors>
+                  <descriptor>src/main/assembly/bin.xml</descriptor>
+                </descriptors>
+              </configuration>
+            </execution>
+          </executions>
+      </plugin>
+    
 		</plugins>
 	</build>
 </project>
