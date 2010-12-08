@@ -18,7 +18,7 @@ set swankmain=tcl.lang.SwkShell
 
 set dir=%~dp0
 
-set cp="%dir%\swank-%swankver%.jar;%dir\lib\jcommon-1.0.16.jar;%dir\lib\jfreechart-1.0.13.jar;%dir\lib\javahelp-2.0.05.jar;%CLASSPATH%"
+set cp="%dir%\swank-%swankver%.jar;%dir%\lib\jcommon-1.0.16.jar;%dir%\lib\jfreechart-1.0.13.jar;%dir%\lib\javahelp-2.0.05.jar;%CLASSPATH%"
 
 if "%TCLLIBPATH%" == "" goto nullTcllib
 set tcllibpath=-DTCLLIBPATH="%TCLLIBPATH%"
