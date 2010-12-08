@@ -67,7 +67,7 @@ set excludeTypes "java.util.Locale java.lang.String {}"
 set setMethods [concat $specialGets $setMethods ]
 set result ""
 foreach method $setMethods {
-puts $method
+#puts $method
      set methodClass [string tolower [lindex $method 4]]
      if {$methodClass != {}} {
                  set widgetVarLocal this.$methodClass
@@ -90,19 +90,18 @@ puts $method
 				if {$optPos >=  0} {
 				    set excludeType [lindex $excludeTypes $optPos]
 				    if {($excludeType == {}) || ($excludeType == $argType)} {
-				    puts "skip $method"
+#				    puts "skip $method"
 				    continue
 				}
 				
 				}
 				
 				if {[lsearch $dashOptions $dashOption] >=  0} {
-				    puts "$dashOption in dashOptions"
+#				    puts "$dashOption in dashOptions"
 					continue
 				}
 				set gotMethod 1
 				lappend dashOptions $dashOption
-puts startifs
 				if {[lsearch $components $argType ] >= 0} {
    					if {![regexp  {(.*\.)(.*\.)(.*)} $argType all a b c]} {
 						exit "bad $argType"
@@ -136,9 +135,8 @@ puts startifs
 						set setter "${widgetVarLocal}.${option}(($complexTypes($argType)) setter.oValue);"
                                 } else {
 						set gotMethod 0
-						puts "no action for $method"
+#						puts "no action for $method"
 				}
-puts endifs
 				if {$gotMethod} {
 					set optionList($dashOption) $cmd
 					set setterList($dashOption) $setter
@@ -181,5 +179,4 @@ foreach option $options {
 append configOptions "\};"
 append configCASEs "\}"
 append setterCASEs "\}"
-puts donewithsets
 }

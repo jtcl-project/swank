@@ -80,7 +80,7 @@ foreach method $getMethods  {
 				if {$optPos >=  0} {
 				    set excludeType [lindex $excludeTypes $optPos]
 				    if {($excludeType == {}) || ($excludeType == $argType)} {
-				    puts "skip $method"
+#				    puts "skip $method"
 				    continue
 				}
 				

@@ -1,4 +1,5 @@
 package require java
+cd [file join src main]
 source [file join swankgen swkSpecial.tcl]
 source [file join swankgen swkMakeSetMethods.tcl]
 source [file join swankgen swkMakeGetMethods.tcl]
@@ -9,7 +10,7 @@ source [file join swankgen setter.tcl]
 
 set tkcomps {
 }
-set swkRoot [file join src main java com onemoonscientific swank]
+set swkRoot [file join java com onemoonscientific swank]
 set specialImports ""
 set specialVars ""
 set widgets { JButton {SMenuButton JButton} JLabel JCheckBox JCheckBoxMenuItem 
@@ -18,7 +19,40 @@ set widgets { JButton {SMenuButton JButton} JLabel JCheckBox JCheckBoxMenuItem
 		    JRadioButtonMenuItem JScrollBar JScrollPane {JSlider JPanel JSlider} JSplitPane JSpinner
 		    JTabbedPane JTable JTextArea JTextField JPasswordField JTextPane JToggleButton JToolBar
 		    JEditorPane JTree JWindow {Canvas JPanel} JInternalFrame JDesktopPane JFileChooser JColorChooser FileDialog}
-
+proc checkStatus {swkHome widgets} {
+       set files [glob [file join swankgen *.tcl]]
+       set files [concat $files [glob [file join swankgen *.java]]]
+       set files [concat $files [glob [file join swankgen widgets *.tcl]]]
+       set scriptTime 0
+       foreach file $files {
+            set mtime [file mtime $file]
+            if {$mtime > $scriptTime} {
+                set scriptTime $mtime
+            }
+       }
+	foreach compWidget $widgets {
+		set widget [lindex $compWidget 0]
+		set widgetType Swk$widget
+                if {[string match *Canvas* $widgetType]} {
+                    set subdir canvas
+                } else {
+                    set subdir ""
+                }
+                foreach type {"" Cmd} {
+		    set file [file join $swkHome $subdir ${widgetType}$type.java]
+                    if {![file exists $file]} {
+puts "existence $file"
+                        return 0
+                    }
+                    set mtime [file mtime $file]
+                    if {$mtime < $scriptTime} {
+puts old
+                        return 0
+                    }
+                }
+	}
+        return 1
+}
 proc makeWidget {f1 type widgetType widget} {
     global specialImports
     global specialInits
@@ -77,8 +111,11 @@ if {$argc==1} {
 if {[info exists widgetList]} {
 	set widgets $widgetList
 }
+set status [checkStatus $swkRoot $widgets]
+if {$status} {
+    exit 0
+}
 foreach widgetArg $widgets {
-         puts $widgetArg
 	if {[string match *Canvas* $widgetArg]} {
 	    set swkHome [file join ${swkRoot} canvas]
 	} else {
@@ -149,3 +186,4 @@ foreach widgetArg $widgets {
 	    close $f1
         }
 }
+exit 0
