@@ -175,6 +175,13 @@ set lastLine ""
 .t insert end "9. The swank canvas item attributes." {demo demo-geomobjects}
 .t insert end " \n " {demospace}
 
+.t insert end \n {} "Canvas Nodes" title
+.t insert end " \n " {demospace}
+.t insert end "1. Nodes" {demo demo-nodes1}
+.t insert end " \n " {demospace}
+.t insert end "2. More Nodes" {demo demo-nodes2}
+.t insert end " \n " {demospace}
+
 .t insert end \n {} "Charts" title
 .t insert end " \n " {demospace}
 .t insert end "1. XY Chart." {demo demo-xychart}
