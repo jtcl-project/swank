@@ -8,4 +8,5 @@ source -url resource:/com/onemoonscientific/swank/library/bgerror.tcl
 source -url resource:/com/onemoonscientific/swank/library/tkerror.tcl
 source -url resource:/com/onemoonscientific/swank/library/html.tcl
 source -url resource:/com/onemoonscientific/swank/library/console.tcl
+source -url resource:/com/onemoonscientific/swank/chart/library/chart.tcl
 
