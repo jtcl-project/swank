@@ -1,6 +1,6 @@
 # widget --
-# This script demonstrates the various widgets provided by Tk,
-# along with many of the features of the Tk toolkit.  This file
+# This script demonstrates the various widgets provided by Swank,
+# along with many of the features of the Swank toolkit.  This file
 # only contains code to generate the main window for the
 # application, which invokes individual demonstrations.  The
 # code for the actual demonstrations is contained in separate
@@ -97,9 +97,9 @@ set lastLine ""
 
 # Create the text for the text widget.
 
-.t insert end "Tk Widget Demonstrations\n" title
+.t insert end "Swank Widget Demonstrations\n" title
 .t insert end {
-    This application provides a front end for several short scripts that demonstrate what you can do with Tk widgets.  Each of the numbered lines below describes a demonstration;  you can click on it to invoke the demonstration.  Once the demonstration window appears, you can click the "See Code" button to see the Tcl/Tk code that created the demonstration.  If you wish, you can edit the code and click the "Rerun Demo" button in the code window to reinvoke the demonstration with the modified code.
+    This application provides a front end for several short scripts that demonstrate what you can do with Swank widgets.  Each of the numbered lines below describes a demonstration;  you can click on it to invoke the demonstration.  Once the demonstration window appears, you can click the "See Code" button to see the Tcl/Tk code that created the demonstration.  If you wish, you can edit the code and click the "Rerun Demo" button in the code window to reinvoke the demonstration with the modified code.  This demo is modified from the original Tk version by the addition of additional demonstrations for some, but not yet all, of the Swank widgets.
     
 }
 .t insert end "Labels, buttons, checkbuttons, and radiobuttons" title
@@ -171,6 +171,17 @@ set lastLine ""
 .t insert end "7. A simple scrollable canvas." {demo demo-cscroll}
 .t insert end " \n " {demospace}
 .t insert end "8. The swank canvas effects." {demo demo-swkitems}
+.t insert end " \n " {demospace}
+.t insert end "9. The swank canvas item attributes." {demo demo-geomobjects}
+.t insert end " \n " {demospace}
+
+.t insert end \n {} "Charts" title
+.t insert end " \n " {demospace}
+.t insert end "1. XY Chart." {demo demo-xychart}
+.t insert end " \n " {demospace}
+.t insert end "2. Bar Chart." {demo demo-barchart}
+.t insert end " \n " {demospace}
+.t insert end "3. Statistical Bar Chart." {demo demo-sbarchart}
 .t insert end " \n " {demospace}
 
 .t insert end \n {} "Scales" title
