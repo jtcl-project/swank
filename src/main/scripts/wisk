@@ -10,7 +10,7 @@
 # TCLLIBPATH - space separated list of Tcl libraries directories
 #
 
-swankver=%VERSION%
+swankver=${project.version}
 swankmain=tcl.lang.SwkShell
 
 iscygwin=false

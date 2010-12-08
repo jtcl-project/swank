@@ -13,7 +13,7 @@ rem
 
 if "%OS%" == "Windows_NT" setlocal
 
-set swankver=%VERSION%
+set swankver=${project.version}
 set swankmain=tcl.lang.SwkShell
 
 set dir=%~dp0
