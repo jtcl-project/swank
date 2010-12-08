@@ -47,20 +47,20 @@ dir=`dirname $pgm`
 
 # set classpath, or add to existing
 if [ -z "$CLASSPATH" ] ; then
-    CLASSPATH="$dir/swank3-$swankver.jar:$dir/lib/jcommon-1.0.16.jar:$dir/lib/jfreechart-1.0.13.jar:$dir/lib/javahelp-2.0.05.jar"
+    CLASSPATH="$dir/swank-$swankver.jar:$dir/lib/jcommon-1.0.16.jar:$dir/lib/jfreechart-1.0.13.jar:$dir/lib/javahelp-2.0.05.jar"
     if $iscygwin ; then
         CLASSPATH=`cygpath -pw "$CLASSPATH"`
     fi
 else
     if $ismsys ; then
         swankdir=`$dir/echopath $dir`
-        CLASSPATH="$swankdir/swank3-$swankver.jar;$dir/lib/jcommon-1.0.16.jar;$dir/lib/jfreechart-1.0.13.jar;$dir/lib/javahelp-2.0.05.jar;$CLASSPATH"
+        CLASSPATH="$swankdir/swank-$swankver.jar;$dir/lib/jcommon-1.0.16.jar;$dir/lib/jfreechart-1.0.13.jar;$dir/lib/javahelp-2.0.05.jar;$CLASSPATH"
     elif $iscygwin ; then
         CLASSPATH=`cygpath -pu "$CLASSPATH"`
-        CLASSPATH="$dir/swank3-$swankver.jar;$dir/lib/jcommon-1.0.16.jar;$dir/lib/jfreechart-1.0.13.jar;$dir/lib/javahelp-2.0.05.jar;$CLASSPATH"
+        CLASSPATH="$dir/swank-$swankver.jar;$dir/lib/jcommon-1.0.16.jar;$dir/lib/jfreechart-1.0.13.jar;$dir/lib/javahelp-2.0.05.jar;$CLASSPATH"
         CLASSPATH=`cygpath -pw "$CLASSPATH"`
     else 
-        CLASSPATH="$dir/swank3-$swankver.jar:$dir/lib/jcommon-1.0.16:$dir/lib/jcommon-1.0.16:$dir/lib/javahelp-2.0.05.jar:$CLASSPATH"
+        CLASSPATH="$dir/swank-$swankver.jar:$dir/lib/jcommon-1.0.16:$dir/lib/jcommon-1.0.16:$dir/lib/javahelp-2.0.05.jar:$CLASSPATH"
     fi
 fi
 

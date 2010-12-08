@@ -54,7 +54,7 @@
       <outputDirectory>lib</outputDirectory>
       <excludes>
          <exclude>jtcl:jtcl:*</exclude>
-         <exclude>swank3:*</exclude>
+         <exclude>swank:*</exclude>
       </excludes>
       <unpack>false</unpack>
     </dependencySet>
