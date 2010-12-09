@@ -25,6 +25,7 @@ Swank Differences from Tk 8.4
         class object, you will get that name as a string.
 
 
+  *  Create menubars with jmenubar, instead of menu.
 
   * Scrolling of widgets in Tk is done by arranging the target widget and one or two scrollbars in the same frame.  Then a 
     somewhat complex interaction between the scrollbars and the widget is configured.  Swank supports this mode, but we find
@@ -33,13 +34,15 @@ Swank Differences from Tk 8.4
     by creating a scrollpane and the desired widdget.  Use a geometry manager to manage the scrollpane (here we use pack) and 
     add the widget (here a text widget) to the scrollpane.
 
-        * jscrollpane .spane
 
-        * pack .spane
+----------------
+         jscrollpane .spane
+         pack .spane
+         text .text
+         .spane add .txt
 
-        * text .text
+----------------
 
-        * .spane add .txt
 
   * Various commands present in Tk are not present in Swank.  See the main documentation page for details. 
 
