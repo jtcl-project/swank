@@ -3341,7 +3341,7 @@ proc edit {args} {
                 -insertbackground $::tkcon::COLOR(cursor) \
                 -font $::tkcon::OPT(font)
         
-        set menu [menu $w.mbar]
+        set menu [jmenubar $w.mbar]
         
         ## File Menu
         ##
@@ -3382,7 +3382,7 @@ proc edit {args} {
                                                                                                                             -command "::tkcon::EvalOther $other \
                     eval \[$w.text get 1.0 end-1c\]"
         }
-        #	$w configure -menu $menu
+        $w configure -menu $menu
         jscrollpane $w.spane
         $w.spane add $w.text
         pack $w.spane -fill both -expand y -side top
