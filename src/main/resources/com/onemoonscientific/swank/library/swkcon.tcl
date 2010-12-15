@@ -1528,8 +1528,8 @@ proc ::tkcon::InitMenus {w title} {
     ## History Menu
     ##
     foreach m [list $w.history $w.pop.history] {
-        menu $m -disabledforeground $COLOR(disabled) \
-                -postcommand [list ::tkcon::HistoryMenu $m]
+        menu $m -disabledforeground $COLOR(disabled) 
+        $m configure -postcommand [list ::tkcon::HistoryMenu $m]
     }
     
     ## Help Menu
@@ -1548,7 +1548,7 @@ proc ::tkcon::InitMenus {w title} {
 ##
 proc ::tkcon::HistoryMenu m {
     variable PRIV
-    
+
     if {![winfo exists $m]} return
     set id [EvalSlave history nextid]
     if {$PRIV(histid)==$id} return
