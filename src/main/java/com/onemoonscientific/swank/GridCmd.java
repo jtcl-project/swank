@@ -65,7 +65,7 @@ public class GridCmd implements Command {
     static final private int OPT_ROWCONFIGURE = 8;
     static final private int OPT_SIZE = 9;
     static final private int OPT_SLAVES = 10;
-    Interp interp = null;
+    //  Interp interp = null;
 
     public void cmdProc(final Interp interp, final TclObject[] argv)
             throws TclException {
@@ -77,7 +77,7 @@ public class GridCmd implements Command {
         Object widgetObj = null;
         TclObject tObj = null;
         Component component1 = null;
-        this.interp = interp;
+        // this.interp = interp;
 
         if (argv.length < 2) {
             throw new TclNumArgsException(interp, 1, argv,
@@ -168,29 +168,25 @@ public class GridCmd implements Command {
 
         return null;
     }
+    /*
+    TclObject tObj = (TclObject) Widgets.getWidget(interp, windowName);
 
-    Container getMaster(String windowName, boolean useParent) {
-        String masterName = null;
+    if (tObj == null) {
+    return null;
+    }
+
+    try {
+    widgetObj = (Object) ReflectObject.get(interp, tObj);
+    } catch (TclException tclE) {
+    return null;
+    }
+     */
+
+    Container getMaster(Component component1, boolean useParent) {
         Container master = null;
         LayoutManager layout = null;
         GridBagConstraints gconstr = null;
         SwkGridBagLayout gbag = null;
-        Object widgetObj = null;
-        Component component1 = null;
-
-        TclObject tObj = (TclObject) Widgets.getWidget(interp, windowName);
-
-        if (tObj == null) {
-            return null;
-        }
-
-        try {
-            widgetObj = (Object) ReflectObject.get(interp, tObj);
-        } catch (TclException tclE) {
-            return null;
-        }
-
-        component1 = (Component) widgetObj;
 
         Component component = null;
 
@@ -232,7 +228,7 @@ public class GridCmd implements Command {
         int nSlaves = 0;
         boolean lastArgSlave = false;
         boolean endOfWindowArgs = false;
-
+        boolean gotExtender = false;
         for (int i = start; i < argv.length; i++) {
             String thisArg = argv[i].toString();
 
@@ -274,23 +270,36 @@ public class GridCmd implements Command {
                 lastArgSlave = true;
                 lastSlave = i;
             } else if (!thisArg.equals("x") && !thisArg.equals("^")) {
-                if (nSlaves > 0) {
-                    throw new TclException(interp,
-                            "unexpected parameter, \"" + thisArg
-                            + "\", in configure list. Should be window name or option");
-                } else if (argv.length == 3) {
-                    throw new TclException(interp,
-                            "bad argument \"" + thisArg
-                            + "\": must be name of window");
-                } else {
+                if (thisArg.length() == 1) {
                     throw new TclException(interp,
                             "invalid window shortcut, \"" + thisArg
                             + "\" should be '-', 'x', or '^'");
+
+                } else {
+                    if (nSlaves > 0) {
+                        throw new TclException(interp,
+                                "unexpected parameter, \"" + thisArg
+                                + "\", in configure list. Should be window name or option");
+                    } else if (argv.length == 3) {
+                        throw new TclException(interp,
+                                "bad argument \"" + thisArg
+                                + "\": must be name of window");
+                    } else {
+                        throw new TclException(interp,
+                                "invalid window shortcut, \"" + thisArg
+                                + "\" should be '-', 'x', or '^'");
+                    }
                 }
             } else {
+                if (thisArg.equals("^")) {
+                    gotExtender = true;
+                }
                 lastArgSlave = false;
                 lastSlave = i;
             }
+        }
+        if (gotExtender && (nSlaves == 0)) {
+            throw new TclException(interp, "can't use '^', cant find master");
         }
 
         if (nSlaves == 0) {
@@ -313,12 +322,33 @@ public class GridCmd implements Command {
         gconstr.fill = GridBagConstraints.NONE;
 
         int modOptions = 0;
-        String[] windows = new String[lastSlave - start + 1];
-
+        String[] windowNames = new String[lastSlave - start + 1];
+        JComponent[] compObjects = new JComponent[windowNames.length];
         for (int i = start; i <= lastSlave; i++) {
-            windows[i - start] = argv[i].toString().intern();
+            String thisArg = argv[i].toString();
+            windowNames[i - start] = thisArg;
+            if (thisArg.equals("^") || thisArg.equals("-")
+                    || thisArg.equals("x")) {
+                continue;
+            }
 
-            if (windows[i - start].equals(masterName)) {
+            TclObject tObj2 = (TclObject) Widgets.getWidget(interp, thisArg);
+
+            if (tObj2 == null) {
+                throw new TclException(interp,
+                        "bad window path name \"" + thisArg + "\"");
+            }
+
+            Object compObject = ReflectObject.get(interp, tObj2);
+
+            if (compObject instanceof JComponent) {
+                compObjects[i - start] = (JComponent) compObject;
+            } else {
+                throw new TclException(interp,
+                        "can't manage \"" + thisArg
+                        + "\": it's a top-level window");
+            }
+            if (thisArg.equals(masterName)) {
                 throw new TclException(interp,
                         "Window can't be managed in itself");
             }
@@ -336,13 +366,22 @@ public class GridCmd implements Command {
         }
 
         Object masterObject = ReflectObject.get(interp, tObj);
-        (new Configure()).exec(masterName, masterObject, gconstr, windows,
-                modOptions);
-    }
 
-    String doit(String masterName, Object masterObject,
-            GridBagConstraints gconstr, String[] windowNames,
-            JComponent[] jcomponents, int modOptions)
+
+
+        String errMsg = (new Configure()).exec(masterName, compObjects, windowNames, masterObject, gconstr, modOptions);
+        if (errMsg != null) {
+            throw new TclException(interp, errMsg);
+        }
+        Container master = getMasterContainer(masterObject);
+        LayoutHandler.addLayoutRequest(interp, master);
+
+    }
+//           errMsg = doit( masterObject, gconstr, jcomponents, modOptions);
+
+    String doit(final String masterName, Object masterObject,
+            GridBagConstraints gconstr,
+            JComponent[] jComps, final String[] windowNames, int modOptions)
             throws IllegalArgumentException {
         Container master = getMasterContainer(masterObject);
 
@@ -365,52 +404,77 @@ public class GridCmd implements Command {
         }
 
         if (master.getComponentCount() == 0) {
-            gbag.lastRow = 0;
-        }
+            //gbag.lastRow = 0;
+            master.setMinimumSize(new Dimension(0, 0));
+            if (masterObject instanceof SwkJFrame) {
+                ((SwkJFrame) masterObject).geometry = new Dimension(1, 1);
+            }
+            //  xxx cheap trick to reset gbag when frame empty
+            boolean propagate = gbag.propagate;
+            int[] widths = gbag.columnWidths;
+            int[] heights = gbag.rowHeights;
+            double[] columnWeights = gbag.columnWeights;
+            double[] rowWeights = gbag.rowWeights;
 
-        if (gconstr.gridy == -1) {
-            gconstr.gridy = gbag.lastRow;
+            gbag = new SwkGridBagLayout();
+            gbag.propagate = propagate;
+            gbag.columnWeights = columnWeights;
+            gbag.rowWeights = rowWeights;
+            gbag.columnWidths = widths;
+            gbag.rowHeights = heights;
+            master.setLayout(gbag);
         }
 
         TclObject tObj2 = null;
         JComponent slave = null;
         JComponent packSlave;
 
-        for (int i = 0; i < jcomponents.length; i++) {
-            String thisArg = windowNames[i];
+        for (int i = 0; i < jComps.length; i++) {
+            if (jComps[i] == null) {
+                String thisArg = (String) windowNames[i];
 
-            if (thisArg.equals("^")) {
-                extendRow(master, gbag, gconstr.gridx, gconstr.gridy);
-                gconstr.gridx++;
 
-                continue;
-            } else if (thisArg.equals("-")) {
-                if (slave != null) {
-                    GridBagConstraints gconstr2 = gbag.getConstraints(slave);
-                    gconstr2.gridwidth++;
-                    gbag.setConstraints(slave, gconstr2);
+                if (thisArg.equals("^")) {
+                    try {
+                        if (gconstr.gridy == -1) {
+                            gconstr.gridy = gbag.lastRow;
+                        }
+                        extendRow(master, gbag, gconstr.gridx, gconstr.gridy);
+                    } catch (IllegalArgumentException iaE) {
+                        return iaE.getMessage();
+                    }
+                    gconstr.gridx++;
+
+                    continue;
+                } else if (thisArg.equals("-")) {
+                    if (slave != null) {
+                        GridBagConstraints gconstr2 = gbag.getConstraints(slave);
+                        gconstr2.gridwidth++;
+                        gbag.setConstraints(slave, gconstr2);
+                        gconstr.gridx = gconstr2.gridx + gconstr2.gridwidth;
+                    } else {
+                        gconstr.gridx++;
+                    }
+
+
+                    continue;
+                } else if (thisArg.equals("x")) {
+                    gconstr.gridx++;
+
+                    continue;
+                }
+            } else {
+                try {
+                    slave = gridSlave(master, masterName, gbag, gconstr,
+                            modOptions, jComps[i], windowNames[i]);
+                } catch (IllegalArgumentException iaE) {
+                    return iaE.getMessage();
                 }
 
                 gconstr.gridx++;
-
-                continue;
-            } else if (thisArg.equals("x")) {
-                gconstr.gridx++;
-
-                continue;
             }
-
-            try {
-                slave = gridSlave(interp, master, masterName, gbag, gconstr,
-                        modOptions, jcomponents[i], windowNames[i]);
-            } catch (IllegalArgumentException iaE) {
-                return iaE.getMessage();
-            }
-
-            gconstr.gridx++;
         }
 
-        LayoutHandler.addLayoutRequest(interp, master);
         gbag.lastRow = gconstr.gridy + 1;
 
         return null;
@@ -425,12 +489,7 @@ public class GridCmd implements Command {
                     "master index ?-option value...?");
         }
 
-        String masterName = argv[2].toString();
-
-        if (!Widgets.exists(interp, argv[2].toString())) {
-            throw new TclException(interp,
-                    "bad window path name \"" + masterName + "\"");
-        }
+        Component component = getComponent(interp, argv[2].toString());
 
         if (argv.length == 5) {
             int index = TclInteger.get(interp, argv[3]);
@@ -440,7 +499,7 @@ public class GridCmd implements Command {
             }
 
             String key = "" + index;
-            GridRowColumnProps rcProps = (new RowColumnGet()).exec(masterName,
+            GridRowColumnProps rcProps = (new RowColumnGet()).exec(component,
                     columnMode, index);
             String thisArg = argv[4].toString();
 
@@ -465,7 +524,7 @@ public class GridCmd implements Command {
             }
 
             String key = "" + index;
-            GridRowColumnProps rcProps = (new RowColumnGet()).exec(argv[2].toString(),
+            GridRowColumnProps rcProps = (new RowColumnGet()).exec(component,
                     columnMode, index);
             TclObject list = TclList.newInstance();
             TclList.append(interp, list, TclString.newInstance("-minsize"));
@@ -528,7 +587,7 @@ public class GridCmd implements Command {
                     }
                 }
 
-                (new RowColumnConfigure()).exec(masterName, columnMode, index,
+                (new RowColumnConfigure()).exec(component, columnMode, index,
                         argTypes, argValues);
             }
         }
@@ -561,15 +620,12 @@ public class GridCmd implements Command {
                     "master ?column row ?column row??");
         }
 
-        if (!Widgets.exists(interp, argv[2].toString())) {
-            throw new TclException(interp,
-                    "bad window path name \"" + argv[2].toString() + "\"");
-        }
+        Component component = getComponent(interp, argv[2].toString());
 
         TclObject list = TclList.newInstance();
 
         if (argv.length == 3) {
-            Rectangle rect = (new BoundingBox()).exec(argv[2].toString(),
+            Rectangle rect = (new BoundingBox()).exec(component,
                     argv.length, null);
 
             if (rect == null) {
@@ -581,10 +637,6 @@ public class GridCmd implements Command {
             TclList.append(interp, list, TclInteger.newInstance(rect.width));
             TclList.append(interp, list, TclInteger.newInstance(rect.height));
         } else {
-            if (!Widgets.exists(interp, argv[2].toString())) {
-                throw new TclException(interp,
-                        "bad window path name \"" + argv[2].toString() + "\"");
-            }
 
             int[][] rcVals = new int[2][2];
             rcVals[0][0] = TclInteger.get(interp, argv[3]);
@@ -592,12 +644,6 @@ public class GridCmd implements Command {
             rcVals[1][0] = rcVals[0][0];
             rcVals[1][1] = rcVals[0][1];
 
-            Rectangle rect = (new BoundingBox()).exec(argv[2].toString(),
-                    argv.length, rcVals);
-
-            if (rect == null) {
-                return;
-            }
 
             if (argv.length == 7) {
                 rcVals[1][0] = TclInteger.get(interp, argv[5]);
@@ -614,6 +660,12 @@ public class GridCmd implements Command {
                     rcVals[0][1] = rcVals[1][1];
                     rcVals[1][1] = hold;
                 }
+            }
+            Rectangle rect = (new BoundingBox()).exec(component,
+                    argv.length, rcVals);
+
+            if (rect == null) {
+                return;
             }
 
             TclList.append(interp, list, TclInteger.newInstance(rect.x));
@@ -637,8 +689,16 @@ public class GridCmd implements Command {
         for (int i = firstWindow; i < argv.length; i++) {
             names[j++] = argv[i].toString();
         }
+        Component[] comps = new Component[names.length];
+        for (int i = 0; i < names.length; i++) {
+            if (!Widgets.exists(interp, names[i])) {
+                throw new TclException(interp,
+                        "bad window path name \"" + argv[2].toString() + "\"");
+            }
+            comps[i] = getComponent(interp, names[i]);
+        }
 
-        (new Forget()).exec(names);
+        (new Forget()).exec(comps);
     }
 
     void getLocation(Interp interp, TclObject[] argv) throws TclException {
@@ -650,6 +710,7 @@ public class GridCmd implements Command {
             throw new TclException(interp,
                     "bad window path name \"" + argv[2].toString() + "\"");
         }
+        Component component = getComponent(interp, argv[2].toString());
 
         int x = 0;
         int y = 0;
@@ -669,7 +730,7 @@ public class GridCmd implements Command {
                     "bad screen distance \"" + argv[4].toString() + "\"");
         }
 
-        Point pt = (new Location()).exec(argv[2].toString(), x, y);
+        Point pt = (new Location()).exec(component, x, y);
         TclObject list = TclList.newInstance();
 
         TclList.append(interp, list, TclInteger.newInstance(pt.x));
@@ -685,10 +746,7 @@ public class GridCmd implements Command {
                     "window ?-option value...?");
         }
 
-        if (!Widgets.exists(interp, argv[2].toString())) {
-            throw new TclException(interp,
-                    "bad window path name \"" + argv[2].toString() + "\"");
-        }
+        Component component = getComponent(interp, argv[2].toString());
 
         int iRow = -1;
         int iColumn = -1;
@@ -715,48 +773,72 @@ public class GridCmd implements Command {
             }
         }
 
-        String[] names = (new Slaves()).exec(argv[2].toString(), iColumn, iRow);
+
+
+        //Object constrObject = (new Info()).exec(argv[2].toString(), component);
+
+
+
+        ArrayList<String> names = (new Slaves()).exec(component, iColumn, iRow);
         TclObject list = TclList.newInstance();
 
-        if (names != null) {
-            for (int i = 0; i < names.length; i++) {
-                TclList.append(interp, list, TclString.newInstance(names[i]));
-            }
+        for (String name : names) {
+            TclList.append(interp, list, TclString.newInstance(name));
         }
+
+
 
         interp.setResult(list);
-
         return;
+
     }
 
-    void getInfo(Interp interp, TclObject[] argv) throws TclException {
-        if (argv.length != 3) {
-            throw new TclNumArgsException(interp, 2, argv, "window");
-        }
-
-        if (!Widgets.exists(interp, argv[2].toString())) {
+    Component getComponent(final Interp interp, final String widgetName) throws TclException {
+        if (!Widgets.exists(interp, widgetName)) {
             throw new TclException(interp,
-                    "bad window path name \"" + argv[2].toString() + "\"");
+                    "bad window path name \"" + widgetName + "\"");
+
+
         }
 
-        interp.resetResult();
+        TclObject tObj = (TclObject) Widgets.getWidget(interp, widgetName);
 
-        TclObject tObj = (TclObject) Widgets.getWidget(interp, argv[2].toString());
+
 
         if (tObj == null) {
             throw new TclException(interp,
-                    "bad window path name \"" + argv[2].toString() + "\"");
+                    "bad window path name \"" + widgetName + "\"");
+
+
         }
 
         Object widgetObj = (Object) ReflectObject.get(interp, tObj);
 
         Component component = (Component) widgetObj;
 
-        Object constrObject = (new Info()).exec(argv[2].toString(), component);
+
+        return component;
+
+
+
+    }
+
+    void getInfo(Interp interp, TclObject[] argv) throws TclException {
+        if (argv.length != 3) {
+            throw new TclNumArgsException(interp, 2, argv, "window");
+
+
+        }
+        Component component = getComponent(interp, argv[2].toString());
+        Object constrObject = (new Info()).exec(component);
+
+
 
         if ((constrObject == null)
                 || !(constrObject instanceof GridBagConstraints)) {
             return;
+
+
         }
 
         GridBagConstraints gconstr = (GridBagConstraints) constrObject;
@@ -790,112 +872,170 @@ public class GridCmd implements Command {
         StringBuffer sbuf = new StringBuffer();
         String anchorStr = null;
 
+
+
         if (gconstr.fill == GridBagConstraints.BOTH) {
             anchorStr = "nesw";
+
+
         } else if (gconstr.fill == GridBagConstraints.NONE) {
             if (gconstr.anchor == GridBagConstraints.NORTHEAST) {
                 anchorStr = "ne";
+
+
             } else if (gconstr.anchor == GridBagConstraints.SOUTHEAST) {
                 anchorStr = "es";
+
+
             } else if (gconstr.anchor == GridBagConstraints.NORTHWEST) {
                 anchorStr = "nw";
+
+
             } else if (gconstr.anchor == GridBagConstraints.SOUTHWEST) {
                 anchorStr = "sw";
+
+
             } else if (gconstr.anchor == GridBagConstraints.WEST) {
                 anchorStr = "w";
+
+
             } else if (gconstr.anchor == GridBagConstraints.NORTH) {
                 anchorStr = "n";
+
+
             } else if (gconstr.anchor == GridBagConstraints.EAST) {
                 anchorStr = "e";
+
+
             } else if (gconstr.anchor == GridBagConstraints.SOUTH) {
                 anchorStr = "s";
+
+
             }
         } else if (gconstr.fill == GridBagConstraints.HORIZONTAL) {
             anchorStr = "ew";
 
+
+
             if (gconstr.anchor == GridBagConstraints.NORTH) {
                 anchorStr = "new";
+
+
             } else if (gconstr.anchor == GridBagConstraints.SOUTH) {
                 anchorStr = "esw";
+
+
             }
         } else if (gconstr.fill == GridBagConstraints.VERTICAL) {
             anchorStr = "ns";
 
+
+
             if (gconstr.anchor == GridBagConstraints.EAST) {
                 anchorStr = "nes";
+
+
             } else if (gconstr.anchor == GridBagConstraints.WEST) {
                 anchorStr = "nsw";
+
+
             }
         }
 
         TclList.append(interp, list, TclString.newInstance(anchorStr));
 
         interp.setResult(list);
+
+
     }
 
     void getSizes(Interp interp, TclObject[] argv) throws TclException {
         if (argv.length != 3) {
             throw new TclNumArgsException(interp, 2, argv, "window");
+
+
         }
 
-        if (!Widgets.exists(interp, argv[2].toString())) {
-            throw new TclException(interp,
-                    "bad window path name \"" + argv[2].toString() + "\"");
-        }
+        Component component = getComponent(interp, argv[2].toString());
 
-        Dimension dim = (new Sizes()).exec(argv[2].toString());
+        Dimension dim = (new Sizes()).exec(component);
+
+
 
         if (dim == null) {
             throw new TclException(interp, "grid sizes exception");
+
+
         }
 
         TclObject list = TclList.newInstance();
         TclList.append(interp, list, TclInteger.newInstance(dim.width));
         TclList.append(interp, list, TclInteger.newInstance(dim.height));
         interp.setResult(list);
+
+
     }
 
     void propagate(Interp interp, TclObject[] argv) throws TclException {
         if ((argv.length != 3) && (argv.length != 4)) {
             throw new TclNumArgsException(interp, 2, argv, "window ?boolean?");
+
+
         }
 
-        if (!Widgets.exists(interp, argv[2].toString())) {
-            throw new TclException(interp,
-                    "bad window path name \"" + argv[2].toString() + "\"");
-        }
+        Component component = getComponent(interp, argv[2].toString());
+
+
 
         boolean propagate = false;
+
+
         boolean setPropagate = false;
+
+
 
         if (argv.length == 4) {
             setPropagate = true;
             propagate = TclBoolean.get(interp, argv[3]);
+
+
         }
 
-        boolean result = (new Propagate()).exec(argv[2].toString(), propagate,
+        boolean result = (new Propagate()).exec(component, propagate,
                 setPropagate);
         interp.setResult(result);
 
+
+
         return;
+
+
     }
 
     void extendRow(Container master, SwkGridBagLayout gbag, int x, int y)
             throws IllegalArgumentException {
         Component[] comps = master.getComponents();
+
+
         boolean foundComp = false;
 
-        for (int i = 0; i < comps.length; i++) {
+
+        for (int i = 0; i
+                < comps.length; i++) {
             Object constr = gbag.getConstraints(comps[i]);
+
 
             if ((constr != null) && (constr instanceof GridBagConstraints)) {
                 GridBagConstraints gconstr = (GridBagConstraints) constr;
+
 
                 if ((gconstr.gridy < y)
                         && ((gconstr.gridy + gconstr.gridheight) > y)
                         && (gconstr.gridx < x)
                         && ((gconstr.gridx + gconstr.gridwidth) > x)) {
                     return;
+
+
                 }
 
                 if (((gconstr.gridy + gconstr.gridheight) == y)
@@ -904,14 +1044,19 @@ public class GridCmd implements Command {
                     gconstr.gridheight = (y - gconstr.gridy + 1);
                     gbag.setConstraints(comps[i], gconstr);
 
+
+
                     break;
+
+
                 }
             }
         }
-
         if (!foundComp) {
             throw new IllegalArgumentException(
                     "can't find slave to extend with \"^\".");
+
+
         }
     }
 
@@ -919,141 +1064,212 @@ public class GridCmd implements Command {
             GridBagConstraints gconstr, Component component)
             throws TclException {
         String thisArg = argv[i].toString();
+
+
         int optionSet = 0;
+
+
 
         if (thisArg.equals("-gridx")) {
             int iValue = TclInteger.get(interp, argv[i + 1]);
 
+
+
             if (iValue < 0) {
                 throw new TclException(interp,
                         "bad grid value \"" + argv[i + 1].toString()
                         + "\": must be a non-negative integer");
+
+
             }
 
             gconstr.gridx = iValue;
             optionSet = GRID_X;
+
+
         } else if (thisArg.equals("-gridy")) {
             int iValue = TclInteger.get(interp, argv[i + 1]);
 
+
+
             if (iValue < 0) {
                 throw new TclException(interp,
                         "bad grid value \"" + argv[i + 1].toString()
                         + "\": must be a non-negative integer");
+
+
             }
 
             optionSet = GRID_Y;
 
             gconstr.gridy = iValue;
+
+
         } else if (thisArg.equals("-row")) {
             int iValue = TclInteger.get(interp, argv[i + 1]);
 
+
+
             if (iValue < 0) {
                 throw new TclException(interp,
                         "bad grid value \"" + argv[i + 1].toString()
                         + "\": must be a non-negative integer");
+
+
             }
 
             optionSet = GRID_Y;
 
             gconstr.gridy = iValue;
+
+
         } else if (thisArg.equals("-column")) {
             int iValue = TclInteger.get(interp, argv[i + 1]);
+
+
 
             if (iValue < 0) {
                 throw new TclException(interp,
                         "bad column value \"" + argv[i + 1].toString()
                         + "\": must be a non-negative integer");
+
+
             }
 
             optionSet = GRID_X;
 
             gconstr.gridx = iValue;
+
+
         } else if (thisArg.equals("-rowspan")) {
             int iValue = TclInteger.get(interp, argv[i + 1]);
+
+
 
             if (iValue < 1) {
                 throw new TclException(interp,
                         "bad rowspan value \"" + argv[i + 1].toString()
                         + "\": must be a positive integer");
+
+
             }
 
             optionSet = GRID_HEIGHT;
 
             gconstr.gridheight = iValue;
+
+
         } else if (thisArg.equals("-columnspan")) {
             int iValue = TclInteger.get(interp, argv[i + 1]);
+
+
 
             if (iValue < 1) {
                 throw new TclException(interp,
                         "bad columnspan value \"" + argv[i + 1].toString()
                         + "\": must be a positive integer");
+
+
             }
 
             optionSet = GRID_WIDTH;
 
             gconstr.gridwidth = iValue;
+
+
         } else if (thisArg.equals("-ipadx")) {
             int iValue = 0;
 
+
+
             try {
                 iValue = SwankUtil.getTkSize(interp, component, argv[i + 1]);
+
+
             } catch (TclException tclE) {
                 throw new TclException(interp,
                         "bad ipadx value \"" + argv[i + 1].toString()
                         + "\": must be positive screen distance");
+
+
             }
 
             if (iValue < 0) {
                 throw new TclException(interp,
                         "bad ipadx value \"" + argv[i + 1].toString()
                         + "\": must be positive screen distance");
+
+
             }
 
             // fixme ipad seems to need to be doubled
             optionSet = GRID_IPADX;
 
             gconstr.ipadx = iValue * 2;
+
+
         } else if (thisArg.equals("-ipady")) {
             int iValue = 0;
 
+
+
             try {
                 iValue = SwankUtil.getTkSize(interp, component, argv[i + 1]);
+
+
             } catch (TclException tclE) {
                 throw new TclException(interp,
                         "bad ipady value \"" + argv[i + 1].toString()
                         + "\": must be positive screen distance");
+
+
             }
 
             if (iValue < 0) {
                 throw new TclException(interp,
                         "bad ipady value \"" + argv[i + 1].toString()
                         + "\": must be positive screen distance");
+
+
             }
 
             // fixme ipad seems to need to be doubled
             optionSet = GRID_IPADY;
             gconstr.ipady = iValue * 2;
+
+
         } else if (thisArg.equals("-padx") || thisArg.equals("-pady")) {
             double dValue = 0.0;
             TclObject[] padArgs = TclList.getElements(interp, argv[i + 1]);
+
+
 
             if ((padArgs.length < 1) || (padArgs.length > 2)) {
                 throw new TclException(interp,
                         "bad pad value \"" + argv[i + 1].toString()
                         + "\": must be positive screen distance");
+
+
             }
 
-            for (int iArg = 0; iArg < padArgs.length; iArg++) {
+            for (int iArg = 0; iArg
+                    < padArgs.length; iArg++) {
                 String[] argErrors = {"", " 2nd"};
+
+
 
                 try {
                     dValue = SwankUtil.getTkSizeD(interp, component,
                             padArgs[iArg]);
+
+
                 } catch (TclException tclE) {
                     throw new TclException(interp,
                             "bad" + argErrors[iArg] + " pad value \""
                             + padArgs[iArg].toString()
                             + "\": must be positive screen distance");
+
+
                 }
 
                 if (dValue < 0) {
@@ -1061,36 +1277,55 @@ public class GridCmd implements Command {
                             "bad" + argErrors[iArg] + " pad value \""
                             + padArgs[iArg].toString()
                             + "\": must be positive screen distance");
+
+
                 }
 
                 if (thisArg.equals("-padx")) {
                     if (iArg == 0) {
                         gconstr.insets.left = (int) dValue;
                         gconstr.insets.right = (int) dValue;
+
+
                     } else {
                         gconstr.insets.right = (int) dValue;
+
+
                     }
 
                     optionSet = GRID_PADX;
+
+
                 } else {
                     if (iArg == 0) {
                         gconstr.insets.top = (int) dValue;
                         gconstr.insets.bottom = (int) dValue;
+
+
                     } else {
                         gconstr.insets.bottom = (int) dValue;
+
+
                     }
 
                     optionSet = GRID_PADY;
+
+
                 }
             }
         } else if (thisArg.equals("-sticky")) {
             String stickyStuff = argv[i + 1].toString();
 
-            for (int j = 0; j < stickyStuff.length(); j++) {
+
+
+            for (int j = 0; j
+                    < stickyStuff.length(); j++) {
                 if ("nsew, ".indexOf(stickyStuff.charAt(j)) == -1) {
                     throw new TclException(interp,
                             "bad stickyness value \"" + stickyStuff
                             + "\": must be a string containing n, e, s, and/or w");
+
+
                 }
             }
 
@@ -1100,74 +1335,130 @@ public class GridCmd implements Command {
                 if ((stickyStuff.indexOf('n') >= 0)
                         && (stickyStuff.indexOf('s') >= 0)) {
                     gconstr.fill = GridBagConstraints.BOTH;
+
+
                 } else {
                     gconstr.fill = GridBagConstraints.HORIZONTAL;
 
+
+
                     if (stickyStuff.indexOf('s') >= 0) {
                         gconstr.anchor = GridBagConstraints.SOUTH;
+
+
                     } else if (stickyStuff.indexOf('n') >= 0) {
                         gconstr.anchor = GridBagConstraints.NORTH;
+
+
                     }
                 }
             } else if ((stickyStuff.indexOf('n') >= 0)
                     && (stickyStuff.indexOf('s') >= 0)) {
                 gconstr.fill = GridBagConstraints.VERTICAL;
 
+
+
                 if (stickyStuff.indexOf('e') >= 0) {
                     gconstr.anchor = GridBagConstraints.EAST;
+
+
                 } else if (stickyStuff.indexOf('w') >= 0) {
                     gconstr.anchor = GridBagConstraints.WEST;
+
+
                 }
             } else {
                 gconstr.fill = GridBagConstraints.NONE;
 
+
+
                 if (stickyStuff.indexOf('n') >= 0) {
                     if (stickyStuff.indexOf('e') >= 0) {
                         gconstr.anchor = GridBagConstraints.NORTHEAST;
+
+
                     } else if (stickyStuff.indexOf('w') >= 0) {
                         gconstr.anchor = GridBagConstraints.NORTHWEST;
+
+
                     } else {
                         gconstr.anchor = GridBagConstraints.NORTH;
+
+
                     }
                 } else if (stickyStuff.indexOf('s') >= 0) {
                     if (stickyStuff.indexOf('e') >= 0) {
                         gconstr.anchor = GridBagConstraints.SOUTHEAST;
+
+
                     } else if (stickyStuff.indexOf('w') >= 0) {
                         gconstr.anchor = GridBagConstraints.SOUTHWEST;
+
+
                     } else {
                         gconstr.anchor = GridBagConstraints.SOUTH;
+
+
                     }
                 } else if (stickyStuff.indexOf('e') >= 0) {
                     gconstr.anchor = GridBagConstraints.EAST;
+
+
                 } else if (stickyStuff.indexOf('w') >= 0) {
                     gconstr.anchor = GridBagConstraints.WEST;
+
+
                 } else {
                     gconstr.anchor = GridBagConstraints.CENTER;
+
+
                 }
             }
 
             optionSet = GRID_ANCHOR;
+
+
         } else if (thisArg.equals("-in")) {
         } else {
             throw new TclException(interp,
                     "unexpected parameter, \"" + thisArg
                     + "\", in configure list. Should be window name or option");
+
+
         }
 
         return optionSet;
+
+
     }
 
-    JComponent gridSlave(Interp interp, Container master, String masterName,
+    JComponent gridSlave(Container master, String masterName,
             SwkGridBagLayout gbag, GridBagConstraints gconstr, int modOptions,
             JComponent slave, String windowName) throws IllegalArgumentException {
         GridBagConstraints currentConstraints = gbag.getConstraints(slave);
         GridBagConstraints applyConstraints = null;
 
+
+
         if (currentConstraints.gridx != -1) {
             applyConstraints = updateConstraints(gconstr, currentConstraints,
                     modOptions);
+
+
         } else {
             applyConstraints = gconstr;
+
+
+        }
+        if (applyConstraints.gridy == -1) {
+            applyConstraints.gridy = gbag.lastRow;
+        }
+        if (gconstr.gridy == -1) {
+            if (currentConstraints == null) {
+                gconstr.gridy = gbag.lastRow;
+            } else {
+                gconstr.gridy = currentConstraints.gridy;
+            }
         }
 
         slave.invalidate();
@@ -1186,32 +1477,52 @@ public class GridCmd implements Command {
         //gbag.setRowMinSize(gconstr.gridy,rowProps.minSize);
         gbag.setConstraints(slave, applyConstraints);
 
+
+
         if (!((Container) master).isAncestorOf(slave)) {
             try {
                 master.add(slave);
+
+
             } catch (java.lang.IllegalArgumentException iaE) {
                 throw new IllegalArgumentException("can't put \"" + windowName
                         + "\" inside \"" + masterName + "\"");
+
+
             }
         }
 
         return slave;
+
+
     }
 
     Container getMasterContainer(Object masterObj) {
         Container master = null;
 
+
+
         if (masterObj instanceof JFrame) {
             master = ((JFrame) masterObj).getContentPane();
+
+
         } else if (masterObj instanceof JWindow) {
             master = ((JWindow) masterObj).getContentPane();
+
+
         } else if (masterObj instanceof JInternalFrame) {
             master = ((JInternalFrame) masterObj).getContentPane();
+
+
         } else {
             master = (Container) masterObj;
+
+
         }
 
         return master;
+
+
     }
 
     GridBagConstraints updateConstraints(GridBagConstraints gconstr,
@@ -1219,117 +1530,109 @@ public class GridCmd implements Command {
         if (currentConstraints != null) {
             if ((modOptions & GRID_X) == GRID_X) {
                 currentConstraints.gridx = gconstr.gridx;
+
+
             }
 
             if ((modOptions & GRID_Y) == GRID_Y) {
                 currentConstraints.gridy = gconstr.gridy;
+
+
             }
 
             if ((modOptions & GRID_HEIGHT) == GRID_HEIGHT) {
                 currentConstraints.gridheight = gconstr.gridheight;
+
+
             }
 
             if ((modOptions & GRID_WIDTH) == GRID_WIDTH) {
                 currentConstraints.gridwidth = gconstr.gridwidth;
+
+
             }
 
             if ((modOptions & GRID_PADX) == GRID_PADX) {
                 currentConstraints.insets.left = gconstr.insets.left;
                 currentConstraints.insets.right = gconstr.insets.right;
+
+
             }
 
             if ((modOptions & GRID_PADY) == GRID_PADY) {
                 currentConstraints.insets.top = gconstr.insets.top;
                 currentConstraints.insets.bottom = gconstr.insets.bottom;
+
+
             }
 
             if ((modOptions & GRID_IPADX) == GRID_IPADX) {
                 currentConstraints.ipadx = gconstr.ipadx;
+
+
             }
 
             if ((modOptions & GRID_IPADY) == GRID_IPADY) {
                 currentConstraints.ipady = gconstr.ipady;
+
+
             }
 
             if ((modOptions & GRID_ANCHOR) == GRID_ANCHOR) {
                 currentConstraints.anchor = gconstr.anchor;
                 currentConstraints.fill = gconstr.fill;
+
+
             }
         }
 
         return currentConstraints;
+
+
+
+
     }
 
     class Configure extends GetValueOnEventThread {
 
-        String masterName = null;
         GridBagConstraints gconstr = null;
         Object masterObject = null;
-        String[] windowNames = null;
-        JComponent[] jcomponents = null;
+        JComponent[] jComps = null;
         int modOptions = 0;
         String errMsg = null;
+        String masterName;
+        String[] windowNames;
 
-        void exec(final String masterName, final Object masterObject,
-                final GridBagConstraints gconstr, final String[] windowNames,
+        String exec(final String masterName, final JComponent[] jComps, final String[] windowNames, final Object masterObject,
+                final GridBagConstraints gconstr,
                 final int modOptions) throws TclException {
             this.masterName = masterName;
+            this.jComps = jComps;
+            this.windowNames = windowNames;
             this.masterObject = masterObject;
             this.gconstr = gconstr;
-            this.windowNames = windowNames;
             this.modOptions = modOptions;
-            jcomponents = new JComponent[windowNames.length];
-
-            for (int i = 0; i < windowNames.length; i++) {
-                String thisArg = windowNames[i];
-
-                if (thisArg.equals("^") || thisArg.equals("-")
-                        || thisArg.equals("x")) {
-                    continue;
-                }
-
-                TclObject tObj2 = (TclObject) Widgets.getWidget(interp, thisArg);
-
-                if (tObj2 == null) {
-                    throw new TclException(interp,
-                            "bad window path name \"" + thisArg + "\"");
-                }
-
-                Object compObject = ReflectObject.get(interp, tObj2);
-
-                if (compObject instanceof JComponent) {
-                    jcomponents[i] = (JComponent) compObject;
-                } else {
-                    throw new TclException(interp,
-                            "can't manage \"" + thisArg
-                            + "\": it's a top-level window");
-                }
-            }
 
             execOnThread();
-
-            if (errMsg != null) {
-                throw new TclException(interp, errMsg);
-            }
+            return errMsg;
         }
 
         public void run() {
-            errMsg = doit(masterName, masterObject, gconstr, windowNames,
-                    jcomponents, modOptions);
+            errMsg = doit(masterName, masterObject, gconstr, jComps, windowNames, modOptions);
         }
     }
 
     class RowColumnGet extends GetValueOnEventThread {
 
-        String item = null;
+        Component component = null;
         String[] names = null;
         int index = 0;
         boolean columnMode = false;
         GridRowColumnProps rcProps = null;
 
-        GridRowColumnProps exec(final String item, final boolean columnMode,
+        GridRowColumnProps exec(final Component component, final boolean columnMode,
                 final int index) {
-            this.item = item;
+            this.component = component;
             this.columnMode = columnMode;
             this.index = index;
             execOnThread();
@@ -1338,7 +1641,7 @@ public class GridCmd implements Command {
         }
 
         public void run() {
-            Container master = getMaster(item, false);
+            Container master = getMaster(component, false);
             SwkGridBagLayout gbag = getLayout(master);
 
             if (gbag == null) {
@@ -1357,15 +1660,15 @@ public class GridCmd implements Command {
         static final int MINSIZE = 2;
         static final int PAD = 3;
         static final int UNIFORM = 4;
-        String item = null;
+        Component component = null;
         int index = 0;
         boolean columnMode = false;
         int[] argTypes = null;
         Vector argValues = null;
 
-        void exec(final String item, final boolean columnMode, final int index,
+        void exec(final Component component, final boolean columnMode, final int index,
                 final int[] argTypes, final Vector argValues) {
-            this.item = item;
+            this.component = component;
             this.columnMode = columnMode;
             this.index = index;
             this.argTypes = argTypes;
@@ -1374,7 +1677,7 @@ public class GridCmd implements Command {
         }
 
         public void run() {
-            Container master = getMaster(item, false);
+            Container master = getMaster(component, false);
             SwkGridBagLayout gbag = getLayout(master);
 
             if (gbag == null) {
@@ -1432,35 +1735,31 @@ public class GridCmd implements Command {
 
     class BoundingBox extends GetValueOnEventThread {
 
-        String item = null;
         Component component = null;
         Object constrObject = null;
         int nArgs = 0;
         Rectangle rect = new Rectangle(0, 0, 0, 0);
         int[][] rcVals = null;
 
-        Rectangle exec(final String item, final int nArgs, final int[][] rcVals) {
-            this.item = item;
+        Rectangle exec(final Component component, final int nArgs, final int[][] rcVals) {
             this.component = component;
             this.rcVals = rcVals;
-            this.nArgs = 0;
+            this.nArgs = nArgs;
             execOnThread();
 
             return rect;
         }
 
         public void run() {
-            Container master = getMaster(item, true);
+            Container master = getMaster(component, true);
             SwkGridBagLayout gbag = getLayout(master);
 
             if (master == null) {
                 return;
             }
-
             if (nArgs > 3) {
                 Component[] comps = master.getComponents();
                 boolean outOfRange = true;
-
                 for (int i = 0; (comps != null) && (i < comps.length); i++) {
                     Object constr = gbag.getConstraints(comps[i]);
 
@@ -1472,7 +1771,6 @@ public class GridCmd implements Command {
                             if ((gconstr.gridx == rcVals[0][0])
                                     && (gconstr.gridy == rcVals[0][1])) {
                                 rect = comps[i].getBounds();
-
                                 break;
                             }
                         } else {
@@ -1511,54 +1809,43 @@ public class GridCmd implements Command {
 
     class Forget extends UpdateOnEventThread {
 
-        String[] names = null;
+        Component[] comps = null;
 
-        void exec(String[] names) {
-            this.names = names;
+        void exec(Component[] comps) {
+            this.comps = comps;
             execOnThread();
         }
 
         public void run() {
-            try {
-                for (int i = 0; i < names.length; i++) {
-                    if (!Widgets.exists(interp, names[i])) {
-                        continue;
-                    }
 
-                    String parentName = Widgets.parent(interp, names[i]);
+            for (int i = 0; i < comps.length; i++) {
+                if (comps[i] != null) {
+                    Container master = getMaster(comps[i], true);
 
-                    if (parentName.equals("")) {
-                        continue;
-                    }
-
-                    Container parent = Widgets.getContainer(interp, parentName);
+                    Container parent = getMasterContainer(master);
                     LayoutManager layoutManager = parent.getLayout();
-
                     if (!(layoutManager instanceof SwkGridBagLayout)) {
                         continue;
                     }
 
-                    SwkWidget window = (SwkWidget) Widgets.get(interp, names[i]);
-                    parent.remove((Component) window);
+                    parent.remove(comps[i]);
                     Widgets.relayoutContainer(parent);
                     parent.repaint();
                 }
-            } catch (TclException tclE) {
-                //FIXME
             }
         }
     }
 
     class Location extends GetValueOnEventThread {
 
-        String item = null;
+        Component component = null;
         String[] names = null;
         int x = -1;
         int y = -1;
         Point pt = new Point();
 
-        Point exec(final String item, final int x, final int y) {
-            this.item = item;
+        Point exec(final Component component, final int x, final int y) {
+            this.component = component;
             this.x = x;
             this.y = y;
             execOnThread();
@@ -1566,18 +1853,48 @@ public class GridCmd implements Command {
             return pt;
         }
 
-        public void run() {
-            Container parent = null;
+        Point getLocation(SwkGridBagLayout gbag) {
+            Point loc = new Point();
+            int[][] dim = gbag.getLayoutDimensions();
+            int[] minWidth = dim[0];
+            int[] minHeight = dim[1];
+            int width = minWidth.length;
+            int height = minHeight.length;
+            int i = 0;
+            int d = 0;
+            Point start = gbag.getLayoutOrigin();
 
-            try {
-                parent = Widgets.getContainer(interp, item);
-            } catch (TclException tclE) {
-                //FIXME
-                interp.backgroundError();
+            //  System.out.println("sx " + start.x+ " " + start.y + " " + width + " " + height + " "+ minWidth[0] + " " + minHeight[0]);
+            // System.out.println(gbag.minimumLayoutSize(null));
+            d = start.x;
 
-                return;
+            for (i = 0; i < width; i++) {
+                // System.out.println(minWidth[i]);
+                d += minWidth[i];
+                if (d > x) {
+                    break;
+                }
             }
+            loc.x = i;
 
+            d = start.y;
+            for (i = 0; i < height; i++) {
+                // System.out.println(minHeight[i]);
+                d += minHeight[i];
+                if (d > y) {
+                    break;
+                }
+            }
+            loc.y = i;
+            return loc;
+        }
+
+        public void run() {
+            Container parent = getMasterContainer(component);
+//System.out.println(parent.getInsets());
+//System.out.println(parent.getMinimumSize());
+//System.out.println(parent.getLocation());
+            //          System.out.println(parent.getComponentCount());
             LayoutManager layoutManager = parent.getLayout();
             Dimension dim = parent.getSize();
 
@@ -1587,9 +1904,11 @@ public class GridCmd implements Command {
 
                 return;
             }
+            SwkGridBagLayout gbag = getLayout(parent);
+            //       System.out.println(gbag.minimumLayoutSize(parent));
 
             Rectangle rect = parent.getBounds();
-
+//System.out.println(rect);
             if (x >= dim.width) {
                 x -= 1;
             }
@@ -1598,8 +1917,9 @@ public class GridCmd implements Command {
                 y -= 1;
             }
 
-            Point pt = ((SwkGridBagLayout) layoutManager).location(x, y);
-
+            //pt = gbag.location(x, y);
+            pt = getLocation(gbag);
+            //          System.out.println(x + " " + y + " " + pt.x + " " + pt.y);
             if (x < pt.x) {
                 pt.x = -1;
             }
@@ -1607,18 +1927,31 @@ public class GridCmd implements Command {
             if (y < pt.y) {
                 pt.y = -1;
             }
+            int colMax = gbag.getRCMax(true);
+            if (pt.x > (colMax + 1)) {
+                pt.x = colMax + 1;
+            }
+
+            int rowMax = gbag.getRCMax(false);
+
+            if (pt.y > (rowMax + 1)) {
+                pt.y = rowMax + 1;
+            }
+
+
+            //        System.out.println(x + " " + y + " " + pt.x + " " + pt.y);
         }
     }
 
     class Slaves extends GetValueOnEventThread {
 
-        String item = null;
-        String[] names = null;
+        Component component = null;
+        ArrayList<String> names = new ArrayList<String>();
         int iColumn = -1;
         int iRow = -1;
 
-        String[] exec(final String item, final int iColumn, final int iRow) {
-            this.item = item;
+        ArrayList<String> exec(final Component component, final int iColumn, final int iRow) {
+            this.component = component;
             this.iColumn = iColumn;
             this.iRow = iRow;
             execOnThread();
@@ -1627,41 +1960,24 @@ public class GridCmd implements Command {
         }
 
         public void run() {
-            Container parent = null;
-            Container master = null;
-            SwkGridBagLayout gbag = null;
+            Container parent = getMasterContainer(component);
+            Container master = getMaster(component, true);
+            SwkGridBagLayout gbag = getLayout(parent);
 
-            try {
-                parent = Widgets.getContainer(interp, item);
-                master = getMaster(item, true);
-
-                if (master == null) {
-                    return;
-                }
-
-                gbag = getLayout(master);
-            } catch (TclException tclE) {
-                //FIXME
-                interp.backgroundError();
-
-                return;
-            }
 
             if (gbag == null) {
+                System.out.println("null gb");
                 return;
             }
 
             int nMembers = parent.getComponentCount();
-            names = new String[nMembers];
 
-            for (int i = (nMembers - 1); i >= 0; i--) {
-                Component comp = parent.getComponent(i);
+            for (int i = 0; i < nMembers; i++) {
+                Component comp = parent.getComponent(nMembers - i - 1);
 
                 if ((iRow >= 0) || (iColumn >= 0)) {
                     if (gbag == null) {
                         System.out.println("null gbag");
-                        interp.resetResult();
-
                         return;
                     }
 
@@ -1672,14 +1988,14 @@ public class GridCmd implements Command {
                         GridBagConstraints gconstr = (GridBagConstraints) constr;
 
                         if ((iRow >= 0) && (gconstr.gridy == iRow)) {
-                            names[i] = comp.getName();
+                            names.add(comp.getName());
                         } else if ((iColumn >= 0)
                                 && (gconstr.gridx == iColumn)) {
-                            names[i] = comp.getName();
+                            names.add(comp.getName());
                         }
                     }
                 } else {
-                    names[i] = comp.getName();
+                    names.add(comp.getName());
                 }
             }
         }
@@ -1687,12 +2003,10 @@ public class GridCmd implements Command {
 
     class Info extends GetValueOnEventThread {
 
-        String item = null;
         Component component = null;
         Object constrObject = null;
 
-        Object exec(final String item, final Component component) {
-            this.item = item;
+        Object exec(final Component component) {
             this.component = component;
             execOnThread();
 
@@ -1700,13 +2014,12 @@ public class GridCmd implements Command {
         }
 
         public void run() {
-            Container master = getMaster(item, true);
+            Container master = getMaster(component, true);
             SwkGridBagLayout gbag = getLayout(master);
 
             if (gbag == null) {
                 return;
             }
-
             constrObject = gbag.getConstraints(component);
         }
     }
@@ -1718,8 +2031,7 @@ public class GridCmd implements Command {
         Object constrObject = null;
         Dimension dim = null;
 
-        Dimension exec(final String item) {
-            this.item = item;
+        Dimension exec(final Component component) {
             this.component = component;
             execOnThread();
 
@@ -1727,7 +2039,7 @@ public class GridCmd implements Command {
         }
 
         public void run() {
-            Container master = getMaster(item, true);
+            Container master = getMaster(component, true);
             SwkGridBagLayout gbag = getLayout(master);
             int nX = 0;
             int nY = 0;
@@ -1769,13 +2081,13 @@ public class GridCmd implements Command {
 
     class Propagate extends GetValueOnEventThread {
 
-        String item = null;
+        Component component = null;
         boolean propagate = false;
         boolean setPropagate = false;
 
-        boolean exec(final String item, final boolean propagate,
+        boolean exec(final Component component, final boolean propagate,
                 final boolean setPropagate) {
-            this.item = item;
+            this.component = component;
             this.propagate = propagate;
             this.setPropagate = setPropagate;
             execOnThread();
@@ -1784,17 +2096,7 @@ public class GridCmd implements Command {
         }
 
         public void run() {
-            Container parent = null;
-
-            try {
-                parent = Widgets.getContainer(interp, item);
-            } catch (TclException tclE) {
-                interp.backgroundError();
-                System.out.println("error " + tclE.getMessage());
-
-                //FIXME
-            }
-
+            Container parent = getMasterContainer(component);
             LayoutManager layoutManager = parent.getLayout();
             SwkGridBagLayout gbag = null;
 
@@ -1808,6 +2110,13 @@ public class GridCmd implements Command {
 
             if (setPropagate) {
                 gbag.propagate = propagate;
+                if (propagate) {
+                    if (component instanceof SwkJPanel) {
+                        ((SwkJPanel) component).swkheight = 0;
+                        ((SwkJPanel) component).swkwidth = 0;
+
+                    }
+                }
                 Widgets.relayoutContainer(parent);
             }
 
