@@ -447,14 +447,14 @@ test grid-8.4 {size} {
     grid .f -row 4 -column 5
     update
     lappend a [grid size .]
-    grid .f -row 947 -column 663
+    grid .f -row 511 -column 511
     update
     lappend a [grid size .]
     grid .f -row 0 -column 0
     update
     lappend a [grid size .]
     set a
-} {{1 1} {6 5} {664 948} {1 1}}
+} {{1 1} {6 5} {512 512} {1 1}}
 grid_reset 8.4
 
 test grid-8.5 {size} {
@@ -757,7 +757,6 @@ test grid-11.9 {default widget placement} {
     list [catch "grid .f x ^" msg] $msg
 } {1 {can't find slave to extend with "^".}}
 grid_reset 11.9
-
 test grid-11.10 {default widget placement} {
     foreach i {1 2 3} {
 		frame .f$i -width 100 -height 50 -highlightthickness 0 -bg red
@@ -833,7 +832,7 @@ grid_reset 11.13
 
 test grid-11.14 {default widget placement} {
     foreach i {1 2 3} {
-	frame .f$i -width 60 -height 60 -highlightthickness 0 -bg red
+	frame .f$i -width 90 -height 90 -highlightthickness 0 -bg red
     }
     grid .f1 .f2
     grid  ^  .f3
@@ -844,7 +843,7 @@ test grid-11.14 {default widget placement} {
 		[winfo width .f$i],[winfo height .f$i]"
     }
     set a
-} {{0,30  60,60} {60,0  60,60} {60,60  60,60}}
+} {{0,45  90,90} {90,0  90,90} {90,90  90,90}}
 grid_reset 11.14
 
 test grid-11.15 {^ ^ test with multiple windows} {
@@ -1076,8 +1075,8 @@ grid_reset 13.11.1
 
 test grid-13.12 {-ipad x and y} {
     frame .f -width 20 -height 20 -highlightthickness 0 -bg red
-    grid columnconfigure . 0 -minsize 150
-    grid rowconfigure . 0 -minsize 100
+    grid columnconfigure . 0 -minsize 150 -weight 100
+    grid rowconfigure . 0 -minsize 100 -weight 100
     set a ""
     foreach x {0 5} {
     	foreach y {0 5} {
@@ -1214,7 +1213,7 @@ test grid-16.2 {layout weights (expanding)} {
 	lappend a [winfo width .$i]-[winfo height .$i]
     }
     set a
-} {120-75 167-100 213-125}
+} {120-75 166-100 212-125}
 grid_reset 16.2
 
 test grid-16.3 {layout weights (shrinking)} {
@@ -1232,7 +1231,8 @@ test grid-16.3 {layout weights (shrinking)} {
 	lappend a [winfo width .$i]-[winfo height .$i]
     }
     set a
-} {84-63 66-50 50-37}
+} {84-63 67-50 50-38}
+
 grid_reset 16.3
 
 test grid-16.4 {layout weights (shrinking with minsize)} {
@@ -1347,7 +1347,7 @@ test grid-16.8 {layout internal constraints} {
 } {0 30 70 250 280 , 0 30 130 230 260 , 0 30 113 197 280 , 0 30 60 90 120 }
 grid_reset 16.8
 
-test grid-16.9 {layout uniform} {
+test grid-16.9 {layout uniform} tkOnly {
     frame .f1 -width 75 -height 50
     frame .f2 -width 60 -height 25
     frame .f3 -width 95 -height 75
@@ -1364,7 +1364,7 @@ test grid-16.9 {layout uniform} {
 } {{0 0 135 75} {0 75 135 100} {0 175 135 75} {0 250 135 100} {0 350 135 40}}
 grid_reset 16.9
 
-test grid-16.10 {layout uniform} {
+test grid-16.10 {layout uniform} tkOnly {
     grid [frame .f1 -width  75 -height  50] -row 0 -column 0
     grid [frame .f2 -width  60 -height  30] -row 1 -column 2
     grid [frame .f3 -width  95 -height  90] -row 2 -column 1
@@ -1385,7 +1385,7 @@ test grid-16.10 {layout uniform} {
 } {{0 0 75 60} {170 60 150 30} {75 90 95 90} {390 180 140 100} {320 280 70 45}}
 grid_reset 16.10
 
-test grid-16.11 {layout uniform (shrink)} {
+test grid-16.11 {layout uniform (shrink)} tkOnly {
     frame .f1 -width 75 -height 50
     frame .f2 -width 100 -height 95
     grid .f1 .f2 -sticky news
@@ -1401,7 +1401,7 @@ test grid-16.11 {layout uniform (shrink)} {
 } {{0 0 100 95} {100 0 100 95} {0 0 50 95} {50 0 100 95}}
 grid_reset 16.11
 
-test grid-16.12 {layout uniform (grow)} {
+test grid-16.12 {layout uniform (grow)} tkOnly {
     frame .f1 -width 40 -height 50
     frame .f2 -width 50 -height 95
     frame .f3 -width 60 -height 50
@@ -1449,7 +1449,7 @@ test grid-17.1 {forget and pending idle handlers} {
     set result ok
 } ok
 
-test grid-18.1 {test respect for internalborder} {
+test grid-18.1 {test respect for internalborder} tkOnly {
     toplevel .pack
     wm geometry .pack 200x200
     frame .pack.l -width 15 -height 10
@@ -1467,7 +1467,7 @@ test grid-18.1 {test respect for internalborder} {
     destroy .pack
     set res
 } {196x188+2+10 177x186+5+7}
-test grid-18.2 {test support for minreqsize} {
+test grid-18.2 {test support for minreqsize} tkOnly {
     toplevel .pack
     wm geometry .pack {}
     frame .pack.l -width 150 -height 100
@@ -1484,7 +1484,7 @@ test grid-18.2 {test support for minreqsize} {
     set res
 } {162x127+0+0 172x112+0+0}
 
-test grid-19.1 {uniform realloc} {
+test grid-19.1 {uniform realloc} tkOnly {
     # Use a lot of uniform groups to test the reallocation mechanism
     for {set t 0} {$t < 100} {incr t 2} {
         frame .fa$t -width 5 -height 20
