@@ -815,19 +815,33 @@ proc swkMakeSpecial {widget widgetVar} {
                    }
                 } 
             }
-        } elseif {[lsearch "JWindow JDialog JFrame" $widget] < 0} {
+        } elseif {[lsearch "JWindow JDialog JFrame" $widget] >= 0} {
             append specialMethods {
                 public void setBorderWidth(double borderWidth) {
-                   this.borderWidth = (int) borderWidth;
+                   if (this.borderWidth != (int) borderWidth) {
+                       this.borderWidth = (int) borderWidth;
+                       Widgets.relayoutContainer(getContentPane());
+                   }
+                } 
+            }
+        } elseif {[lsearch "JPanel" $widget] >= 0} {
+            append specialMethods {
+                public void setBorderWidth(double borderWidth) {
                    if (!(getBorder() instanceof SwkBorder)) {
                       setBorder(new SwkBorder());
                    }
-                } 
+                   if (this.borderWidth != (int) borderWidth) {
+                       this.borderWidth = (int) borderWidth;
+                       Widgets.relayoutContainer(this);
+                   }
+               }
             }
         } else {
             append specialMethods {
                 public void setBorderWidth(double borderWidth) {
-                   this.borderWidth = (int) borderWidth;
+                   if (this.borderWidth != (int) borderWidth) {
+                       this.borderWidth = (int) borderWidth;
+                   }
                }
             }
         }
@@ -2113,14 +2127,14 @@ Dimension dSize = new Dimension(scrollRegion[1][0]-scrollRegion[0][0],scrollRegi
     }
     if {[lsearch "JPanel LabelFrame JFrame" $widget] >= 0} {
         append specialVars "
-        int swkwidth = [defpar Width $widget 1];
-        int swkheight = [defpar Height $widget 1];
+        int swkwidth = 0;
+        int swkheight = 0;
         "
         set specialGets [concat  $specialGets { {setSwkWidth tkSize Width -width} } ]
         set specialGets [concat  $specialGets { {setSwkHeight tkSize Height -height} } ]
         if {[lsearch "JPanel LabelFrame" $widget] >= 0} {
             append specialMethods {
-                public Dimension getMinimumSize() {
+               public Dimension getMinimumSize() {
                     LayoutManager layout = getLayout();
                     Dimension dSize = layout.minimumLayoutSize(this);
                     boolean propagate = false;
@@ -2130,36 +2144,81 @@ Dimension dSize = new Dimension(scrollRegion[1][0]-scrollRegion[0][0],scrollRegi
                         } else if (layout instanceof SwkGridBagLayout) {
                         propagate = ((SwkGridBagLayout) layout).propagate;
                     }
-                    
-                    if (!propagate) {
-                        if (dSize.width < swkwidth) {
-                            dSize.width = swkwidth;
-                        }
-                        
-                        if (dSize.height < swkheight) {
-                            dSize.height = swkheight;
-                        }
-                    }
-                    return (dSize);
+       if (!propagate) {
+            if (swkwidth > 0) {
+                int minWidth = swkwidth;
+                if (dSize.width < minWidth) {
+                    dSize.width = minWidth;
                 }
-                public Dimension getPreferredSize() {
-                        return(getMinimumSize());
+            }
+
+            if (swkheight > 0) {
+                int minHeight = swkheight;
+                if (dSize.height < minHeight) {
+                    dSize.height = minHeight;
+                }
+            }
+        }
+                 return (dSize);
+                }
+   public Dimension getMaximumSize() {
+       boolean propagate=true;
+        LayoutManager layout = getLayout();
+        boolean packed = layout instanceof com.onemoonscientific.swank.PackerLayout;
+        boolean gridded = layout instanceof SwkGridBagLayout;
+
+        if (gridded) {
+            propagate = ((SwkGridBagLayout) layout).propagate;
+       } else if (packed) {
+            propagate = ((com.onemoonscientific.swank.PackerLayout) layout).propagate;
+        } else {
+        }
+        int width = 4096;
+        int height = 4096;
+        if (!propagate) {
+            if (swkwidth > 0) {
+                width = swkwidth;
+            }
+
+            if (swkheight > 0) {
+                height = swkheight;
+            }
+        }
+        return new Dimension(width,height);
+    }
+
+             public Dimension getPreferredSize() {
+                    Dimension minSize = getMinimumSize();
+                    Dimension maxSize = getMaximumSize();
+                    int width = minSize.width;
+                    if (width > maxSize.width) {
+                        width = maxSize.width;
+                    }
+                    int height = minSize.height;
+                    if (height > maxSize.height) {
+                        height = maxSize.height;
+                    }
+                    return new Dimension(width,height);
                 }
 
                 public void setSwkHeight(int height) {
-                        this.swkheight = height;
+                    if (swkheight != height) {
+                        swkheight = height;
+                        Widgets.relayoutContainer(this);
+                    }
                 }
                 public int getSwkHeight() {
-                        return swkheight;
+                    return swkheight;
                 }
                 public void setSwkWidth(int width) {
-                        this.swkwidth = width;
+                    if (swkwidth != width) {
+                        swkwidth = width;
+                        Widgets.relayoutContainer(this);
+                    }
                 }
                 public int getSwkWidth() {
-                        return swkwidth;
+                    return swkwidth;
                 }
-
-                
             }
             } else {
             append specialVars "
@@ -2176,7 +2235,7 @@ Dimension dSize = new Dimension(scrollRegion[1][0]-scrollRegion[0][0],scrollRegi
         boolean gridded = layoutC instanceof SwkGridBagLayout;
         boolean propagate=true;
         Insets insets = getInsets();
-        Dimension gSize  = null;;
+        Dimension gSize  = null;
         if (geometryActive) {
             gSize = new Dimension(geometry);
             gSize.width += insets.left + insets.right;
@@ -2189,7 +2248,7 @@ Dimension dSize = new Dimension(scrollRegion[1][0]-scrollRegion[0][0],scrollRegi
             dSize.width += insets.left + insets.right;
             dSize.height += insets.top + insets.bottom;
             //dSize = layout.minimumLayoutSize(this);
-        } else if (packed) {
+       } else if (packed) {
             propagate = ((com.onemoonscientific.swank.PackerLayout) layoutC).propagate;
             dSize = layoutC.minimumLayoutSize(c1);
     
@@ -2210,21 +2269,52 @@ Dimension dSize = new Dimension(scrollRegion[1][0]-scrollRegion[0][0],scrollRegi
         }
         sizeConfigured = true;
         if (!propagate) {
-            int minWidth = swkwidth+insets.left+insets.right;
-            int minHeight = swkheight+insets.top+insets.bottom;
-            if (dSize.width < minWidth) {
-                dSize.width = minWidth;
+            if (swkwidth > 0) {
+                int minWidth = swkwidth+insets.left+insets.right;
+                if (dSize.width < minWidth) {
+                    dSize.width = minWidth;
+                }
             }
 
-            if (dSize.height < minHeight) {
-                dSize.height = minHeight;
+            if (swkheight > 0) {
+                int minHeight = swkheight+insets.top+insets.bottom;
+                if (dSize.height < minHeight) {
+                    dSize.height = minHeight;
+                }
             }
         }
-        return (dSize);
+       return (dSize);
+    }
+    public Dimension getMaximumSize() {
+       boolean propagate=true;
+        Insets insets = getInsets();
+        LayoutManager layout = getLayout();
+	Container c1 = getContentPane();
+        LayoutManager layoutC = c1.getLayout();
+        boolean packed = layoutC instanceof com.onemoonscientific.swank.PackerLayout;
+        boolean gridded = layoutC instanceof SwkGridBagLayout;
+
+        if (gridded) {
+            propagate = ((SwkGridBagLayout) layoutC).propagate;
+       } else if (packed) {
+            propagate = ((com.onemoonscientific.swank.PackerLayout) layoutC).propagate;
+        } else {
+        }
+        int width = 4096;
+        int height = 4096;
+        if (!propagate) {
+            if (swkwidth > 0) {
+                width = swkwidth+insets.left+insets.right;
+            }
+
+            if (swkheight > 0) {
+                height = swkheight+insets.top+insets.bottom;
+            }
+        }
+        return new Dimension(width,height);
     }
 
-            }
-            append specialMethods {
+            
                 public void setGeometry(int width, int height) {
                     geometry = new Dimension(width,height);
                     geometryActive = true;
@@ -2233,24 +2323,40 @@ Dimension dSize = new Dimension(scrollRegion[1][0]-scrollRegion[0][0],scrollRegi
                     geometryActive = false;
                 }
                 
-            }
-            append specialMethods {
+            
                 public Dimension getPreferredSize() {
-                    return(getMinimumSize());
+                    Dimension minSize = getMinimumSize();
+                    Dimension maxSize = getMaximumSize();
+                    int width = minSize.width;
+                    if (width > maxSize.width) {
+                        width = maxSize.width;
+                    }
+                    int height = minSize.height;
+                    if (height > maxSize.height) {
+                        height = maxSize.height;
+                    }
+                    return new Dimension(width,height);
                 }
                 
                 public void setSwkHeight(int height) {
-                    this.swkheight = height;
+                    if (swkheight != height) {
+                        swkheight = height;
+                        Widgets.relayoutContainer(getContentPane());
+                    }
                 }
                 public int getSwkHeight() {
                     return swkheight;
                 }
                 public void setSwkWidth(int width) {
-                    this.swkwidth = width;
+                    if (swkwidth != width) {
+                        swkwidth = width;
+                        Widgets.relayoutContainer(getContentPane());
+                    }
                 }
                 public int getSwkWidth() {
                     return swkwidth;
                 }
+ 
             }
             
         }
