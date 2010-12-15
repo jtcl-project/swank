@@ -26,13 +26,8 @@ package com.onemoonscientific.swank;
 
 import tcl.lang.*;
 import tcl.pkg.java.ReflectObject;
-
 import java.awt.*;
-
-import java.io.*;
-
 import java.util.*;
-
 import javax.swing.*;
 
 public class GridCmd implements Command {
@@ -569,18 +564,18 @@ public class GridCmd implements Command {
                         }
 
                         argTypes[k++] = RowColumnConfigure.WEIGHT;
-                        argValues.add(new Integer(value));
+                        argValues.add(Integer.valueOf(value));
                     } else if (argv[i].toString().equals("-minsize")) {
                         // FIXME null component for getScreenDistance (won't get proper resolution?)
                         int value = getScreenDistance(interp, null, argv[i],
                                 argv[i + 1]);
                         argTypes[k++] = RowColumnConfigure.MINSIZE;
-                        argValues.add(new Integer(value));
+                        argValues.add(Integer.valueOf(value));
                     } else if (argv[i].toString().equals("-pad")) {
                         int value = getScreenDistance(interp, null, argv[i],
                                 argv[i + 1]);
                         argTypes[k++] = RowColumnConfigure.PAD;
-                        argValues.add(new Integer(value));
+                        argValues.add(Integer.valueOf(value));
                     } else if (argv[i].toString().equals("-uniform")) {
                         argTypes[k++] = RowColumnConfigure.UNIFORM;
                         argValues.add(argv[i + 1].toString().intern());
@@ -869,7 +864,6 @@ public class GridCmd implements Command {
 
         TclList.append(interp, list, TclString.newInstance("-sticky"));
 
-        StringBuffer sbuf = new StringBuffer();
         String anchorStr = null;
 
 
@@ -1025,7 +1019,7 @@ public class GridCmd implements Command {
             Object constr = gbag.getConstraints(comps[i]);
 
 
-            if ((constr != null) && (constr instanceof GridBagConstraints)) {
+            if (constr != null) {
                 GridBagConstraints gconstr = (GridBagConstraints) constr;
 
 
@@ -1617,6 +1611,7 @@ public class GridCmd implements Command {
             return errMsg;
         }
 
+        @Override
         public void run() {
             errMsg = doit(masterName, masterObject, gconstr, jComps, windowNames, modOptions);
         }
@@ -1625,7 +1620,6 @@ public class GridCmd implements Command {
     class RowColumnGet extends GetValueOnEventThread {
 
         Component component = null;
-        String[] names = null;
         int index = 0;
         boolean columnMode = false;
         GridRowColumnProps rcProps = null;
@@ -1640,6 +1634,7 @@ public class GridCmd implements Command {
             return rcProps;
         }
 
+        @Override
         public void run() {
             Container master = getMaster(component, false);
             SwkGridBagLayout gbag = getLayout(master);
@@ -1676,6 +1671,7 @@ public class GridCmd implements Command {
             execOnThread();
         }
 
+        @Override
         public void run() {
             Container master = getMaster(component, false);
             SwkGridBagLayout gbag = getLayout(master);
@@ -1690,6 +1686,7 @@ public class GridCmd implements Command {
 
             if (rcProps == null) {
                 System.out.println("rcProps null");
+                return;
             }
 
             GridRowColumnProps newProps = (GridRowColumnProps) rcProps.clone();
@@ -1736,7 +1733,6 @@ public class GridCmd implements Command {
     class BoundingBox extends GetValueOnEventThread {
 
         Component component = null;
-        Object constrObject = null;
         int nArgs = 0;
         Rectangle rect = new Rectangle(0, 0, 0, 0);
         int[][] rcVals = null;
@@ -1750,6 +1746,7 @@ public class GridCmd implements Command {
             return rect;
         }
 
+        @Override
         public void run() {
             Container master = getMaster(component, true);
             SwkGridBagLayout gbag = getLayout(master);
@@ -1763,8 +1760,7 @@ public class GridCmd implements Command {
                 for (int i = 0; (comps != null) && (i < comps.length); i++) {
                     Object constr = gbag.getConstraints(comps[i]);
 
-                    if ((constr != null)
-                            && (constr instanceof GridBagConstraints)) {
+                    if (constr != null) {
                         GridBagConstraints gconstr = (GridBagConstraints) constr;
 
                         if (nArgs == 5) {
@@ -1816,6 +1812,7 @@ public class GridCmd implements Command {
             execOnThread();
         }
 
+        @Override
         public void run() {
 
             for (int i = 0; i < comps.length; i++) {
@@ -1839,7 +1836,6 @@ public class GridCmd implements Command {
     class Location extends GetValueOnEventThread {
 
         Component component = null;
-        String[] names = null;
         int x = -1;
         int y = -1;
         Point pt = new Point();
@@ -1889,12 +1885,9 @@ public class GridCmd implements Command {
             return loc;
         }
 
+        @Override
         public void run() {
             Container parent = getMasterContainer(component);
-//System.out.println(parent.getInsets());
-//System.out.println(parent.getMinimumSize());
-//System.out.println(parent.getLocation());
-            //          System.out.println(parent.getComponentCount());
             LayoutManager layoutManager = parent.getLayout();
             Dimension dim = parent.getSize();
 
@@ -1905,10 +1898,7 @@ public class GridCmd implements Command {
                 return;
             }
             SwkGridBagLayout gbag = getLayout(parent);
-            //       System.out.println(gbag.minimumLayoutSize(parent));
 
-            Rectangle rect = parent.getBounds();
-//System.out.println(rect);
             if (x >= dim.width) {
                 x -= 1;
             }
@@ -1959,9 +1949,9 @@ public class GridCmd implements Command {
             return names;
         }
 
+        @Override
         public void run() {
             Container parent = getMasterContainer(component);
-            Container master = getMaster(component, true);
             SwkGridBagLayout gbag = getLayout(parent);
 
 
@@ -1976,15 +1966,10 @@ public class GridCmd implements Command {
                 Component comp = parent.getComponent(nMembers - i - 1);
 
                 if ((iRow >= 0) || (iColumn >= 0)) {
-                    if (gbag == null) {
-                        System.out.println("null gbag");
-                        return;
-                    }
 
                     Object constr = gbag.getConstraints(comp);
 
-                    if ((constr != null)
-                            && (constr instanceof GridBagConstraints)) {
+                    if (constr != null) {
                         GridBagConstraints gconstr = (GridBagConstraints) constr;
 
                         if ((iRow >= 0) && (gconstr.gridy == iRow)) {
@@ -2013,6 +1998,7 @@ public class GridCmd implements Command {
             return constrObject;
         }
 
+        @Override
         public void run() {
             Container master = getMaster(component, true);
             SwkGridBagLayout gbag = getLayout(master);
@@ -2026,9 +2012,7 @@ public class GridCmd implements Command {
 
     class Sizes extends GetValueOnEventThread {
 
-        String item = null;
         Component component = null;
-        Object constrObject = null;
         Dimension dim = null;
 
         Dimension exec(final Component component) {
@@ -2038,6 +2022,7 @@ public class GridCmd implements Command {
             return dim;
         }
 
+        @Override
         public void run() {
             Container master = getMaster(component, true);
             SwkGridBagLayout gbag = getLayout(master);
@@ -2048,7 +2033,7 @@ public class GridCmd implements Command {
             for (int i = 0; (comps != null) && (i < comps.length); i++) {
                 Object constr = gbag.getConstraints(comps[i]);
 
-                if ((constr != null) && (constr instanceof GridBagConstraints)) {
+                if (constr != null) {
                     GridBagConstraints gconstr = (GridBagConstraints) constr;
 
                     if (gconstr.gridx >= nX) {
@@ -2095,6 +2080,7 @@ public class GridCmd implements Command {
             return this.propagate;
         }
 
+        @Override
         public void run() {
             Container parent = getMasterContainer(component);
             LayoutManager layoutManager = parent.getLayout();
