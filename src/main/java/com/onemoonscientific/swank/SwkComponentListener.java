@@ -44,7 +44,7 @@ public class SwkComponentListener implements ComponentListener, SwkListener {
     ArrayList<SwkBinding> bindings;
     Component component;
     boolean shown = false;
-
+    long lastResize = 0;
     SwkComponentListener(Interp interp, Component component) {
         this.interp = interp;
         this.component = component;
@@ -82,7 +82,8 @@ public class SwkComponentListener implements ComponentListener, SwkListener {
 
     public void componentResized(ComponentEvent e) {
         if (component instanceof SwkJFrame) {
-            if (!((SwkJFrame) component).isPacking) {
+            long timeNow = System.currentTimeMillis();
+            if (!((SwkJFrame) component).isPacking && ((timeNow-lastResize) > 500)) {
                 SwkJFrame jframe = (SwkJFrame) component;
                 Dimension dim = jframe.getRootPane().getSize();
 
@@ -99,6 +100,7 @@ public class SwkComponentListener implements ComponentListener, SwkListener {
                     //   jframe.sizeConfigured = true;
                 }
             }
+            lastResize = System.currentTimeMillis();
 
             ((SwkJFrame) component).isPacking = false;
         }
