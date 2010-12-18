@@ -686,10 +686,6 @@ public class GridCmd implements Command {
         }
         Component[] comps = new Component[names.length];
         for (int i = 0; i < names.length; i++) {
-            if (!Widgets.exists(interp, names[i])) {
-                throw new TclException(interp,
-                        "bad window path name \"" + argv[2].toString() + "\"");
-            }
             comps[i] = getComponent(interp, names[i]);
         }
 
@@ -1688,8 +1684,12 @@ public class GridCmd implements Command {
                 System.out.println("rcProps null");
                 return;
             }
-
-            GridRowColumnProps newProps = (GridRowColumnProps) rcProps.clone();
+            final GridRowColumnProps newProps;
+            try {
+                newProps = (GridRowColumnProps) rcProps.clone();
+            } catch (CloneNotSupportedException cnsE) {
+                return;
+            }
 
             for (int i = 0; i < argTypes.length; i++) {
                 switch (argTypes[i]) {
