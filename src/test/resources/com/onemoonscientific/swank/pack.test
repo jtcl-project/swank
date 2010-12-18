@@ -386,7 +386,7 @@ catch {destroy .pack2}
 toplevel .pack2 -height 400 -width 400
 wm geometry .pack2 +0+0
 pack propagate .pack2 0
-pack forget .pack2.a .pack2.b .pack2.c .pack2.d
+#pack forget .pack2.a .pack2.b .pack2.c .pack2.d
 foreach i {w1 w2 w3} {
     frame .pack2.$i -width 30 -height 30 -bd 2 -relief raised
     label .pack2.$i.l -text $i
@@ -523,7 +523,7 @@ test pack-8.7 {insufficient space} {
 } {20x30+0+0 1 30x30+20+0 1 50x30+20+0 0}
 pack forget .pack.b
 update
-test pack-8.8 {insufficient space} {
+test pack-8.8 {insufficient space} tkOnly {
     list [winfo geometry .pack.a] [winfo ismapped .pack.a] \
 	    [winfo geometry .pack.b] [winfo ismapped .pack.b] \
 	    [winfo geometry .pack.c] [winfo ismapped .pack.c]
@@ -886,7 +886,7 @@ test pack-13.1 {window deletion} {
 } {{.pack.right .pack.bottom .pack.a .pack.b .pack.c} 20x40+30+0 50x30+15+40 80x80+0+70}
 
 test pack-14.1 {respond to changes in expansion} {
-    pack forget .pack.a .pack.b .pack.c .pack.d
+    pack forget .pack.a .pack.b .pack.c 
     wm geom .pack {}
     pack .pack.a
     update
@@ -901,7 +901,7 @@ test pack-14.1 {respond to changes in expansion} {
 wm geom .pack {}
 
 test pack-15.1 {managing geometry with -in option} {
-    pack forget .pack.a .pack.b .pack.c .pack.d
+    pack forget .pack.a .pack.b .pack.c 
     pack .pack.a -side top
     frame .pack.f
     lower .pack.f
@@ -912,13 +912,13 @@ test pack-15.1 {managing geometry with -in option} {
     pack .pack.b -in .pack.f.f2
     update
     set result [winfo geom .pack.b]
-    pack unpack .pack.a
+    pack forget .pack.a
     update
     lappend result [winfo geom .pack.b]
 } {50x30+0+40 50x30+0+0}
 catch {destroy .pack.f}
 test pack-15.2 {managing geometry with -in option} {
-    pack forget .pack.a .pack.b .pack.c .pack.d
+    pack forget .pack.a .pack.b .pack.c
     frame .pack.f
     lower .pack.f
     pack .pack.a -in .pack.f -side top
@@ -933,7 +933,7 @@ test pack-15.2 {managing geometry with -in option} {
 } {0 1 20x40+30+45 0}
 catch {destroy .pack.f}
 test pack-15.3 {managing geometry with -in option} {
-    pack forget .pack.a .pack.b .pack.c .pack.d
+    pack forget .pack.a .pack.b .pack.c
     pack .pack.a -side top
     frame .pack.f
     lower .pack.f
@@ -944,13 +944,13 @@ test pack-15.3 {managing geometry with -in option} {
     pack .pack.b -in .pack.f.f2
     update
     set result [winfo ismapped .pack.b]
-    pack unpack .pack.f
+    pack forget .pack.f
     update
     lappend result [winfo ismapped .pack.b]
 } {1 0}
 catch {destroy .pack.f}
-test pack-15.4 {managing geometry with -in option} {
-    pack forget .pack.a .pack.b .pack.c .pack.d
+test pack-15.4 {managing geometry with -in option} tkOnly {
+    pack forget .pack.a .pack.b .pack.c 
     foreach i {1 2} {
 	frame .pack.f$i -width 100 -height 40 -bd 2 -relief raised
 	lower .pack.f$i
@@ -973,7 +973,7 @@ test pack-15.4 {managing geometry with -in option} {
 } {50x30+48+5 1 50x30+25+48 1 50x30+25+28 1 50x30+25+28 0}
 catch {destroy .pack.f1 .pack.f2}
 test pack-15.5 {managing geometry with -in option} {
-    pack forget .pack.a .pack.b .pack.c .pack.d
+    pack forget .pack.a .pack.b .pack.c 
     foreach i {1 2} {
 	frame .pack.f$i -width 100 -height 20 -bd 2 -relief raised
 	lower .pack.f$i
@@ -991,7 +991,7 @@ test pack-15.5 {managing geometry with -in option} {
 catch {destroy .pack.f1 .pack.f2}
 
 test pack-16.1 {geometry manager name} {
-    pack forget .pack.a .pack.b .pack.c .pack.d
+    pack forget .pack.a .pack.b .pack.c 
     set result {}
     lappend result [winfo manager .pack.a]
     pack .pack.a
@@ -1001,7 +1001,7 @@ test pack-16.1 {geometry manager name} {
 } {{} pack {}}
 
 test pack-17.1 {PackLostSlaveProc procedure} {
-    pack forget .pack.a .pack.b .pack.c .pack.d
+    pack forget .pack.a .pack.b .pack.c 
     pack .pack.a
     update
     place .pack.a -x 40 -y 10
