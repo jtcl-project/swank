@@ -20,7 +20,8 @@ public class GridRowColumnProps implements Cloneable {
     public GridRowColumnProps() {
     }
 
-    public Object clone() {
+    public Object clone() throws CloneNotSupportedException {
+        super.clone();
         GridRowColumnProps newObject = new GridRowColumnProps();
         newObject.minSize = minSize;
         newObject.weight = weight;
