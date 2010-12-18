@@ -177,46 +177,7 @@ public class GridCmd implements Command {
     }
      */
 
-    Container getMaster(Component component1, boolean useParent) {
-        Container master = null;
-        LayoutManager layout = null;
-        GridBagConstraints gconstr = null;
-        SwkGridBagLayout gbag = null;
-
-        Component component = null;
-
-        if (useParent) {
-            component = ((Component) component1).getParent();
-        } else {
-            component = component1;
-        }
-
-        if (component == null) {
-            component = component1;
-        }
-
-        if (component instanceof JFrame) {
-            master = ((JFrame) component).getContentPane();
-
-            if (master == null) {
-                System.out.println("mnull");
-            }
-        } else if (component instanceof JWindow) {
-            master = ((JWindow) component).getContentPane();
-
-            if (master == null) {
-                System.out.println("mnull");
-            }
-        } else if (component instanceof JInternalFrame) {
-            master = ((JInternalFrame) component).getContentPane();
-        } else {
-            master = (Container) component;
-        }
-
-        return master;
-    }
-
-    private void configure(Interp interp, TclObject[] argv, int start)
+     private void configure(Interp interp, TclObject[] argv, int start)
             throws TclException {
         int lastSlave = 0;
         String masterName = null;
@@ -368,7 +329,7 @@ public class GridCmd implements Command {
         if (errMsg != null) {
             throw new TclException(interp, errMsg);
         }
-        Container master = getMasterContainer(masterObject);
+        Container master = Widgets.getMasterContainer(masterObject);
         LayoutHandler.addLayoutRequest(interp, master);
 
     }
@@ -378,7 +339,7 @@ public class GridCmd implements Command {
             GridBagConstraints gconstr,
             JComponent[] jComps, final String[] windowNames, int modOptions)
             throws IllegalArgumentException {
-        Container master = getMasterContainer(masterObject);
+        Container master = Widgets.getMasterContainer(masterObject);
 
         //    SwkGridBagLayout gbag = getLayout(master);
         SwkGridBagLayout gbag = null;
@@ -484,7 +445,7 @@ public class GridCmd implements Command {
                     "master index ?-option value...?");
         }
 
-        Component component = getComponent(interp, argv[2].toString());
+        Component component = Widgets.getComponent(interp, argv[2].toString());
 
         if (argv.length == 5) {
             int index = TclInteger.get(interp, argv[3]);
@@ -615,7 +576,7 @@ public class GridCmd implements Command {
                     "master ?column row ?column row??");
         }
 
-        Component component = getComponent(interp, argv[2].toString());
+        Component component = Widgets.getComponent(interp, argv[2].toString());
 
         TclObject list = TclList.newInstance();
 
@@ -686,7 +647,7 @@ public class GridCmd implements Command {
         }
         Component[] comps = new Component[names.length];
         for (int i = 0; i < names.length; i++) {
-            comps[i] = getComponent(interp, names[i]);
+            comps[i] = Widgets.getComponent(interp, names[i]);
         }
 
         (new Forget()).exec(comps);
@@ -701,7 +662,7 @@ public class GridCmd implements Command {
             throw new TclException(interp,
                     "bad window path name \"" + argv[2].toString() + "\"");
         }
-        Component component = getComponent(interp, argv[2].toString());
+        Component component = Widgets.getComponent(interp, argv[2].toString());
 
         int x = 0;
         int y = 0;
@@ -737,7 +698,7 @@ public class GridCmd implements Command {
                     "window ?-option value...?");
         }
 
-        Component component = getComponent(interp, argv[2].toString());
+        Component component = Widgets.getComponent(interp, argv[2].toString());
 
         int iRow = -1;
         int iColumn = -1;
@@ -784,35 +745,6 @@ public class GridCmd implements Command {
 
     }
 
-    Component getComponent(final Interp interp, final String widgetName) throws TclException {
-        if (!Widgets.exists(interp, widgetName)) {
-            throw new TclException(interp,
-                    "bad window path name \"" + widgetName + "\"");
-
-
-        }
-
-        TclObject tObj = (TclObject) Widgets.getWidget(interp, widgetName);
-
-
-
-        if (tObj == null) {
-            throw new TclException(interp,
-                    "bad window path name \"" + widgetName + "\"");
-
-
-        }
-
-        Object widgetObj = (Object) ReflectObject.get(interp, tObj);
-
-        Component component = (Component) widgetObj;
-
-
-        return component;
-
-
-
-    }
 
     void getInfo(Interp interp, TclObject[] argv) throws TclException {
         if (argv.length != 3) {
@@ -820,7 +752,7 @@ public class GridCmd implements Command {
 
 
         }
-        Component component = getComponent(interp, argv[2].toString());
+        Component component = Widgets.getComponent(interp, argv[2].toString());
         Object constrObject = (new Info()).exec(component);
 
 
@@ -946,7 +878,7 @@ public class GridCmd implements Command {
 
         }
 
-        Component component = getComponent(interp, argv[2].toString());
+        Component component = Widgets.getComponent(interp, argv[2].toString());
 
         Dimension dim = (new Sizes()).exec(component);
 
@@ -973,7 +905,7 @@ public class GridCmd implements Command {
 
         }
 
-        Component component = getComponent(interp, argv[2].toString());
+        Component component = Widgets.getComponent(interp, argv[2].toString());
 
 
 
@@ -1487,34 +1419,7 @@ public class GridCmd implements Command {
 
     }
 
-    Container getMasterContainer(Object masterObj) {
-        Container master = null;
-
-
-
-        if (masterObj instanceof JFrame) {
-            master = ((JFrame) masterObj).getContentPane();
-
-
-        } else if (masterObj instanceof JWindow) {
-            master = ((JWindow) masterObj).getContentPane();
-
-
-        } else if (masterObj instanceof JInternalFrame) {
-            master = ((JInternalFrame) masterObj).getContentPane();
-
-
-        } else {
-            master = (Container) masterObj;
-
-
-        }
-
-        return master;
-
-
-    }
-
+ 
     GridBagConstraints updateConstraints(GridBagConstraints gconstr,
             GridBagConstraints currentConstraints, int modOptions) {
         if (currentConstraints != null) {
@@ -1632,7 +1537,7 @@ public class GridCmd implements Command {
 
         @Override
         public void run() {
-            Container master = getMaster(component, false);
+            Container master = Widgets.getMaster(component, false);
             SwkGridBagLayout gbag = getLayout(master);
 
             if (gbag == null) {
@@ -1669,7 +1574,7 @@ public class GridCmd implements Command {
 
         @Override
         public void run() {
-            Container master = getMaster(component, false);
+            Container master = Widgets.getMaster(component, false);
             SwkGridBagLayout gbag = getLayout(master);
 
             if (gbag == null) {
@@ -1748,7 +1653,7 @@ public class GridCmd implements Command {
 
         @Override
         public void run() {
-            Container master = getMaster(component, true);
+            Container master = Widgets.getMaster(component, true);
             SwkGridBagLayout gbag = getLayout(master);
 
             if (master == null) {
@@ -1817,9 +1722,9 @@ public class GridCmd implements Command {
 
             for (int i = 0; i < comps.length; i++) {
                 if (comps[i] != null) {
-                    Container master = getMaster(comps[i], true);
+                    Container master = Widgets.getMaster(comps[i], true);
 
-                    Container parent = getMasterContainer(master);
+                    Container parent = Widgets.getMasterContainer(master);
                     LayoutManager layoutManager = parent.getLayout();
                     if (!(layoutManager instanceof SwkGridBagLayout)) {
                         continue;
@@ -1887,7 +1792,7 @@ public class GridCmd implements Command {
 
         @Override
         public void run() {
-            Container parent = getMasterContainer(component);
+            Container parent = Widgets.getMasterContainer(component);
             LayoutManager layoutManager = parent.getLayout();
             Dimension dim = parent.getSize();
 
@@ -1951,7 +1856,7 @@ public class GridCmd implements Command {
 
         @Override
         public void run() {
-            Container parent = getMasterContainer(component);
+            Container parent = Widgets.getMasterContainer(component);
             SwkGridBagLayout gbag = getLayout(parent);
 
 
@@ -2000,7 +1905,7 @@ public class GridCmd implements Command {
 
         @Override
         public void run() {
-            Container master = getMaster(component, true);
+            Container master = Widgets.getMaster(component, true);
             SwkGridBagLayout gbag = getLayout(master);
 
             if (gbag == null) {
@@ -2024,7 +1929,7 @@ public class GridCmd implements Command {
 
         @Override
         public void run() {
-            Container master = getMaster(component, true);
+            Container master = Widgets.getMaster(component, true);
             SwkGridBagLayout gbag = getLayout(master);
             int nX = 0;
             int nY = 0;
@@ -2082,7 +1987,7 @@ public class GridCmd implements Command {
 
         @Override
         public void run() {
-            Container parent = getMasterContainer(component);
+            Container parent = Widgets.getMasterContainer(component);
             LayoutManager layoutManager = parent.getLayout();
             SwkGridBagLayout gbag = null;
 

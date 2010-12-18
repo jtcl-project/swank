@@ -113,100 +113,6 @@ public class PackCmd implements Command {
         }
     }
 
-    Container getMasterContainer(Object masterObj) {
-        Container master = null;
-
-
-
-        if (masterObj instanceof JFrame) {
-            master = ((JFrame) masterObj).getContentPane();
-
-
-        } else if (masterObj instanceof JWindow) {
-            master = ((JWindow) masterObj).getContentPane();
-
-
-        } else if (masterObj instanceof JInternalFrame) {
-            master = ((JInternalFrame) masterObj).getContentPane();
-
-
-        } else {
-            master = (Container) masterObj;
-
-
-        }
-
-        return master;
-
-
-    }
-
-    Container getMaster(Component component1, boolean useParent) {
-        Container master = null;
-        LayoutManager layout = null;
-
-        Component component = null;
-
-        if (useParent) {
-            component = ((Component) component1).getParent();
-        } else {
-            component = component1;
-        }
-
-        if (component == null) {
-            component = component1;
-        }
-
-        if (component instanceof JFrame) {
-            master = ((JFrame) component).getContentPane();
-
-            if (master == null) {
-                System.out.println("mnull");
-            }
-        } else if (component instanceof JWindow) {
-            master = ((JWindow) component).getContentPane();
-
-            if (master == null) {
-                System.out.println("mnull");
-            }
-        } else if (component instanceof JInternalFrame) {
-            master = ((JInternalFrame) component).getContentPane();
-        } else {
-            master = (Container) component;
-        }
-
-        return master;
-    }
-
-    Component getComponent(final Interp interp, final String widgetName) throws TclException {
-        if (!Widgets.exists(interp, widgetName)) {
-            throw new TclException(interp,
-                    "bad window path name \"" + widgetName + "\"");
-
-
-        }
-
-        TclObject tObj = (TclObject) Widgets.getWidget(interp, widgetName);
-
-
-
-        if (tObj == null) {
-            throw new TclException(interp,
-                    "bad window path name \"" + widgetName + "\"");
-
-
-        }
-
-        Object widgetObj = (Object) ReflectObject.get(interp, tObj);
-
-        Component component = (Component) widgetObj;
-
-
-        return component;
-
-
-
-    }
 
     PackerLayout getLayout(Container master) {
         LayoutManager layout = master.getLayout();
@@ -225,7 +131,7 @@ public class PackCmd implements Command {
             throw new TclException(interp,
                     "wrong # args: should be \"pack info window\"");
         }
-        Component comp = getComponent(interp, argv[2].toString());
+        Component comp = Widgets.getComponent(interp, argv[2].toString());
 
         String result = (new Info()).exec(comp, argv[2].toString());
 
@@ -245,7 +151,7 @@ public class PackCmd implements Command {
             throw new TclNumArgsException(interp, 2, argv, "window ?boolean?");
         }
 
-        Component comp = getComponent(interp, argv[2].toString());
+        Component comp = Widgets.getComponent(interp, argv[2].toString());
 
         boolean propagate = false;
         boolean setPropagate = false;
@@ -267,7 +173,7 @@ public class PackCmd implements Command {
             throw new TclNumArgsException(interp, 2, argv, "window");
         }
 
-        Component component = getComponent(interp, argv[2].toString());
+        Component component = Widgets.getComponent(interp, argv[2].toString());
 
         String[] names = (new Slaves()).exec(component);
         TclObject list = TclList.newInstance();
@@ -297,7 +203,7 @@ public class PackCmd implements Command {
         }
         Component[] comps = new Component[names.length];
         for (int i = 0; i < names.length; i++) {
-            comps[i] = getComponent(interp, names[i]);
+            comps[i] = Widgets.getComponent(interp, names[i]);
         }
 
         (new Forget()).exec(comps);
@@ -449,7 +355,7 @@ public class PackCmd implements Command {
 
         @Override
         public void run() {
-            Container master = getMaster(component, true);
+            Container master = Widgets.getMaster(component, true);
             PackerLayout packer = getLayout(master);
 
             Object settings = packer.getComponentSettings((Component) component);
@@ -476,7 +382,7 @@ public class PackCmd implements Command {
 
         @Override
         public void run() {
-            Container parent = getMasterContainer(component);
+            Container parent = Widgets.getMasterContainer(component);
             LayoutManager layoutManager = parent.getLayout();
 
             PackerLayout packer = null;
@@ -512,7 +418,7 @@ public class PackCmd implements Command {
 
         @Override
         public void run() {
-            Container parent = getMasterContainer(component);
+            Container parent = Widgets.getMasterContainer(component);
 
             int nMembers = parent.getComponentCount();
             names = new String[nMembers];
@@ -538,9 +444,9 @@ public class PackCmd implements Command {
 
             for (int i = 0; i < comps.length; i++) {
                 if (comps[i] != null) {
-                    Container master = getMaster(comps[i], true);
+                    Container master = Widgets.getMaster(comps[i], true);
 
-                    Container parent = getMasterContainer(master);
+                    Container parent = Widgets.getMasterContainer(master);
                     LayoutManager layoutManager = parent.getLayout();
                     if (!(layoutManager instanceof PackerLayout)) {
                         continue;

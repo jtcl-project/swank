@@ -340,4 +340,98 @@ public class Widgets {
 
         return component;
     }
+    public static Container getMasterContainer(final Object masterObj) {
+        Container master = null;
+
+
+
+        if (masterObj instanceof JFrame) {
+            master = ((JFrame) masterObj).getContentPane();
+
+
+        } else if (masterObj instanceof JWindow) {
+            master = ((JWindow) masterObj).getContentPane();
+
+
+        } else if (masterObj instanceof JInternalFrame) {
+            master = ((JInternalFrame) masterObj).getContentPane();
+
+
+        } else {
+            master = (Container) masterObj;
+
+
+        }
+
+        return master;
+
+
+    }
+
+    public static Container getMaster(final Component component1, final boolean useParent) {
+        Container master = null;
+        LayoutManager layout = null;
+
+        Component component = null;
+
+        if (useParent) {
+            component = ((Component) component1).getParent();
+        } else {
+            component = component1;
+        }
+
+        if (component == null) {
+            component = component1;
+        }
+
+        if (component instanceof JFrame) {
+            master = ((JFrame) component).getContentPane();
+
+            if (master == null) {
+                System.out.println("mnull");
+            }
+        } else if (component instanceof JWindow) {
+            master = ((JWindow) component).getContentPane();
+
+            if (master == null) {
+                System.out.println("mnull");
+            }
+        } else if (component instanceof JInternalFrame) {
+            master = ((JInternalFrame) component).getContentPane();
+        } else {
+            master = (Container) component;
+        }
+
+        return master;
+    }
+
+    public static Component getComponent(final Interp interp, final String widgetName) throws TclException {
+        if (!Widgets.exists(interp, widgetName)) {
+            throw new TclException(interp,
+                    "bad window path name \"" + widgetName + "\"");
+
+
+        }
+
+        TclObject tObj = (TclObject) Widgets.getWidget(interp, widgetName);
+
+
+
+        if (tObj == null) {
+            throw new TclException(interp,
+                    "bad window path name \"" + widgetName + "\"");
+
+
+        }
+
+        Object widgetObj = (Object) ReflectObject.get(interp, tObj);
+
+        Component component = (Component) widgetObj;
+
+
+        return component;
+
+
+
+    }
 }
