@@ -26,13 +26,8 @@ package com.onemoonscientific.swank;
 
 import tcl.lang.*;
 import tcl.pkg.java.ReflectObject;
-
 import java.awt.*;
-
-import java.io.*;
-
 import java.util.*;
-
 import javax.swing.*;
 
 public class PackCmd implements Command {
@@ -118,20 +113,121 @@ public class PackCmd implements Command {
         }
     }
 
+    Container getMasterContainer(Object masterObj) {
+        Container master = null;
+
+
+
+        if (masterObj instanceof JFrame) {
+            master = ((JFrame) masterObj).getContentPane();
+
+
+        } else if (masterObj instanceof JWindow) {
+            master = ((JWindow) masterObj).getContentPane();
+
+
+        } else if (masterObj instanceof JInternalFrame) {
+            master = ((JInternalFrame) masterObj).getContentPane();
+
+
+        } else {
+            master = (Container) masterObj;
+
+
+        }
+
+        return master;
+
+
+    }
+
+    Container getMaster(Component component1, boolean useParent) {
+        Container master = null;
+        LayoutManager layout = null;
+
+        Component component = null;
+
+        if (useParent) {
+            component = ((Component) component1).getParent();
+        } else {
+            component = component1;
+        }
+
+        if (component == null) {
+            component = component1;
+        }
+
+        if (component instanceof JFrame) {
+            master = ((JFrame) component).getContentPane();
+
+            if (master == null) {
+                System.out.println("mnull");
+            }
+        } else if (component instanceof JWindow) {
+            master = ((JWindow) component).getContentPane();
+
+            if (master == null) {
+                System.out.println("mnull");
+            }
+        } else if (component instanceof JInternalFrame) {
+            master = ((JInternalFrame) component).getContentPane();
+        } else {
+            master = (Container) component;
+        }
+
+        return master;
+    }
+
+    Component getComponent(final Interp interp, final String widgetName) throws TclException {
+        if (!Widgets.exists(interp, widgetName)) {
+            throw new TclException(interp,
+                    "bad window path name \"" + widgetName + "\"");
+
+
+        }
+
+        TclObject tObj = (TclObject) Widgets.getWidget(interp, widgetName);
+
+
+
+        if (tObj == null) {
+            throw new TclException(interp,
+                    "bad window path name \"" + widgetName + "\"");
+
+
+        }
+
+        Object widgetObj = (Object) ReflectObject.get(interp, tObj);
+
+        Component component = (Component) widgetObj;
+
+
+        return component;
+
+
+
+    }
+
+    PackerLayout getLayout(Container master) {
+        LayoutManager layout = master.getLayout();
+
+        if (layout != null) {
+            if (layout instanceof PackerLayout) {
+                return (PackerLayout) layout;
+            }
+        }
+
+        return null;
+    }
+
     void packInfo(Interp interp, TclObject[] argv) throws TclException {
         if (argv.length != 3) {
             throw new TclException(interp,
                     "wrong # args: should be \"pack info window\"");
         }
+        Component comp = getComponent(interp, argv[2].toString());
 
-        SwkWidget window = (SwkWidget) Widgets.get(interp, argv[2].toString());
-
-        if (window == null) {
-            throw new TclException(interp,
-                    "window \"" + argv[2].toString() + "\" doesn't exist");
-        }
-
-        String result = (new Info()).exec(window, argv[2].toString());
+        String result = (new Info()).exec(comp, argv[2].toString());
 
         if (result == null) {
             throw new TclException(interp,
@@ -149,10 +245,7 @@ public class PackCmd implements Command {
             throw new TclNumArgsException(interp, 2, argv, "window ?boolean?");
         }
 
-        if (!Widgets.exists(interp, argv[2].toString())) {
-            throw new TclException(interp,
-                    "bad window path name \"" + argv[2].toString() + "\"");
-        }
+        Component comp = getComponent(interp, argv[2].toString());
 
         boolean propagate = false;
         boolean setPropagate = false;
@@ -162,7 +255,7 @@ public class PackCmd implements Command {
             propagate = TclBoolean.get(interp, argv[3]);
         }
 
-        boolean result = (new Propagate()).exec(argv[2].toString(), propagate,
+        boolean result = (new Propagate()).exec(comp, propagate,
                 setPropagate);
         interp.setResult(result);
 
@@ -174,12 +267,9 @@ public class PackCmd implements Command {
             throw new TclNumArgsException(interp, 2, argv, "window");
         }
 
-        if (!Widgets.exists(interp, argv[2].toString())) {
-            throw new TclException(interp,
-                    "bad window path name \"" + argv[2].toString() + "\"");
-        }
+        Component component = getComponent(interp, argv[2].toString());
 
-        String[] names = (new Slaves()).exec(argv[2].toString());
+        String[] names = (new Slaves()).exec(component);
         TclObject list = TclList.newInstance();
 
         if (names != null) {
@@ -195,14 +285,22 @@ public class PackCmd implements Command {
 
     void packForget(Interp interp, TclObject[] argv, int firstWindow)
             throws TclException {
+        if (argv.length < 3) {
+            throw new TclNumArgsException(interp, 2, argv, "window");
+        }
+
         String[] names = new String[argv.length - firstWindow];
         int j = 0;
 
         for (int i = firstWindow; i < argv.length; i++) {
             names[j++] = argv[i].toString();
         }
+        Component[] comps = new Component[names.length];
+        for (int i = 0; i < names.length; i++) {
+            comps[i] = getComponent(interp, names[i]);
+        }
 
-        (new Forget()).exec(names);
+        (new Forget()).exec(comps);
     }
 
     int initPackingWindow(Interp interp, TclObject[] argv, String[] args,
@@ -337,50 +435,38 @@ public class PackCmd implements Command {
 
     class Info extends GetValueOnEventThread {
 
-        String result = null;
-        String item = null;
-        SwkWidget window = null;
+        Component component = null;
+        String parentName = null;
+        String result;
 
-        String exec(SwkWidget window, String item) {
-            this.item = item;
-            this.window = window;
+        String exec(final Component component, final String parentName) {
+            this.component = component;
+            this.parentName = parentName;
             execOnThread();
 
             return result;
         }
 
+        @Override
         public void run() {
-            String parentName = null;
-            Container parent = null;
+            Container master = getMaster(component, true);
+            PackerLayout packer = getLayout(master);
 
-            try {
-                parentName = Widgets.parent(interp, item);
-                parent = Widgets.getContainer(interp, parentName);
-            } catch (TclException tclE) {
-                parent = null;
-            }
+            Object settings = packer.getComponentSettings((Component) component);
+            result = "-in " + parentName + " " + settings.toString();
 
-            if (parent != null) {
-                LayoutManager layoutManager = parent.getLayout();
-
-                if (layoutManager instanceof PackerLayout) {
-                    PackerLayout packer = (PackerLayout) layoutManager;
-                    Object settings = packer.getComponentSettings((Component) window);
-                    result = "-in " + parentName + " " + settings.toString();
-                }
-            }
         }
     }
 
     class Propagate extends GetValueOnEventThread {
 
-        String item = null;
+        Component component = null;
         boolean propagate = false;
         boolean setPropagate = false;
 
-        boolean exec(final String item, final boolean propagate,
+        boolean exec(final Component component, final boolean propagate,
                 final boolean setPropagate) {
-            this.item = item;
+            this.component = component;
             this.propagate = propagate;
             this.setPropagate = setPropagate;
             execOnThread();
@@ -388,19 +474,11 @@ public class PackCmd implements Command {
             return this.propagate;
         }
 
+        @Override
         public void run() {
-            Container parent = null;
-
-            try {
-                parent = Widgets.getContainer(interp, item);
-            } catch (TclException tclE) {
-                System.out.println("error prop " + tclE.getMessage());
-                interp.backgroundError();
-
-                //FIXME
-            }
-
+            Container parent = getMasterContainer(component);
             LayoutManager layoutManager = parent.getLayout();
+
             PackerLayout packer = null;
 
             if (!(layoutManager instanceof PackerLayout)) {
@@ -422,28 +500,19 @@ public class PackCmd implements Command {
 
     class Slaves extends GetValueOnEventThread {
 
-        String item = null;
+        Component component = null;
         String[] names = null;
 
-        String[] exec(String item) {
-            this.item = item;
+        String[] exec(final Component component) {
+            this.component = component;
             execOnThread();
 
             return names;
         }
 
+        @Override
         public void run() {
-            Container parent = null;
-
-            try {
-                parent = Widgets.getContainer(interp, item);
-            } catch (TclException tclE) {
-                //FIXME
-                System.out.println("error slaves " + tclE.getMessage());
-                interp.backgroundError();
-
-                return;
-            }
+            Container parent = getMasterContainer(component);
 
             int nMembers = parent.getComponentCount();
             names = new String[nMembers];
@@ -457,40 +526,30 @@ public class PackCmd implements Command {
 
     class Forget extends UpdateOnEventThread {
 
-        String[] names = null;
+        Component[] comps = null;
 
-        void exec(String[] names) {
-            this.names = names;
+        void exec(Component[] comps) {
+            this.comps = comps;
             execOnThread();
         }
 
+        @Override
         public void run() {
-            try {
-                for (int i = 0; i < names.length; i++) {
-                    if (!Widgets.exists(interp, names[i])) {
-                        continue;
-                    }
 
-                    String parentName = Widgets.parent(interp, names[i]);
+            for (int i = 0; i < comps.length; i++) {
+                if (comps[i] != null) {
+                    Container master = getMaster(comps[i], true);
 
-                    if (parentName.equals("")) {
-                        continue;
-                    }
-
-                    Container parent = Widgets.getContainer(interp, parentName);
+                    Container parent = getMasterContainer(master);
                     LayoutManager layoutManager = parent.getLayout();
-
                     if (!(layoutManager instanceof PackerLayout)) {
                         continue;
                     }
 
-                    SwkWidget window = (SwkWidget) Widgets.get(interp, names[i]);
-                    parent.remove((Component) window);
+                    parent.remove(comps[i]);
                     Widgets.relayoutContainer(parent);
                     parent.repaint();
                 }
-            } catch (TclException tclE) {
-                //FIXME
             }
         }
     }
@@ -681,6 +740,7 @@ public class PackCmd implements Command {
             LayoutHandler.addLayoutRequest(interp, parent);
         }
 
+        @Override
         public void run() {
             try {
                 doSpecial1();
