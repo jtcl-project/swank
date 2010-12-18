@@ -37,11 +37,11 @@ public class PackerLayout implements LayoutManager2 {
     //this hashtable will do the mapping between
     //options and the actual option object
 
-    private static Hashtable option_table;
+    private final static Hashtable option_table;
     //this hashtable will do the mapping between
     //option arguments and the option that they
     //are valid for
-    private static Hashtable value_table;
+    private final static Hashtable value_table;
     //if the option_table hash returns a ref to the
     //INT_MAP object then we know that this option
     //just takes an integer
@@ -233,8 +233,6 @@ public class PackerLayout implements LayoutManager2 {
     public PackerLayout(Interp interp) {
         this.interp = interp;
         component_table = new Hashtable();
-        firstcomp = null;
-        lastcomp = null;
         propagate = true;
     }
 
@@ -564,13 +562,7 @@ public class PackerLayout implements LayoutManager2 {
             //System.out.println("put pack record in table");
         }
     }
-
-    /**
-     * Adds the specified component to the layout.
-     * @param name information about attachments
-     * @param comp the the component to be added
-     */
-    public static void checkPackArgs(Interp interp, String spec, Component comp)
+public static void checkPackArgs(Interp interp, String spec, Component comp)
             throws TclException {
         int i;
         int max;
@@ -598,7 +590,7 @@ public class PackerLayout implements LayoutManager2 {
 
         for (i = 0; i < max; i += 2) {
             //first match the input string option
-            option = option_table.get(argv[i].toString());
+            option = PackerLayout.option_table.get(argv[i].toString());
 
             if (option == null) {
                 //this is an error becuase the option
@@ -813,6 +805,9 @@ public class PackerLayout implements LayoutManager2 {
         }
     }
 
+
+
+  
     /**
      * Removes the specified component from the layout.
      * @param comp the component to remove
@@ -858,8 +853,6 @@ public class PackerLayout implements LayoutManager2 {
 
     public Dimension getTargetContainerSize(Container target) {
         int i;
-        Insets insets = target.getInsets();
-        Dimension cdim = target.getSize();
         Container target2 = target;
 
         if (target instanceof JComponent) {
