@@ -476,6 +476,8 @@ public class WinfoCmd implements Command {
             rectangle.height = size.height;
         } catch (TclException tclE) {
             interp.backgroundError();
+        } catch (Exception e) {
+             System.out.println(e.getMessage());
         }
 
         return rectangle;
@@ -524,7 +526,6 @@ public class WinfoCmd implements Command {
             Dimension size = null;
             Point location = null;
             JRootPane jRoot;
-
             if (object instanceof JWindow) {
                 JWindow window = (JWindow) object;
                 jRoot = window.getRootPane();
@@ -533,11 +534,12 @@ public class WinfoCmd implements Command {
             }
 
             rectangle = getGeometry(interp, object, widgetName);
+/*
             rectangle.x = location.x;
             rectangle.y = location.y;
             rectangle.width = size.width;
             rectangle.height = size.height;
-
+*/
             if (rectangle.x < 0) {
                 rectangle.x = 0;
             }
@@ -588,10 +590,30 @@ public class WinfoCmd implements Command {
         }
 
         public void run() {
+            Point wLocation = null;
+            Point pLocation = null;
+            Dimension size;
+            if (object instanceof JFrame) {
+                Window window = (Window) object;
+                size = ((JFrame) window).getRootPane().getSize();
+                wLocation = window.getLocationOnScreen();
+                locationOnScreen = window.getLocation();
+                preferredSize = ((JFrame) window).getRootPane().getPreferredSize();
+            } else if (object instanceof Window) {
+                Window window = (Window) object;
+                size = window.getSize();
+                wLocation = window.getLocationOnScreen();
+                locationOnScreen = window.getLocation();
+                preferredSize = window.getPreferredSize();
+            } else if (object instanceof Component) {
+                Component comp = (Component) object;
+                locationOnScreen = comp.getLocation();
+                preferredSize = comp.getPreferredSize();
+            } else {
+                //throw new TclException(interp, "invalid object type \"" + widgetName + "\"");
+            }
             viewable = ((Component) object).isVisible();
-            preferredSize = ((Component) object).getPreferredSize();
             showing = ((Component) object).isShowing();
-            locationOnScreen = ((Component) object).getLocationOnScreen();
 
             if ((object instanceof Frame)
                     && ((((Frame) object).getExtendedState() & Frame.ICONIFIED) == Frame.ICONIFIED)) {
