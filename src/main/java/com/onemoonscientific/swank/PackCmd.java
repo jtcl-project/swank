@@ -132,15 +132,19 @@ public class PackCmd implements Command {
                     "wrong # args: should be \"pack info window\"");
         }
         Component comp = Widgets.getComponent(interp, argv[2].toString());
+        ArrayList<String> settings = (new Info()).exec(comp, argv[2].toString());
 
-        String result = (new Info()).exec(comp, argv[2].toString());
-
-        if (result == null) {
+        if (settings.size() < 3) {
             throw new TclException(interp,
-                    "window \"" + argv[2].toString() + "\" isn't packed");
+                    "window \"" + argv[2].toString() + "\" isn't placed");
         }
-
+ 
+        TclObject result = TclList.newInstance();
+        for (String value:settings) {
+            TclList.append(interp,result,TclString.newInstance(value));
+        }
         interp.setResult(result);
+
 
         return;
     }
@@ -343,23 +347,26 @@ public class PackCmd implements Command {
 
         Component component = null;
         String parentName = null;
-        String result;
+        ArrayList<String> settings;
 
-        String exec(final Component component, final String parentName) {
+        ArrayList<String> exec(final Component component, final String parentName) {
             this.component = component;
             this.parentName = parentName;
             execOnThread();
 
-            return result;
+            return settings;
         }
 
         @Override
         public void run() {
             Container master = Widgets.getMaster(component, true);
             PackerLayout packer = getLayout(master);
+            SwkWidget swkParent = Widgets.swankParent(component);
+            settings = new ArrayList<String>();
+            settings.add("-in");
+            settings.add(swkParent.getName());
+            packer.getComponentSettings((Component) component,settings);
 
-            Object settings = packer.getComponentSettings((Component) component);
-            result = "-in " + parentName + " " + settings.toString();
 
         }
     }

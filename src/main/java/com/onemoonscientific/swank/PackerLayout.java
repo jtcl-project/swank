@@ -1240,139 +1240,121 @@ public static void checkPackArgs(Interp interp, String spec, Component comp)
     // This method will return the current packing properties
     // of a specific widget like the following format
     // -anchor center -expand 0 -fill none -ipadx 0 -ipady 0 -padx 0 -pady 0 -side top
-    public String getComponentSettings(Component comp) {
-        StringBuffer sb = new StringBuffer();
+    public void getComponentSettings(final Component comp, final ArrayList<String> sb) {
 
         PackRecord pr = (PackRecord) component_table.get(comp);
 
         if (pr == null) {
-            return null; // The widget is not managed by this PackerLayout
+            return; // The widget is not managed by this PackerLayout
         }
 
         // -anchor
-        sb.append(OPT_ANCHOR);
-        sb.append(' ');
+        sb.add(OPT_ANCHOR);
 
         Object anchor = pr.anchor;
 
         if (anchor == ANCHOR_OBJ_N) {
-            sb.append(ANCHOR_OPT_N);
+            sb.add(ANCHOR_OPT_N);
         } else if (anchor == ANCHOR_OBJ_NE) {
-            sb.append(ANCHOR_OPT_NE);
+            sb.add(ANCHOR_OPT_NE);
         } else if (anchor == ANCHOR_OBJ_E) {
-            sb.append(ANCHOR_OPT_E);
+            sb.add(ANCHOR_OPT_E);
         } else if (anchor == ANCHOR_OBJ_SE) {
-            sb.append(ANCHOR_OPT_SE);
+            sb.add(ANCHOR_OPT_SE);
         } else if (anchor == ANCHOR_OBJ_S) {
-            sb.append(ANCHOR_OPT_S);
+            sb.add(ANCHOR_OPT_S);
         } else if (anchor == ANCHOR_OBJ_SW) {
-            sb.append(ANCHOR_OPT_SW);
+            sb.add(ANCHOR_OPT_SW);
         } else if (anchor == ANCHOR_OBJ_W) {
-            sb.append(ANCHOR_OPT_W);
+            sb.add(ANCHOR_OPT_W);
         } else if (anchor == ANCHOR_OBJ_NW) {
-            sb.append(ANCHOR_OPT_NW);
+            sb.add(ANCHOR_OPT_NW);
         } else if (anchor == ANCHOR_OBJ_C) {
-            sb.append(ANCHOR_OPT_C);
+            sb.add(ANCHOR_OPT_C);
         } else {
             throw new RuntimeException("no match for ANCHOR type");
         }
 
-        sb.append(' ');
 
         // -expand
-        sb.append(OPT_EXPAND);
-        sb.append(' ');
+        sb.add(OPT_EXPAND);
 
         if (pr.expand == true) {
-            sb.append(EXPAND_OPT_YES);
+            sb.add(EXPAND_OPT_YES);
         } else if (pr.expand == false) {
-            sb.append(EXPAND_OPT_NO);
+            sb.add(EXPAND_OPT_NO);
         } else {
             throw new RuntimeException("no match for EXPAND type");
         }
 
-        sb.append(' ');
 
         // -fill
-        sb.append(OPT_FILL);
-        sb.append(' ');
+        sb.add(OPT_FILL);
 
         if (pr.fill == FILL_OBJ_NONE) {
-            sb.append(FILL_OPT_NONE);
+            sb.add(FILL_OPT_NONE);
         } else if (pr.fill == FILL_OBJ_X) {
-            sb.append(FILL_OPT_X);
+            sb.add(FILL_OPT_X);
         } else if (pr.fill == FILL_OBJ_Y) {
-            sb.append(FILL_OPT_Y);
+            sb.add(FILL_OPT_Y);
         } else if (pr.fill == FILL_OBJ_BOTH) {
-            sb.append(FILL_OPT_BOTH);
+            sb.add(FILL_OPT_BOTH);
         } else {
             throw new RuntimeException("no match for FILL type");
         }
 
-        sb.append(' ');
 
         // -ipadx -ipady -padx -pady
-        sb.append(OPT_IPADX);
-        sb.append(' ');
+        sb.add(OPT_IPADX);
 
         if (pr.ipadx[0] == pr.ipadx[1]) {
-            sb.append(pr.ipadx[0]);
+            sb.add(Integer.toString(pr.ipadx[0]));
         } else {
-            sb.append("{" + pr.ipadx[0] + " " + pr.ipadx[1] + "}");
+            sb.add(pr.ipadx[0] + " " + pr.ipadx[1]);
         }
 
-        sb.append(' ');
 
-        sb.append(OPT_IPADY);
-        sb.append(' ');
+        sb.add(OPT_IPADY);
 
         if (pr.ipady[0] == pr.ipady[1]) {
-            sb.append(pr.ipady[0]);
+            sb.add(Integer.toString(pr.ipady[0]));
         } else {
-            sb.append("{" + pr.ipady[0] + " " + pr.ipady[1] + "}");
+            sb.add(pr.ipady[0] + " " + pr.ipady[1]);
         }
 
-        sb.append(' ');
 
-        sb.append(OPT_PADX);
-        sb.append(' ');
+        sb.add(OPT_PADX);
 
         if (pr.padx[0] == pr.padx[1]) {
-            sb.append(pr.padx[0]);
+            sb.add(Integer.toString(pr.padx[0]));
         } else {
-            sb.append("{" + pr.padx[0] + " " + pr.padx[1] + "}");
+            sb.add(pr.padx[0] + " " + pr.padx[1]);
         }
 
-        sb.append(' ');
 
-        sb.append(OPT_PADY);
-        sb.append(' ');
+        sb.add(OPT_PADY);
 
         if (pr.pady[0] == pr.pady[1]) {
-            sb.append(pr.pady[0]);
+            sb.add(Integer.toString(pr.pady[0]));
         } else {
-            sb.append("{" + pr.pady[0] + " " + pr.pady[1] + "}");
+            sb.add(pr.pady[0] + " " + pr.pady[1]);
         }
 
-        sb.append(' ');
 
         // -side
-        sb.append(OPT_SIDE);
-        sb.append(' ');
+        sb.add(OPT_SIDE);
 
         if (pr.side == SIDE_OBJ_TOP) {
-            sb.append(SIDE_OPT_TOP);
+            sb.add(SIDE_OPT_TOP);
         } else if (pr.side == SIDE_OBJ_BOTTOM) {
-            sb.append(SIDE_OPT_BOTTOM);
+            sb.add(SIDE_OPT_BOTTOM);
         } else if (pr.side == SIDE_OBJ_LEFT) {
-            sb.append(SIDE_OPT_LEFT);
+            sb.add(SIDE_OPT_LEFT);
         } else if (pr.side == SIDE_OBJ_RIGHT) {
-            sb.append(SIDE_OPT_RIGHT);
+            sb.add(SIDE_OPT_RIGHT);
         } else {
             throw new RuntimeException("no match for SIDE type");
         }
-
-        return sb.toString();
     }
 
     // "update" functionality workaround
