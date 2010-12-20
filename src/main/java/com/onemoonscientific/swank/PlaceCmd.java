@@ -25,16 +25,8 @@
 package com.onemoonscientific.swank;
 
 import tcl.lang.*;
-import tcl.pkg.java.ReflectObject;
-
 import java.awt.*;
-
-import java.io.*;
-
-import java.lang.*;
-
 import java.util.*;
-
 import javax.swing.*;
 
 public class PlaceCmd implements Command {
@@ -72,7 +64,6 @@ public class PlaceCmd implements Command {
         LayoutManager layoutManager;
         PlacerLayout placer = null;
         Container parent = null;
-        ;
 
         TclObject optionArg = null;
 
@@ -120,43 +111,37 @@ public class PlaceCmd implements Command {
                 throw new TclRuntimeError("TclIndex.get() error");
         }
     }
-
     void placeInfo(Interp interp, TclObject[] argv) throws TclException {
         if (argv.length != 3) {
             throw new TclException(interp,
                     "wrong # args: should be \"place info window\"");
         }
+        Component comp = Widgets.getComponent(interp, argv[2].toString());
 
-        SwkWidget window = (SwkWidget) Widgets.get(interp, argv[2].toString());
+        ArrayList<String> settings = (new Info()).exec(comp);
 
-        if (window == null) {
+        if (settings.size() < 3) {
             throw new TclException(interp,
-                    "window \"" + argv[2].toString() + "\" doesn't exist");
+                    "window \"" + argv[2].toString() + "\" isn't placed");
         }
-
-        String result = (new Info()).exec(window, argv[2].toString());
-
-        if (result == null) {
-            throw new TclException(interp,
-                    "window \"" + argv[2].toString() + "\" isn't Placed");
+        TclObject result = TclList.newInstance();
+        for (String value:settings) {
+            TclList.append(interp,result,TclString.newInstance(value));
         }
-
         interp.setResult(result);
 
         return;
     }
+
 
     void placeSlaves(Interp interp, TclObject[] argv) throws TclException {
         if (argv.length != 3) {
             throw new TclNumArgsException(interp, 2, argv, "window");
         }
 
-        if (!Widgets.exists(interp, argv[2].toString())) {
-            throw new TclException(interp,
-                    "bad window path name \"" + argv[2].toString() + "\"");
-        }
+        Component component = Widgets.getComponent(interp, argv[2].toString());
 
-        String[] names = (new Slaves()).exec(argv[2].toString());
+        String[] names = (new Slaves()).exec(component);
         TclObject list = TclList.newInstance();
 
         if (names != null) {
@@ -172,16 +157,26 @@ public class PlaceCmd implements Command {
 
     void placeForget(Interp interp, TclObject[] argv, int firstWindow)
             throws TclException {
+        if (argv.length < 3) {
+            throw new TclNumArgsException(interp, 2, argv, "window");
+        }
+
         String[] names = new String[argv.length - firstWindow];
         int j = 0;
 
         for (int i = firstWindow; i < argv.length; i++) {
             names[j++] = argv[i].toString();
         }
+        Component[] comps = new Component[names.length];
+        for (int i = 0; i < names.length; i++) {
+            comps[i] = Widgets.getComponent(interp, names[i]);
+        }
 
-        (new Forget()).exec(names);
+        (new Forget()).exec(comps);
     }
 
+
+ 
     int initPlaceingWindow(Interp interp, TclObject[] argv, String[] args,
             int firstWindow) throws TclException {
         int lastWindow = 0;
@@ -281,6 +276,17 @@ public class PlaceCmd implements Command {
         (new Configure()).exec(window1Special, args, strippedArgs.toString(),
                 firstWindow, lastWindow);
     }
+    PlacerLayout getLayout(Container master) {
+        LayoutManager layout = master.getLayout();
+
+        if (layout != null) {
+            if (layout instanceof PlacerLayout) {
+                return (PlacerLayout) layout;
+            }
+        }
+
+        return null;
+    }
 
     String getParent(Interp interp, String widgetName)
             throws TclException {
@@ -303,69 +309,48 @@ public class PlaceCmd implements Command {
 
         return (masterName);
     }
+     class Info extends GetValueOnEventThread {
 
-    class Info extends GetValueOnEventThread {
+        Component component = null;
+        ArrayList<String> settings;
 
-        String result = null;
-        String item = null;
-        SwkWidget window = null;
-        String parentName = null;
-        Container parent = null;
-
-        String exec(SwkWidget window, String item) {
-            this.item = item;
-            this.window = window;
-            try {
-                parentName = Widgets.parent(interp, item);
-                parent = Widgets.getContainer(interp, parentName);
-            } catch (TclException tclE) {
-                return null;
-            }
+        ArrayList<String> exec(final Component component) {
+            this.component = component;
             execOnThread();
 
-            return result;
+            return settings;
         }
 
+        @Override
         public void run() {
-            if (parent != null) {
-                LayoutManager layoutManager = parent.getLayout();
+            Container master = Widgets.getMaster(component, true);
+            PlacerLayout placer = getLayout(master);
+            SwkWidget swkParent = Widgets.swankParent(component);
+            settings = new ArrayList<String>();
+            settings.add("-in");
+            settings.add(swkParent.getName());
+            placer.getComponentSettings((Component) component,settings);
 
-                if (!(layoutManager instanceof PlacerLayout)) {
-                    return;
-                }
 
-                PlacerLayout placer = (PlacerLayout) layoutManager;
-
-                Object settings = placer.getComponentSettings((Component) window);
-
-                result = settings.toString() + " -in " + parentName;
-            }
         }
     }
 
+
     class Slaves extends GetValueOnEventThread {
 
-        String item = null;
+        Component component = null;
         String[] names = null;
 
-        String[] exec(String item) {
-            this.item = item;
+        String[] exec(final Component component) {
+            this.component = component;
             execOnThread();
 
             return names;
         }
 
+        @Override
         public void run() {
-            Container parent = null;
-
-            try {
-                parent = Widgets.getContainer(interp, item);
-            } catch (TclException tclE) {
-                //FIXME
-                interp.backgroundError();
-
-                return;
-            }
+            Container parent = Widgets.getMasterContainer(component);
 
             int nMembers = parent.getComponentCount();
             names = new String[nMembers];
@@ -379,43 +364,39 @@ public class PlaceCmd implements Command {
 
     class Forget extends UpdateOnEventThread {
 
-        String[] names = null;
+        Component[] comps = null;
 
-        void exec(String[] names) {
-            this.names = names;
+        void exec(Component[] comps) {
+            this.comps = comps;
             execOnThread();
         }
 
+        @Override
         public void run() {
-            try {
-                for (int i = 0; i < names.length; i++) {
-                    if (!Widgets.exists(interp, names[i])) {
-                        continue;
-                    }
 
-                    String parentName = Widgets.parent(interp, names[i]);
+            for (int i = 0; i < comps.length; i++) {
+                if (comps[i] != null) {
+                    Container master = Widgets.getMaster(comps[i], true);
 
-                    if (parentName.equals("")) {
-                        continue;
-                    }
-
-                    Container parent = Widgets.getContainer(interp, parentName);
+                    Container parent = Widgets.getMasterContainer(master);
                     LayoutManager layoutManager = parent.getLayout();
-
                     if (!(layoutManager instanceof PlacerLayout)) {
                         continue;
                     }
 
-                    SwkWidget window = (SwkWidget) Widgets.get(interp, names[i]);
-                    parent.remove((Component) window);
+                    parent.remove(comps[i]);
                     Widgets.relayoutContainer(parent);
                     parent.repaint();
                 }
-            } catch (TclException tclE) {
-                //FIXME
             }
         }
     }
+
+  
+
+ 
+
+   
 
     class Configure extends UpdateOnEventThread {
 
@@ -477,8 +458,6 @@ public class PlaceCmd implements Command {
         }
 
         void addWindows() throws TclException {
-            String window1 = args[firstWindow];
-
             for (int i = firstWindow; i <= lastWindow; i++) {
                 int PlacePosition = -1;
                 String windowName = args[i];
@@ -529,6 +508,7 @@ public class PlaceCmd implements Command {
             LayoutHandler.addLayoutRequest(interp, parent);
         }
 
+        @Override
         public void run() {
             try {
                 doSpecial();

@@ -903,130 +903,108 @@ public class PlacerLayout implements LayoutManager {
     // This method will return the current packing properties
     // of a specific widget like the following format
     // -anchor center -expand 0 -fill none -ipadx 0 -ipady 0 -padx 0 -pady 0 -side top
-    public String getComponentSettings(Component comp) {
-        StringBuffer sb = new StringBuffer();
+    public void getComponentSettings(final Component comp, final ArrayList<String> sb) {
 
         PlaceRecord pr = (PlaceRecord) component_table.get(comp);
 
         if (pr == null) {
-            return null; // The widget is not managed by this PlacerLayout
+            return; // The widget is not managed by this PlacerLayout
         }
 
         // -x -y -width -height
-        sb.append(OPT_X);
-        sb.append(' ');
-        sb.append(pr.x);
+        sb.add(OPT_X);
+        sb.add(Integer.toString(pr.x));
 
-        sb.append(' ');
 
-        sb.append(OPT_RELX);
-        sb.append(' ');
-        sb.append(pr.relx);
+        sb.add(OPT_RELX);
+        sb.add(Float.toString(pr.relx));
 
-        sb.append(' ');
 
-        sb.append(OPT_Y);
-        sb.append(' ');
-        sb.append(pr.y);
+        sb.add(OPT_Y);
+        sb.add(Integer.toString(pr.y));
 
-        sb.append(' ');
 
         // -x -y -width -height
-        sb.append(OPT_RELY);
-        sb.append(' ');
-        sb.append(pr.rely);
+        sb.add(OPT_RELY);
+        sb.add(Float.toString(pr.rely));
 
-        sb.append(' ');
 
-        sb.append(OPT_WIDTH);
-        sb.append(' ');
+        sb.add(OPT_WIDTH);
 
         if (pr.widthActive) {
-            sb.append(pr.width);
+            sb.add(Integer.toString(pr.width));
         } else {
-            sb.append("{}");
+            sb.add("");
         }
 
-        sb.append(' ');
 
-        sb.append(OPT_RELWIDTH);
-        sb.append(' ');
+        sb.add(OPT_RELWIDTH);
 
         if (pr.relWidthActive) {
-            sb.append(pr.relwidth);
+            sb.add(Float.toString(pr.relwidth));
         } else {
-            sb.append("{}");
+            sb.add("");
         }
 
-        sb.append(' ');
 
-        sb.append(OPT_HEIGHT);
-        sb.append(' ');
+        sb.add(OPT_HEIGHT);
 
         if (pr.heightActive) {
-            sb.append(pr.height);
+            sb.add(Integer.toString(pr.height));
         } else {
-            sb.append("{}");
+            sb.add("");
         }
 
-        sb.append(' ');
 
-        sb.append(OPT_RELHEIGHT);
-        sb.append(' ');
+        sb.add(OPT_RELHEIGHT);
 
         if (pr.relHeightActive) {
-            sb.append(pr.relheight);
+            sb.add(Float.toString(pr.relheight));
         } else {
-            sb.append("{}");
+            sb.add("");
         }
 
-        sb.append(' ');
 
         // -anchor
-        sb.append(OPT_ANCHOR);
-        sb.append(' ');
+        sb.add(OPT_ANCHOR);
 
         Object anchor = pr.anchor;
 
         if (anchor == ANCHOR_OBJ_N) {
-            sb.append(ANCHOR_OPT_N);
+            sb.add(ANCHOR_OPT_N);
         } else if (anchor == ANCHOR_OBJ_NE) {
-            sb.append(ANCHOR_OPT_NE);
+            sb.add(ANCHOR_OPT_NE);
         } else if (anchor == ANCHOR_OBJ_E) {
-            sb.append(ANCHOR_OPT_E);
+            sb.add(ANCHOR_OPT_E);
         } else if (anchor == ANCHOR_OBJ_SE) {
-            sb.append(ANCHOR_OPT_SE);
+            sb.add(ANCHOR_OPT_SE);
         } else if (anchor == ANCHOR_OBJ_S) {
-            sb.append(ANCHOR_OPT_S);
+            sb.add(ANCHOR_OPT_S);
         } else if (anchor == ANCHOR_OBJ_SW) {
-            sb.append(ANCHOR_OPT_SW);
+            sb.add(ANCHOR_OPT_SW);
         } else if (anchor == ANCHOR_OBJ_W) {
-            sb.append(ANCHOR_OPT_W);
+            sb.add(ANCHOR_OPT_W);
         } else if (anchor == ANCHOR_OBJ_NW) {
-            sb.append(ANCHOR_OPT_NW);
+            sb.add(ANCHOR_OPT_NW);
         } else if (anchor == ANCHOR_OBJ_C) {
-            sb.append(ANCHOR_OPT_C);
+            sb.add(ANCHOR_OPT_C);
         } else {
             throw new RuntimeException("no match for ANCHOR type");
         }
 
-        sb.append(' ');
-        sb.append(OPT_BORDERMODE);
-        sb.append(' ');
+        sb.add(OPT_BORDERMODE);
 
         Object bordermode = pr.bordermode;
 
         if (bordermode == BORDERMODE_OBJ_INSIDE) {
-            sb.append(BORDERMODE_OPT_INSIDE);
+            sb.add(BORDERMODE_OPT_INSIDE);
         } else if (bordermode == BORDERMODE_OBJ_OUTSIDE) {
-            sb.append(BORDERMODE_OPT_OUTSIDE);
+            sb.add(BORDERMODE_OPT_OUTSIDE);
         } else if (bordermode == BORDERMODE_OBJ_IGNORE) {
-            sb.append(BORDERMODE_OPT_IGNORE);
+            sb.add(BORDERMODE_OPT_IGNORE);
         } else {
             throw new RuntimeException("no match for BORDERMODE type");
         }
-
-        return sb.toString();
     }
 
     // "update" functionality workaround
