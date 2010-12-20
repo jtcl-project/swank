@@ -255,6 +255,9 @@ public class WinfoCmd implements Command {
             case OPT_REQWIDTH:
                 winfo = new Winfo();
                 winfo.exec(object);
+                if (winfo.preferredSize == null) {
+                     throw new TclException(interp,"Couldn't get width for \"" + argv[2].toString() + "\"");
+                }
                 interp.setResult(winfo.preferredSize.width);
 
                 break;
@@ -262,6 +265,9 @@ public class WinfoCmd implements Command {
             case OPT_REQHEIGHT:
                 winfo = new Winfo();
                 winfo.exec(object);
+                if (winfo.preferredSize == null) {
+                     throw new TclException(interp,"Couldn't get height for \"" + argv[2].toString() + "\"");
+                }
                 interp.setResult(winfo.preferredSize.height);
 
                 break;
