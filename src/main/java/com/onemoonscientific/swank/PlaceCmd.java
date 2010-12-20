@@ -111,6 +111,7 @@ public class PlaceCmd implements Command {
                 throw new TclRuntimeError("TclIndex.get() error");
         }
     }
+
     void placeInfo(Interp interp, TclObject[] argv) throws TclException {
         if (argv.length != 3) {
             throw new TclException(interp,
@@ -125,14 +126,13 @@ public class PlaceCmd implements Command {
                     "window \"" + argv[2].toString() + "\" isn't placed");
         }
         TclObject result = TclList.newInstance();
-        for (String value:settings) {
-            TclList.append(interp,result,TclString.newInstance(value));
+        for (String value : settings) {
+            TclList.append(interp, result, TclString.newInstance(value));
         }
         interp.setResult(result);
 
         return;
     }
-
 
     void placeSlaves(Interp interp, TclObject[] argv) throws TclException {
         if (argv.length != 3) {
@@ -175,9 +175,7 @@ public class PlaceCmd implements Command {
         (new Forget()).exec(comps);
     }
 
-
- 
-    int initPlaceingWindow(Interp interp, TclObject[] argv, String[] args,
+    Component[] initPlaceingWindow(Interp interp, TclObject[] argv, String[] args,
             int firstWindow) throws TclException {
         int lastWindow = 0;
 
@@ -196,7 +194,7 @@ public class PlaceCmd implements Command {
                         + "\": must be name of window");
             }
         }
-
+        ArrayList<String> names = new ArrayList<String>();
         for (int i = firstWindow; i < args.length; i++) {
             if (!args[i].startsWith(".")) {
                 break;
@@ -207,24 +205,34 @@ public class PlaceCmd implements Command {
                     throw new TclException(interp,
                             "bad window path name \"" + args[i] + "\"");
                 }
-
+                if ((window instanceof JWindow) || (window instanceof JFrame)) {
+                    throw new TclException(interp,
+                            "can't Place \"" + args[i]
+                            + "\": it's a top-level window");
+                }
+                names.add(args[i].toString());
                 lastWindow = i;
             }
+        }
+        Component[] components = new Component[names.size()];
+        int i = 0;
+        for (String name : names) {
+            components[i++] = Widgets.getComponent(interp, name);
         }
 
         if (lastWindow < firstWindow) {
             throw new TclNumArgsException(interp, 2, argv, "window");
         }
 
-        return lastWindow;
+        return components;
     }
 
-    void getSpecialArgs(Interp interp, String[] args, int lastWindow,
-            Vector window1Special, StringBuffer strippedArgs)
+    Container getSpecialArgs(Interp interp, String[] args, int lastWindow,
+            StringBuffer strippedArgs)
             throws TclException {
         int firstArg = lastWindow + 1;
         int lastArg = args.length - 1;
-
+        Container parent = null;
         for (int i = firstArg; i <= lastArg; i += 2) {
             /*
             if (argv[i + 1].toString ().startsWith ("-") && !Character.isDigit(argv[i+1].toString().charAt(1))) {
@@ -236,9 +244,7 @@ public class PlaceCmd implements Command {
                     throw new TclException(interp,
                             "bad window path name \"" + args[i + 1] + "\"");
                 }
-
-                window1Special.add(args[i]);
-                window1Special.add(args[i + 1]);
+                parent = Widgets.getContainer(interp, args[i + 1].toString());
             } else {
                 if (strippedArgs.length() != 0) {
                     strippedArgs.append(" ");
@@ -247,6 +253,7 @@ public class PlaceCmd implements Command {
                 strippedArgs.append(args[i] + " {" + args[i + 1] + "}");
             }
         }
+        return parent;
     }
 
     void placeConfigure(Interp interp, TclObject[] argv, int firstWindow)
@@ -257,8 +264,8 @@ public class PlaceCmd implements Command {
             args[i] = argv[i].toString().intern();
         }
 
-        int lastWindow = initPlaceingWindow(interp, argv, args, firstWindow);
-
+        Component[] comps = initPlaceingWindow(interp, argv, args, firstWindow);
+        int lastWindow = firstWindow + comps.length - 1;
         int firstArg = lastWindow + 1;
         int lastArg = argv.length - 1;
         int nArgs = lastArg - firstArg + 1;
@@ -269,13 +276,24 @@ public class PlaceCmd implements Command {
                     + "\" (option with no value?)");
         }
 
-        Vector window1Special = new Vector();
         StringBuffer strippedArgs = new StringBuffer();
-        getSpecialArgs(interp, args, lastWindow, window1Special, strippedArgs);
+        Container parent = getSpecialArgs(interp, args, lastWindow, strippedArgs);
+        for (Component window : comps) {
+            if (window == parent) {
+                throw new TclException(interp,
+                        "can't Place \"" + window.getName() + "\" inside itself");
+            }
+            if (parent == null) {
+                String parentName = getParent(interp, window.getName());
+                parent = Widgets.getContainer(interp, parentName);
+            }
+
+        }
         PlacerLayout.checkPlaceArgs(interp, strippedArgs.toString(), null);
-        (new Configure()).exec(window1Special, args, strippedArgs.toString(),
+        (new Configure()).exec(parent, comps, strippedArgs.toString(),
                 firstWindow, lastWindow);
     }
+
     PlacerLayout getLayout(Container master) {
         LayoutManager layout = master.getLayout();
 
@@ -309,7 +327,8 @@ public class PlaceCmd implements Command {
 
         return (masterName);
     }
-     class Info extends GetValueOnEventThread {
+
+    class Info extends GetValueOnEventThread {
 
         Component component = null;
         ArrayList<String> settings;
@@ -329,12 +348,11 @@ public class PlaceCmd implements Command {
             settings = new ArrayList<String>();
             settings.add("-in");
             settings.add(swkParent.getName());
-            placer.getComponentSettings((Component) component,settings);
+            placer.getComponentSettings((Component) component, settings);
 
 
         }
     }
-
 
     class Slaves extends GetValueOnEventThread {
 
@@ -392,95 +410,45 @@ public class PlaceCmd implements Command {
         }
     }
 
-  
-
- 
-
-   
-
     class Configure extends UpdateOnEventThread {
 
-        String specialWindowName = null;
-        String parentName = null;
         Container parent = null;
-        String option = null;
         String strippedArgs = null;
-        Vector window1Special = null;
         int firstWindow = 0;
         int lastWindow = 0;
-        String[] args = null;
+        Component[] comps = null;
 
-        void exec(final Vector window1Special, final String[] args,
+        void exec(final Container parent, final Component[] comps,
                 String strippedArgs, int firstWindow, int lastWindow) {
-            this.args = args;
-            this.window1Special = window1Special;
+            this.comps = comps;
+            this.parent = parent;
             this.strippedArgs = strippedArgs;
             this.firstWindow = firstWindow;
             this.lastWindow = lastWindow;
             execOnThread();
         }
 
-        void doSpecial() throws TclException {
-            if (window1Special.size() > 0) {
-                for (int j = 0; j < window1Special.size(); j += 2) {
-                    option = (String) window1Special.elementAt(j);
+        void doSpecial() {
+            if (parent != null) {
+                for (Component window : comps) {
+                    int nMembers = parent.getComponentCount();
 
-                    specialWindowName = (String) window1Special.elementAt(j
-                            + 1);
+                    for (int iWin = 0; iWin < nMembers; iWin++) {
+                        Component comp = parent.getComponent(iWin);
 
-                    if (option.equals("-in")) {
-                        parentName = (String) window1Special.elementAt(j + 1);
-                        parent = Widgets.getContainer(interp, parentName);
-                    }
-                }
+                        if (comp == (Component) window) {
+                            parent.remove((Component) window);
 
-                for (int i = firstWindow; i <= lastWindow; i++) {
-                    String windowName = args[i];
-
-                    if (!windowName.equals(specialWindowName)) {
-                        SwkWidget window = (SwkWidget) Widgets.get(interp,
-                                windowName);
-
-                        int nMembers = parent.getComponentCount();
-
-                        for (int iWin = 0; iWin < nMembers; iWin++) {
-                            Component comp = parent.getComponent(iWin);
-
-                            if (comp == (Component) window) {
-                                parent.remove((Component) window);
-
-                                break;
-                            }
+                            break;
                         }
                     }
                 }
             }
         }
 
-        void addWindows() throws TclException {
-            for (int i = firstWindow; i <= lastWindow; i++) {
+        void addWindows() {
+            for (Component window : comps) {
                 int PlacePosition = -1;
-                String windowName = args[i];
-
-                if (windowName.equals(parentName)) {
-                    throw new TclException(interp,
-                            "can't Place \"" + windowName + "\" inside itself");
-                }
-
-                if (window1Special.size() > 0) {
-                } else {
-                    parentName = getParent(interp, windowName);
-                    parent = Widgets.getContainer(interp, parentName);
-                }
-
-                SwkWidget window = (SwkWidget) Widgets.get(interp, windowName);
-
-                if ((window instanceof JWindow) || (window instanceof JFrame)) {
-                    throw new TclException(interp,
-                            "can't Place \"" + windowName
-                            + "\": it's a top-level window");
-                }
-
                 LayoutManager layoutManager = parent.getLayout();
                 PlacerLayout Place = null;
 
@@ -504,19 +472,13 @@ public class PlaceCmd implements Command {
                     Place.setIgnoreNextRemove(false);
                 }
             }
-
             LayoutHandler.addLayoutRequest(interp, parent);
         }
 
         @Override
         public void run() {
-            try {
-                doSpecial();
-                addWindows();
-            } catch (TclException tclE) {
-                interp.backgroundError();
-            }
-
+            doSpecial();
+            addWindows();
             parent.repaint();
         }
     }
