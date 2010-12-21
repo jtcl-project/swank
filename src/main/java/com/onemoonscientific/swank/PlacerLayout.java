@@ -1172,6 +1172,9 @@ public class PlacerLayout implements LayoutManager {
             } else if (option != value_table.get(argv[i + 1].toString())) {
                 //in this case the given value for the option
                 //did not match one of the possible option values
+                if (option == OPT_BORDERMODE) {
+                    throw new TclException(interp,"bad bordermode \"" + argv[i+1].toString() + "\": must be inside, outside, or ignore");
+                }
                 throw new TclException(interp,
                         "error : option \"" + argv[i].toString()
                         + "\" can not take the value \"" + argv[i + 1].toString()

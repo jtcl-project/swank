@@ -30,7 +30,7 @@ update
 test place-1.1 {Tk_PlaceCmd procedure, "info" option} {
     place .t.f2 -x 0
     place info .t.f2
-} {-in .t -x 0 -relx 0 -y 0 -rely 0 -width {} -relwidth {} -height {} -relheight {} -anchor nw -bordermode inside}
+} {-in .t -x 0 -relx 0.0 -y 0 -rely 0.0 -width {} -relwidth {} -height {} -relheight {} -anchor nw -bordermode inside}
 test place-1.2 {Tk_PlaceCmd procedure, "info" option} {
     place .t.f2 -x 1 -y 2 -width 3 -height 4 -relx 0.1 -rely 0.2 \
 	    -relwidth 0.3 -relheight 0.4 -anchor se -in .t.f  \
@@ -87,11 +87,11 @@ test place-3.3 {ConfigureSlave procedure, -relheight option} {
 test place-4.1 {ConfigureSlave procedure, bad -in options} {
     place forget .t.f2
     list [catch {place .t.f2 -in .t.f2} msg] $msg
-} [list 1 "can't place .t.f2 relative to itself"]
+} [list 1 {can't place ".t.f2" relative to itself}]
 test place-4.2 {ConfigureSlave procedure, bad -in option} {
     place forget .t.f2
     list [catch {place .t.f2 -in .} msg] $msg
-} [list 1 "can't place .t.f2 relative to ."]
+} [list 1 {can't place ".t.f2" relative to .}]
 
 test place-5.1 {ConfigureSlave procedure, -relwidth option} {
     list [catch {place .t.f2 -relwidth abcd} msg] $msg
@@ -251,21 +251,21 @@ test place-9.5 {PlaceObjCmd} {
     destroy .foo
     set res
 } [list 1 "bad option \"badopt\": must be configure, forget, info, or slaves"]
-test place-9.6 {PlaceObjCmd, configure errors} {
+test place-9.6 {PlaceObjCmd, configure errors} tkOnly {
     catch {destroy .foo}
     frame .foo
     set res [list [catch {place configure .foo} msg] $msg]
     destroy .foo
     set res
 } [list 0 ""]
-test place-9.7 {PlaceObjCmd, configure errors} {
+test place-9.7 {PlaceObjCmd, configure errors} tkOnly {
     catch {destroy .foo}
     frame .foo
     set res [list [catch {place configure .foo bar} msg] $msg]
     destroy .foo
     set res
 } [list 0 ""]
-test place-9.8 {PlaceObjCmd, configure} {
+test place-9.8 {PlaceObjCmd, configure} tkOnly {
     catch {destroy .foo}
     frame .foo
     place .foo -x 0 -y 0
@@ -273,7 +273,7 @@ test place-9.8 {PlaceObjCmd, configure} {
     destroy .foo
     set res
 } [list {-anchor {} {} nw nw} {-bordermode {} {} inside inside} {-height {} {} {} {}} {-in {} {} {} .} {-relheight {} {} {} {}} {-relwidth {} {} {} {}} {-relx {} {} 0 0.0} {-rely {} {} 0 0.0} {-width {} {} {} {}} {-x {} {} 0 0} {-y {} {} 0 0}]
-test place-9.9 {PlaceObjCmd, configure} {
+test place-9.9 {PlaceObjCmd, configure} tkOnly {
     catch {destroy .foo}
     frame .foo
     place .foo -x 0 -y 0
@@ -310,7 +310,7 @@ test place-10.1 {ConfigureSlave} {
     destroy .foo
     set res
 } [list 1 "unknown option \"-badopt\""]
-test place-10.2 {ConfigureSlave} {
+test place-10.2 {ConfigureSlave} tkOnly {
     catch {destroy .foo}
     frame .foo
     set res [list [catch {place .foo -anchor} msg] $msg]
@@ -324,7 +324,7 @@ test place-10.3 {ConfigureSlave} {
     destroy .foo
     set res
 } [list 1 "bad bordermode \"j\": must be inside, outside, or ignore"]
-test place-10.4 {ConfigureSlave} {
+test place-10.4 {ConfigureSlave} tkOnly {
     catch {destroy .foo}
     frame .foo
     set res [list [catch {place configure .foo -x 0 -y} msg] $msg]

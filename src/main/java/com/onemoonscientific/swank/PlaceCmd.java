@@ -49,7 +49,7 @@ public class PlaceCmd implements Command {
 
         if (argv.length < 2) {
             throw new TclNumArgsException(interp, 1, argv,
-                    "option arg ?arg ...?");
+                    "option|pathName args");
         }
 
         this.interp = interp;
@@ -73,7 +73,7 @@ public class PlaceCmd implements Command {
 
             if (argv.length < 3) {
                 throw new TclNumArgsException(interp, 1, argv,
-                        "option arg ?arg ...?");
+                        "option|pathName args");
             }
         } else {
             optionArg = configArg;
@@ -115,7 +115,7 @@ public class PlaceCmd implements Command {
     void placeInfo(Interp interp, TclObject[] argv) throws TclException {
         if (argv.length != 3) {
             throw new TclException(interp,
-                    "wrong # args: should be \"place info window\"");
+                    "wrong # args: should be \"place info pathName\"");
         }
         Component comp = Widgets.getComponent(interp, argv[2].toString());
 
@@ -136,7 +136,7 @@ public class PlaceCmd implements Command {
 
     void placeSlaves(Interp interp, TclObject[] argv) throws TclException {
         if (argv.length != 3) {
-            throw new TclNumArgsException(interp, 2, argv, "window");
+            throw new TclNumArgsException(interp, 2, argv, "pathName");
         }
 
         Component component = Widgets.getComponent(interp, argv[2].toString());
@@ -158,7 +158,7 @@ public class PlaceCmd implements Command {
     void placeForget(Interp interp, TclObject[] argv, int firstWindow)
             throws TclException {
         if (argv.length < 3) {
-            throw new TclNumArgsException(interp, 2, argv, "window");
+            throw new TclNumArgsException(interp, 2, argv, "pathName");
         }
 
         String[] names = new String[argv.length - firstWindow];
@@ -281,7 +281,7 @@ public class PlaceCmd implements Command {
         for (Component window : comps) {
             if (window == parent) {
                 throw new TclException(interp,
-                        "can't Place \"" + window.getName() + "\" inside itself");
+                        "can't place \"" + window.getName() + "\" relative to itself");
             }
             if (parent == null) {
                 String parentName = getParent(interp, window.getName());
