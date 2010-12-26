@@ -543,12 +543,8 @@ append specialInits {
                                 componentsValid = false;
                                 revalidate();
 			}
-			public String getShowValue() {
-				if (showValue) {
-        			return("1");
-				} else {
-					return("0");
-				}
+			public boolean getShowValue() {
+                                return showValue;
 			}
                        public void setLength(int length) {
                                 this.length = length;

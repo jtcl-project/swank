@@ -122,6 +122,8 @@ foreach method $getMethods  {
 						set cmd "return($widgetVarLocal.${getMethod}());"
 					} elseif {$argType == "state"} {
 						set cmd "return($widgetVarLocal.${getMethod}());"
+					} elseif {$argType == "default"} {
+						set cmd "return($widgetVarLocal.${getMethod}());"
 					} elseif {$argType == "tkRectangle"} {
 						set cmd "return(SwankUtil.parseTkRectangle($widgetVarLocal.${getMethod}()));"
 					} elseif {$argType == "tkRectangleCorners"} {
@@ -133,7 +135,13 @@ foreach method $getMethods  {
 					} elseif {$argType == "int"} {
 						set cmd "return(Integer.toString($widgetVarLocal.${getMethod}()));"
 					} elseif {$argType == "boolean"} {
-                                                set cmd "return(String.valueOf($widgetVarLocal.${getMethod}()));"
+                                                set cmd "
+                                                    if ($widgetVarLocal.${getMethod}()) {
+                                                        return(\"1\");
+                                                    } else {
+                                                        return(\"0\");
+                                                    }
+                                                "
 					} elseif {$argType == "float"} {
 						set cmd "return(Float.toString($widgetVarLocal.${getMethod}()));"
 					} elseif {$argType == "double"} {
@@ -144,6 +152,8 @@ foreach method $getMethods  {
 						set cmd "return(SwankUtil.parseFile( $widgetVarLocal.${getMethod}()));"
 					} elseif {$argType == "spinlist"} {
 						set cmd "return(SwankUtil.parseSpinlist( $widgetVarLocal.${getMethod}()));"
+					} elseif {$argType == "bitmap"} {
+						set cmd "return(getBitmap());"
 					} elseif {$argType == "java.net.URL"} {
 						set cmd "return(SwankUtil.parseURL((URL) $widgetVarLocal.${getMethod}()));"
 					} else {

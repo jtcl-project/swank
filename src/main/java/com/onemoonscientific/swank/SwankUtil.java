@@ -260,7 +260,14 @@ public class SwankUtil {
         }
     }
 
-    public static String getState(Interp interp, TclObject tclObject)
+    public static String getDefault(Interp interp, TclObject tclObject) throws TclException {
+        return getDefaultOrState(interp,tclObject,"default");
+    }
+
+    public static String getState(Interp interp, TclObject tclObject) throws TclException {
+        return getDefaultOrState(interp,tclObject,"state");
+    }
+    public static String getDefaultOrState(Interp interp, TclObject tclObject,final String mode)
             throws TclException {
         String value = tclObject.toString();
         String state = "";
@@ -273,7 +280,7 @@ public class SwankUtil {
             state = SwkWidget.DISABLED;
         } else {
             throw new TclException(interp,
-                    "bad state \"" + value
+                    "bad " + mode  + " \"" + value
                     + "\": must be active, disabled, or normal");
         }
 
@@ -733,7 +740,16 @@ public class SwankUtil {
         }
     }
 
+    public static ImageIcon getBitmapImage(Interp interp, TclObject tclObject)
+            throws TclException {
+          return getImageIcon(interp,tclObject,true);
+    }
     public static ImageIcon getImageIcon(Interp interp, TclObject tclObject)
+            throws TclException {
+          return getImageIcon(interp,tclObject,false);
+    }
+  
+    public static ImageIcon getImageIcon(Interp interp, TclObject tclObject,final boolean bitmapMode)
             throws TclException {
         TclObject[] argv = TclList.getElements(interp, tclObject);
 
@@ -748,8 +764,13 @@ public class SwankUtil {
             imageObject = ImageCmd.getImage(argv[0].toString());
 
             if (imageObject == null) {
-                throw new TclException(interp,
-                        "image \"" + argv[0].toString() + "\" doesn't exist");
+                if (bitmapMode) {
+                    throw new TclException(interp,
+                            "bitmap \"" + argv[0].toString() + "\" not defined");
+                } else {
+                    throw new TclException(interp,
+                            "image \"" + argv[0].toString() + "\" doesn't exist");
+                }
             } else {
                 if (imageObject instanceof ImageIcon) {
                     return ((ImageIcon) imageObject);
@@ -1409,7 +1430,7 @@ public class SwankUtil {
         SwkJMenuBar swkjmenubar = null;
 
         if (tObj == null) {
-            swkjmenubar = new SwkJMenuBar(interp, menuName, "Menu");
+            swkjmenubar = new SwkJMenuBar(interp, menuName);
             interp.createCommand(menuName, new SwkJMenuBarWidgetCmd());
             tObj = ReflectObject.newInstance(interp, SwkJMenuBar.class, swkjmenubar);
             tObj.preserve();
@@ -1431,7 +1452,7 @@ public class SwankUtil {
         SwkJMenu swkjmenu = null;
 
         if (tObj == null) {
-            swkjmenu = new SwkJMenu(interp, menuName, "Menu");
+            swkjmenu = new SwkJMenu(interp, menuName);
             interp.createCommand(menuName, new SwkJMenuWidgetCmd());
             tObj = ReflectObject.newInstance(interp, SwkJMenu.class, swkjmenu);
             tObj.preserve();
@@ -1457,7 +1478,7 @@ public class SwankUtil {
         }
 
         if (argv[2].toString().equals("command")) {
-            SwkJMenuItem jmenuItem = new SwkJMenuItem(interp, "", "SwkJMenuItem");
+            SwkJMenuItem jmenuItem = new SwkJMenuItem(interp, "");
             jmenuItem.configure(interp, argv, 3);
 
             if (jcomp instanceof JPopupMenu) {
@@ -1467,7 +1488,7 @@ public class SwankUtil {
             }
         } else if (argv[2].toString().startsWith("check")) {
             SwkJCheckBoxMenuItem jmenuItem = new SwkJCheckBoxMenuItem(interp,
-                    "", "SwkJMenuItem");
+                    "");
             jmenuItem.configure(interp, argv, 3);
 
             if (jcomp instanceof JPopupMenu) {
@@ -1477,7 +1498,7 @@ public class SwankUtil {
             }
         } else if (argv[2].toString().startsWith("radio")) {
             SwkJRadioButtonMenuItem jmenuItem = new SwkJRadioButtonMenuItem(interp,
-                    "", "SwkJMenuItem");
+                    "");
             jmenuItem.configure(interp, argv, 3);
 
             if (jcomp instanceof JPopupMenu) {
@@ -1516,7 +1537,7 @@ public class SwankUtil {
             TclObject tObj = (TclObject) Widgets.getWidget(interp, menuName);
 
             if (tObj == null) {
-                swkjmenu = new SwkJMenu(interp, menuName, "Menu");
+                swkjmenu = new SwkJMenu(interp, menuName);
                 interp.createCommand(menuName, new SwkJMenuWidgetCmd());
                 tObj = ReflectObject.newInstance(interp, SwkJMenu.class,
                         swkjmenu);

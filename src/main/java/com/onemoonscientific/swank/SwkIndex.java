@@ -145,7 +145,9 @@ public class SwkIndex implements InternalRep {
                 throw new TclException(interp, sbuf.toString());
             }
         }
-
+        if (index == -1) {
+             throw new TclException(interp, "unknown option \"" + str + "\"");
+        }
         // Create a new index object.
 
         tobj.setInternalRep(new SwkIndex(index, table));
@@ -224,6 +226,9 @@ public class SwkIndex implements InternalRep {
 
                 throw new TclException(interp, sbuf.toString());
             }
+        }
+        if (index == -1) {
+             throw new TclException(interp, "unknown option \"" + str + "\"");
         }
 
         // Create a new index object.

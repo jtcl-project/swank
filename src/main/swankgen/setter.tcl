@@ -27,6 +27,9 @@ proc getSetter {widgetVar mode} {
         "state" {
            set result {String value = SwankUtil.getState(interp,argv[i+1]);}
         }
+        "default" {
+           set result {String value = SwankUtil.getDefault(interp,argv[i+1]);}
+        }
         "tkRelief" {
            set result {String value = SwankUtil.getTkRelief(interp,argv[i+1]);}
         }
@@ -58,7 +61,7 @@ proc getSetter {widgetVar mode} {
            set result "Object value  = SwankUtil.getTkRectangleCorners(interp,(Component) this,argv\[i+1\]);"
         }
         "bitmap" {
-           set result {Object value  = SwankUtil.getImageIcon(interp,argv[i+1]);
+           set result {Object value  = SwankUtil.getBitmapImage(interp,argv[i+1]);
            String sValue = argv[i+1].toString();
            }
         }

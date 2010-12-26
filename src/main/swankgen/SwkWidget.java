@@ -31,7 +31,7 @@ public class ${widgetType} extends ${widget} implements SwkWidget, Printable$spe
     {
     static Hashtable resourceDB = null;
     String name = null;
-    String className = null;
+    static String className = "$widgetClass";
     LinkedList children = null;
     ArrayList<SwkBinding> virtualBindings = null;
     int active = 0;
@@ -52,7 +52,7 @@ public class ${widgetType} extends ${widget} implements SwkWidget, Printable$spe
     }
 
 
-    public ${widgetType}(final Interp interp, String name, String className) {
+    public ${widgetType}(final Interp interp, String name) {
         $specialSuper
         this.name = name.intern();
         this.interp = interp;

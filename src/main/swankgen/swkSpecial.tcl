@@ -138,13 +138,8 @@ proc swkMakeSpecial {widget widgetVar} {
             public void setContainer(boolean container) {
                 this.container=container;
             }
-            public String getContainer() {
-                String result = "1";
-                if (!container) {
-                    result = "0";
-                }
-                return result;
-                
+            public boolean getContainer() {
+                return container;
             }
         }
         
@@ -174,6 +169,9 @@ proc swkMakeSpecial {widget widgetVar} {
     
     # -default
     if {[lsearch "JButton" $widget ] >= 0} {
+        set specialGets [concat  $specialGets {
+            {setDefault default Default -default}
+        }]
         append specialVars {
             String SwkDefault=null;
         }
@@ -186,9 +184,6 @@ proc swkMakeSpecial {widget widgetVar} {
             return(SwkDefault);
         \}
         "
-        set specialGets [concat  $specialGets {
-            {setDefault java.lang.String Default}
-        }]
     }
     
     # -debug
@@ -238,12 +233,8 @@ proc swkMakeSpecial {widget widgetVar} {
             public void setHideMargin(boolean hideMargin) {
                 this.hideMargin=hideMargin;
             }
-            public String getHideMargin() {
-                String result = "0";
-                if (hideMargin) {
-                    result = "1";
-                }
-                return result;
+            public boolean getHideMargin() {
+                return hideMargin;
             }
         }
         
@@ -883,7 +874,7 @@ proc swkMakeSpecial {widget widgetVar} {
         }
         
         set specialGets [concat  $specialGets {
-            {setBitmap bitmap Bitmap}
+            {setBitmap bitmap Bitmap -bitmap}
         }]
     }
     
@@ -913,18 +904,14 @@ proc swkMakeSpecial {widget widgetVar} {
         append specialVars {
             boolean exportSelection;
         }
-        append specialMethods "
-        public void setExportSelection(boolean exportSelection) \{
+        append specialMethods {
+        public void setExportSelection(boolean exportSelection) {
             this.exportSelection = exportSelection;
-        \}
-        public String getExportSelection() \{
-            if (exportSelection) \{
-                return(\"1\");
-                \} else \{
-                return(\"0\");
-            \}
-        \}
-        "
+        }
+        public boolean getExportSelection() {
+            return exportSelection;
+            }
+        }
         set specialGets [concat  $specialGets {
             {setExportSelection boolean ExportSelection}
         }
@@ -1289,12 +1276,8 @@ proc swkMakeSpecial {widget widgetVar} {
         public void setSetGrid(boolean setGrid) \{
             this.setGrid = setGrid;
         \}
-        public String getSetGrid() \{
-            if (setGrid) \{
-                return(\"1\");
-                \} else \{
-                return(\"0\");
-            \}
+        public boolean getSetGrid() \{
+            return setGrid;
         \}
         "
         

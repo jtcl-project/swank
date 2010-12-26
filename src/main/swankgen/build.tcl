@@ -13,12 +13,57 @@ set tkcomps {
 set swkRoot [file join java com onemoonscientific swank]
 set specialImports ""
 set specialVars ""
-set widgets { JButton {SMenuButton JButton} JLabel JCheckBox JCheckBoxMenuItem 
+set widgets { JButton {SMenuButton JButton} JCheckBox JCheckBoxMenuItem 
 		    JComboBox JDialog JFrame JLabel JList
 		    JMenu JMenuBar JMenuItem JOptionPane JPanel {LabelFrame JPanel} JPopupMenu {SMenu JPopupMenu} JProgressBar JRadioButton
 		    JRadioButtonMenuItem JScrollBar JScrollPane {JSlider JPanel JSlider} JSplitPane JSpinner
 		    JTabbedPane JTable JTextArea JTextField JPasswordField JTextPane JToggleButton JToolBar
 		    JEditorPane JTree JWindow {Canvas JPanel} JInternalFrame JDesktopPane JFileChooser JColorChooser FileDialog}
+array set widgetMap {
+JButton Button
+SMenuButton Menubutton
+JLabel Label
+JCheckBox Checkbutton
+JCheckBoxMenuItem Checkbutton
+JComboBox JCombobox
+JDialog JDialog
+JFrame Toplevel
+JLabel Label
+JList List
+JMenu Menu
+JMenuBar Menubar
+JMenuItem Menuitem
+JOptionPane JOptionpane
+JPanel Frame
+LabelFrame Labelframe
+JPopupMenu Popupmenu
+SMenu  Menu
+JProgressBar JProgressbar
+JRadioButton Radiobutton
+JRadioButtonMenuItem Radiobutton
+JScrollBar Scrollbar
+JScrollPane JScrollpane
+JSlider Scale
+JSplitPane Panedwindow
+JSpinner Spinbox
+JTabbedPane JTabbedpane
+JTable JTable
+JTextArea  Message
+JTextField Entry
+JPasswordField JPasswordfield
+JTextPane Text
+JToggleButton JTogglebutton
+JToolBar JToolbar
+JEditorPane JEditorpane
+JTree JTree
+JWindow JWindow
+Canvas  Canvas
+JInternalFrame JInternalframe
+JDesktopPane JDesktoppane
+JFileChooser JFilechooser
+JColorChooser JColorchooser
+FileDialog Filedialog
+}
 proc checkStatus {swkHome widgets} {
        set files [glob [file join swankgen *.tcl]]
        set files [concat $files [glob [file join swankgen *.java]]]
@@ -74,6 +119,7 @@ proc makeWidget {f1 type widgetType widget} {
     global getOPTs
     global getCASEs
     global specialPrints
+    global widgetClass
     source [file join swankgen ${type}.java]
     set widgetVar [string tolower $widgetType]
     puts $f1 [subst -nobackslashes -nocommand $body]
@@ -182,6 +228,7 @@ foreach widgetArg $widgets {
 	    set file $widgetType[string range $type 9 end].java
 	    set fullPath [file join $swkHome $file]
 	    set f1 [open $fullPath w]
+            set widgetClass $widgetMap($simpleWidget)
 	    makeWidget $f1 $type $widgetType $mainWidget
 	    close $f1
         }

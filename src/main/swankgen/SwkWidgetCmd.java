@@ -58,13 +58,11 @@ public class ${widgetType}Cmd implements Command {
    class CmdProc implements Runnable {
 	Interp interp;
 	TclObject[] argv = null;
-        String className = "";
         String widgetName  = "";
         ${widgetType} ${widgetVar} = null;
 
-        CmdProc(Interp interp, String className, String widgetName) {
+        CmdProc(Interp interp, String widgetName) {
 		this.interp = interp;
-                this.className = className;
                 this.widgetName = widgetName;
         }
 
@@ -73,7 +71,7 @@ public class ${widgetType}Cmd implements Command {
         }
  
         public void run() {
-                       ${widgetVar} = new ${widgetType}(interp, widgetName, className);
+                       ${widgetVar} = new ${widgetType}(interp, widgetName);
  	}
    }
         public void cmdProcNotET(Interp interp, TclObject[] argv) throws TclException {
@@ -88,11 +86,9 @@ public class ${widgetType}Cmd implements Command {
         }
 
        String cmdName = argv[0].toString();
-       String className = argv[0].toString().substring(0, 1).toUpperCase() +
-            argv[0].toString().substring(1);
        String  widgetName = argv[1].toString();
 
-        CmdProc cmdProc = new CmdProc(interp,className,widgetName);
+        CmdProc cmdProc = new CmdProc(interp,widgetName);
                 try {
 	            SwingUtilities.invokeAndWait(cmdProc);
                 } catch (InterruptedException iE) {
@@ -111,7 +107,6 @@ public class ${widgetType}Cmd implements Command {
                     "\" already exists in parent");
             }
 
-            ${widgetVar}.className = className.intern();
         } else {
             if ((argv[1].toString().length() > 1) &&
                     Character.isUpperCase(argv[1].toString().charAt(1))) {
@@ -121,7 +116,6 @@ public class ${widgetType}Cmd implements Command {
             }
 
  
-            ${widgetVar}.className = className.intern();
 
             LinkedList children = null;
             interp.createCommand(argv[1].toString(), new ${widgetType}WidgetCmd());
