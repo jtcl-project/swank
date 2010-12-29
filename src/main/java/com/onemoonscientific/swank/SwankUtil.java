@@ -376,8 +376,8 @@ public class SwankUtil {
             orient = JSlider.HORIZONTAL;
         } else {
             throw new TclException(interp,
-                    "bad justification \"" + value
-                    + "\": must be vertical or horizontal");
+                    "bad orient \"" + value
+                    + "\": must be horizontal or vertical");
         }
 
         return orient;
