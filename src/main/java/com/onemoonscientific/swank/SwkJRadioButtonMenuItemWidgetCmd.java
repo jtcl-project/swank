@@ -14,8 +14,6 @@ import java.awt.*;
 
 import java.io.*;
 
-import java.lang.*;
-
 import java.net.*;
 
 import java.util.*;
@@ -43,10 +41,8 @@ class SwkJRadioButtonMenuItemWidgetCmd implements Command {
         return validCmds;
     }
 
-    public void cmdProc(final Interp interp, final TclObject[] argv)
+    public void cmdProc(Interp interp, TclObject[] argv)
             throws TclException {
-        int i;
-
         if (argv.length < 2) {
             throw new TclNumArgsException(interp, 1, argv,
                     "option ?arg arg ...?");
@@ -60,7 +56,7 @@ class SwkJRadioButtonMenuItemWidgetCmd implements Command {
                     "bad window path name \"" + argv[0].toString() + "\"");
         }
 
-        final SwkJRadioButtonMenuItem swkjradiobuttonmenuitem = (SwkJRadioButtonMenuItem) ReflectObject.get(interp,
+        final SwkJRadioButtonMenuItem swkjradiobutton = (SwkJRadioButtonMenuItem) ReflectObject.get(interp,
                 tObj);
 
         switch (opt) {
@@ -70,21 +66,21 @@ class SwkJRadioButtonMenuItemWidgetCmd implements Command {
                     throw new TclNumArgsException(interp, 2, argv, "option");
                 }
 
-                interp.setResult(swkjradiobuttonmenuitem.jget(interp, argv[2]));
+                interp.setResult(swkjradiobutton.jget(interp, argv[2]));
 
                 break;
 
             case OPT_CONFIGURE:
 
                 if (!gotDefaults) {
-                    swkjradiobuttonmenuitem.setResourceDefaults();
+                    swkjradiobutton.setResourceDefaults();
                     gotDefaults = true;
                 }
 
                 if (argv.length == 2) {
-                    swkjradiobuttonmenuitem.jgetAll(interp);
+                    swkjradiobutton.jgetAll(interp);
                 } else if (argv.length == 3) {
-                    String result = swkjradiobuttonmenuitem.jget(interp, argv[2]);
+                    String result = swkjradiobutton.jget(interp, argv[2]);
                     ResourceObject ro = (ResourceObject) SwkJRadioButtonMenuItem.resourceDB.get(argv[2].toString());
 
                     if (ro == null) {
@@ -102,17 +98,22 @@ class SwkJRadioButtonMenuItemWidgetCmd implements Command {
                     TclList.append(interp, list, TclString.newInstance(result));
                     interp.setResult(list);
                 } else {
-                    swkjradiobuttonmenuitem.configure(interp, argv, 2);
+                    swkjradiobutton.configure(interp, argv, 2);
                 }
 
                 break;
 
             case OPT_DESELECT:
-                deselect(interp, swkjradiobuttonmenuitem, argv);
+                deselect(interp, swkjradiobutton, argv);
 
                 break;
 
             case OPT_FLASH:
+
+                if (argv.length != 2) {
+                    throw new TclNumArgsException(interp, 2, argv, "");
+                }
+
                 break;
 
             case OPT_INVOKE:
@@ -120,24 +121,11 @@ class SwkJRadioButtonMenuItemWidgetCmd implements Command {
                 if (argv.length != 2) {
                     throw new TclNumArgsException(interp, 2, argv, "");
                 }
-
-                if (!swkjradiobuttonmenuitem.isEnabled()) {
-                    return;
-                }
-
-                if ((swkjradiobuttonmenuitem.commandListener.command != null)
-                        && (swkjradiobuttonmenuitem.commandListener.command.length() != 0)) {
-                    try {
-                        interp.eval(swkjradiobuttonmenuitem.commandListener.command);
-                    } catch (TclException tclE) {
-                        System.out.println(interp.getResult());
-                    }
-                }
-
+                invoke(interp, swkjradiobutton, argv);
                 break;
 
             case OPT_SELECT:
-                select(interp, swkjradiobuttonmenuitem, argv);
+                select(interp, swkjradiobutton, argv);
 
                 break;
 
@@ -145,46 +133,93 @@ class SwkJRadioButtonMenuItemWidgetCmd implements Command {
                 throw new TclRuntimeError("TclIndex.get() error");
         }
     }
+    void invoke(final Interp interp, final SwkJRadioButtonMenuItem swkjradiobutton,
+            final TclObject[] argv) throws TclException {
+        CommandVarListenerSettings buttonSettings = (new Toggle()).exec(swkjradiobutton);
+        if (!buttonSettings.isEnabled()) {
+            return;
+        }
+        swkjradiobutton.commandListener.tclAction(buttonSettings);
+    }
 
-    void deselect(final Interp interp,
-            final SwkJRadioButtonMenuItem swkjradiobuttonmenuitem,
+    void deselect(final Interp interp, final SwkJRadioButtonMenuItem swkjradiobutton,
             final TclObject[] argv) throws TclException {
         if (argv.length != 2) {
             throw new TclNumArgsException(interp, 2, argv, "");
         }
 
-        (new Select()).exec(swkjradiobuttonmenuitem, true);
+        CommandVarListenerSettings buttonSettings = (new Select()).exec(swkjradiobutton,false);
+        if (!buttonSettings.isEnabled()) {
+            return;
+        }
+        swkjradiobutton.commandListener.tclAction(buttonSettings);
+
     }
 
-    void select(final Interp interp,
-            final SwkJRadioButtonMenuItem swkjradiobuttonmenuitem,
+    void select(final Interp interp, final SwkJRadioButtonMenuItem swkjradiobutton,
             final TclObject[] argv) throws TclException {
         if (argv.length != 2) {
             throw new TclNumArgsException(interp, 2, argv, "");
         }
+        CommandVarListenerSettings buttonSettings = (new Select()).exec(swkjradiobutton,true);
+        if (!buttonSettings.isEnabled()) {
+            return;
+        }
+        swkjradiobutton.commandListener.tclAction(buttonSettings);
 
-        (new Select()).exec(swkjradiobuttonmenuitem, false);
     }
 
-    class Select extends UpdateOnEventThread {
+    class Select extends GetValueOnEventThread {
 
         boolean mode = false;
-        SwkJRadioButtonMenuItem swkjradiobuttonmenuitem;
+        SwkJRadioButtonMenuItem swkjradiobutton;
+        CommandVarListenerSettings buttonSettings;
 
-        void exec(SwkJRadioButtonMenuItem swkjradiobuttonmenuitem,
-                final boolean mode) {
+        CommandVarListenerSettings  exec(SwkJRadioButtonMenuItem swkjradiobutton, final boolean mode) {
             this.mode = mode;
-            this.swkjradiobuttonmenuitem = swkjradiobuttonmenuitem;
+            this.swkjradiobutton = swkjradiobutton;
             execOnThread();
+            return buttonSettings;
         }
 
         public void run() {
-            if (!swkjradiobuttonmenuitem.isEnabled()) {
+            if (!swkjradiobutton.isEnabled()) {
                 return;
             }
 
-            swkjradiobuttonmenuitem.setSelected(mode);
-            swkjradiobuttonmenuitem.doClick();
+            swkjradiobutton.setSelected(mode);
+            buttonSettings = swkjradiobutton.commandListener.getButtonSettings();
         }
     }
+   class ButtonState {
+        final private boolean enabled;
+        final private String varName;
+        final private String varValue;
+        final private boolean selected;
+        ButtonState (final boolean enabled, final String varName, final String varValue, final boolean selected) {
+            this.enabled = enabled;
+            this.varName = varName;;
+            this.varValue = varValue;
+            this.selected = selected;
+        }
+   }
+   class Toggle extends GetValueOnEventThread {
+
+        SwkJRadioButtonMenuItem swkjradiobutton;
+        CommandVarListenerSettings buttonSettings;
+
+        CommandVarListenerSettings  exec(SwkJRadioButtonMenuItem swkjradiobutton) {
+            this.swkjradiobutton = swkjradiobutton;
+            execOnThread();
+            return buttonSettings;
+        }
+
+        public void run() {
+            if (swkjradiobutton.isEnabled()) {
+                swkjradiobutton.setSelected(!swkjradiobutton.isSelected());
+                buttonSettings = swkjradiobutton.commandListener.getButtonSettings();
+            }
+        }
+    }
+
 }

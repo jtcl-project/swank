@@ -43,55 +43,11 @@ public class SwkRadioButtonListener implements ActionListener, VarTrace,
     Interp interp;
     JToggleButton component;
     boolean traceLock = false;
-    ButtonSettings buttonSettings = new ButtonSettings();
+    CommandVarListenerSettings buttonSettings = new CommandVarListenerSettings();
 
-    public static class ButtonSettings {
-        final private String value;
-        final private String varName;
-        final private String command;
-        private boolean enabled = true;
-        private boolean selected = true;
-        ButtonSettings() {
-           value = "1";
-           varName = "";
-           command = "";
-        }
-        ButtonSettings(final String value, final String varName, final String command) {
-           this.value = value;
-           this.varName = varName;
-           this.command = command;
-        }
-        public String getValue() {
-            return value;
-        }
-        public String getVarName() {
-            return varName;
-        }
-        public String getCommand() {
-            return command;
-        }
-        public boolean isEnabled() {
-            return enabled;
-        }
-        public boolean isSelected() {
-            return selected;
-        }
-        public ButtonSettings getWithVarName( final String newVarName) {
-            ButtonSettings newValue = new ButtonSettings(getValue(), newVarName, getCommand());
-            return newValue;
-        }
-        public ButtonSettings getWithValue( final String newValue) {
-            ButtonSettings newSettings = new ButtonSettings(newValue, getVarName(), getCommand());
-            return newSettings;
-        }
-        public ButtonSettings getWithCommand( final String newCommand) {
-            ButtonSettings newSettings = new ButtonSettings(getValue(),  getVarName(), newCommand);
-            return newSettings;
-        }
-    }
-    ButtonSettings getButtonSettings() {
-        buttonSettings.enabled = component.isEnabled();
-        buttonSettings.selected = component.isSelected();
+    CommandVarListenerSettings getButtonSettings() {
+        buttonSettings.setEnabled(component.isEnabled());
+        buttonSettings.setSelected(component.isSelected());
         return buttonSettings;
     }
 
@@ -244,7 +200,7 @@ public class SwkRadioButtonListener implements ActionListener, VarTrace,
                 (EventObject) e, 0);
         interp.getNotifier().queueEvent(bEvent, TCL.QUEUE_TAIL);
     }
-    public void tclActionVar(ButtonSettings buttonSettings) throws TclException {
+    public void tclActionVar(CommandVarListenerSettings buttonSettings) throws TclException {
         final TclObject tObj;
         final String value;
            if (buttonSettings.isSelected()) {
@@ -255,7 +211,7 @@ public class SwkRadioButtonListener implements ActionListener, VarTrace,
             tObj = TclString.newInstance(value);
             interp.setVar(buttonSettings.getVarName(), tObj, TCL.GLOBAL_ONLY);
     }
-    public void tclAction(ButtonSettings buttonSettings) throws TclException {
+    public void tclAction(CommandVarListenerSettings buttonSettings) throws TclException {
         tclActionVar(buttonSettings);
         if (buttonSettings.getCommand().length() != 0) {
             try {

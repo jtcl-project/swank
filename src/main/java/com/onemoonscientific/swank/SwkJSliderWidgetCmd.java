@@ -13,6 +13,8 @@ import tcl.pkg.java.ReflectObject;
 import java.awt.*;
 
 import javax.swing.*;
+import javax.swing.plaf.SliderUI;
+import javax.swing.plaf.basic.BasicSliderUI;
 
 class SwkJSliderWidgetCmd implements Command {
 
@@ -93,6 +95,7 @@ class SwkJSliderWidgetCmd implements Command {
                 } else {
                     swkjslider.configure(interp, argv, 2);
                     SwingUtilities.invokeLater(new Runnable() {
+
                         public void run() {
                             swkjslider.updateRange();
                         }
@@ -119,7 +122,7 @@ class SwkJSliderWidgetCmd implements Command {
 
             case OPT_SET:
                 set(interp, swkjslider, argv);
-                swkjslider.sliderChangeListener.tclAction(buttonSettings);
+
 
                 break;
 
@@ -192,7 +195,8 @@ class SwkJSliderWidgetCmd implements Command {
         }
 
         double value = TclDouble.get(interp, argv[2]);
-        (new Set()).exec(swkjslider, value);
+        CommandVarListenerSettings buttonSettings = (new Set()).exec(swkjslider, value);
+        swkjslider.sliderChangeListener.tclActionVar(buttonSettings);
     }
 
     class Coords extends GetValueOnEventThread {
@@ -271,27 +275,28 @@ class SwkJSliderWidgetCmd implements Command {
                     result = TclDouble.newInstance(swkjslider.getDValue());
                 }
             } else {
-                Dimension size = swkjslider.getSize();
-                double to = swkjslider.getTo();
-                double from = swkjslider.getFrom();
-                int halfWid = 7;
-                double value;
-
+                SliderUI sliderUI = swkjslider.jslider.getUI();
+                int xValue = 0;
+                int yValue = 0;
+                if (sliderUI instanceof BasicSliderUI) {
+                    BasicSliderUI bSliderUI = (BasicSliderUI) sliderUI;
+                    xValue = bSliderUI.valueForXPosition(x);
+                    yValue = bSliderUI.valueForYPosition(y);
+               }
+               int value;
                 if (swkjslider.jslider.getOrientation() == JSlider.VERTICAL) {
-                    value = ((((double) (y - halfWid)) / (size.height
-                            - halfWid)) * (to - from)) + from;
+                    value = yValue;
+                   
                 } else {
-                    value = ((((double) (x - halfWid)) / (size.width - halfWid)) * (to
-                            - from)) + from;
+                    value = xValue;
                 }
-
                 if ((swkjslider.resolution == 0)
                         || (swkjslider.resolution >= 1.0)) {
-                    int iValue = (int) Math.round(value);
+                    ;
+                    int iValue = (int) Math.round(swkjslider.convertValue(value));
                     result = TclInteger.newInstance(iValue);
                 } else {
-                    value = Math.round(value / swkjslider.resolution) * swkjslider.resolution;
-                    result = TclDouble.newInstance(value);
+                        result = TclDouble.newInstance(swkjslider.convertValue(value));
                 }
             }
         }
@@ -301,17 +306,22 @@ class SwkJSliderWidgetCmd implements Command {
 
         SwkJSlider swkjslider = null;
         double value = 0.0;
+        CommandVarListenerSettings sliderSettings = null;
 
-        void exec(final SwkJSlider swkjslider, final double value) {
+        CommandVarListenerSettings exec(final SwkJSlider swkjslider, final double value) {
             this.value = value;
             this.swkjslider = swkjslider;
             execOnThread();
+            return sliderSettings;
         }
 
         public void run() {
             if (swkjslider.isEnabled()) {
                 swkjslider.setDValue(value);
+                swkjslider.sliderChangeListener.updateSettingsValue();
+
             }
+            sliderSettings = swkjslider.sliderChangeListener.getButtonSettings();
         }
     }
 }

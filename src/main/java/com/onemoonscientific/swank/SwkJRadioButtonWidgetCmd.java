@@ -135,7 +135,7 @@ class SwkJRadioButtonWidgetCmd implements Command {
     }
     void invoke(final Interp interp, final SwkJRadioButton swkjradiobutton,
             final TclObject[] argv) throws TclException {
-        SwkRadioButtonListener.ButtonSettings buttonSettings = (new Toggle()).exec(swkjradiobutton);
+        CommandVarListenerSettings buttonSettings = (new Toggle()).exec(swkjradiobutton);
         if (!buttonSettings.isEnabled()) {
             return;
         }
@@ -148,7 +148,7 @@ class SwkJRadioButtonWidgetCmd implements Command {
             throw new TclNumArgsException(interp, 2, argv, "");
         }
 
-        SwkRadioButtonListener.ButtonSettings buttonSettings = (new Select()).exec(swkjradiobutton,false);
+        CommandVarListenerSettings buttonSettings = (new Select()).exec(swkjradiobutton,false);
         if (!buttonSettings.isEnabled()) {
             return;
         }
@@ -161,7 +161,7 @@ class SwkJRadioButtonWidgetCmd implements Command {
         if (argv.length != 2) {
             throw new TclNumArgsException(interp, 2, argv, "");
         }
-        SwkRadioButtonListener.ButtonSettings buttonSettings = (new Select()).exec(swkjradiobutton,true);
+        CommandVarListenerSettings buttonSettings = (new Select()).exec(swkjradiobutton,true);
         if (!buttonSettings.isEnabled()) {
             return;
         }
@@ -173,9 +173,9 @@ class SwkJRadioButtonWidgetCmd implements Command {
 
         boolean mode = false;
         SwkJRadioButton swkjradiobutton;
-        SwkRadioButtonListener.ButtonSettings buttonSettings;
+        CommandVarListenerSettings buttonSettings;
 
-        SwkRadioButtonListener.ButtonSettings  exec(SwkJRadioButton swkjradiobutton, final boolean mode) {
+        CommandVarListenerSettings  exec(SwkJRadioButton swkjradiobutton, final boolean mode) {
             this.mode = mode;
             this.swkjradiobutton = swkjradiobutton;
             execOnThread();
@@ -206,9 +206,9 @@ class SwkJRadioButtonWidgetCmd implements Command {
    class Toggle extends GetValueOnEventThread {
 
         SwkJRadioButton swkjradiobutton;
-        SwkRadioButtonListener.ButtonSettings buttonSettings;
+        CommandVarListenerSettings buttonSettings;
 
-        SwkRadioButtonListener.ButtonSettings  exec(SwkJRadioButton swkjradiobutton) {
+        CommandVarListenerSettings  exec(SwkJRadioButton swkjradiobutton) {
             this.swkjradiobutton = swkjradiobutton;
             execOnThread();
             return buttonSettings;

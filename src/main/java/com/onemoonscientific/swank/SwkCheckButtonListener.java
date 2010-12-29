@@ -43,67 +43,53 @@ public class SwkCheckButtonListener implements ActionListener, VarTrace,
     Interp interp;
     JToggleButton component;
     boolean traceLock = false;
+
+    ButtonSettings getButtonSettings() {
+        buttonSettings.setEnabled(component.isEnabled());
+        buttonSettings.setSelected(component.isSelected());
+        return buttonSettings;
+    }
     ButtonSettings buttonSettings = new ButtonSettings();
- 
-    public static class ButtonSettings {
-        final private String onValue;
+
+    public static class ButtonSettings extends CommandVarListenerSettings {
+
         final private String offValue;
-        final private String varName;
-        final private String command;
-        private boolean enabled = true;
-        private boolean selected = true;
+
         ButtonSettings() {
-           onValue = "1";
-           offValue = "0";
-           varName = "";
-           command = "";
+            super();
+            offValue = "0";
         }
-        ButtonSettings(final String onValue, final String offValue, final String varName, final String command) {
-           this.onValue = onValue;
-           this.offValue = offValue;
-           this.varName = varName;
-           this.command = command;
+
+        ButtonSettings(final String value, final String offValue, final String varName, final String command) {
+            super(value, varName, command);
+            this.offValue = offValue;
         }
-        public String getOnValue() {
-            return onValue;
-        }
+
         public String getOffValue() {
             return offValue;
         }
-        public String getVarName() {
-            return varName;
-        }
-        public String getCommand() {
-            return command;
-        }
-        public boolean isEnabled() {
-            return enabled;
-        }
-        public boolean isSelected() {
-            return selected;
-        }
-        public ButtonSettings getWithVarName( final String newVarName) {
-            ButtonSettings newValue = new ButtonSettings(getOnValue(), getOffValue(), newVarName, getCommand());
+
+        public ButtonSettings getWithOffValue(final String newOffValue) {
+            ButtonSettings newValue = new ButtonSettings(getValue(), newOffValue, getVarName(), getCommand());
             return newValue;
         }
-        public ButtonSettings getWithOnValue( final String newOnValue) {
-            ButtonSettings newValue = new ButtonSettings(newOnValue, getOffValue(), getVarName(), getCommand());
+
+        public ButtonSettings getWithVarName(final String newVarName) {
+            ButtonSettings newValue = new ButtonSettings(getValue(), getOffValue(), newVarName, getCommand());
             return newValue;
         }
-        public ButtonSettings getWithOffValue( final String newOffValue) {
-            ButtonSettings newValue = new ButtonSettings(getOnValue(),newOffValue,  getVarName(), getCommand());
-            return newValue;
+
+        public ButtonSettings getWithValue(final String newValue) {
+            ButtonSettings newSettings = new ButtonSettings(newValue, getOffValue(), getVarName(), getCommand());
+            return newSettings;
         }
-        public ButtonSettings getWithCommand( final String newCommand) {
-            ButtonSettings newValue = new ButtonSettings(getOnValue(),getOffValue(),  getVarName(), newCommand);
-            return newValue;
+
+        public ButtonSettings getWithCommand(final String newCommand) {
+            ButtonSettings newSettings = new ButtonSettings(getValue(), getOffValue(), getVarName(), newCommand);
+            return newSettings;
         }
     }
-    ButtonSettings getButtonSettings() {
-        buttonSettings.enabled = component.isEnabled();
-        buttonSettings.selected = component.isSelected();
-        return buttonSettings;
-    }
+
     SwkCheckButtonListener(Interp interp, Component component) {
         this.interp = interp;
         this.component = (JToggleButton) component;
@@ -130,7 +116,7 @@ public class SwkCheckButtonListener implements ActionListener, VarTrace,
                 TclObject tobj = interp.getVar(buttonSettings.getVarName(), TCL.GLOBAL_ONLY);
                 final boolean state;
 
-                if (tobj.toString().equals(buttonSettings.getOnValue())) {
+                if (tobj.toString().equals(buttonSettings.getValue())) {
                     state = true;
                 } else {
                     state = false;
@@ -161,7 +147,7 @@ public class SwkCheckButtonListener implements ActionListener, VarTrace,
             try {
                 tObj = interp.getVar(name, TCL.GLOBAL_ONLY);
 
-                if (tObj.toString().equals(buttonSettings.getOnValue())) {
+                if (tObj.toString().equals(buttonSettings.getValue())) {
                     final boolean state = true;
                     SwingUtilities.invokeLater(new Runnable() {
 
@@ -182,7 +168,7 @@ public class SwkCheckButtonListener implements ActionListener, VarTrace,
             } catch (TclException tclException) {
                 interp.resetResult();
 
-                if ( !buttonSettings.getOffValue().equals("")) {
+                if (!buttonSettings.getOffValue().equals("")) {
                     tObj = TclString.newInstance(buttonSettings.getOffValue());
                 } else {
                     tObj = TclString.newInstance("0");
@@ -202,7 +188,8 @@ public class SwkCheckButtonListener implements ActionListener, VarTrace,
         }
         buttonSettings = buttonSettings.getWithVarName(name);
     }
-   public boolean setVarName(Interp interp, String name)
+
+    public boolean setVarName(Interp interp, String name)
             throws TclException {
         if (EventQueue.isDispatchThread()) {
             System.out.println(
@@ -211,23 +198,23 @@ public class SwkCheckButtonListener implements ActionListener, VarTrace,
         boolean state = false;
         TclObject tObj = null;
         if (name == null) {
-             name = "";
+            name = "";
         }
 
         if (!name.equals("")) {
             try {
                 tObj = interp.getVar(name, TCL.GLOBAL_ONLY);
 
-                if (tObj.toString().equals(buttonSettings.getOnValue())) {
+                if (tObj.toString().equals(buttonSettings.getValue())) {
                     state = true;
-                 }
+                }
                 if (tObj.toString().equals(buttonSettings.getOffValue())) { //Added for the configure case where checkbutton should become disabled
                     state = false;
                 }
             } catch (TclException tclException) {
                 interp.resetResult();
 
-                if ( !buttonSettings.getOffValue().equals("")) {
+                if (!buttonSettings.getOffValue().equals("")) {
                     tObj = TclString.newInstance(buttonSettings.getOffValue());
                 } else {
                     tObj = TclString.newInstance("0");
@@ -262,11 +249,11 @@ public class SwkCheckButtonListener implements ActionListener, VarTrace,
         TclObject tObj;
 
         if (((SwkJCheckBox) component).isSelected()
-                && !(value.equals(buttonSettings.getOnValue()))) {
+                && !(value.equals(buttonSettings.getValue()))) {
             actionPerformed(null);
         }
 
-        buttonSettings = buttonSettings.getWithOnValue(value);
+        buttonSettings = buttonSettings.getWithValue(value);
     }
 
     public String getOffValue() {
@@ -288,7 +275,7 @@ public class SwkCheckButtonListener implements ActionListener, VarTrace,
     }
 
     public String getOnValue() {
-        return buttonSettings.getOnValue();
+        return buttonSettings.getValue();
     }
 
     public void setCommand(String name) {
@@ -307,7 +294,7 @@ public class SwkCheckButtonListener implements ActionListener, VarTrace,
 
         String value;
         if (((SwkJCheckBox) component).isSelected()) {
-            value = buttonSettings.getOnValue();
+            value = buttonSettings.getValue();
         } else {
             value = buttonSettings.getOffValue();
         }
@@ -328,14 +315,15 @@ public class SwkCheckButtonListener implements ActionListener, VarTrace,
     public void tclActionVar(ButtonSettings buttonSettings) throws TclException {
         final TclObject tObj;
         final String value;
-           if (buttonSettings.isSelected()) {
-            value = buttonSettings.getOnValue();
-           } else {
+        if (buttonSettings.isSelected()) {
+            value = buttonSettings.getValue();
+        } else {
             value = buttonSettings.getOffValue();
-           }
-            tObj = TclString.newInstance(value);
-            interp.setVar(buttonSettings.getVarName(), tObj, TCL.GLOBAL_ONLY);
+        }
+        tObj = TclString.newInstance(value);
+        interp.setVar(buttonSettings.getVarName(), tObj, TCL.GLOBAL_ONLY);
     }
+
     public void tclAction(ButtonSettings buttonSettings) throws TclException {
         tclActionVar(buttonSettings);
         if (buttonSettings.getCommand().length() != 0) {
@@ -353,12 +341,12 @@ public class SwkCheckButtonListener implements ActionListener, VarTrace,
             System.out.println(
                     "SwkCheckButtonListener: processEvent on event thread");
         }
-            try {
-        tclAction(getButtonSettings());
-            } catch (TclException tclException) {
-                interp.addErrorInfo("\n    (\"binding\" script)");
-                interp.backgroundError();
-            }
+        try {
+            tclAction(getButtonSettings());
+        } catch (TclException tclException) {
+            interp.addErrorInfo("\n    (\"binding\" script)");
+            interp.backgroundError();
+        }
         traceLock = false;
     }
 }

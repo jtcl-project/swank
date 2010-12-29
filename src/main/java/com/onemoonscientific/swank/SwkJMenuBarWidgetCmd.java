@@ -200,7 +200,7 @@ class SwkJMenuBarWidgetCmd implements Command {
 
         public void run() {
             if (cascade == null) {
-                cascade = new SwkJMenu(interp, menuName, "Menu");
+                cascade = new SwkJMenu(interp, menuName);
             }
 
             swkjmenubar.add(cascade);

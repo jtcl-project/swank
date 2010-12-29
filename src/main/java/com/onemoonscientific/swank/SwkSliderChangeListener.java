@@ -25,26 +25,21 @@
 package com.onemoonscientific.swank;
 
 import tcl.lang.*;
-
 import java.awt.*;
-import java.awt.event.*;
-
-import java.lang.*;
-
-import java.util.*;
-
 import javax.swing.*;
 import javax.swing.event.*;
-import javax.swing.text.*;
 
 public class SwkSliderChangeListener implements ChangeListener, VarTrace {
 
     Interp interp;
-    String command = null;
-    String varName = "";
-    double value = 0.0;
     Component component;
     boolean actionLock = false;
+    CommandVarListenerSettings buttonSettings = new CommandVarListenerSettings();
+
+    CommandVarListenerSettings getButtonSettings() {
+        buttonSettings.setEnabled(component.isEnabled());
+        return buttonSettings;
+    }
 
     SwkSliderChangeListener(Interp interp, Component component) {
         this.interp = interp;
@@ -52,11 +47,11 @@ public class SwkSliderChangeListener implements ChangeListener, VarTrace {
     }
 
     public void setCommand(String name) {
-        command = name.intern();
+        buttonSettings = buttonSettings.getWithCommand(name);
     }
 
     public String getCommand() {
-        return (command);
+        return buttonSettings.getCommand();
     }
 
     public void traceProc(Interp interp, String string1, String string2,
@@ -68,14 +63,9 @@ public class SwkSliderChangeListener implements ChangeListener, VarTrace {
 
         // if the variable is removed restore it
         if ((flags & TCL.TRACE_UNSETS) != 0) {
-            if ((varName != null) && (!varName.equals(""))) {
-                SwingUtilities.invokeLater(new Runnable() {
-
-                    public void run() {
-                        setVarValueET();
-                    }
-                });
-                interp.traceVar(varName, this,
+            if (!buttonSettings.getVarName().equals("")) {
+                tclActionVar(buttonSettings);
+                interp.traceVar(buttonSettings.getVarName(), this,
                         TCL.TRACE_UNSETS | TCL.TRACE_WRITES | TCL.GLOBAL_ONLY);
             }
         } else {
@@ -94,7 +84,7 @@ public class SwkSliderChangeListener implements ChangeListener, VarTrace {
         actionLock = true;
 
         try {
-            tobj = interp.getVar(varName, TCL.GLOBAL_ONLY);
+            tobj = interp.getVar(buttonSettings.getVarName(), TCL.GLOBAL_ONLY);
         } catch (TclException tclE) {
         }
 
@@ -103,8 +93,8 @@ public class SwkSliderChangeListener implements ChangeListener, VarTrace {
             // to same variable
             if (!tobj.toString().equals("")) {
                 try {
-                    value = TclDouble.get(interp, tobj);
-
+                    final double value = TclDouble.get(interp, tobj);
+                    buttonSettings = buttonSettings.getWithValue(value);
                     SwingUtilities.invokeLater(new Runnable() {
 
                         public void run() {
@@ -135,25 +125,32 @@ public class SwkSliderChangeListener implements ChangeListener, VarTrace {
             System.out.println(
                     "svn is ettttttttttttttttttttttttttttttttttttttttttt");
         }
-        if ((varName != null) && (!varName.equals(""))) {
-            interp.untraceVar(varName, this, TCL.TRACE_WRITES
+        if (!buttonSettings.getVarName().equals("")) {
+            interp.untraceVar(buttonSettings.getVarName(), this, TCL.TRACE_WRITES
                     | TCL.GLOBAL_ONLY);
         }
 
-        varName = name.intern();
         Double dValue = null;
         if (!name.equals("")) {
             try {
-                TclObject tobj;
-                tobj = interp.getVar(varName, TCL.GLOBAL_ONLY);
-                if (!tobj.toString().equals("")) {
-                    dValue = TclDouble.get(interp, tobj);
+                TclObject tObj;
+                tObj = interp.getVar(name, TCL.GLOBAL_ONLY);
+                if (!tObj.toString().equals("")) {
+                    dValue = TclDouble.get(interp, tObj);
                 }
             } catch (TclException tclE) {
-                TclObject tobj;
-                dValue = ((SwkJSlider) component).getDValue();;
-                tobj = TclDouble.newInstance(dValue);
-                interp.setVar(varName, tobj, TCL.GLOBAL_ONLY);
+                TclObject tObj;
+                dValue = ((SwkJSlider) component).getDValue();
+
+                if ((((SwkJSlider) component).resolution >= 1.0)
+                        && (((SwkJSlider) component).digits == 0)) {
+                    tObj = TclInteger.newInstance((int) dValue.doubleValue());
+
+                } else {
+                    tObj = TclDouble.newInstance(dValue.doubleValue());
+
+                }
+                interp.setVar(name, tObj, TCL.GLOBAL_ONLY);
                 interp.resetResult();
             }
 
@@ -161,11 +158,12 @@ public class SwkSliderChangeListener implements ChangeListener, VarTrace {
                     TCL.TRACE_UNSETS | TCL.TRACE_WRITES | TCL.GLOBAL_ONLY);
         }
         actionLock = false;
+        buttonSettings = buttonSettings.getWithVarName(name);
         return dValue;
     }
 
     public String getVarName() {
-        return (varName);
+        return buttonSettings.getVarName();
     }
 
     public void setVarValueET() {
@@ -174,15 +172,14 @@ public class SwkSliderChangeListener implements ChangeListener, VarTrace {
                     "svvet not ettttttttttttttttttttttttttttttttttttttttttt");
         }
         actionLock = true;
-
         if ((((SwkJSlider) component).resolution >= 1.0)
                 && (((SwkJSlider) component).digits == 0)) {
-            SetIntVarEvent intEvent = new SetIntVarEvent(interp, varName, null,
-                    (int) value);
+            SetIntVarEvent intEvent = new SetIntVarEvent(interp, buttonSettings.getVarName(), null,
+                    (int) (buttonSettings.getDValue()));
             interp.getNotifier().queueEvent(intEvent, TCL.QUEUE_TAIL);
         } else {
-            SetDoubleVarEvent dvEvent = new SetDoubleVarEvent(interp, varName,
-                    null, value);
+            SetDoubleVarEvent dvEvent = new SetDoubleVarEvent(interp, buttonSettings.getVarName(),
+                    null, buttonSettings.getDValue());
             interp.getNotifier().queueEvent(dvEvent, TCL.QUEUE_TAIL);
         }
 
@@ -205,24 +202,41 @@ public class SwkSliderChangeListener implements ChangeListener, VarTrace {
             return;
         }
 
-        value = ((SwkJSlider) component).getDValue();
-
-        if ((varName != null) && (varName.length() != 0)) {
+        double value = ((SwkJSlider) component).getDValue();
+        buttonSettings = buttonSettings.getWithValue(value);
+        if (buttonSettings.getVarName().length() != 0) {
             setVarValueET();
         }
 
-        if (!actionLock && (command != null) && (command.length() != 0)) {
+        if (!actionLock && (buttonSettings.getCommand() != null) && (buttonSettings.getCommand().length() != 0)) {
             String cmd = null;
 
             if ((((SwkJSlider) component).resolution >= 1.0)
                     && (((SwkJSlider) component).digits == 0)) {
-                cmd = command + " " + ((int) value);
+                cmd = buttonSettings.getCommand() + " " + ((int) (buttonSettings.getDValue()));
             } else {
-                cmd = command + " " + value;
+                cmd = buttonSettings.getCommand() + " " + buttonSettings.getDValue();
             }
 
             BindEvent bEvent = new BindEvent(interp, cmd);
             interp.getNotifier().queueEvent(bEvent, TCL.QUEUE_TAIL);
         }
+    }
+
+    public void updateSettingsValue() {
+        buttonSettings = buttonSettings.getWithValue(((SwkJSlider) component).getDValue());
+    }
+
+    public void tclActionVar(CommandVarListenerSettings buttonSettings) throws TclException {
+        final TclObject tObj;
+        final double value;
+        value = buttonSettings.getDValue();
+        if ((((SwkJSlider) component).resolution >= 1.0)
+                && (((SwkJSlider) component).digits == 0)) {
+            tObj = TclInteger.newInstance((int) value);
+        } else {
+            tObj = TclDouble.newInstance(value);
+        }
+        interp.setVar(buttonSettings.getVarName(), tObj, TCL.GLOBAL_ONLY);
     }
 }

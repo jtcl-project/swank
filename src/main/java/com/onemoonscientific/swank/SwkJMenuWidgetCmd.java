@@ -605,8 +605,7 @@ class SwkJMenuWidgetCmd implements Command {
         public void run() {
             //JComponent jcomp = null;
             if (itemType.equals("command")) {
-                SwkJMenuItem jmenuItem = new SwkJMenuItem(interp, "",
-                        "SwkJMenuItem");
+                SwkJMenuItem jmenuItem = new SwkJMenuItem(interp, "");
                 if (insertPos != -1) {
                     swkjmenu.insert(jmenuItem, insertPos);
                 } else {
@@ -614,8 +613,8 @@ class SwkJMenuWidgetCmd implements Command {
                 }
                 swkWidget = (SwkWidget) jmenuItem;
             } else if (itemType.startsWith("check")) {
-                SwkJCheckBoxMenuItem jmenuItem = new SwkJCheckBoxMenuItem(interp,
-                        "", "SwkJMenuItem");
+                SwkJCheckBoxMenuItem jmenuItem = new SwkJCheckBoxMenuItem(interp, "");
+System.out.println("cas " + jmenuItem);
                 if (insertPos != -1) {
                     swkjmenu.insert(jmenuItem, insertPos);
                 } else {
@@ -623,8 +622,8 @@ class SwkJMenuWidgetCmd implements Command {
                 }
                 swkWidget = (SwkWidget) jmenuItem;
             } else if (itemType.startsWith("radio")) {
-                SwkJRadioButtonMenuItem jmenuItem = new SwkJRadioButtonMenuItem(interp,
-                        "", "SwkJMenuItem");
+                SwkJRadioButtonMenuItem jmenuItem = new SwkJRadioButtonMenuItem(interp, "");
+System.out.println("cas " + jmenuItem);
                 if (insertPos != -1) {
                     swkjmenu.insert(jmenuItem, insertPos);
                 } else {
@@ -640,7 +639,7 @@ class SwkJMenuWidgetCmd implements Command {
                 }
             } else if (itemType.equals("cascade")) {
                 if (cascade == null) {
-                    cascade = new SwkJMenu(interp, menuName, "Menu");
+                    cascade = new SwkJMenu(interp, menuName);
                 }
 
                 if (insertPos != -1) {
