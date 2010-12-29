@@ -86,12 +86,12 @@ proc checkStatus {swkHome widgets} {
                 foreach type {"" Cmd} {
 		    set file [file join $swkHome $subdir ${widgetType}$type.java]
                     if {![file exists $file]} {
-puts "existence $file"
+puts "Regenerate files as Java file $file missing"
                         return 0
                     }
                     set mtime [file mtime $file]
                     if {$mtime < $scriptTime} {
-puts old
+puts "Regenerate files as swankgen scripts updated"
                         return 0
                     }
                 }
