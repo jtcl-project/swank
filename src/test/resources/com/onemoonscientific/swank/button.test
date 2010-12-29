@@ -247,12 +247,14 @@ test button-4.21 {ButtonWidgetCmd procedure, "deselect" option} {
      update
     set value
 } {0}
-test button-4.22 {ButtonWidgetCmd procedure, "deselect" option} {
+
+# tkOnly on because in Swank once one button is selected, at least one must be
+test button-4.22 {ButtonWidgetCmd procedure, "deselect" option} tkOnly {
     set value2 green
     .r deselect
     set value2
 } {green}
-test button-4.23 {ButtonWidgetCmd procedure, "deselect" option} {
+test button-4.23 {ButtonWidgetCmd procedure, "deselect" option} tkOnly {
     set value2 red
     .r deselect
     set value2
@@ -266,7 +268,7 @@ test button-4.24 {ButtonWidgetCmd procedure, "deselect" option} {
 } {1 {can't set "value": trace aborted} {can't set "value": trace aborted
     while executing
 ".c deselect"} 0}
-test button-4.25 {ButtonWidgetCmd procedure, "deselect" option} {
+test button-4.25 {ButtonWidgetCmd procedure, "deselect" option} tkOnly {
     set value2 red
     trace variable value2 w bogusTrace
     set result [list [catch {.r deselect} msg] $msg $errorInfo $value2]
@@ -454,7 +456,7 @@ test button-6.3 {ConfigureButton - image handling} testImageType {
     .b1 configure -image image2
     image names
 } {image2}
-test button-6.5 {ConfigureButton - default value for variable} {
+test button-6.5 {ConfigureButton - default value for variable} tkOnly {
     catch {destroy .b1}
     checkbutton .b1
     .b1 cget -variable

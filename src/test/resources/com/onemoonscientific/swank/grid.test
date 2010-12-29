@@ -718,7 +718,7 @@ test grid-10.37 {column/row configure} {
 } {0 {-minsize 0 -pad 0 -uniform {} -weight 0}}
 grid_reset 10.37
 
-test grid-10.38 {column/row configure} -body {
+test grid-10.38 {column/row configure} -constraints tkOnly  -body {
     # This is a test for bug 1423666 where a column >= 10000 caused
     # a crash in layout.  The update is needed to reach the layout stage.
     # Test different combinations of row/column overflow
@@ -744,7 +744,7 @@ test grid-10.38 {column/row configure} -body {
 } 0 end]
 grid_reset 10.38
 
-test grid-10.39 {column/row configure} -body {
+test grid-10.39 {column/row configure} -constraints tkOnly -body {
     # Additional tests for row/column overflow
     frame .f
     frame .g

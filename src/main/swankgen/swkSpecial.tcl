@@ -1448,6 +1448,8 @@ proc swkMakeSpecial {widget widgetVar} {
         }
         set specialGets [concat  $specialGets { {setTextVariable textvariable TextVariable -textvariable}}]
         append specialMethods "
+     public void setTextVariable( String name) {
+     }
      public void setTextVariable(Interp interp, String name) throws TclException {
             docListener.setVarName(name);
      }
@@ -1478,7 +1480,9 @@ proc swkMakeSpecial {widget widgetVar} {
         set specialGets [concat  $specialGets { {setTextVariable textvariable TextVariable -textvariable}}]
         set specialGets [concat  $specialGets { {setSwkText java.lang.String Text -text}}]
         append specialMethods {
-           public void setTextVariable(Interp interp, String name) throws TclException {
+           public void setTextVariable(String name) {
+           }
+           public void setTextVariable(Interp interp,String name) throws TclException {
                  String text =  SwankUtil.setupTrace(interp,this, textVariable, name);
                  textVariable = name;
                  if (text != null) {
@@ -1697,7 +1701,6 @@ proc swkMakeSpecial {widget widgetVar} {
     
     set widgets "JRadioButton JRadioButtonMenuItem"
     if {[lsearch $widgets $widget] >= 0} {
-        if {$widget == "JRadioButton" } {
             append specialVars "
             static Hashtable bgroupTable = new Hashtable();
             SwkRadioButtonListener commandListener=null;
@@ -1706,17 +1709,17 @@ proc swkMakeSpecial {widget widgetVar} {
             commandListener = new SwkRadioButtonListener(interp,this);
             addActionListener (commandListener);
             "
-            } else {
-            append specialVars "
-            SwkRadioMenuListener commandListener=null;
-            "
-            append specialInits "
-            commandListener = new SwkRadioMenuListener(interp,this);
-            addActionListener (commandListener);
-            "
-        }
         
         append specialMethods "
+          public boolean setVarName(Interp interp,String name) throws TclException {
+               boolean state = commandListener.setVarName(interp,name);
+               return state;
+           }
+           public void setVarName(final boolean state) {
+               setSelected(state);
+           }
+           public void setVarName(final String name) {
+           }
         public void setCommand(String name) \{
         commandListener.setCommand(name); \}
         public String getCommand() \{
@@ -1733,7 +1736,7 @@ proc swkMakeSpecial {widget widgetVar} {
         \}
         "
         lappend specialGets "setCommand java.lang.String Command"
-        lappend specialGets "setVarName variable VarName -variable"
+        lappend specialGets "setVarName bvariable VarName -variable"
         lappend specialGets "setValue java.lang.String Value -value"
         append specialConfig "
         $widgetVar.commandListener.setFromVar(interp);
@@ -1754,7 +1757,6 @@ proc swkMakeSpecial {widget widgetVar} {
     
     set widgets "JCheckBox JCheckBoxMenuItem "
     if {[lsearch $widgets $widget] >= 0} {
-        if {$widget == "JCheckBox" } {
             append specialVars "
             SwkCheckButtonListener commandListener=null;
             "
@@ -1762,18 +1764,18 @@ proc swkMakeSpecial {widget widgetVar} {
             commandListener = new SwkCheckButtonListener(interp,this);
             addActionListener (commandListener);
             "
-            } else {
-            append specialVars "
-            SwkCheckMenuListener commandListener=null;
-            "
-            append specialInits "
-            commandListener = new SwkCheckMenuListener(interp,this);
-            addActionListener (commandListener);
-            "
-        }
         
         
         append specialMethods "
+           public void setVarName(final boolean state) {
+               setSelected(state);
+           }
+           public void setVarName(final String name) {
+           }
+          public boolean setVarName(Interp interp,String name) throws TclException {
+               boolean state = commandListener.setVarName(interp,name);
+               return state;
+           }
         public void setCommand(String name) \{
         commandListener.setCommand(name); \}
         public String getCommand() \{
@@ -1796,7 +1798,7 @@ proc swkMakeSpecial {widget widgetVar} {
         \}
         "
         lappend specialGets "setCommand java.lang.String Command"
-        lappend specialGets "setVarName variable VarName -variable"
+        lappend specialGets "setVarName bvariable VarName -variable"
         lappend specialGets "setOnValue java.lang.String Value -onvalue"
         lappend specialGets "setOffValue java.lang.String Value -offvalue"
         append specialConfig "
@@ -1828,6 +1830,8 @@ proc swkMakeSpecial {widget widgetVar} {
         }
         
         append specialMethods "
+     public void setVarName( String name) {
+     }
      public void setVarName(Interp interp, String name) throws TclException {
             commandListener.setVarName(interp,name);
      }
@@ -2384,7 +2388,7 @@ Dimension dSize = new Dimension(scrollRegion[1][0]-scrollRegion[0][0],scrollRegi
         }
         if {[lsearch "JCheckBox JRadioButton JCheckBoxMenuItem JRadioButtonMenuItem" $widget] >= 0} {
             append specialVars {
-                private int symbolSize = 16;
+                private int symbolSize = 24;
             }
             
             } else {

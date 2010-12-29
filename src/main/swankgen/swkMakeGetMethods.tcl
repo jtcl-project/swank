@@ -54,7 +54,7 @@ set excludes "-locale -page -styleddocument -color -actioncommand -armed -autocr
 -columns -defaultcloseoperation -delay -displayedmnemonicindex -dragenabled -editingcolumn -editingrow -focuspainted
 -lastdividerlocation -layer -popupmenuvisible -popupvisible -scrolloffset
 -wantsinput -alignmentx -alignmenty -bounds -classname -debuggraphicsoptions -doublebuffered -horizontalalignment -ignorerepaint
--inheritspopupmenu -location -margin -maximumsize -minimumsize -name -preferredsize -size -verticalalignment
+-inheritspopupmenu -location -margin -maximumsize -minimumsize -name -preferredsize -size -verticalalignment -orientation
 "
 set excludeTypes "java.util.Locale java.lang.String {} int"
 
@@ -76,7 +76,7 @@ foreach method $getMethods  {
                                         set dashOption -[string tolower  $rootPart]
                                 }
 
-				set optPos [lsearch $excludes $dashOption] 
+				set optPos [lsearch -exact $excludes $dashOption] 
 				if {$optPos >=  0} {
 				    set excludeType [lindex $excludeTypes $optPos]
 				    if {($excludeType == {}) || ($excludeType == $argType)} {
@@ -120,9 +120,15 @@ foreach method $getMethods  {
 						set cmd "return($widgetVarLocal.${getMethod}());"
 					} elseif {$argType == "variable"} {
 						set cmd "return($widgetVarLocal.${getMethod}());"
+					} elseif {$argType == "dvariable"} {
+						set cmd "return($widgetVarLocal.${getMethod}());"
+					} elseif {$argType == "bvariable"} {
+						set cmd "return($widgetVarLocal.${getMethod}());"
 					} elseif {$argType == "state"} {
 						set cmd "return($widgetVarLocal.${getMethod}());"
 					} elseif {$argType == "default"} {
+						set cmd "return($widgetVarLocal.${getMethod}());"
+					} elseif {$argType == "orient"} {
 						set cmd "return($widgetVarLocal.${getMethod}());"
 					} elseif {$argType == "tkRectangle"} {
 						set cmd "return(SwankUtil.parseTkRectangle($widgetVarLocal.${getMethod}()));"
@@ -157,7 +163,7 @@ foreach method $getMethods  {
 					} elseif {$argType == "java.net.URL"} {
 						set cmd "return(SwankUtil.parseURL((URL) $widgetVarLocal.${getMethod}()));"
 					} else {
-#						puts "no action for $method"
+						#puts "no action for $method $argType"
                                                 set gotMethod 0
 					}
 					if {$gotMethod} {

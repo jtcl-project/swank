@@ -29,9 +29,6 @@ append specialInits {
 
 
 append specialMethods {
-     public void setVarName(Interp interp, String name) throws TclException {
-            commandListener.setVarName(interp,name);
-     }
 }
 
 append specialWidgetTypeCmds {

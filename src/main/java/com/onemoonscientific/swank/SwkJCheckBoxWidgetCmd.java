@@ -106,7 +106,6 @@ class SwkJCheckBoxWidgetCmd implements Command {
 
             case OPT_DESELECT:
                 deselect(interp, swkjcheckbox, argv);
-                swkjcheckbox.commandListener.tclAction();
 
                 break;
 
@@ -123,28 +122,11 @@ class SwkJCheckBoxWidgetCmd implements Command {
                 if (argv.length != 2) {
                     throw new TclNumArgsException(interp, 2, argv, "");
                 }
-
-                if (!swkjcheckbox.isEnabled()) {
-                    return;
-                }
-
-                if ((swkjcheckbox.commandListener.command != null)
-                        && (swkjcheckbox.commandListener.command.length() != 0)) {
-                    try {
-                        interp.eval(swkjcheckbox.commandListener.command);
-                    } catch (TclException tclE) {
-                        System.out.println(interp.getResult());
-                    }
-                }
-
-                swkjcheckbox.setSelected(true);
-                swkjcheckbox.commandListener.tclAction();
-
+                invoke(interp, swkjcheckbox, argv);
                 break;
 
             case OPT_SELECT:
                 select(interp, swkjcheckbox, argv);
-                swkjcheckbox.commandListener.tclAction();
 
                 break;
 
@@ -153,24 +135,28 @@ class SwkJCheckBoxWidgetCmd implements Command {
                 if (argv.length != 2) {
                     throw new TclNumArgsException(interp, 2, argv, "");
                 }
-
-                if (!swkjcheckbox.isEnabled()) {
-                    return;
-                }
-
-                if (swkjcheckbox.isSelected()) {
-                    swkjcheckbox.setSelected(false);
-                } else {
-                    swkjcheckbox.setSelected(true);
-                }
-
-                swkjcheckbox.commandListener.tclAction();
-
+                toggle(interp, swkjcheckbox, argv);
                 break;
 
             default:
                 throw new TclRuntimeError("TclIndex.get() error");
         }
+    }
+    void invoke(final Interp interp, final SwkJCheckBox swkjcheckbox,
+            final TclObject[] argv) throws TclException {
+        SwkCheckButtonListener.ButtonSettings buttonSettings = (new Toggle()).exec(swkjcheckbox);
+        if (!buttonSettings.isEnabled()) {
+            return;
+        }
+        swkjcheckbox.commandListener.tclAction(buttonSettings);
+    }
+    void toggle(final Interp interp, final SwkJCheckBox swkjcheckbox,
+            final TclObject[] argv) throws TclException {
+        SwkCheckButtonListener.ButtonSettings buttonSettings = (new Toggle()).exec(swkjcheckbox);
+        if (!buttonSettings.isEnabled()) {
+            return;
+        }
+        swkjcheckbox.commandListener.tclActionVar(buttonSettings);
     }
 
     void deselect(final Interp interp, final SwkJCheckBox swkjcheckbox,
@@ -179,7 +165,12 @@ class SwkJCheckBoxWidgetCmd implements Command {
             throw new TclNumArgsException(interp, 2, argv, "");
         }
 
-        (new Select()).exec(swkjcheckbox, true);
+        SwkCheckButtonListener.ButtonSettings buttonSettings = (new Select()).exec(swkjcheckbox,false);
+        if (!buttonSettings.isEnabled()) {
+            return;
+        }
+        swkjcheckbox.commandListener.tclAction(buttonSettings);
+
     }
 
     void select(final Interp interp, final SwkJCheckBox swkjcheckbox,
@@ -187,19 +178,25 @@ class SwkJCheckBoxWidgetCmd implements Command {
         if (argv.length != 2) {
             throw new TclNumArgsException(interp, 2, argv, "");
         }
+        SwkCheckButtonListener.ButtonSettings buttonSettings = (new Select()).exec(swkjcheckbox,true);
+        if (!buttonSettings.isEnabled()) {
+            return;
+        }
+        swkjcheckbox.commandListener.tclAction(buttonSettings);
 
-        (new Select()).exec(swkjcheckbox, false);
     }
 
-    class Select extends UpdateOnEventThread {
+    class Select extends GetValueOnEventThread {
 
         boolean mode = false;
         SwkJCheckBox swkjcheckbox;
+        SwkCheckButtonListener.ButtonSettings buttonSettings;
 
-        void exec(SwkJCheckBox swkjcheckbox, final boolean mode) {
+        SwkCheckButtonListener.ButtonSettings  exec(SwkJCheckBox swkjcheckbox, final boolean mode) {
             this.mode = mode;
             this.swkjcheckbox = swkjcheckbox;
             execOnThread();
+            return buttonSettings;
         }
 
         public void run() {
@@ -208,7 +205,38 @@ class SwkJCheckBoxWidgetCmd implements Command {
             }
 
             swkjcheckbox.setSelected(mode);
-            swkjcheckbox.doClick();
+            buttonSettings = swkjcheckbox.commandListener.getButtonSettings();
         }
     }
+   class ButtonState {
+        final private boolean enabled;
+        final private String varName;
+        final private String varValue;
+        final private boolean selected;
+        ButtonState (final boolean enabled, final String varName, final String varValue, final boolean selected) {
+            this.enabled = enabled;
+            this.varName = varName;;
+            this.varValue = varValue;
+            this.selected = selected;
+        }
+   }
+   class Toggle extends GetValueOnEventThread {
+
+        SwkJCheckBox swkjcheckbox;
+        SwkCheckButtonListener.ButtonSettings buttonSettings;
+
+        SwkCheckButtonListener.ButtonSettings  exec(SwkJCheckBox swkjcheckbox) {
+            this.swkjcheckbox = swkjcheckbox;
+            execOnThread();
+            return buttonSettings;
+        }
+
+        public void run() {
+            if (swkjcheckbox.isEnabled()) {
+                swkjcheckbox.setSelected(!swkjcheckbox.isSelected());
+                buttonSettings = swkjcheckbox.commandListener.getButtonSettings();
+            }
+        }
+    }
+
 }

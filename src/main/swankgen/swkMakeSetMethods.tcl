@@ -58,7 +58,7 @@ set excludes "-locale -page -styleddocument -actioncommand -armed -autocreatecol
 -defaultcloseoperation -delay -displayedmnemonicindex -dragenabled -editingcolumn -editingrow -focuspainted -lastdividerlocation
 -layer -popupmenuvisible -popupvisible -scrolloffset -wantsinput -alignmentx -alignmenty -bounds -classname -debuggraphicsoptions
 -doublebuffered -horizontalalignment -ignorerepaint -inheritspopupmenu -location -margin -maximumsize -minimumsize -name -preferredsize
--size -verticalalignment
+-size -verticalalignment -orientation
 "
 set excludeTypes "java.util.Locale java.lang.String {}"
 #puts $specialGets
@@ -86,7 +86,7 @@ foreach method $setMethods {
 				if {$dashOption == {}} {
 					set dashOption -[string tolower  $rootPart]
 				}
-				set optPos [lsearch $excludes $dashOption] 
+				set optPos [lsearch -exact $excludes $dashOption] 
 				if {$optPos >=  0} {
 				    set excludeType [lindex $excludeTypes $optPos]
 				    if {($excludeType == {}) || ($excludeType == $argType)} {
@@ -102,6 +102,7 @@ foreach method $setMethods {
 				}
 				set gotMethod 1
 				lappend dashOptions $dashOption
+				set setter "${widgetVarLocal}.${option}(setter.sValue);"
 				if {[lsearch $components $argType ] >= 0} {
    					if {![regexp  {(.*\.)(.*\.)(.*)} $argType all a b c]} {
 						exit "bad $argType"
@@ -118,6 +119,15 @@ foreach method $setMethods {
 						set cmd "setTextVariable(interp,argv\[i+1\].toString());"
 				} elseif {$argType == "variable"} {
 						set cmd "setVarName(interp,argv\[i+1\].toString());"
+                                                append cmd "\n(new Setter((SwkWidget) this,opt)).exec(false);"
+				} elseif {$argType == "bvariable"} {
+						set cmd "boolean state = setVarName(interp,argv\[i+1\].toString());"
+                                                append cmd "\n(new Setter((SwkWidget) this,opt)).exec(state);"
+				                set setter "${widgetVarLocal}.${option}(setter.bValue);"
+				} elseif {$argType == "dvariable"} {
+						set cmd "Double value = setVarName(interp,argv\[i+1\].toString());"
+                                                append cmd "\nif (value != null) {(new Setter((SwkWidget) this,opt)).exec(value.doubleValue());}"
+				                set setter "${widgetVarLocal}.${option}(setter.dValue);"
 				} elseif {[lsearch $tkcomps $argType ] >= 0} {
 						set cmd "${widgetVarLocal}.${option}(SwkTk.${option}(interp,argv\[i+1\]));"
 						set setter "${widgetVarLocal}.${option}(setter.iValue);"

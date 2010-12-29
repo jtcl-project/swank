@@ -36,6 +36,8 @@ append specialInits {
 append specialListeners {}
   
 append specialMethods {
+           public void setTextVariable(String name) {
+           }
            public void setTextVariable(Interp interp, String name) throws TclException {
                  commandListener.setVarName(interp,name);
            }

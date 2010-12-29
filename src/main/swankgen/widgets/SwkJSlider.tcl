@@ -238,7 +238,6 @@ append specialInits {
 
 			public void setTo(double value) {
 				to = value;
-                                updateRange();
 			}
 			
 			public double getTo() {
@@ -246,7 +245,6 @@ append specialInits {
 			}
 			public void setFrom(double value) {
 				from = value;
-                                updateRange();
 			}
 			
 			public double getFrom() {
@@ -276,7 +274,7 @@ append specialInits {
 			}
 	}
 	set specialGets [concat  $specialGets {
-		{setOrient orient Orient} 
+		{setOrient orient Orient -orient} 
 	}]
  
 # -to
@@ -397,7 +395,6 @@ append specialInits {
 	append specialMethods {
 			public void setResolution(double value) {
 				resolution = value;
-                                updateRange();
 			}
 			
 			public double getResolution() {
@@ -529,7 +526,6 @@ append specialInits {
                                 } else {
                                         this.tickInterval = Math.round(tickInterval);
                                 }
-                                updateRange();
  
 			}
 			public double getTickInterval() {
@@ -562,7 +558,7 @@ append specialInits {
 		    
 		
 		lappend specialGets "setCommand java.lang.String Command"
-		lappend specialGets "setVarName variable VarName -variable"
+		lappend specialGets "setVarName dvariable VarName -variable"
 		lappend specialGets "setValue int Value -value"
 		lappend specialGets "setShowValue boolean ShowValue -showvalue"
 		lappend specialGets "setTickInterval double TickInterval -tickinterval"
@@ -584,8 +580,14 @@ append specialInits {
 
 
 append specialMethods {
-     public void setVarName(Interp interp, String name) throws TclException {
-        sliderChangeListener.setVarName(interp,name);
+     public Double setVarName(Interp interp, String name) throws TclException {
+        Double value = sliderChangeListener.setVarName(interp,name);
+        return value;
+     }
+     public void setVarName(String name) {
+     }
+     public void setVarName(double value) {
+         setDValue(value);
      }
 
 }

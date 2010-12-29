@@ -92,6 +92,12 @@ class SwkJSliderWidgetCmd implements Command {
                     interp.setResult(list);
                 } else {
                     swkjslider.configure(interp, argv, 2);
+                    SwingUtilities.invokeLater(new Runnable() {
+                        public void run() {
+                            swkjslider.updateRange();
+                        }
+                    });
+
                 }
 
                 break;
@@ -113,6 +119,7 @@ class SwkJSliderWidgetCmd implements Command {
 
             case OPT_SET:
                 set(interp, swkjslider, argv);
+                swkjslider.sliderChangeListener.tclAction(buttonSettings);
 
                 break;
 
@@ -123,8 +130,8 @@ class SwkJSliderWidgetCmd implements Command {
 
     void coords(final Interp interp, final SwkJSlider swkjslider,
             final TclObject[] argv) throws TclException {
-        if (argv.length != 2) {
-            throw new TclNumArgsException(interp, 2, argv, "");
+        if (argv.length > 3) {
+            throw new TclNumArgsException(interp, 2, argv, "?value?");
         }
 
         double value = 0.0;
@@ -290,7 +297,7 @@ class SwkJSliderWidgetCmd implements Command {
         }
     }
 
-    class Set extends UpdateOnEventThread {
+    class Set extends GetValueOnEventThread {
 
         SwkJSlider swkjslider = null;
         double value = 0.0;

@@ -10,6 +10,18 @@ package com.onemoonscientific.swank;
 import tcl.lang.*;
 import tcl.pkg.java.ReflectObject;
 
+import java.awt.*;
+
+import java.io.*;
+
+import java.net.*;
+
+import java.util.*;
+
+import javax.swing.*;
+import javax.swing.text.*;
+import javax.swing.tree.*;
+
 class SwkJRadioButtonWidgetCmd implements Command {
 
     static final private String[] validCmds = {
@@ -29,10 +41,8 @@ class SwkJRadioButtonWidgetCmd implements Command {
         return validCmds;
     }
 
-    public void cmdProc(final Interp interp, final TclObject[] argv)
+    public void cmdProc(Interp interp, TclObject[] argv)
             throws TclException {
-        int i;
-
         if (argv.length < 2) {
             throw new TclNumArgsException(interp, 1, argv,
                     "option ?arg arg ...?");
@@ -94,7 +104,7 @@ class SwkJRadioButtonWidgetCmd implements Command {
                 break;
 
             case OPT_DESELECT:
-                select(interp, swkjradiobutton, argv);
+                deselect(interp, swkjradiobutton, argv);
 
                 break;
 
@@ -111,20 +121,7 @@ class SwkJRadioButtonWidgetCmd implements Command {
                 if (argv.length != 2) {
                     throw new TclNumArgsException(interp, 2, argv, "");
                 }
-
-                if (!swkjradiobutton.isEnabled()) {
-                    return;
-                }
-
-                if ((swkjradiobutton.commandListener.command != null)
-                        && (swkjradiobutton.commandListener.command.length() != 0)) {
-                    try {
-                        interp.eval(swkjradiobutton.commandListener.command);
-                    } catch (TclException tclE) {
-                        System.out.println(interp.getResult());
-                    }
-                }
-
+                invoke(interp, swkjradiobutton, argv);
                 break;
 
             case OPT_SELECT:
@@ -136,6 +133,14 @@ class SwkJRadioButtonWidgetCmd implements Command {
                 throw new TclRuntimeError("TclIndex.get() error");
         }
     }
+    void invoke(final Interp interp, final SwkJRadioButton swkjradiobutton,
+            final TclObject[] argv) throws TclException {
+        SwkRadioButtonListener.ButtonSettings buttonSettings = (new Toggle()).exec(swkjradiobutton);
+        if (!buttonSettings.isEnabled()) {
+            return;
+        }
+        swkjradiobutton.commandListener.tclAction(buttonSettings);
+    }
 
     void deselect(final Interp interp, final SwkJRadioButton swkjradiobutton,
             final TclObject[] argv) throws TclException {
@@ -143,7 +148,12 @@ class SwkJRadioButtonWidgetCmd implements Command {
             throw new TclNumArgsException(interp, 2, argv, "");
         }
 
-        (new Select()).exec(swkjradiobutton, true);
+        SwkRadioButtonListener.ButtonSettings buttonSettings = (new Select()).exec(swkjradiobutton,false);
+        if (!buttonSettings.isEnabled()) {
+            return;
+        }
+        swkjradiobutton.commandListener.tclAction(buttonSettings);
+
     }
 
     void select(final Interp interp, final SwkJRadioButton swkjradiobutton,
@@ -151,19 +161,25 @@ class SwkJRadioButtonWidgetCmd implements Command {
         if (argv.length != 2) {
             throw new TclNumArgsException(interp, 2, argv, "");
         }
+        SwkRadioButtonListener.ButtonSettings buttonSettings = (new Select()).exec(swkjradiobutton,true);
+        if (!buttonSettings.isEnabled()) {
+            return;
+        }
+        swkjradiobutton.commandListener.tclAction(buttonSettings);
 
-        (new Select()).exec(swkjradiobutton, false);
     }
 
-    class Select extends UpdateOnEventThread {
+    class Select extends GetValueOnEventThread {
 
         boolean mode = false;
         SwkJRadioButton swkjradiobutton;
+        SwkRadioButtonListener.ButtonSettings buttonSettings;
 
-        void exec(SwkJRadioButton swkjradiobutton, final boolean mode) {
+        SwkRadioButtonListener.ButtonSettings  exec(SwkJRadioButton swkjradiobutton, final boolean mode) {
             this.mode = mode;
             this.swkjradiobutton = swkjradiobutton;
             execOnThread();
+            return buttonSettings;
         }
 
         public void run() {
@@ -172,7 +188,38 @@ class SwkJRadioButtonWidgetCmd implements Command {
             }
 
             swkjradiobutton.setSelected(mode);
-            swkjradiobutton.doClick();
+            buttonSettings = swkjradiobutton.commandListener.getButtonSettings();
         }
     }
+   class ButtonState {
+        final private boolean enabled;
+        final private String varName;
+        final private String varValue;
+        final private boolean selected;
+        ButtonState (final boolean enabled, final String varName, final String varValue, final boolean selected) {
+            this.enabled = enabled;
+            this.varName = varName;;
+            this.varValue = varValue;
+            this.selected = selected;
+        }
+   }
+   class Toggle extends GetValueOnEventThread {
+
+        SwkJRadioButton swkjradiobutton;
+        SwkRadioButtonListener.ButtonSettings buttonSettings;
+
+        SwkRadioButtonListener.ButtonSettings  exec(SwkJRadioButton swkjradiobutton) {
+            this.swkjradiobutton = swkjradiobutton;
+            execOnThread();
+            return buttonSettings;
+        }
+
+        public void run() {
+            if (swkjradiobutton.isEnabled()) {
+                swkjradiobutton.setSelected(!swkjradiobutton.isSelected());
+                buttonSettings = swkjradiobutton.commandListener.getButtonSettings();
+            }
+        }
+    }
+
 }

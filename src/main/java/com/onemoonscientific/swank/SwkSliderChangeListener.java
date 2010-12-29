@@ -42,7 +42,7 @@ public class SwkSliderChangeListener implements ChangeListener, VarTrace {
     Interp interp;
     String command = null;
     String varName = "";
-    double value;
+    double value = 0.0;
     Component component;
     boolean actionLock = false;
 
@@ -86,7 +86,6 @@ public class SwkSliderChangeListener implements ChangeListener, VarTrace {
     public void setFromVar(Interp interp, boolean override)
             throws TclException {
         TclObject tobj = null;
-
         if (EventQueue.isDispatchThread()) {
             System.out.println(
                     "sfv is ettttttttttttttttttttttttttttttttttttttttttt");
@@ -121,16 +120,14 @@ public class SwkSliderChangeListener implements ChangeListener, VarTrace {
                             }
                         });
                     } else {
-                        interp.addErrorInfo(
-                                "\ncan't assign non-numeric value to scale variable");
-                        interp.backgroundError();
+                        throw new TclException(interp, "can't assign non-numeric value to scale variable");
                     }
                 }
             }
         }
     }
 
-    public void setVarName(Interp interp, String name)
+    public Double setVarName(Interp interp, String name)
             throws TclException {
         actionLock = true;
 
@@ -138,34 +135,33 @@ public class SwkSliderChangeListener implements ChangeListener, VarTrace {
             System.out.println(
                     "svn is ettttttttttttttttttttttttttttttttttttttttttt");
         }
-
         if ((varName != null) && (!varName.equals(""))) {
             interp.untraceVar(varName, this, TCL.TRACE_WRITES
                     | TCL.GLOBAL_ONLY);
         }
 
-        /*        double value = ((SwkJSlider) component).getDValue();
-        tobj = TclDouble.newInstance(value);
-        interp.setVar(name,tobj,TCL.GLOBAL_ONLY);
-         */
         varName = name.intern();
-
+        Double dValue = null;
         if (!name.equals("")) {
             try {
                 TclObject tobj;
                 tobj = interp.getVar(varName, TCL.GLOBAL_ONLY);
+                if (!tobj.toString().equals("")) {
+                    dValue = TclDouble.get(interp, tobj);
+                }
             } catch (TclException tclE) {
                 TclObject tobj;
-                tobj = TclDouble.newInstance(value);
+                dValue = ((SwkJSlider) component).getDValue();;
+                tobj = TclDouble.newInstance(dValue);
                 interp.setVar(varName, tobj, TCL.GLOBAL_ONLY);
+                interp.resetResult();
             }
 
-            setFromVar(interp, true);
             interp.traceVar(name, this,
                     TCL.TRACE_UNSETS | TCL.TRACE_WRITES | TCL.GLOBAL_ONLY);
         }
-
         actionLock = false;
+        return dValue;
     }
 
     public String getVarName() {
@@ -177,7 +173,6 @@ public class SwkSliderChangeListener implements ChangeListener, VarTrace {
             System.out.println(
                     "svvet not ettttttttttttttttttttttttttttttttttttttttttt");
         }
-
         actionLock = true;
 
         if ((((SwkJSlider) component).resolution >= 1.0)
