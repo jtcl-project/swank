@@ -461,6 +461,9 @@ class SwkJTextPaneWidgetCmd implements Command {
 
         Result result = (new Compare()).exec(swkjtextpane, argv[2].toString(),
                 argv[3].toString(), argv[4].toString());
+        if (result == null) { 
+           throw new TclException(interp,"null result");
+        }
         result.checkError(interp);
         interp.setResult(result.b);
     }
@@ -484,6 +487,9 @@ class SwkJTextPaneWidgetCmd implements Command {
         int index2 = -1;
 
         for (int i = 2; i < argv.length; i++) {
+            if (argv[i].toString().length() == 0) {
+                throw new TclException(interp,"bad search arg");
+            }
             if ((argv[i].toString().charAt(0) != '-') || !flagSearch) {
                 if (patternIndex == -1) {
                     patternIndex = i;
@@ -741,6 +747,8 @@ class SwkJTextPaneWidgetCmd implements Command {
 
             if (arg1.equals("sel")) {
                 swkjtextpane.setCaretPosition(index);
+// FIXME is this only needed if arg3 is "end"
+                index2--;
                 swkjtextpane.moveCaretPosition(index2);
 
                 if (!swkjtextpane.selectionWindowAdded) {

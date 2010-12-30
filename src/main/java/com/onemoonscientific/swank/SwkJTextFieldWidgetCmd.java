@@ -27,18 +27,20 @@ import javax.swing.tree.*;
 class SwkJTextFieldWidgetCmd implements Command {
 
     static final private String[] validCmds = {
-        "cget", "configure", "delete", "get", "index",
+        "bbox","cget", "configure", "delete", "get", "icursor","index",
         "insert", "scan", "selection", "xview"
     };
-    static final private int OPT_CGET = 0;
-    static final private int OPT_CONFIGURE = 1;
-    static final private int OPT_DELETE = 2;
-    static final private int OPT_GET = 3;
-    static final private int OPT_INDEX = 4;
-    static final private int OPT_INSERT = 5;
-    static final private int OPT_SCAN = 6;
-    static final private int OPT_SELECTION = 7;
-    static final private int OPT_XVIEW = 8;
+    static final private int OPT_BBOX = 0;
+    static final private int OPT_CGET = 1;
+    static final private int OPT_CONFIGURE = 2;
+    static final private int OPT_DELETE = 3;
+    static final private int OPT_GET = 4;
+    static final private int OPT_ICURSOR = 5;
+    static final private int OPT_INDEX = 6;
+    static final private int OPT_INSERT = 7;
+    static final private int OPT_SCAN = 8;
+    static final private int OPT_SELECTION = 9;
+    static final private int OPT_XVIEW = 10;
     static boolean gotDefaults = false;
     int index;
     Interp interp = null;
@@ -70,6 +72,10 @@ class SwkJTextFieldWidgetCmd implements Command {
                 tObj);
 
         switch (opt) {
+             case OPT_BBOX:
+                bbox(interp, swkjtextfield, argv);
+                break;
+
             case OPT_CGET:
 
                 if (argv.length != 3) {
@@ -113,12 +119,16 @@ class SwkJTextFieldWidgetCmd implements Command {
 
                 break;
 
-            case OPT_DELETE:
+             case OPT_DELETE:
+                delete(interp, swkjtextfield, argv);
                 break;
 
             case OPT_GET:
                 interp.setResult(swkjtextfield.getText());
 
+                break;
+             case OPT_ICURSOR:
+                icursor(interp, swkjtextfield, argv);
                 break;
 
             case OPT_INDEX:
@@ -245,6 +255,44 @@ class SwkJTextFieldWidgetCmd implements Command {
         int index = (new Index()).exec(swkjtextfield, argv[2].toString(), offset);
         interp.setResult(index);
     }
+   void bbox(final Interp interp, final SwkJTextField swkjtextfield,
+            final TclObject[] argv) throws TclException {
+        if (argv.length != 3) {
+            throw new TclNumArgsException(interp, 2, argv, "index");
+        }
+        Rectangle rect = (new Bbox()).exec(swkjtextfield, argv[2].toString());
+        TclObject rectResult = TclList.newInstance();
+        TclList.append(interp,rectResult,TclInteger.newInstance(rect.x));
+        TclList.append(interp,rectResult,TclInteger.newInstance(rect.y));
+        TclList.append(interp,rectResult,TclInteger.newInstance(rect.width));
+        TclList.append(interp,rectResult,TclInteger.newInstance(rect.height));
+        interp.setResult(rectResult);
+    }
+    void delete(final Interp interp, final SwkJTextField swkjtextfield,
+            final TclObject[] argv) throws TclException {
+        if ((argv.length < 3) || (argv.length > 4)) {
+            throw new TclNumArgsException(interp, 2, argv, "first ?last?");
+        }
+        final String firstPos = argv[2].toString();
+        final String lastPos;
+        if (argv.length == 4) {
+            lastPos = argv[3].toString();
+        } else {
+            lastPos = null;
+        }
+
+        String errMessage = (new Delete()).exec(swkjtextfield,firstPos,lastPos);
+        if (errMessage != null) {
+             throw new TclException(interp,errMessage);
+        }
+    }
+   void icursor(final Interp interp, final SwkJTextField swkjtextfield,
+            final TclObject[] argv) throws TclException {
+        if (argv.length != 3) {
+            throw new TclNumArgsException(interp, 2, argv, "index");
+        }
+        (new Icursor()).exec(swkjtextfield, argv[2].toString());
+    }
 
     void insert(final Interp interp, final SwkJTextField swkjtextfield,
             final TclObject[] argv) throws TclException {
@@ -254,6 +302,68 @@ class SwkJTextFieldWidgetCmd implements Command {
 
         (new Insert()).exec(swkjtextfield, argv[2].toString(),
                 argv[3].toString());
+    }
+ class Bbox extends GetValueOnEventThread {
+
+        SwkJTextField swkjtextfield = null;
+        String item = null;
+        String errMessage = null;
+        Rectangle rectangle = null;
+        Rectangle exec(final SwkJTextField swkjtextfield, final String item) throws TclException {
+            this.item = item;
+            this.swkjtextfield = swkjtextfield;
+            execOnThread();
+            if (errMessage != null) {
+                throw new TclException(interp, errMessage);
+            }
+            return rectangle;
+
+        }
+
+        public void run() {
+            Result result = new Result();
+            swkjtextfield.getIndex(item, 0, result);
+
+            if (result.hasError()) {
+                errMessage = result.getErrorMsg();
+                return;
+            }
+            try {
+                rectangle = swkjtextfield.modelToView(result.i);
+                Rectangle rectangle2 = swkjtextfield.modelToView(result.i+1);
+                rectangle = rectangle.union(rectangle2);
+            } catch (BadLocationException bLE) {
+                 errMessage = bLE.getMessage();
+            }
+        }
+    }
+
+   class Icursor extends GetValueOnEventThread {
+
+        SwkJTextField swkjtextfield = null;
+        String item = null;
+        String errMessage = null;
+
+        void exec(final SwkJTextField swkjtextfield, final String item) throws TclException {
+            this.item = item;
+            this.swkjtextfield = swkjtextfield;
+            execOnThread();
+            if (errMessage != null) {
+                throw new TclException(interp, errMessage);
+            }
+
+        }
+
+        public void run() {
+            Result result = new Result();
+            swkjtextfield.getIndex(item, 0, result);
+
+            if (result.hasError()) {
+                errMessage = result.getErrorMsg();
+                return;
+            }
+            swkjtextfield.setCaretPosition(result.i); 
+        }
     }
 
     class Index extends GetValueOnEventThread {
@@ -289,6 +399,49 @@ class SwkJTextFieldWidgetCmd implements Command {
             }
 
             index = result.i;
+        }
+    }
+   class Delete extends GetValueOnEventThread {
+
+        SwkJTextField swkjtextfield = null;
+        String firstPos = null;
+        String lastPos = null;
+        String errMessage = null;
+
+        String exec(final SwkJTextField swkjtextfield, final String firstPos,
+                final String lastPos) throws TclException {
+            this.swkjtextfield = swkjtextfield;
+            this.firstPos = firstPos;
+            this.lastPos = lastPos;
+            execOnThread();
+            return errMessage;
+        }
+
+        public void run() {
+            Result result1 = new Result();
+            Result result2 = new Result();
+            swkjtextfield.getIndex(firstPos, 0, result1);
+            if (result1.hasError()) {
+                errMessage = result1.getErrorMsg();
+            } else {
+                int nChar = 0;
+                if (lastPos != null) {
+                    swkjtextfield.getIndex(lastPos, 0, result2);
+                    if (result2.hasError()) {
+                        errMessage = result2.getErrorMsg();
+                        return;
+                    }
+                    nChar = result2.i-result1.i;
+                } else {
+                    nChar = 1;
+                }
+                try {
+                    swkjtextfield.getDocument().remove(result1.i,nChar);
+                } catch (BadLocationException bLE) {
+                     System.out.println(result1.i + " " + result2.i + " " + nChar);
+                     errMessage = bLE.getMessage();
+                }
+            }
         }
     }
 

@@ -697,10 +697,17 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
 
     public Result compareIndices(SwkJTextPane swkjtextpane, String indexArg1,
             String op, String indexArg2) {
-        int index1 = getIndexLC(swkjtextpane, indexArg1);
-        int index2 = getIndexLC(swkjtextpane, indexArg2);
         Result result = new Result();
         result.setValue(false);
+        final int index1;
+        final int index2;
+        try {
+            index1 = getIndexLC(swkjtextpane, indexArg1);
+            index2 = getIndexLC(swkjtextpane, indexArg2);
+        } catch (IllegalArgumentException iaE) {
+            result.setError(iaE.getMessage());
+            return result;
+        }
 
         if (op.equals("==")) {
             if (index1 == index2) {
