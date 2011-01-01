@@ -50,11 +50,15 @@ foreach method $methods  {
 }
 
 set getMethods [concat $specialGets $getMethods]
-set excludes "-locale -page -styleddocument -color -actioncommand -armed -autocreatecolumnsfrommodel -borderpainted -borderpaintedflat
--columns -defaultcloseoperation -delay -displayedmnemonicindex -dragenabled -editingcolumn -editingrow -focuspainted
--lastdividerlocation -layer -popupmenuvisible -popupvisible -scrolloffset
+set excludes "-class -locale -page -styleddocument -color -actioncommand -armed -autocreatecolumnsfrommodel -borderpainted -borderpaintedflat
+-columns -defaultcloseoperation -delay -displayedmnemonicindex -dragenabled -editingcolumn -editingrow -editable -enabled -focuspainted
+-horizontalscrollbarpolicy -lastdividerlocation -layer -popupmenuvisible -popupvisible -scrolloffset
 -wantsinput -alignmentx -alignmenty -bounds -classname -debuggraphicsoptions -doublebuffered -horizontalalignment -ignorerepaint
--inheritspopupmenu -location -margin -maximumsize -minimumsize -name -preferredsize -size -verticalalignment -orientation
+-inheritspopupmenu -location -margin -maximumsize -minimumsize -name -preferredsize -size -verticalalignment -verticalscrollbarpolicy -orientation
+-verifyinputwhenfocustarget
+-focustraversalpolicyprovider
+-requestfocusenabled
+-focustraversalkeysenabled
 "
 set excludeTypes "java.util.Locale java.lang.String {} int"
 
@@ -126,7 +130,13 @@ foreach method $getMethods  {
 						set cmd "return($widgetVarLocal.${getMethod}());"
 					} elseif {$argType == "state"} {
 						set cmd "return($widgetVarLocal.${getMethod}());"
+					} elseif {$argType == "tstate"} {
+						set cmd "return($widgetVarLocal.${getMethod}());"
 					} elseif {$argType == "default"} {
+						set cmd "return($widgetVarLocal.${getMethod}());"
+					} elseif {$argType == "vscrollbar"} {
+						set cmd "return($widgetVarLocal.${getMethod}());"
+					} elseif {$argType == "hscrollbar"} {
 						set cmd "return($widgetVarLocal.${getMethod}());"
 					} elseif {$argType == "orient"} {
 						set cmd "return($widgetVarLocal.${getMethod}());"
@@ -213,7 +223,6 @@ set getOPTs ""
 set getCASEs  "
         switch (opt) \{
 "
-
 foreach option $options {
         set optionNoDash [string range $option 1 end]
         append getOptions "\"$option\",\n"
@@ -223,7 +232,6 @@ foreach option $options {
                        "
         incr i
 }
-
 append getOptions "\};"
 append getCASEs "\}"
 
