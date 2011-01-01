@@ -24,11 +24,20 @@ proc getSetter {widgetVar mode} {
         "wrap" {
            set result {String value = SwankUtil.getWrap(interp,argv[i+1]);}
         }
+        "tstate" {
+           set result {String value = SwankUtil.getTextState(interp,argv[i+1]);}
+        }
         "state" {
            set result {String value = SwankUtil.getState(interp,argv[i+1]);}
         }
         "default" {
            set result {String value = SwankUtil.getDefault(interp,argv[i+1]);}
+        }
+        "hscrollbar" {
+           set result {int value = SCROLLPOLICY.findPolicy(interp,argv[i+1].toString(),false);}
+        }
+        "vscrollbar" {
+           set result {int value = SCROLLPOLICY.findPolicy(interp,argv[i+1].toString(),true);}
         }
         "tkRelief" {
            set result {String value = SwankUtil.getTkRelief(interp,argv[i+1]);}
