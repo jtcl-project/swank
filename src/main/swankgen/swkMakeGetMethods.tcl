@@ -50,7 +50,7 @@ foreach method $methods  {
 }
 
 set getMethods [concat $specialGets $getMethods]
-set excludes "-class -locale -page -styleddocument -color -actioncommand -armed -autocreatecolumnsfrommodel -borderpainted -borderpaintedflat
+set excludes "-locale -page -styleddocument -color -class -actioncommand -armed -autocreatecolumnsfrommodel -borderpainted -borderpaintedflat
 -columns -defaultcloseoperation -delay -displayedmnemonicindex -dragenabled -editingcolumn -editingrow -editable -enabled -focuspainted
 -horizontalscrollbarpolicy -lastdividerlocation -layer -popupmenuvisible -popupvisible -scrolloffset
 -wantsinput -alignmentx -alignmenty -bounds -classname -debuggraphicsoptions -doublebuffered -horizontalalignment -ignorerepaint
@@ -84,7 +84,7 @@ foreach method $getMethods  {
 				if {$optPos >=  0} {
 				    set excludeType [lindex $excludeTypes $optPos]
 				    if {($excludeType == {}) || ($excludeType == $argType)} {
-#				    puts "skip $method"
+				    #puts "skip $method"
 				    continue
 				}
 				
@@ -218,6 +218,7 @@ foreach method $isMethods  {
 set options [lsort -dictionary [array names goptionList]]
 set i 0
 global getOptions getOPTs getCASEs
+puts $options
 set getOptions "static String validCmds\[\] = \{"
 set getOPTs ""
 set getCASEs  "

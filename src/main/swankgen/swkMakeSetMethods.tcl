@@ -54,7 +54,7 @@ foreach "methodClass methods" $methodGroups {
 
 set resourceNames ""
 set dashOptions ""
-set excludes "-class -locale -page -styleddocument -actioncommand -armed -autocreatecolumnsfrommodel -borderpainted -borderpaintedflat -columns
+set excludes "-locale -page -styleddocument -class -actioncommand -armed -autocreatecolumnsfrommodel -borderpainted -borderpaintedflat -columns
 -defaultcloseoperation -delay -displayedmnemonicindex -dragenabled -editingcolumn -editingrow -focuspainted -horizontalscrollbarpolicy -lastdividerlocation
 -layer -popupmenuvisible -popupvisible -scrolloffset -wantsinput -alignmentx -alignmenty -bounds -classname -debuggraphicsoptions
 -doublebuffered -horizontalalignment -ignorerepaint -inheritspopupmenu -location -margin -maximumsize -minimumsize -name -preferredsize
