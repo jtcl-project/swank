@@ -56,19 +56,19 @@ append specialInits {
   
 # -listvar
         append specialVars {
-                String listVar;
+                String listVariable;
         }
  
         append specialMethods "
-                        public void setListVar(String listVar) \{
-                                        this.listVar = listVar.intern();
+                        public void setListVariable(String listVariable) \{
+                                        this.listVariable = listVariable.intern();
                         \}
-                        public String getListVar() \{
-                                return(listVar);
+                        public String getListVariable() \{
+                                return(listVariable);
                         \}
         "
         set specialGets [concat  $specialGets {
-                {setListVar java.lang.String ListVar}
+                {setListVariable java.lang.String ListVariable}
         }]
 
 
