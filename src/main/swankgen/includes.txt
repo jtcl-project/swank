@@ -1,0 +1,36 @@
+ -activebackground -activeborderwidth -activeforeground -anchor -background -bitmap
+ -borderwidth -compound -cursor -disabledforeground -exportselection -font
+ -foreground -highlightbackground -highlightcolor -highlightthickness -image -insertbackground
+ -insertborderwidth -insertofftime -insertontime -insertwidth -jump -justify
+ -orient -padx -pady -relief -repeatdelay -repeatinterval
+ -selectbackground -selectborderwidth -selectforeground -setgrid -takefocus -text
+ -textvariable -troughcolor -underline -wraplength -xscrollcommand -yscrollcommand
+ -activerelief -activestyle -aspect -autoseparators -bigincrement -class
+ -colormap -command -container -default -digits -direction
+ -disabledbackground -elementborderwidth -format -from -handlepad -handlesize
+ -height -increment -indicatoron -invalidcommand -label -labelanchor
+ -labelwidget -length -listvariable -maxundo -menu -offrelief
+ -offvalue -onvalue -opaqueresize -overrelief -postcommand -readonlybackground
+ -resolution -sashcursor -sashpad -sashrelief -sashwidth -screen
+ -selectcolor -selectimage -selectmode -show -showhandle -showvalue
+ -sliderlength -sliderrelief -spacing1 -spacing2 -spacing3 -state
+ -tabs -tearoff -tearoffcommand -tickinterval -title -to
+ -type -undo -use -validate -validatecommand -value
+ -values -variable -visual -width -wrap -accelerator
+ -acceptallfilefilterused -approvebuttontext -approvebuttontooltiptext -autoresizemode -cellselectionenabled -closable
+ -closed -cols -columnselectionallowed -contenttype -currentdirectory
+ -dvalue -dialogparent -dialogtitle -dialogtype -directory -disabledicon
+ -disabledselectedicon -disabledtextcolor -dividerlocation -dividersize -dragmode -file
+ -fileselectionmode -floatable -focuscycleroot -focusable -gridcolor -hscrollbar
+ -horizontaltextposition -icon -icontextgap -iconifiable -indeterminate -intercellspacing
+ -inverted -jhelptarget -layoutorientation -majortickspacing -maximizable -maximumrowcount
+ -messagetype -minortickspacing -modal -mode -multiselectionenabled -onetouchexpandable
+ -opaque -optiontype -paintlabels -paintticks -painttrack
+ -preferredscrollableviewportsize -pressedicon -resizable -resizeweight -rollover -rolloverenabled
+ -rollovericon -rolloverselectedicon -rowheight -rowmargin -rowselectionallowed -rows
+ -selectedfile -selectedicon -selectedtextcolor -selectionbackground -selectioncolor -selectionend
+ -selectionforeground -selectionmode -selectionstart -showhorizontallines -showverticallines -snaptoticks
+ -string -stringpainted -tablayoutpolicy -tabplacement -tabsize -tooltiptext
+ -undecorated -unitincrement -usecommand -vscrollbar -verticaltextposition -visible
+ -visibleamount -visiblerowcount
+-bd -bg -scrollregion -message -options -hidemargin -fg

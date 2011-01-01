@@ -65,6 +65,12 @@ set excludes "-locale -page -styleddocument -class -actioncommand -armed -autocr
 -focustraversalkeysenabled
 "
 set excludeTypes "java.util.Locale java.lang.String {}"
+
+set fInc [open [file join swankgen includes.txt]]
+set includes [read $fInc]
+close $fInc
+
+
 #puts $specialGets
 #puts ""
 #puts $setMethods
@@ -90,15 +96,14 @@ foreach method $setMethods {
 				if {$dashOption == {}} {
 					set dashOption -[string tolower  $rootPart]
 				}
-				set optPos [lsearch -exact $excludes $dashOption] 
-				if {$optPos >=  0} {
-				    set excludeType [lindex $excludeTypes $optPos]
-				    if {($excludeType == {}) || ($excludeType == $argType)} {
-#				    puts "skip $method"
-				    continue
-				}
-				
-				}
+
+                                set optPos [lsearch -exact $includes $dashOption]
+                                if {$optPos == -1} {
+                                    #puts "skip $method"
+                                    continue
+                                }
+
+
 				
 				if {[lsearch $dashOptions $dashOption] >=  0} {
 #				    puts "$dashOption in dashOptions"

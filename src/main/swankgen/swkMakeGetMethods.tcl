@@ -61,7 +61,9 @@ set excludes "-locale -page -styleddocument -color -class -actioncommand -armed 
 -focustraversalkeysenabled
 "
 set excludeTypes "java.util.Locale java.lang.String {} int"
-
+set fInc [open [file join swankgen includes.txt]]
+set includes [read $fInc]
+close $fInc
 set dashOptions ""
 foreach method $getMethods  {
      set methodClass [string tolower [lindex $method 4]]
@@ -80,15 +82,12 @@ foreach method $getMethods  {
                                         set dashOption -[string tolower  $rootPart]
                                 }
 
-				set optPos [lsearch -exact $excludes $dashOption] 
-				if {$optPos >=  0} {
-				    set excludeType [lindex $excludeTypes $optPos]
-				    if {($excludeType == {}) || ($excludeType == $argType)} {
-				    #puts "skip $method"
+				set optPos [lsearch -exact $includes $dashOption] 
+				if {$optPos == -1} {
+				#    puts "skip $method"
 				    continue
 				}
 				
-				}
 				
 				if {[lsearch $dashOptions $dashOption] >=  0} {
 					continue
@@ -218,7 +217,6 @@ foreach method $isMethods  {
 set options [lsort -dictionary [array names goptionList]]
 set i 0
 global getOptions getOPTs getCASEs
-puts $options
 set getOptions "static String validCmds\[\] = \{"
 set getOPTs ""
 set getCASEs  "
