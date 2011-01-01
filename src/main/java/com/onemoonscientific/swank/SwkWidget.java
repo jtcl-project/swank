@@ -39,6 +39,7 @@ import javax.swing.*;
 public interface SwkWidget {
 
     public static final String NORMAL = "normal";
+    public static final String READONLY = "readonly";
     public static final String DISABLED = "disabled";
     public static final String ACTIVE = "active";
     public static final String LEFT = "left";
