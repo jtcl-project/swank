@@ -286,6 +286,25 @@ public class SwankUtil {
 
         return state;
     }
+    public static String getTextState(Interp interp, TclObject tclObject)
+            throws TclException {
+        String value = tclObject.toString();
+        String state = "";
+
+        if (SwkWidget.NORMAL.startsWith(value)) {
+            state = SwkWidget.NORMAL;
+        } else if (SwkWidget.READONLY.startsWith(value)) {
+            state = SwkWidget.READONLY;
+        } else if (SwkWidget.DISABLED.startsWith(value)) {
+            state = SwkWidget.DISABLED;
+        } else {
+            throw new TclException(interp,
+                    "bad state \"" + value
+                    + "\": must be disabled, normal, or readonly");
+        }
+
+        return state;
+    }
 
     public static String setupTrace(Interp interp, VarTrace varTrace,
             String textVariable, String name) throws TclException {
