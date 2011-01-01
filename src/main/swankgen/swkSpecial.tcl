@@ -430,7 +430,7 @@ proc swkMakeSpecial {widget widgetVar} {
     
     if {[lsearch "SMenuButton JCheckBox JRadioButton JCheckBoxMenuItem JRadioButtonMenuItem" $widget] >= 0} {
         set specialGets [concat  $specialGets {
-            {setSelectedIcon javax.swing.Icon SelectedIcon -selectimage}
+            {setSelectedIcon javax.swing.Icon SelectImage -selectimage}
         }]
     }
     # -scrollregion
@@ -609,11 +609,14 @@ proc swkMakeSpecial {widget widgetVar} {
         append specialMethods {
             public void setState(String state) {
                 if (NORMAL.startsWith(state)) {
+                    this.setEnabled(true);
                     this.setEditable(true);
-                    } else if (ACTIVE.startsWith(state)) {
-                    this.setEditable(true);
+                    } else if (READONLY.startsWith(state)) {
+                    this.setEnabled(true);
+                    this.setEditable(false);
                     } else if (DISABLED.startsWith(state)) {
                     this.setEditable(false);
+                    this.setEnabled(false);
                     } else {
                 }
             }
@@ -627,7 +630,7 @@ proc swkMakeSpecial {widget widgetVar} {
         }
         
         set specialGets [concat  $specialGets {
-            {setState state State}
+            {setState tstate State}
         }]
     }
     # -tabs
@@ -1072,18 +1075,18 @@ proc swkMakeSpecial {widget widgetVar} {
         }
         
         append specialMethods "
-        public void setPadx(int padx) \{
+        public void setPadX(int padx) \{
             this.padx = (int) padx;
 	    emptyBorderInsets.left = this.padx;
 	    emptyBorderInsets.right = this.padx;
 	    minimumSize = null;	
         \}
-        public int getPadx() \{
+        public int getPadX() \{
             return(padx);
         \}
         "
         set specialGets [concat  $specialGets {
-            {setPadx tkSize Padx}
+            {setPadX tkSize PadX}
         }]
     }
     
@@ -1094,18 +1097,18 @@ proc swkMakeSpecial {widget widgetVar} {
         }
         
         append specialMethods "
-        public void setPady(int pady) \{
+        public void setPadY(int pady) \{
             this.pady =(int)  pady;
 	    emptyBorderInsets.top = this.pady;
 	    emptyBorderInsets.bottom = this.pady;
             minimumSize = null;
         \}
-        public int getPady() \{
+        public int getPadY() \{
             return(pady);
         \}
         "
         set specialGets [concat  $specialGets {
-            {setPady tkSize Pady}
+            {setPadY tkSize PadY}
         }]
     }
     
@@ -1381,20 +1384,20 @@ proc swkMakeSpecial {widget widgetVar} {
     # -wraplength
     if {[lsearch "JLabel JMenu SMenuButton JButton JCheckBox JRadioButton JCheckBoxMenuItem JRadioButtonMenuItem" $widget] >= 0} {
         append specialVars {
-            int wraplength;
+            int wrapLength;
         }
         
         append specialMethods "
-        public void setWraplength(int wraplength) \{
-            this.wraplength = wraplength;
+        public void setWrapLength(int wrapLength) \{
+            this.wrapLength = wrapLength;
 	    minimumSize = null;
         \}
-        public int getWraplength() \{
-            return(wraplength);
+        public int getWrapLength() \{
+            return(wrapLength);
         \}
         "
         set specialGets [concat  $specialGets {
-            {setWraplength tkSize Wraplength}
+            {setWrapLength tkSize WrapLength}
         }]
     }
     
@@ -1900,6 +1903,25 @@ proc swkMakeSpecial {widget widgetVar} {
         append specialOpts "
         static final private int OPT_ADD = 4;
         "
+    }
+    set widgets "JScrollPane"
+    if {[lsearch $widgets $widget] >= 0} {
+        append specialMethods {
+            void setVScrollbar(final int policy) {
+                setVerticalScrollBarPolicy(policy);
+            }
+            void setHScrollbar(final int policy ) {
+                setHorizontalScrollBarPolicy(policy);
+            }
+            String getHScrollbar() {
+                return "always";
+            }
+            String getVScrollbar() {
+                return "always";
+            }
+        }
+        lappend specialGets "setVScrollbar vscrollbar VScrollbar -vscrollbar"
+        lappend specialGets "setHScrollbar hscrollbar HScrollbar -hscrollbar"
     }
     set iOpt 3
     if {$widget == "JList"} {
@@ -2437,9 +2459,9 @@ Dimension dSize = new Dimension(scrollRegion[1][0]-scrollRegion[0][0],scrollRegi
                     size.height = (int) (swkheight*fontMetrics.getHeight()*1.2);
                     if ((s1.length() > swkwidth)) {
                         size.width = fontMetrics.stringWidth(s1)+charW;
-                        if (wraplength > (swkwidth*charW)) {
-                            size.width = wraplength+charW;
-                            size.height = (int) (((fontMetrics.stringWidth(s1)/wraplength)+1)*fontMetrics.getHeight()*1.1);
+                        if (wrapLength > (swkwidth*charW)) {
+                            size.width = wrapLength+charW;
+                            size.height = (int) (((fontMetrics.stringWidth(s1)/wrapLength)+1)*fontMetrics.getHeight()*1.1);
                             if (!s1.startsWith("<html>")) {
                                 setText("<html>"+s1+"</html>");
                             }
@@ -2495,6 +2517,17 @@ Dimension dSize = new Dimension(scrollRegion[1][0]-scrollRegion[0][0],scrollRegi
         }
         append specialListeners { ,SwkTextVariable }
         append specialMethods {
+            public void setText(String s) {
+                super.setText(s);
+                minimumSize = null;
+            }
+            public Dimension getPreferredScrollableViewportSize() {
+                Dimension size = new Dimension();
+                FontMetrics fontMetrics =  this.getFontMetrics(this.getFont());
+                size.height = minimumSize.height+2;
+                size.width = getColumns()*fontMetrics.charWidth('O');
+                return size;
+            }
             public Dimension getPreferredSize() {
                 Dimension size = getMinimumSize();
                 return size;
@@ -2503,10 +2536,14 @@ Dimension dSize = new Dimension(scrollRegion[1][0]-scrollRegion[0][0],scrollRegi
 		if(minimumSize == null) {
                 FontMetrics fontMetrics =  this.getFontMetrics(this.getFont());
                 Dimension size = new Dimension();
-                size.height = fontMetrics.getHeight();
+                size.height = fontMetrics.getHeight()+2;
                 size.width = getColumns()*fontMetrics.charWidth('O');
+                int aWidth = fontMetrics.stringWidth(getText());
+                if (aWidth > size.width) {
+                   size.width = aWidth;
+                }
                 insets = getInsets(insets);
-                size.height += insets.top+insets.bottom;
+                size.height += insets.top + insets.bottom;
                 size.width += insets.left+insets.right;
 		minimumSize = size;
 		}
@@ -2514,6 +2551,7 @@ Dimension dSize = new Dimension(scrollRegion[1][0]-scrollRegion[0][0],scrollRegi
             }
             
             public void setSwkWidth(int width) {
+                minimumSize = null;
                 setColumns(width);
             }
             public int getSwkWidth() {
