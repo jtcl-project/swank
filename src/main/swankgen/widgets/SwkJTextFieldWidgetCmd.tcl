@@ -37,74 +37,53 @@ append specialInits {
 
 
 append specialMethods {
-		public void getIndex(String sIndex,int endVal,Result result) {
-     int index=0;
-     boolean isInt = false;
+         public void getIndex(String sIndex,int endVal,Result result) {
+             int index=0;
+             boolean isInt = false;
 
-       if (SwankUtil.looksLikeInt(sIndex)) {
-            try {
-                index = Integer.parseInt(sIndex);
-                isInt = true; 
-            } catch (NumberFormatException nfE) {
-                isInt = false; 
+            if (SwankUtil.looksLikeInt(sIndex)) {
+                try {
+                    index = Integer.parseInt(sIndex);
+                    isInt = true;
+                } catch (NumberFormatException nfE) {
+                    isInt = false;
+                }
             }
-        }
-        
-        if (!isInt) {
+
+            if (!isInt) {
                 boolean validIndex = false;
                 if (sIndex.startsWith("e")) {
-                        index = getText().length()+endVal;
-                        validIndex = true;
-                } else if (sIndex.equals("active")) {
-			index = active;
-			if (index >= getText().length()) {
-				index = getText().length()-1;
-			}
-                        validIndex = true;
+                    index = getText().length()+endVal;
+                    validIndex = true;
                 } else if (sIndex.startsWith("sel.f")) {
-                        validIndex = true;
-                	index = getSelectionStart();
+                    validIndex = true;
+                    index = getSelectionStart();
                 } else if (sIndex.startsWith("sel.l")) {
-                        validIndex = true;
-                 	index = getSelectionEnd();
+                    validIndex = true;
+                    index = getSelectionEnd();
                } else if (sIndex.equals("anchor")) {
-		  	/*	int selected[] = getSelectedIndices();
-		  		if (selected.length > 0) {
-		  			index = selected[0];
-                                        validIndex = true;
-                    } else {
-                    	index = 0;
-                    	validIndex = true;
+                    validIndex = true;
+                    index = getSelectionStart();
+               } else if (sIndex.equals("insert")) {
+                    validIndex = true;
+                    index = getCaretPosition();
+               } else if (sIndex.startsWith("@") ){
+                    if (sIndex.length() > 1) {
+                        String xS = sIndex.substring(1);
+                        try {
+                            int x = Integer.valueOf(xS).intValue();
+                            index = viewToModel(new Point(x,1));
+                            validIndex = true;
+                        } catch (Exception e) {
+                        }
                     }
-                    */
-                } else if (sIndex.startsWith("@") ){
-                	if (sIndex.length() > 1) {
-                        	String xS = sIndex.substring(1);
-		                      try {
-		                   /*     	int x = Integer.valueOf(xS).intValue();
-		                        	p.y = Integer.valueOf(yS).intValue();
-			  						p1 = jview.getViewPosition ();
-									p.y += p1.y;
-		                        	index = locationToIndex(p);
-		                        	*/
-/*			 						Dimension listSize = getSize ();
-			  						index  += (int) (p.y / (listSize.height / model.getSize ()));
-*/
-		                        	validIndex = true;
-		                        } catch (Exception e) 
-		                        {
-		                        }
-                }}
-                
-                if (!validIndex) {
-					result.setError("bad listbox index \""+sIndex+"\": must be active, anchor, end, @x,y, or a number");
-				}
-				
-				
+              }
+
+              if (!validIndex) {
+                  result.setError("bad entry index \""+sIndex+"\"");
+              }
         }
         result.i = index;
-		
     }
-
-		}
+}
 
