@@ -25,10 +25,105 @@ import javax.swing.text.*;
 import javax.swing.tree.*;
 
 class SwkJTextFieldWidgetCmd implements Command {
+        enum SelMode {
+             ADJUST(3,1,1,"index") {
+                Object doTask(SwkJTextField swkjtextfield, final int index1, final int index2) {
+                      swkjtextfield.setCaretPosition(index1);
+                      return null;
+                }
+             },
+             CLEAR(3,0,0,"") {
+                Object doTask(SwkJTextField swkjtextfield, final int index1, final int index2) {
+                      swkjtextfield.setCaretPosition(swkjtextfield.getDocument().getLength());
+                      swkjtextfield.moveCaretPosition(swkjtextfield.getDocument().getLength());
+                      return null;
+                }
+             },
+             FROM(3,1,1,"index") {
+                Object doTask(SwkJTextField swkjtextfield, final int index1, final int index2) {
+                      swkjtextfield.setCaretPosition(index1);
+                      return null;
+                }
+             },
+             PRESENT(3,0,0,"") {
+                Object doTask(SwkJTextField swkjtextfield, final int index1, final int index2) {
+                      Boolean value = Boolean.valueOf(true);
+                      if ((swkjtextfield.getSelectionStart() - swkjtextfield.getSelectionEnd()) ==  0) {
+                          value = Boolean.valueOf(false);
+                      }
+                      if (swkjtextfield.getSelectionStart()  >= swkjtextfield.getDocument().getLength()) {
+                          value = Boolean.valueOf(false);
+                      }
+                      return value;
+                }
+             },
+             RANGE(3,2,2,"start end") {
+                Object doTask(SwkJTextField swkjtextfield, final int index1, final int index2) {
+                      swkjtextfield.setCaretPosition(index1);
+                      swkjtextfield.moveCaretPosition(index2);
+                      return null;
+                }
+             },
+             TO(3,1,1,"index") {
+                Object doTask(SwkJTextField swkjtextfield, final int index1, final int index2) {
+                      swkjtextfield.moveCaretPosition(index1);
+                      return null;
+                }
+             },
+             ;
+             private int startOpt;
+             private int argNumMin;
+             private int argNumMax;
+             private String argNumError;
+             SelMode(final int startOpt, final int argNumMin,final int argNumMax,final String argNumError) {
+                 this.startOpt = startOpt;
+                 this.argNumMin = argNumMin;
+                 this.argNumMax = argNumMax;
+                 this.argNumError = argNumError;
+             }
+             void checkArgCount(final Interp interp, final TclObject[] argv) throws TclException {
+                   int numOptArgs = argv.length-startOpt;
+                   if ((numOptArgs < argNumMin) || (numOptArgs > argNumMax)) {
+                         throw new TclNumArgsException(interp,startOpt,argv,argNumError);
+                   }
+             }
+             static SelMode getSelMode(final Interp interp, final String modeName) throws TclException {
+                  String modeNameUC = modeName.toUpperCase();
+                  SelMode selModeMatch = null;
+                  if (selModeMatch == null) {
+                      for (SelMode selMode:SelMode.values()) {
+                         if (modeNameUC.startsWith(selMode.toString())) {
+                             selModeMatch = selMode;
+                             break;
+                         }
+                      }
+                  }
+                  if (selModeMatch == null)  {
+                      throw new TclException(interp,"bad selection option \"" + modeName + "\": must be adjust, clear, from, present, range, or to");
+                  }
+                  return selModeMatch;
+             }
+             void exec(final Interp interp, final SwkJTextField swkjtextfield, final TclObject[] argv,Selection selection) throws TclException {
+                 String index1 = null;
+                 String index2 = null;
+                 if (argv.length > 3) {
+                     index1 = argv[3].toString();
+                 }
+                 if (argv.length > 4) {
+                     index2 = argv[4].toString();
+                 }
+                 Object objResult = selection.exec(swkjtextfield,this,index1,index2);
+                 if (objResult != null) {
+                      interp.setResult("1");
+                 }
+             }
+                abstract Object doTask(SwkJTextField swkjtextfield, final int index1, final int index2);
+
+        }
 
     static final private String[] validCmds = {
         "bbox","cget", "configure", "delete", "get", "icursor","index",
-        "insert", "scan", "selection", "xview"
+        "insert", "scan", "selection", "validate","xview"
     };
     static final private int OPT_BBOX = 0;
     static final private int OPT_CGET = 1;
@@ -40,7 +135,8 @@ class SwkJTextFieldWidgetCmd implements Command {
     static final private int OPT_INSERT = 7;
     static final private int OPT_SCAN = 8;
     static final private int OPT_SELECTION = 9;
-    static final private int OPT_XVIEW = 10;
+    static final private int OPT_VALIDATE = 10;
+    static final private int OPT_XVIEW = 11;
     static boolean gotDefaults = false;
     int index;
     Interp interp = null;
@@ -124,8 +220,10 @@ class SwkJTextFieldWidgetCmd implements Command {
                 break;
 
             case OPT_GET:
+                if (argv.length != 2) {
+                    throw new TclNumArgsException(interp, 2, argv, "");
+                }
                 interp.setResult(swkjtextfield.getText());
-
                 break;
              case OPT_ICURSOR:
                 icursor(interp, swkjtextfield, argv);
@@ -145,7 +243,12 @@ class SwkJTextFieldWidgetCmd implements Command {
                 break;
 
             case OPT_SELECTION:
+                selection(interp, swkjtextfield, argv);
                 break;
+
+            case OPT_VALIDATE:
+                break;
+
 
             case OPT_XVIEW:
 
@@ -238,7 +341,7 @@ class SwkJTextFieldWidgetCmd implements Command {
     int getIndex2(final Interp interp, final SwkJTextField swkjtextfield,
             final TclObject[] argv, int offset) throws TclException {
         if (argv.length != 3) {
-            throw new TclNumArgsException(interp, 2, argv, "index");
+            throw new TclNumArgsException(interp, 2, argv, "string");
         }
 
         int index = (new Index()).exec(swkjtextfield, argv[2].toString(), offset);
@@ -249,7 +352,7 @@ class SwkJTextFieldWidgetCmd implements Command {
     void getIndex(final Interp interp, final SwkJTextField swkjtextfield,
             final TclObject[] argv, int offset) throws TclException {
         if (argv.length != 3) {
-            throw new TclNumArgsException(interp, 2, argv, "index");
+            throw new TclNumArgsException(interp, 2, argv, "string");
         }
 
         int index = (new Index()).exec(swkjtextfield, argv[2].toString(), offset);
@@ -271,7 +374,7 @@ class SwkJTextFieldWidgetCmd implements Command {
     void delete(final Interp interp, final SwkJTextField swkjtextfield,
             final TclObject[] argv) throws TclException {
         if ((argv.length < 3) || (argv.length > 4)) {
-            throw new TclNumArgsException(interp, 2, argv, "first ?last?");
+            throw new TclNumArgsException(interp, 2, argv, "firstIndex ?lastIndex?");
         }
         final String firstPos = argv[2].toString();
         final String lastPos;
@@ -289,7 +392,7 @@ class SwkJTextFieldWidgetCmd implements Command {
    void icursor(final Interp interp, final SwkJTextField swkjtextfield,
             final TclObject[] argv) throws TclException {
         if (argv.length != 3) {
-            throw new TclNumArgsException(interp, 2, argv, "index");
+            throw new TclNumArgsException(interp, 2, argv, "pos");
         }
         (new Icursor()).exec(swkjtextfield, argv[2].toString());
     }
@@ -297,11 +400,21 @@ class SwkJTextFieldWidgetCmd implements Command {
     void insert(final Interp interp, final SwkJTextField swkjtextfield,
             final TclObject[] argv) throws TclException {
         if (argv.length != 4) {
-            throw new TclNumArgsException(interp, 2, argv, "option");
+            throw new TclNumArgsException(interp, 2, argv, "index text");
         }
 
         (new Insert()).exec(swkjtextfield, argv[2].toString(),
                 argv[3].toString());
+    }
+    void selection(final Interp interp, final SwkJTextField swkjtextfield,
+            final TclObject[] argv) throws TclException {
+        if (argv.length  < 3) {
+            throw new TclNumArgsException(interp, 2, argv, "option ?index?");
+        }
+        String modeArg = argv[2].toString();
+        final SelMode mode = SelMode.getSelMode(interp,modeArg);
+        mode.checkArgCount(interp,argv);
+        mode.exec(interp,swkjtextfield,argv, new Selection());
     }
  class Bbox extends GetValueOnEventThread {
 
@@ -355,6 +468,9 @@ class SwkJTextFieldWidgetCmd implements Command {
         }
 
         public void run() {
+            if (!swkjtextfield.isEditable()) {
+                return;
+            }
             Result result = new Result();
             swkjtextfield.getIndex(item, 0, result);
 
@@ -363,6 +479,52 @@ class SwkJTextFieldWidgetCmd implements Command {
                 return;
             }
             swkjtextfield.setCaretPosition(result.i); 
+        }
+    }
+  class Selection extends GetValueOnEventThread {
+
+        SwkJTextField swkjtextfield = null;
+        String item1 = null;
+        String item2 = null;
+        SelMode selMode = null;
+        String errMessage = null;
+        Object objResult = null;
+        Object exec(final SwkJTextField swkjtextfield, SelMode selMode, final String item1, final String item2) throws TclException {
+            this.selMode = selMode;
+            this.item1 = item1;
+            this.item2 = item2;
+            this.swkjtextfield = swkjtextfield;
+            execOnThread();
+            if (errMessage != null) {
+                throw new TclException(interp, errMessage);
+            }
+            return objResult;
+        }
+
+        public void run() {
+            if (!swkjtextfield.isEnabled()) {
+                return;
+            }
+            Result result = new Result();
+            int index1 = 0;
+            int index2 = 0;
+            if (item1 != null) {
+                swkjtextfield.getIndex(item1, 0, result);
+            }
+            if (result.hasError()) {
+                errMessage = result.getErrorMsg();
+                return;
+            }
+            index1 = result.i;
+            if (item2 != null) {
+                swkjtextfield.getIndex(item2, 0, result);
+                if (result.hasError()) {
+                    errMessage = result.getErrorMsg();
+                    return;
+                }
+                index2 = result.i;
+            }
+            objResult = selMode.doTask(swkjtextfield,index1, index2);
         }
     }
 
@@ -418,6 +580,9 @@ class SwkJTextFieldWidgetCmd implements Command {
         }
 
         public void run() {
+            if (!swkjtextfield.isEditable()) {
+                return;
+            }
             Result result1 = new Result();
             Result result2 = new Result();
             swkjtextfield.getIndex(firstPos, 0, result1);
@@ -445,7 +610,7 @@ class SwkJTextFieldWidgetCmd implements Command {
         }
     }
 
-    class Insert extends UpdateOnEventThread {
+    class Insert extends GetValueOnEventThread {
 
         SwkJTextField swkjtextfield = null;
         String strIndex = null;
@@ -461,6 +626,9 @@ class SwkJTextFieldWidgetCmd implements Command {
         }
 
         public void run() {
+            if (!swkjtextfield.isEditable()) {
+                return;
+            }
             Result result = new Result();
             swkjtextfield.getIndex(strIndex, 0, result);
 
