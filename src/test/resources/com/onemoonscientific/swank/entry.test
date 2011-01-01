@@ -48,7 +48,7 @@ foreach test {
     {-bd 4 4 badValue {bad screen distance "badValue"}}
     {-bg red red non-existent {unknown color name "non-existent"}}
     {-borderwidth 1.3 1 badValue {bad screen distance "badValue"}}
-    {-cursor arrow arrow badValue {bad cursor spec "badValue"}}
+    {-cursor left_ptr left_ptr badValue {bad cursor spec "badValue"}}
     {-exportselection yes 1 xyzzy {expected boolean value but got "xyzzy"}}
     {-fg #110022 #110022 bogus {unknown color name "bogus"}}
     {-font "Helvetica 12" "Helvetica 12" {} {font "" doesn't exist}}
@@ -317,21 +317,21 @@ test entry-3.40 {EntryWidgetCmd procedure, "insert" widget command} {
 test entry-3.41 {EntryWidgetCmd procedure, "insert" widget command} {
     list [catch {.e insert a b c} msg] $msg
 } {1 {wrong # args: should be ".e insert index text"}}
-test entry-3.42 {EntryWidgetCmd procedure, "scan" widget command} {
+test entry-3.42 {EntryWidgetCmd procedure, "scan" widget command} tkOnly {
     list [catch {.e scan a} msg] $msg
 } {1 {wrong # args: should be ".e scan mark|dragto x"}}
-test entry-3.43 {EntryWidgetCmd procedure, "scan" widget command} {
+test entry-3.43 {EntryWidgetCmd procedure, "scan" widget command} tkOnly {
     list [catch {.e scan a b c} msg] $msg
 } {1 {wrong # args: should be ".e scan mark|dragto x"}}
-test entry-3.44 {EntryWidgetCmd procedure, "scan" widget command} {
+test entry-3.44 {EntryWidgetCmd procedure, "scan" widget command} tkOnly {
     list [catch {.e scan foobar 20} msg] $msg
 } {1 {bad scan option "foobar": must be mark or dragto}}
-test entry-3.45 {EntryWidgetCmd procedure, "scan" widget command} {
+test entry-3.45 {EntryWidgetCmd procedure, "scan" widget command} tkOnly {
     list [catch {.e scan mark 20.1} msg] $msg
 } {1 {expected integer but got "20.1"}}
 # This test is non-portable because character sizes vary.
 
-test entry-3.46 {EntryWidgetCmd procedure, "scan" widget command} {fonts} {
+test entry-3.46 {EntryWidgetCmd procedure, "scan" widget command} {fonts tkOnly} {
     .e delete 0 end
     update
     .e insert end "This is quite a long string, in fact a "
@@ -458,76 +458,76 @@ test entry-3.64 {EntryWidgetCmd procedure, "selection" widget command} {
 test entry-3.64 {EntryWidgetCmd procedure, "selection to" widget command} {
     list [catch {.e select to 2 3} msg] $msg
 } {1 {wrong # args: should be ".e selection to index"}}
-test entry-3.65 {EntryWidgetCmd procedure, "xview" widget command} {
+test entry-3.65 {EntryWidgetCmd procedure, "xview" widget command} tkOnly {
     .e xview 5
     .e xview
 } {0.0537634 0.268817}
-test entry-3.66 {EntryWidgetCmd procedure, "xview" widget command} {
+test entry-3.66 {EntryWidgetCmd procedure, "xview" widget command} tkOnly {
     list [catch {.e xview gorp} msg] $msg
 } {1 {bad entry index "gorp"}}
-test entry-3.67 {EntryWidgetCmd procedure, "xview" widget command} {
+test entry-3.67 {EntryWidgetCmd procedure, "xview" widget command} tkOnly {
     .e xview 0
     .e icursor 10
     .e xview insert
     .e xview
 } {0.107527 0.322581}
-test entry-3.68 {EntryWidgetCmd procedure, "xview" widget command} {
+test entry-3.68 {EntryWidgetCmd procedure, "xview" widget command} tkOnly {
     list [catch {.e xview moveto foo bar} msg] $msg
 } {1 {wrong # args: should be ".e xview moveto fraction"}}
-test entry-3.69 {EntryWidgetCmd procedure, "xview" widget command} {
+test entry-3.69 {EntryWidgetCmd procedure, "xview" widget command} tkOnly {
     list [catch {.e xview moveto foo} msg] $msg
 } {1 {expected floating-point number but got "foo"}}
-test entry-3.70 {EntryWidgetCmd procedure, "xview" widget command} {
+test entry-3.70 {EntryWidgetCmd procedure, "xview" widget command} tkOnly {
     .e xview moveto 0.5
     .e xview
 } {0.505376 0.72043}
-test entry-3.71 {EntryWidgetCmd procedure, "xview" widget command} {
+test entry-3.71 {EntryWidgetCmd procedure, "xview" widget command} tkOnly {
     list [catch {.e xview scroll 24} msg] $msg
 } {1 {wrong # args: should be ".e xview scroll number units|pages"}}
-test entry-3.72 {EntryWidgetCmd procedure, "xview" widget command} {
+test entry-3.72 {EntryWidgetCmd procedure, "xview" widget command} tkOnly {
     list [catch {.e xview scroll gorp units} msg] $msg
 } {1 {expected integer but got "gorp"}}
-test entry-3.73 {EntryWidgetCmd procedure, "xview" widget command} {
+test entry-3.73 {EntryWidgetCmd procedure, "xview" widget command} tkOnly {
     .e xview moveto 0
     .e xview scroll 1 pages
     .e xview
 } {0.193548 0.408602}
-test entry-3.74 {EntryWidgetCmd procedure, "xview" widget command} {
+test entry-3.74 {EntryWidgetCmd procedure, "xview" widget command} tkOnly {
     .e xview moveto .9
     update
     .e xview scroll -2 p
     .e xview
 } {0.397849 0.612903}
-test entry-3.75 {EntryWidgetCmd procedure, "xview" widget command} {
+test entry-3.75 {EntryWidgetCmd procedure, "xview" widget command} tkOnly {
     .e xview 30
     update
     .e xview scroll 2 units 
     .e index @0
 } {32}
-test entry-3.76 {EntryWidgetCmd procedure, "xview" widget command} {
+test entry-3.76 {EntryWidgetCmd procedure, "xview" widget command} tkOnly {
     .e xview 30
     update
     .e xview scroll -1 units 
     .e index @0
 } {29}
-test entry-3.77 {EntryWidgetCmd procedure, "xview" widget command} {
+test entry-3.77 {EntryWidgetCmd procedure, "xview" widget command} tkOnly {
     list [catch {.e xview scroll 23 foobars} msg] $msg
 } {1 {bad argument "foobars": must be units or pages}}
-test entry-3.78 {EntryWidgetCmd procedure, "xview" widget command} {
+test entry-3.78 {EntryWidgetCmd procedure, "xview" widget command} tkOnly {
     list [catch {.e xview eat 23 hamburgers} msg] $msg
 } {1 {unknown option "eat": must be moveto or scroll}}
-test entry-3.79 {EntryWidgetCmd procedure, "xview" widget command} {
+test entry-3.79 {EntryWidgetCmd procedure, "xview" widget command} tkOnly {
     .e xview 0
     update
     .e xview -4
     .e index @0
 } {0}
-test entry-3.80 {EntryWidgetCmd procedure, "xview" widget command} {
+test entry-3.80 {EntryWidgetCmd procedure, "xview" widget command} tkOnly {
     .e xview 300
     .e index @0
 } {73}
 .e insert 10 \u4e4e
-test entry-3.81 {EntryWidgetCmd procedure, "xview" widget command} {
+test entry-3.81 {EntryWidgetCmd procedure, "xview" widget command} tkOnly {
     # UTF
     # If Tcl_NumUtfChars wasn't used, wrong answer would be:
     # 0.106383 0.117021 0.117021
