@@ -33,4 +33,4 @@
  -string -stringpainted -tablayoutpolicy -tabplacement -tabsize -tooltiptext
  -undecorated -unitincrement -usecommand -vscrollbar -verticaltextposition -visible
  -visibleamount -visiblerowcount
--bd -bg -scrollregion -message -options -hidemargin -fg
+-bd -bg -scrollregion -message -options -hidemargin -fg -nativekeys
