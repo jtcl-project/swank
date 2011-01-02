@@ -53,18 +53,18 @@ text .t2
 set i 0
 foreach test {
     {-autoseparators yes 1 nah}
-    {-background #ff00ff #ff00ff <gorp>}
+    {-background magenta magenta <gorp>}
     {-bd 4 4 foo}
     {-bg blue blue #xx}
     {-borderwidth 7 7 ++}
-    {-cursor watch watch lousy}
+    {-cursor wait wait lousy}
     {-exportselection no 0 maybe}
     {-fg red red stupid}
-    {-font fixed fixed {}}
-    {-foreground #012 #012 bogus}
+    {-font "Dialog 12" "Dialog 12" {}}
+    {-foreground #012 #001020 bogus}
     {-height 5 5 bad}
-    {-highlightbackground #123 #123 bogus}
-    {-highlightcolor #234 #234 bogus}
+    {-highlightbackground #123 #102030 bogus}
+    {-highlightcolor #234 #203040 bogus}
     {-highlightthickness -2 0 bad}
     {-insertbackground green green <bogus>}
     {-insertborderwidth 45 45 bogus}
@@ -101,15 +101,15 @@ test text-1.[incr i] {text options} {
     .t2 configure -takefocus "any old thing"
     .t2 cget -takefocus
 } {any old thing}
-test text-1.[incr i] {text options} {
+test text-1.[incr i] {text options} tkOnly {
     .t2 configure -xscrollcommand "x scroll command"
     .t2 configure -xscrollcommand
 } {-xscrollcommand xScrollCommand ScrollCommand {} {x scroll command}}
-test text-1.[incr i] {text options} {
+test text-1.[incr i] {text options} tkOnly {
     .t2 configure -yscrollcommand "test command"
     .t2 configure -yscrollcommand
 } {-yscrollcommand yScrollCommand ScrollCommand {} {test command}}
-test text-1.[incr i] {text options} {
+test text-1.[incr i] {text options} tkOnly {
     set result {}
     foreach i [.t2 configure] {
 	lappend result [lindex $i 4]
@@ -154,7 +154,7 @@ test text-3.1 {TextWidgetCmd procedure, basics} {
 } {1 {wrong # args: should be ".t option ?arg arg ...?"}}
 test text-3.2 {TextWidgetCmd procedure} {
     list [catch {.t gorp 1.0 z 1.2} msg] $msg
-} {1 {bad option "gorp": must be bbox, cget, compare, configure, debug, delete, dlineinfo, dump, edit, get, image, index, insert, mark, scan, search, see, tag, window, xview, or yview}}
+} {1 {bad option "gorp": must be bbox, cget, compare, configure, debug, delete, dlineinfo, dump, edit, get, image, index, insert, mark, scan, search, see, tag, or window}}
 
 test text-4.1 {TextWidgetCmd procedure, "bbox" option} {
     list [catch {.t bbox} msg] $msg
@@ -222,7 +222,7 @@ test text-6.13 {TextWidgetCmd procedure, "compare" option} {
 } {1 {bad comparison operator "z": must be <, <=, ==, >=, >, or !=}}
 test text-6.14 {TextWidgetCmd procedure, "compare" option} {
     list [catch {.t co 1.0 z 1.2} msg] $msg
-} {1 {bad option "co": must be bbox, cget, compare, configure, debug, delete, dlineinfo, dump, edit, get, image, index, insert, mark, scan, search, see, tag, window, xview, or yview}}
+} {1 {ambiguous option "co": must be bbox, cget, compare, configure, debug, delete, dlineinfo, dump, edit, get, image, index, insert, mark, scan, search, see, tag, or window}}
 
 # "configure" option is already covered above
 
@@ -231,7 +231,7 @@ test text-7.1 {TextWidgetCmd procedure, "debug" option} {
 } {1 {wrong # args: should be ".t debug boolean"}}
 test text-7.2 {TextWidgetCmd procedure, "debug" option} {
     list [catch {.t de 0 1} msg] $msg
-} {1 {bad option "de": must be bbox, cget, compare, configure, debug, delete, dlineinfo, dump, edit, get, image, index, insert, mark, scan, search, see, tag, window, xview, or yview}}
+} {1 {ambiguous option "de": must be bbox, cget, compare, configure, debug, delete, dlineinfo, dump, edit, get, image, index, insert, mark, scan, search, see, tag, or window}}
 test text-7.3 {TextWidgetCmd procedure, "debug" option} {
     .t debug true
     .t deb
@@ -391,7 +391,7 @@ test text-10.2 {TextWidgetCmd procedure, "index" option} {
 } {1 {wrong # args: should be ".t index index"}}
 test text-10.3 {TextWidgetCmd procedure, "index" option} {
     list [catch {.t in a b} msg] $msg
-} {1 {bad option "in": must be bbox, cget, compare, configure, debug, delete, dlineinfo, dump, edit, get, image, index, insert, mark, scan, search, see, tag, window, xview, or yview}}
+} {1 {ambiguous option "in": must be bbox, cget, compare, configure, debug, delete, dlineinfo, dump, edit, get, image, index, insert, mark, scan, search, see, tag, or window}}
 test text-10.4 {TextWidgetCmd procedure, "index" option} {
     list [catch {.t index @xyz} msg] $msg
 } {1 {bad text index "@xyz"}}
