@@ -27,26 +27,28 @@ import javax.swing.tree.*;
 class SwkJTextPaneWidgetCmd implements Command {
 
     static final private String[] validCmds = {
-        "cget", "configure", "elem", "insert", "tag", "celem",
-        "index", "delete", "mark", "compare", "get", "see", "window", "bbox",
-        "search", "debug"
+        "bbox","cget", "compare","configure", "debug", "delete", "dlineinfo", "dump", "edit", "get", 
+        "image", "index", "insert", "mark", "scan", "search", "see", "tag", "window"
     };
-    static final private int OPT_CGET = 0;
-    static final private int OPT_CONFIGURE = 1;
-    static final private int OPT_ELEM = 2;
-    static final private int OPT_INSERT = 3;
-    static final private int OPT_TAG = 4;
-    static final private int OPT_CELEM = 5;
-    static final private int OPT_INDEX = 6;
-    static final private int OPT_DELETE = 7;
-    static final private int OPT_MARK = 8;
-    static final private int OPT_COMPARE = 9;
-    static final private int OPT_GET = 10;
-    static final private int OPT_SEE = 11;
-    static final private int OPT_WINDOW = 12;
-    static final private int OPT_BBOX = 13;
-    static final private int OPT_SEARCH = 14;
-    static final private int OPT_DEBUG = 15;
+    static final private int OPT_BBOX = 0;
+    static final private int OPT_CGET = 1;
+    static final private int OPT_COMPARE = 2;
+    static final private int OPT_CONFIGURE = 3;
+    static final private int OPT_DEBUG = 4;
+    static final private int OPT_DELETE = 5;
+    static final private int OPT_DLINEINFO = 6;
+    static final private int OPT_DUMP = 7;
+    static final private int OPT_EDIT = 8;
+    static final private int OPT_GET = 9;
+    static final private int OPT_IMAGE = 10;
+    static final private int OPT_INDEX = 11;
+    static final private int OPT_INSERT = 12;
+    static final private int OPT_MARK = 13;
+    static final private int OPT_SCAN = 14;
+    static final private int OPT_SEARCH = 15;
+    static final private int OPT_SEE = 16;
+    static final private int OPT_TAG = 17;
+    static final private int OPT_WINDOW = 18;
     static boolean gotDefaults = false;
     Interp interp = null;
 
@@ -119,15 +121,14 @@ class SwkJTextPaneWidgetCmd implements Command {
 
                 break;
 
-            case OPT_ELEM:
-                elem(interp, swkjtextpane, argv);
-
+            case OPT_DUMP:
+                dump(interp, swkjtextpane, argv);
                 break;
 
-            case OPT_CELEM:
-                celem(interp, swkjtextpane, argv);
-
+            case OPT_EDIT:
+                dump(interp, swkjtextpane, argv);
                 break;
+
 
             case OPT_INDEX:
                 index(interp, swkjtextpane, argv);
@@ -193,8 +194,11 @@ class SwkJTextPaneWidgetCmd implements Command {
                 throw new TclRuntimeError("TclIndex.get() error");
         }
     }
+    void edit(Interp interp, SwkJTextPane swkjtextpane, TclObject[] argv)
+            throws TclException {
+    }
 
-    void elem(Interp interp, SwkJTextPane swkjtextpane, TclObject[] argv)
+    void dump(Interp interp, SwkJTextPane swkjtextpane, TclObject[] argv)
             throws TclException {
         ElementIterator elIter = new ElementIterator(swkjtextpane.doc);
         Element elem;
