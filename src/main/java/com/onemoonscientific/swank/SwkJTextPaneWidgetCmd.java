@@ -126,7 +126,7 @@ class SwkJTextPaneWidgetCmd implements Command {
                 break;
 
             case OPT_EDIT:
-                dump(interp, swkjtextpane, argv);
+                edit(interp, swkjtextpane, argv);
                 break;
 
 
@@ -196,6 +196,35 @@ class SwkJTextPaneWidgetCmd implements Command {
     }
     void edit(Interp interp, SwkJTextPane swkjtextpane, TclObject[] argv)
             throws TclException {
+        if (argv.length < 3) {
+            throw new TclNumArgsException(interp, 2, argv, "option ?arg arg ...?");
+        }
+        if (argv[2].toString().equals("undo")) {
+            if (swkjtextpane.undoManager != null) {
+                if (!swkjtextpane.undoManager.canUndo()) {
+                     throw new TclException(interp,"nothing to undo");
+                }
+                swkjtextpane.undoManager.undo();
+            }
+        } else if (argv[2].toString().equals("redo")) {
+            if (swkjtextpane.undoManager != null) {
+                if (!swkjtextpane.undoManager.canRedo()) {
+                     throw new TclException(interp,"nothing to redo");
+                }
+                swkjtextpane.undoManager.redo();
+            }
+        } else if (argv[2].toString().equals("reset")) {
+            if (swkjtextpane.undoManager != null) {
+                swkjtextpane.undoManager.discardAllEdits();
+            }
+        } else if (argv[2].toString().equals("separator")) {
+        } else if (argv[2].toString().equals("modified")) {
+            if (argv.length == 4) {
+            }
+        } else {
+           throw new TclException(interp,"bad edit option \"" + argv[2].toString() + "\": must be modified, redo, reset, separator or undo");
+        }
+
     }
 
     void dump(Interp interp, SwkJTextPane swkjtextpane, TclObject[] argv)

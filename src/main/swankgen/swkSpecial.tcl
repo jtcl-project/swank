@@ -1294,19 +1294,16 @@ proc swkMakeSpecial {widget widgetVar} {
     set vWidgets "JTextPane JLabel JMenu SMenuButton JButton JCheckBox JRadioButton JCheckBoxMenuItem JRadioButtonMenuItem JList JPanel LabelFrame JScrollBar JSlider JTextArea JTextField JLabel"
     
     if {[lsearch $vWidgets $widget ] >= 0} {
-        append specialVars {
-            String takeFocus=null;
+        append specialMethods {
+        public void setTakeFocus(final boolean takeFocus) {
+               setFocusable(takeFocus);
         }
-        append specialMethods "
-        public void setTakeFocus(String takeFocus) \{
-            this.takeFocus = takeFocus.intern();
-        \}
-        public String getTakeFocus() \{
-            return(takeFocus);
-        \}
-        "
+        public boolean getTakeFocus() {
+            return isFocusable();
+        }
+        }
         set specialGets [concat  $specialGets {
-            {setTakeFocus java.lang.String TakeFocus}
+            {setTakeFocus boolean TakeFocus}
         }]
     }
     
@@ -2589,13 +2586,49 @@ Dimension dSize = new Dimension(scrollRegion[1][0]-scrollRegion[0][0],scrollRegi
     }
     
     if {[lsearch "JTextPane JEditorPane" $widget] >= 0} {
+        append specialImports "import javax.swing.undo.*;"
         append specialVars {
             int swkwidth=80;
             int swkheight=24;
+            UndoManager undoManager = null;
         }
         set specialGets [concat  $specialGets { {setSwkWidth int Width} } ]
         set specialGets [concat  $specialGets { {setSwkHeight int Height} } ]
+        set specialGets [concat  $specialGets { {setUndo boolean Undo} } ]
+        set specialGets [concat  $specialGets { {setMaxUndo int MaxUndo} } ]
+        set specialGets [concat  $specialGets { {setAutoSeparators boolean AutoSeparators} } ]
         append specialMethods {
+            public void setUndo(final boolean value) {
+                if (value) {
+                      undoManager = new UndoManager();
+                      getDocument().addUndoableEditListener(undoManager);
+                } else {
+                      if (undoManager != null) {
+                          getDocument().removeUndoableEditListener(undoManager);
+                          undoManager = null;
+                      }
+                }
+            }
+            public boolean getUndo() {
+                return undoManager != null;
+            }
+            public boolean getAutoSeparators() {
+                 return false;
+            }
+            public void setAutoSeparators(final boolean value) {
+            }
+            public int getMaxUndo() {
+                 int value = -1;
+                 if (undoManager != null) {
+                     value = undoManager.getLimit();
+                 }
+                 return value;
+            }
+            public void setMaxUndo(final int value) {
+                 if (undoManager != null) {
+                      undoManager.setLimit(value);
+                 }
+            }
             public Dimension getPreferredScrollableViewportSize() {
                 FontMetrics fontMetrics =  this.getFontMetrics(this.getFont());
                 Dimension size = new Dimension();
