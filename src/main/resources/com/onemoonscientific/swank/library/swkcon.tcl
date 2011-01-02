@@ -662,7 +662,7 @@ proc ::tkcon::InitTab {w} {
     set con $fr.text
     set spane $fr.spane
     text $con -wrap char -foreground $COLOR(stdin) \
-            -insertbackground $COLOR(cursor) 
+            -insertbackground $COLOR(cursor) -nativekeys 0
     $con mark set output 1.0
     $con mark set limit 1.0
     if {[string compare {} $COLOR(bg)]} {
