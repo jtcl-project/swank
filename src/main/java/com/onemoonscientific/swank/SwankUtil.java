@@ -660,6 +660,9 @@ public class SwankUtil {
     public static Insets getInsets(Interp interp, TclObject tclObject)
             throws TclException {
         TclObject[] argv = TclList.getElements(interp, tclObject);
+         if (argv.length != 4) {
+             throw new TclException(interp,"Inset arg must have two elements");
+         }
         int top = TclInteger.get(interp, argv[0]);
         int left = TclInteger.get(interp, argv[1]);
         int bottom = TclInteger.get(interp, argv[2]);
@@ -687,6 +690,9 @@ public class SwankUtil {
     public static Point getPoint(Interp interp, TclObject tclObject)
             throws TclException {
         TclObject[] argv = TclList.getElements(interp, tclObject);
+         if (argv.length != 2) {
+             throw new TclException(interp,"Point arg must have two elements");
+         }
         int x = TclInteger.get(interp, argv[0]);
         int y = TclInteger.get(interp, argv[1]);
 
@@ -703,6 +709,9 @@ public class SwankUtil {
     public static Dimension getDimension(Interp interp, TclObject tclObject)
             throws TclException {
         TclObject[] argv = TclList.getElements(interp, tclObject);
+         if (argv.length != 2) {
+             throw new TclException(interp,"Dimension arg must have two elements");
+         }
         int width = TclInteger.get(interp, argv[0]);
         int height = TclInteger.get(interp, argv[1]);
 
