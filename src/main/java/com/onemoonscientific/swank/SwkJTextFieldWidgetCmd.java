@@ -28,7 +28,21 @@ class SwkJTextFieldWidgetCmd implements Command {
         enum SelMode {
              ADJUST(3,1,1,"index") {
                 Object doTask(SwkJTextField swkjtextfield, final int index1, final int index2) {
-                      swkjtextfield.setCaretPosition(index1);
+                      int start = swkjtextfield.getSelectionStart();
+                      int end = swkjtextfield.getSelectionEnd();
+                      final int new1;
+                      final int new2;
+                      if ( Math.abs(start-index1) < Math.abs(end-index1)) {
+                           new1 = end;
+                           new2 = index1;
+                      } else {
+                           new1 = start;
+                           new2 = index1;
+                      }
+                      swkjtextfield.setCaretPosition(new1);
+                      swkjtextfield.moveCaretPosition(new2);
+                      SelectionCmd.setSelectionWindow(swkjtextfield);
+
                       return null;
                 }
              },
@@ -36,23 +50,29 @@ class SwkJTextFieldWidgetCmd implements Command {
                 Object doTask(SwkJTextField swkjtextfield, final int index1, final int index2) {
                       swkjtextfield.setCaretPosition(swkjtextfield.getDocument().getLength());
                       swkjtextfield.moveCaretPosition(swkjtextfield.getDocument().getLength());
+                      SelectionCmd.setSelectionWindow(swkjtextfield);
                       return null;
                 }
              },
              FROM(3,1,1,"index") {
                 Object doTask(SwkJTextField swkjtextfield, final int index1, final int index2) {
                       swkjtextfield.setCaretPosition(index1);
+                      SelectionCmd.setSelectionWindow(swkjtextfield);
                       return null;
                 }
              },
              PRESENT(3,0,0,"") {
                 Object doTask(SwkJTextField swkjtextfield, final int index1, final int index2) {
                       Boolean value = Boolean.valueOf(true);
-                      if ((swkjtextfield.getSelectionStart() - swkjtextfield.getSelectionEnd()) ==  0) {
+                      if (swkjtextfield.getDocument().getLength() == 0) {
                           value = Boolean.valueOf(false);
-                      }
-                      if (swkjtextfield.getSelectionStart()  >= swkjtextfield.getDocument().getLength()) {
-                          value = Boolean.valueOf(false);
+                      } else {
+                          if ((swkjtextfield.getSelectionStart() - swkjtextfield.getSelectionEnd()) ==  0) {
+                              value = Boolean.valueOf(false);
+                          }
+                          if (swkjtextfield.getSelectionStart()  >= swkjtextfield.getDocument().getLength()) {
+                              value = Boolean.valueOf(false);
+                          }
                       }
                       return value;
                 }
@@ -61,12 +81,14 @@ class SwkJTextFieldWidgetCmd implements Command {
                 Object doTask(SwkJTextField swkjtextfield, final int index1, final int index2) {
                       swkjtextfield.setCaretPosition(index1);
                       swkjtextfield.moveCaretPosition(index2);
+                      SelectionCmd.setSelectionWindow(swkjtextfield);
                       return null;
                 }
              },
              TO(3,1,1,"index") {
                 Object doTask(SwkJTextField swkjtextfield, final int index1, final int index2) {
                       swkjtextfield.moveCaretPosition(index1);
+                      SelectionCmd.setSelectionWindow(swkjtextfield);
                       return null;
                 }
              },
@@ -113,8 +135,12 @@ class SwkJTextFieldWidgetCmd implements Command {
                      index2 = argv[4].toString();
                  }
                  Object objResult = selection.exec(swkjtextfield,this,index1,index2);
-                 if (objResult != null) {
-                      interp.setResult("1");
+                 if (objResult instanceof Boolean) {
+                      if (((Boolean) objResult).booleanValue()) {
+                          interp.setResult("1");
+                      } else {
+                          interp.setResult("0");
+                      }
                  }
              }
                 abstract Object doTask(SwkJTextField swkjtextfield, final int index1, final int index2);
