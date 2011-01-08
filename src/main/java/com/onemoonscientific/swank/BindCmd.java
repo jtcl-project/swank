@@ -24,7 +24,6 @@
  */
 package com.onemoonscientific.swank;
 
-import com.onemoonscientific.swank.canvas.SwkShape;
 import com.onemoonscientific.swank.canvas.HitShape;
 import tcl.lang.*;
 import tcl.pkg.java.ReflectObject;
@@ -41,25 +40,25 @@ import javax.swing.*;
  * @version %I%, %G%
  */
 public class BindCmd implements Command {
-    // This Hashtable stores class level virtual bindings.
 
-    public static Hashtable virtualTable = new Hashtable();
+    // This Hashtable stores class level virtual bindings.
+    final private static Hashtable virtualTable = new Hashtable();
     // This Hashtable stores class level focus bindings.
-    public static Hashtable focusTable = new Hashtable();
+    final private static Hashtable focusTable = new Hashtable();
     // This Hashtable stores class level configure bindings.
-    public static Hashtable configureTable = new Hashtable();
+    final private static Hashtable configureTable = new Hashtable();
     // This Hashtable stores class level activation bindings.
-    public static Hashtable activationTable = new Hashtable();
+    final private static Hashtable activationTable = new Hashtable();
     // This Hashtable stores class level key bindings.
-    public static Hashtable keyTable = new Hashtable();
+    final private static Hashtable keyTable = new Hashtable();
     // This Hashtable stores class level mouse bindings.
-    public static Hashtable mouseTable = new Hashtable();
-    public static Hashtable stateChangeTable = new Hashtable();
-    public static Hashtable selectionChangeTable = new Hashtable();
-    public static Hashtable appChangeTable = new Hashtable();
+    final private static Hashtable mouseTable = new Hashtable();
+    final private static Hashtable stateChangeTable = new Hashtable();
+    final private static Hashtable selectionChangeTable = new Hashtable();
+    final private static Hashtable appChangeTable = new Hashtable();
     // This Hashtable stores class level mousemotion bindings.
-    public static Hashtable mouseMotionTable = new Hashtable();
-    public static SwkAppListener swkAppListener = null;
+    final private static Hashtable mouseMotionTable = new Hashtable();
+    private static SwkAppListener swkAppListener = null;
 
     /** Method called to process the bind command.
      * @param interp The interpreter in which this command is active.
@@ -971,7 +970,7 @@ public class BindCmd implements Command {
                                 sbuf.append(ch);
                             } else {
                                 int keyCode = ((KeyEvent) e).getKeyCode();
-                                sbuf.append(((KeyEvent) e).getKeyText(keyCode));
+                                sbuf.append(KeyEvent.getKeyText(keyCode));
                             }
                         }
 
