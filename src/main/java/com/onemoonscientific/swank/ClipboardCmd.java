@@ -25,16 +25,9 @@
 package com.onemoonscientific.swank;
 
 import com.onemoonscientific.swank.canvas.*;
-
 import tcl.lang.*;
-import tcl.pkg.java.ReflectObject;
-
 import java.awt.*;
 import java.awt.datatransfer.*;
-
-import java.io.*;
-
-import java.util.*;
 
 import javax.swing.*;
 
