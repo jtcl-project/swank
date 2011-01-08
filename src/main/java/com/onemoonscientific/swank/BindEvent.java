@@ -1,10 +1,6 @@
 package com.onemoonscientific.swank;
 
 import tcl.lang.*;
-
-import java.awt.*;
-import java.awt.event.*;
-
 import java.util.*;
 
 public class BindEvent extends TclEvent {
