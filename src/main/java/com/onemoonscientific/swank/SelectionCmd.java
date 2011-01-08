@@ -25,24 +25,12 @@
 package com.onemoonscientific.swank;
 
 import tcl.lang.*;
-import tcl.pkg.java.ReflectObject;
-
-import java.awt.*;
-import java.awt.datatransfer.*;
-
-import java.io.*;
-
-import java.lang.*;
-
 import java.util.*;
-
-import javax.swing.*;
 import javax.swing.text.*;
 
 public class SelectionCmd implements Command {
 
-    static protected String getCommand = null;
-    static protected Hashtable hasSelection = new Hashtable();
+    static final private Hashtable hasSelection = new Hashtable();
     static private JTextComponent selectionComponent = null;
     public void cmdProc(Interp interp, TclObject[] argv)
             throws TclException {

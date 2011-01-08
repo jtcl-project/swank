@@ -37,6 +37,9 @@ public class Result {
     public int getInt() {
         return i;
     }
+    public boolean getBoolean() {
+        return b;
+    }
 
     public float getFloat() {
         return f;

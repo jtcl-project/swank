@@ -24,8 +24,6 @@
  */
 package com.onemoonscientific.swank;
 
-import tcl.lang.*;
-
 public class ResourceObject {
 
     public String resource = null;
