@@ -26,16 +26,10 @@ package com.onemoonscientific.swank;
 
 import tcl.lang.*;
 import tcl.pkg.java.ReflectObject;
-
 import java.awt.*;
 import java.awt.image.*;
-
-import java.io.*;
-
 import java.net.*;
-
 import java.util.*;
-
 import javax.swing.*;
 
 public class CursorCmd implements Command {
