@@ -9,9 +9,6 @@ import com.onemoonscientific.swank.canvas.*;
 
 import java.awt.*;
 import java.awt.datatransfer.*;
-
-import java.io.*;
-
 import javax.swing.*;
 
 /**
@@ -21,21 +18,24 @@ import javax.swing.*;
  */
 public class ImageSelection extends TransferHandler implements Transferable {
 
-    private static DataFlavor[] flavors = {DataFlavor.imageFlavor};
+    private static final DataFlavor[] flavors = {DataFlavor.imageFlavor};
     private Image image;
 
     /** Creates new ImageSelection */
     public ImageSelection() {
     }
 
+    @Override
     public int getSourceActions(JComponent c) {
         return TransferHandler.COPY;
     }
 
+    @Override
     public boolean canImport(JComponent comp, DataFlavor[] flavor) {
         return false;
     }
 
+    @Override
     public Transferable createTransferable(JComponent comp) {
         image = null;
 
