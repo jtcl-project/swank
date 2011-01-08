@@ -26,14 +26,7 @@ package com.onemoonscientific.swank;
 
 import tcl.lang.*;
 import tcl.pkg.java.ReflectObject;
-
 import java.awt.*;
-
-import java.io.*;
-
-import java.util.*;
-
-import javax.swing.*;
 
 public class PasswordCmd implements Command {
 
@@ -53,7 +46,6 @@ public class PasswordCmd implements Command {
         }
 
         SwkWidget swkwidget = (SwkWidget) ReflectObject.get(interp, tObj);
-        Component component = (Component) swkwidget;
         String title = argv[2].toString();
         PasswordValue pwValue = (new Password()).exec(null, title);
         TclObject pwObj = ReflectObject.newInstance(interp, PasswordValue.class, pwValue);
@@ -101,6 +93,7 @@ public class PasswordCmd implements Command {
             return new PasswordValue(name, password);
         }
 
+        @Override
         public void run() {
             PasswordDialog p = new PasswordDialog(frame, title);
             if (p.showDialog()) {

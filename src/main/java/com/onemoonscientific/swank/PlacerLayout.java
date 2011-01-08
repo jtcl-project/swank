@@ -26,11 +26,7 @@
 package com.onemoonscientific.swank;
 
 import tcl.lang.*;
-
 import java.awt.*;
-
-import java.lang.*;
-
 import java.util.*;
 
 public class PlacerLayout implements LayoutManager {
@@ -365,7 +361,6 @@ public class PlacerLayout implements LayoutManager {
                 //this is an double option so we need to find out which
                 //record member we will assign the double to
                 value = value_table.get(argv[i].toString());
-                ;
 
                 //temp check for fatal case
                 if (value == null) {
@@ -421,7 +416,6 @@ public class PlacerLayout implements LayoutManager {
                 //this is an int option so we need to find out which
                 //record member we will assign the int to
                 value = value_table.get(argv[i].toString());
-                ;
 
                 //temp check for fatal case
                 if (value == null) {
@@ -495,7 +489,6 @@ public class PlacerLayout implements LayoutManager {
                 //this is an int option so we need to find out which
                 //record member we will assign the int to
                 value = value_table.get(argv[i].toString());
-                ;
 
                 //temp check for fatal case
                 if (value == null) {
@@ -648,7 +641,6 @@ public class PlacerLayout implements LayoutManager {
     public Dimension minimumLayoutSize(Container target) {
         int i;
         Insets insets = target.getInsets();
-        Dimension cdim = target.getSize();
         int dim_width = 0;
         int dim_height = 0;
         Dimension d;
@@ -1015,6 +1007,7 @@ public class PlacerLayout implements LayoutManager {
     /**
      * Returns the String representation of this class...
      */
+    @Override
     public String toString() {
         return getClass().getName();
     }
@@ -1094,7 +1087,6 @@ public class PlacerLayout implements LayoutManager {
                 }
 
                 value = value_table.get(argv[i].toString());
-                ;
 
                 //temp check for fatal case
                 if (value == null) {
@@ -1149,7 +1141,6 @@ public class PlacerLayout implements LayoutManager {
                 //this is an int option so we need to find out which
                 //record member we will assign the int to
                 value = value_table.get(argv[i].toString());
-                ;
 
                 //temp check for fatal case
                 if (value == null) {
@@ -1209,7 +1200,7 @@ public class PlacerLayout implements LayoutManager {
 
     //there is one of these records for each widget packed
     //into a window, it stores the pack info for that widget
-    class PlaceRecord {
+    static class PlaceRecord {
 
         Component prev = null;
         Component next = null;

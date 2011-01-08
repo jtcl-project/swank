@@ -2,7 +2,6 @@ package com.onemoonscientific.swank;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
 import javax.swing.*;
 
 public class PasswordDialog extends JDialog implements ActionListener, KeyListener {
@@ -15,10 +14,12 @@ public class PasswordDialog extends JDialog implements ActionListener, KeyListen
     protected JLabel passwordLabel;
     protected JPanel buttonPanel;
 
+    @Override
     public void setName(String name) {
         this.nameField.setText(name);
     }
 
+    @Override
     public String getName() {
         return nameField.getText();
     }
@@ -126,6 +127,7 @@ public class PasswordDialog extends JDialog implements ActionListener, KeyListen
         buttonPanel.add(cancelButton);
     }
 
+    @Override
     protected void dialogInit() {
         makeControls();
         super.dialogInit();
