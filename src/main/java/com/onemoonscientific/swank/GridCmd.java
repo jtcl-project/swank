@@ -152,7 +152,7 @@ public class GridCmd implements Command {
         }
     }
 
-    SwkGridBagLayout getLayout(Container master) {
+    static SwkGridBagLayout getLayout(Container master) {
         LayoutManager layout = master.getLayout();
 
         if (layout != null) {
@@ -1518,7 +1518,7 @@ public class GridCmd implements Command {
         }
     }
 
-    class RowColumnGet extends GetValueOnEventThread {
+    static class RowColumnGet extends GetValueOnEventThread {
 
         Component component = null;
         int index = 0;
@@ -1550,7 +1550,7 @@ public class GridCmd implements Command {
         }
     }
 
-    class RowColumnConfigure extends UpdateOnEventThread {
+    static class RowColumnConfigure extends UpdateOnEventThread {
 
         static final int WEIGHT = 1;
         static final int MINSIZE = 2;
@@ -1635,7 +1635,7 @@ public class GridCmd implements Command {
         }
     }
 
-    class BoundingBox extends GetValueOnEventThread {
+    static class BoundingBox extends GetValueOnEventThread {
 
         Component component = null;
         int nArgs = 0;
@@ -1708,7 +1708,7 @@ public class GridCmd implements Command {
         }
     }
 
-    class Forget extends UpdateOnEventThread {
+    static class Forget extends UpdateOnEventThread {
 
         Component[] comps = null;
 
@@ -1738,7 +1738,7 @@ public class GridCmd implements Command {
         }
     }
 
-    class Location extends GetValueOnEventThread {
+    static class Location extends GetValueOnEventThread {
 
         Component component = null;
         int x = -1;
@@ -1838,7 +1838,7 @@ public class GridCmd implements Command {
         }
     }
 
-    class Slaves extends GetValueOnEventThread {
+    static class Slaves extends GetValueOnEventThread {
 
         Component component = null;
         ArrayList<String> names = new ArrayList<String>();
@@ -1891,7 +1891,7 @@ public class GridCmd implements Command {
         }
     }
 
-    class Info extends GetValueOnEventThread {
+    static class Info extends GetValueOnEventThread {
 
         Component component = null;
         Object constrObject = null;
@@ -1915,7 +1915,7 @@ public class GridCmd implements Command {
         }
     }
 
-    class Sizes extends GetValueOnEventThread {
+    static class Sizes extends GetValueOnEventThread {
 
         Component component = null;
         Dimension dim = null;
@@ -1969,7 +1969,7 @@ public class GridCmd implements Command {
         }
     }
 
-    class Propagate extends GetValueOnEventThread {
+    static class Propagate extends GetValueOnEventThread {
 
         Component component = null;
         boolean propagate = false;

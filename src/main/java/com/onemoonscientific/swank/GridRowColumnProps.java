@@ -20,6 +20,7 @@ public class GridRowColumnProps implements Cloneable {
     public GridRowColumnProps() {
     }
 
+    @Override
     public Object clone() throws CloneNotSupportedException {
         super.clone();
         GridRowColumnProps newObject = new GridRowColumnProps();

@@ -25,13 +25,9 @@
 package com.onemoonscientific.swank;
 
 import tcl.lang.*;
-import tcl.pkg.java.ReflectObject;
-
 import java.awt.*;
 
-import java.io.*;
 
-import java.util.*;
 
 public class FontCmd implements Command {
 
@@ -277,7 +273,7 @@ public class FontCmd implements Command {
         }
     }
 
-    class Add extends GetValueOnEventThread {
+    static class Add extends GetValueOnEventThread {
 
         Component comp = null;
         Font font = null;
@@ -291,6 +287,7 @@ public class FontCmd implements Command {
             return fontMetrics;
         }
 
+        @Override
         public void run() {
             fontMetrics = comp.getFontMetrics(font);
         }
