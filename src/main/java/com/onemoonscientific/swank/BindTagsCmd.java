@@ -26,16 +26,8 @@ package com.onemoonscientific.swank;
 
 import tcl.lang.*;
 import tcl.pkg.java.ReflectObject;
-
-import java.awt.*;
-import java.awt.event.*;
-
-import java.io.*;
-
 import java.util.*;
 
-import javax.swing.*;
-import javax.swing.event.*;
 
 /** This class implements the Jacl bind command.
  * @author Bruce A. Johnson
