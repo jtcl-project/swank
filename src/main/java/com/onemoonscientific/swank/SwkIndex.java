@@ -41,7 +41,7 @@ public class SwkIndex implements InternalRep {
 
     private SwkIndex(int i, TreeMap TM) {
         index = i;
-        TM = TM;
+        this.TM = TM;
     }
 
     /**
@@ -166,8 +166,6 @@ public class SwkIndex implements InternalRep {
         }
 
         String str = tobj.toString();
-        int strLen = str.length();
-        int tableLen = TM.size();
         int index = -1;
         int numAbbrev = 0;
 
