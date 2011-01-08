@@ -28,24 +28,15 @@ import tcl.lang.*;
 
 import java.awt.*;
 import java.awt.event.*;
-
-import java.lang.*;
-
 import java.util.*;
-
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.text.*;
 
 public class SwkFileChooserListener implements ActionListener, SwkListener {
 
     Interp interp;
     String command = "";
-    Component component;
 
     SwkFileChooserListener(Interp interp, Component component) {
         this.interp = interp;
-        this.component = component;
     }
 
     public void setCommand(String name) {
@@ -63,8 +54,6 @@ public class SwkFileChooserListener implements ActionListener, SwkListener {
     }
 
     public void processEvent(EventObject eventObject, Object obj, int subtype) {
-        ActionEvent e = (ActionEvent) eventObject;
-
         if ((command != null) && (command.length() != 0)) {
             try {
                 interp.eval(command);

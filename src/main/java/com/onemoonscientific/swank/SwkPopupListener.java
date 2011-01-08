@@ -29,14 +29,7 @@ import tcl.pkg.java.ReflectObject;
 
 import java.awt.*;
 import java.awt.event.*;
-
-import java.lang.*;
-
 import java.util.*;
-
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.text.*;
 
 public class SwkPopupListener extends MouseAdapter implements SwkListener {
 
@@ -52,16 +45,19 @@ public class SwkPopupListener extends MouseAdapter implements SwkListener {
         this.popupName = popupName.intern();
     }
 
+    @Override
     public void mousePressed(MouseEvent e) {
         System.out.println("pressed");
         maybeShowPopup(e, 0);
     }
 
+    @Override
     public void mouseReleased(MouseEvent e) {
         System.out.println("released");
         maybeShowPopup(e, 0);
     }
 
+    @Override
     public void mouseEntered(MouseEvent e) {
         System.out.println("entered");
 
@@ -72,6 +68,7 @@ public class SwkPopupListener extends MouseAdapter implements SwkListener {
         //maybeShowPopup(e,0);
     }
 
+    @Override
     public void mouseExited(MouseEvent e) {
         System.out.println("exited");
 
@@ -85,8 +82,12 @@ public class SwkPopupListener extends MouseAdapter implements SwkListener {
     }
 
     public void processEvent(EventObject eventObject, Object obj, int show) {
+        if (!(eventObject instanceof MouseEvent)) {
+            return;
+        }
         MouseEvent e = (MouseEvent) eventObject;
 
+        // fixme why did I set the following to always be true?
         if (e.isPopupTrigger() || true) {
             System.out.println("popuptrigger");
 

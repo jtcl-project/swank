@@ -28,14 +28,8 @@ import tcl.lang.*;
 
 import java.awt.*;
 import java.awt.event.*;
-
-import java.lang.*;
-
 import java.util.*;
-
 import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.text.*;
 
 public class SwkRadioMenuListener implements ActionListener, VarTrace,
         SwkListener {
@@ -135,7 +129,7 @@ public class SwkRadioMenuListener implements ActionListener, VarTrace,
             });
         }
 
-        varName = name.intern();
+        varName = name;
     }
 
     public String getVarName() {
@@ -186,8 +180,6 @@ public class SwkRadioMenuListener implements ActionListener, VarTrace,
     }
 
     public void processEvent(EventObject eventObject, Object obj, int subtype) {
-        ActionEvent e = (ActionEvent) eventObject;
-
         if (EventQueue.isDispatchThread()) {
             System.out.println(
                     "SwkRadioMenuListener: processEvent on event thread");

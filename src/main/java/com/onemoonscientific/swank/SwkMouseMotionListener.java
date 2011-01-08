@@ -28,14 +28,8 @@ import tcl.lang.*;
 
 import java.awt.*;
 import java.awt.event.*;
-
-import java.lang.*;
-
 import java.util.*;
 
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.text.*;
 
 public class SwkMouseMotionListener implements MouseMotionListener, SwkListener {
 
@@ -105,27 +99,26 @@ public class SwkMouseMotionListener implements MouseMotionListener, SwkListener 
             int i;
 
             //  System.out.println(e.toString());
-            int buttons = e.getButton();
 
             // System.out.println("button "+e.getButton());
-            ArrayList<SwkBinding> bindings = null;
+            ArrayList<SwkBinding> tagBindings = null;
             Vector tagList = ((SwkWidget) component).getTagList();
 
             for (int j = 0; j < tagList.size(); j++) {
                 String tag = (String) tagList.elementAt(j);
 
                 if (tag.startsWith(".")) {
-                    bindings = this.bindings;
+                    tagBindings = this.bindings;
                 } else {
-                    bindings = BindCmd.getMouseMotionBindings(tag);
+                    tagBindings = BindCmd.getMouseMotionBindings(tag);
                 }
 
-                if (bindings == null) {
+                if (tagBindings == null) {
                     continue;
                 }
 
-                for (i = 0; i < bindings.size(); i++) {
-                    binding = bindings.get(i);
+                for (i = 0; i < tagBindings.size(); i++) {
+                    binding = tagBindings.get(i);
 
                     // System.out.println("binding is "+binding.toString()+" "+binding.subtype+" bmod "+binding.mod+" mod "+mods);
                     if (binding.subtype != SwkBinding.MOTION) {

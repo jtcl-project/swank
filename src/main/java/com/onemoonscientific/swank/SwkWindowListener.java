@@ -25,17 +25,9 @@
 package com.onemoonscientific.swank;
 
 import tcl.lang.*;
-
 import java.awt.*;
 import java.awt.event.*;
-
-import java.lang.*;
-
 import java.util.*;
-
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.text.*;
 
 public class SwkWindowListener extends WindowAdapter implements SwkListener {
 
@@ -43,7 +35,6 @@ public class SwkWindowListener extends WindowAdapter implements SwkListener {
     String command = "puts component";
     ArrayList<SwkBinding> bindings;
     Window component;
-    boolean shown = false;
 
     SwkWindowListener(Interp interp, Window component) {
         this.interp = interp;
@@ -96,32 +87,35 @@ public class SwkWindowListener extends WindowAdapter implements SwkListener {
     }
 
     public void processEvent(EventObject eventObject, Object obj, int subtype) {
+        if (!(eventObject instanceof WindowEvent)) {
+            return;
+        }
         WindowEvent e = (WindowEvent) eventObject;
-        ArrayList<SwkBinding> bindings = null;
+        ArrayList<SwkBinding> tagBindings = null;
         Vector tagList = ((SwkWidget) component).getTagList();
 
         SwkBinding binding;
         for (int j = 0; j < tagList.size(); j++) {
-            bindings = null;
+            tagBindings = null;
 
             String tag = (String) tagList.elementAt(j);
             if (tag.equals(((SwkWidget) component).getName())) {
-                bindings = this.bindings;
+                tagBindings = this.bindings;
             } else if (tag.startsWith(".")) {
                 try {
-                    bindings = ((SwkJFrame) Widgets.get(interp, tag)).getWindowListener().getBindings();
+                    tagBindings = ((SwkJFrame) Widgets.get(interp, tag)).getWindowListener().getBindings();
                 } catch (TclException tclE) {
                 }
             } else {
-                bindings = BindCmd.getActivationBindings(tag);
+                tagBindings = BindCmd.getActivationBindings(tag);
             }
 
-            if (bindings == null) {
+            if (tagBindings == null) {
                 continue;
             }
 
-            for (int i = 0; i < bindings.size(); i++) {
-                binding = (SwkBinding) bindings.get(i);
+            for (int i = 0; i < tagBindings.size(); i++) {
+                binding = (SwkBinding) tagBindings.get(i);
                 if (binding.subtype != subtype) {
                     continue;
                 }

@@ -28,21 +28,14 @@ import tcl.lang.*;
 
 import java.awt.*;
 import java.awt.event.*;
-
-import java.lang.*;
-
 import java.util.*;
-
 import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.text.*;
 
 public class SwkCheckButtonListener implements ActionListener, VarTrace,
         SwkListener {
 
     Interp interp;
     JToggleButton component;
-    boolean traceLock = false;
 
     ButtonSettings getButtonSettings() {
         buttonSettings.setEnabled(component.isEnabled());
@@ -74,16 +67,19 @@ public class SwkCheckButtonListener implements ActionListener, VarTrace,
             return newValue;
         }
 
+        @Override
         public ButtonSettings getWithVarName(final String newVarName) {
             ButtonSettings newValue = new ButtonSettings(getValue(), getOffValue(), newVarName, getCommand());
             return newValue;
         }
 
+        @Override
         public ButtonSettings getWithValue(final String newValue) {
             ButtonSettings newSettings = new ButtonSettings(newValue, getOffValue(), getVarName(), getCommand());
             return newSettings;
         }
 
+        @Override
         public ButtonSettings getWithCommand(final String newCommand) {
             ButtonSettings newSettings = new ButtonSettings(getValue(), getOffValue(), getVarName(), newCommand);
             return newSettings;
@@ -130,8 +126,6 @@ public class SwkCheckButtonListener implements ActionListener, VarTrace,
                 });
             }
         }
-
-        traceLock = false;
     }
 
     public void setVarName2(Interp interp, String name)
@@ -183,7 +177,7 @@ public class SwkCheckButtonListener implements ActionListener, VarTrace,
                     | TCL.GLOBAL_ONLY);
         }
 
-        if (!name.equals("")) {
+        if ((name != null) && !name.equals("")) {
             interp.traceVar(name, this, TCL.TRACE_WRITES | TCL.GLOBAL_ONLY);
         }
         buttonSettings = buttonSettings.getWithVarName(name);
@@ -299,8 +293,6 @@ public class SwkCheckButtonListener implements ActionListener, VarTrace,
             value = buttonSettings.getOffValue();
         }
 
-        traceLock = true;
-
         if (!buttonSettings.getVarName().equals("")) {
             SetStringVarEvent strEvent = new SetStringVarEvent(interp, buttonSettings.getVarName(),
                     null, value);
@@ -347,6 +339,5 @@ public class SwkCheckButtonListener implements ActionListener, VarTrace,
             interp.addErrorInfo("\n    (\"binding\" script)");
             interp.backgroundError();
         }
-        traceLock = false;
     }
 }

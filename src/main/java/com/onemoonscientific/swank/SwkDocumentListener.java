@@ -25,13 +25,7 @@
 package com.onemoonscientific.swank;
 
 import tcl.lang.*;
-
 import java.awt.*;
-
-import java.lang.*;
-
-import java.util.*;
-
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
@@ -129,7 +123,7 @@ public class SwkDocumentListener implements DocumentListener, VarTrace,
                     | TCL.GLOBAL_ONLY);
         }
 
-        if ((name != null) && (name != "")) {
+        if ((name != null) && (!name.equals(""))) {
             try {
                 TclObject tobj = interp.getVar(name, TCL.GLOBAL_ONLY);
                 final String s1 = tobj.toString();

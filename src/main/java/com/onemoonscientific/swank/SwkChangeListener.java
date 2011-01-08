@@ -25,17 +25,10 @@
 package com.onemoonscientific.swank;
 
 import tcl.lang.*;
-
 import java.awt.*;
 import java.awt.event.*;
-
-import java.lang.*;
-
 import java.util.*;
-
-import javax.swing.*;
 import javax.swing.event.*;
-import javax.swing.text.*;
 
 public class SwkChangeListener implements ChangeListener, SwkListener {
 
@@ -43,7 +36,6 @@ public class SwkChangeListener implements ChangeListener, SwkListener {
     String command = "puts component";
     ArrayList<SwkBinding> bindings;
     Component component;
-    boolean shown = false;
 
     SwkChangeListener(Interp interp, Component component) {
         this.interp = interp;
@@ -87,8 +79,6 @@ public class SwkChangeListener implements ChangeListener, SwkListener {
             System.out.println(
                     "SwkChangeListener: processEvent on event thread");
         }
-
-        ChangeEvent e = (ChangeEvent) eventObject;
 
         SwkBinding binding;
 

@@ -28,14 +28,7 @@ import tcl.lang.*;
 
 import java.awt.*;
 import java.awt.event.*;
-
-import java.lang.*;
-
 import java.util.*;
-
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.text.*;
 
 public class SwkComponentListener implements ComponentListener, SwkListener {
 
@@ -45,6 +38,7 @@ public class SwkComponentListener implements ComponentListener, SwkListener {
     Component component;
     boolean shown = false;
     long lastResize = 0;
+
     SwkComponentListener(Interp interp, Component component) {
         this.interp = interp;
         this.component = component;
@@ -83,7 +77,7 @@ public class SwkComponentListener implements ComponentListener, SwkListener {
     public void componentResized(ComponentEvent e) {
         if (component instanceof SwkJFrame) {
             long timeNow = System.currentTimeMillis();
-            if (!((SwkJFrame) component).isPacking && ((timeNow-lastResize) > 500)) {
+            if (!((SwkJFrame) component).isPacking && ((timeNow - lastResize) > 500)) {
                 SwkJFrame jframe = (SwkJFrame) component;
                 Dimension dim = jframe.getRootPane().getSize();
 
@@ -115,22 +109,23 @@ public class SwkComponentListener implements ComponentListener, SwkListener {
     }
 
     public void processEvent(EventObject eventObject, Object obj, int subtype) {
-        ComponentEvent e = (ComponentEvent) eventObject;
+        if (eventObject instanceof ComponentEvent) {
+            ComponentEvent e = (ComponentEvent) eventObject;
+            SwkBinding binding;
 
-        SwkBinding binding;
+            for (int i = 0; i < bindings.size(); i++) {
+                binding = (SwkBinding) bindings.get(i);
 
-        for (int i = 0; i < bindings.size(); i++) {
-            binding = (SwkBinding) bindings.get(i);
-
-            if ((binding.command != null) && (binding.command.length() != 0)) {
-                try {
-                    BindCmd.doCmd(interp, binding, component, e);
-                } catch (TclException tclE) {
-                    if (tclE.getCompletionCode() == TCL.BREAK) {
-                        return;
-                    } else {
-                        interp.addErrorInfo("\n    (\"binding\" script)");
-                        interp.backgroundError();
+                if ((binding.command != null) && (binding.command.length() != 0)) {
+                    try {
+                        BindCmd.doCmd(interp, binding, component, e);
+                    } catch (TclException tclE) {
+                        if (tclE.getCompletionCode() == TCL.BREAK) {
+                            return;
+                        } else {
+                            interp.addErrorInfo("\n    (\"binding\" script)");
+                            interp.backgroundError();
+                        }
                     }
                 }
             }

@@ -25,28 +25,15 @@
 package com.onemoonscientific.swank;
 
 import tcl.lang.*;
-
 import java.awt.*;
-import java.awt.event.*;
-
-import java.lang.*;
-
-import java.util.*;
-
-import javax.swing.*;
 import javax.swing.event.*;
-import javax.swing.text.*;
 
 public class SwkMenuKeyListener implements MenuKeyListener {
 
-    Interp interp;
     String menu = null;
-    JPopupMenu jpopupmenu;
     boolean traceLock = false;
 
     SwkMenuKeyListener(Interp interp, Component component, String menu) {
-        this.interp = interp;
-        this.jpopupmenu = (JPopupMenu) component;
         this.menu = menu;
     }
 

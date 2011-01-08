@@ -28,11 +28,7 @@ import tcl.lang.*;
 
 import java.awt.*;
 import java.awt.event.*;
-
-import java.lang.*;
-
 import java.util.*;
-
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
@@ -42,7 +38,6 @@ public class SwkJSpinnerListener implements ChangeListener, VarTrace,
 
     Interp interp;
     String command = "";
-    String value = "";
     String varName = "";
     final JSpinner component;
     boolean traceLock = false;
@@ -117,7 +112,7 @@ public class SwkJSpinnerListener implements ChangeListener, VarTrace,
                     | TCL.GLOBAL_ONLY);
         }
 
-        if ((name != null) && (name != "")) {
+        if ((name != null) && !name.equals("")) {
             try {
                 TclObject tobj = interp.getVar(name, TCL.GLOBAL_ONLY).duplicate();
 
@@ -251,7 +246,6 @@ public class SwkJSpinnerListener implements ChangeListener, VarTrace,
     }
 
     public void processEvent(EventObject eventObject, Object obj, int subtype) {
-        ChangeEvent e = (ChangeEvent) eventObject;
         //   System.out.println("Process Event" + this);
         if (EventQueue.isDispatchThread()) {
             System.out.println(

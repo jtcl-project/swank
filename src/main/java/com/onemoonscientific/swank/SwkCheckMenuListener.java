@@ -28,14 +28,8 @@ import tcl.lang.*;
 
 import java.awt.*;
 import java.awt.event.*;
-
-import java.lang.*;
-
 import java.util.*;
-
 import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.text.*;
 
 public class SwkCheckMenuListener implements ActionListener, VarTrace,
         SwkListener {
@@ -132,7 +126,7 @@ public class SwkCheckMenuListener implements ActionListener, VarTrace,
                     | TCL.GLOBAL_ONLY);
         }
 
-        if (!name.equals("")) {
+        if ((name != null) && !name.equals("")) {
             interp.traceVar(name, this, TCL.TRACE_WRITES | TCL.GLOBAL_ONLY);
         }
 
@@ -221,8 +215,6 @@ public class SwkCheckMenuListener implements ActionListener, VarTrace,
             System.out.println(
                     "SwkCheckMenuListener: processEvent on event thread");
         }
-
-        ActionEvent e = (ActionEvent) eventObject;
 
         if ((command != null) && (command.length() != 0)) {
             try {

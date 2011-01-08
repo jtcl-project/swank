@@ -25,12 +25,8 @@
 package com.onemoonscientific.swank;
 
 import tcl.lang.*;
-
 import java.awt.*;
 import java.awt.event.*;
-
-import java.lang.*;
-
 import java.util.*;
 
 public class SwkMouseListener implements MouseListener, SwkListener {
@@ -90,6 +86,9 @@ public class SwkMouseListener implements MouseListener, SwkListener {
     }
 
     public void processEvent(EventObject eventObject, Object obj, int subtype) {
+        if (!(eventObject instanceof MouseEvent)) {
+            return;
+        }
         MouseEvent e = (MouseEvent) eventObject;
 
         if (e.isConsumed()) {
@@ -105,31 +104,31 @@ public class SwkMouseListener implements MouseListener, SwkListener {
             //component.requestFocus ();
         }
 
-        ArrayList<SwkBinding> bindings = null;
+        ArrayList<SwkBinding> tagBindings = null;
         Vector tagList = ((SwkWidget) component).getTagList();
 
         for (int j = 0; j < tagList.size(); j++) {
-            bindings = null;
+            tagBindings = null;
 
             String tag = (String) tagList.elementAt(j);
 
             if (tag.equals(((SwkWidget) component).getName())) {
-                bindings = this.bindings;
+                tagBindings = this.bindings;
             } else if (tag.startsWith(".")) {
                 try {
-                    bindings = ((SwkWidget) Widgets.get(interp, tag)).getMouseListener().getBindings();
+                    tagBindings = ((SwkWidget) Widgets.get(interp, tag)).getMouseListener().getBindings();
                 } catch (TclException tclE) {
                 }
             } else {
-                bindings = BindCmd.getMouseBindings(tag);
+                tagBindings = BindCmd.getMouseBindings(tag);
             }
 
-            if (bindings == null) {
+            if (tagBindings == null) {
                 continue;
             }
             SwkBinding lastBinding = null;
-            for (i = 0; i < bindings.size(); i++) {
-                binding = bindings.get(i);
+            for (i = 0; i < tagBindings.size(); i++) {
+                binding = tagBindings.get(i);
 
                 if (binding.type != SwkBinding.MOUSE) {
                     continue;

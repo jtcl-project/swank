@@ -25,24 +25,16 @@
 package com.onemoonscientific.swank;
 
 import tcl.lang.*;
-
 import java.awt.*;
 import java.awt.event.*;
-
-import java.lang.*;
-
 import java.util.*;
-
 import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.text.*;
 
 public class SwkRadioButtonListener implements ActionListener, VarTrace,
         SwkListener {
 
     Interp interp;
     JToggleButton component;
-    boolean traceLock = false;
     CommandVarListenerSettings buttonSettings = new CommandVarListenerSettings();
 
     CommandVarListenerSettings getButtonSettings() {
@@ -91,7 +83,6 @@ public class SwkRadioButtonListener implements ActionListener, VarTrace,
             }
         }
 
-        traceLock = false;
     }
 
     public boolean setVarName(Interp interp, String name)
@@ -180,15 +171,6 @@ public class SwkRadioButtonListener implements ActionListener, VarTrace,
                     "SwkCheckButtonListener: actionPerformed not on event thread");
         }
 
-        String myValue;
-
-        if (((SwkJRadioButton) component).isSelected()) {
-            myValue = buttonSettings.getValue();
-        } else {
-            myValue = "";
-        }
-
-        traceLock = true;
 
         if ((buttonSettings.getVarName() != null) && (!buttonSettings.getVarName().equals(""))) {
             SetStringVarEvent strEvent = new SetStringVarEvent(interp, buttonSettings.getVarName(),
@@ -206,7 +188,7 @@ public class SwkRadioButtonListener implements ActionListener, VarTrace,
            if (buttonSettings.isSelected()) {
             value = buttonSettings.getValue();
            } else {
-            value = buttonSettings.getValue();
+            value = "";
            }
             tObj = TclString.newInstance(value);
             interp.setVar(buttonSettings.getVarName(), tObj, TCL.GLOBAL_ONLY);
@@ -224,8 +206,6 @@ public class SwkRadioButtonListener implements ActionListener, VarTrace,
     }
 
     public void processEvent(EventObject eventObject, Object obj, int subtype) {
-        ActionEvent e = (ActionEvent) eventObject;
-
         if (EventQueue.isDispatchThread()) {
             System.out.println(
                     "SwkRadioButtonListener: processEvent on event thread");

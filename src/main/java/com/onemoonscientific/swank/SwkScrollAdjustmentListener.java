@@ -25,17 +25,10 @@
 package com.onemoonscientific.swank;
 
 import tcl.lang.*;
-
 import java.awt.*;
 import java.awt.event.*;
-
-import java.lang.*;
-
 import java.util.*;
 
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.text.*;
 
 public class SwkScrollAdjustmentListener implements AdjustmentListener,
         SwkListener {
@@ -74,7 +67,6 @@ public class SwkScrollAdjustmentListener implements AdjustmentListener,
     }
 
     public void processEvent(EventObject eventObject, Object obj, int subtype) {
-        AdjustmentEvent e = (AdjustmentEvent) eventObject;
 
         // FIXME first part below should be on Swing ET
         Double fxd = (Double) (obj);

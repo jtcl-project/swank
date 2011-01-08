@@ -25,17 +25,10 @@
 package com.onemoonscientific.swank;
 
 import tcl.lang.*;
-
 import java.awt.*;
 import java.awt.event.*;
-
-import java.lang.*;
-
 import java.util.*;
-
 import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.text.*;
 
 public class SwkValueCommandListener implements ActionListener, VarTrace,
         SwkListener {
@@ -136,8 +129,6 @@ public class SwkValueCommandListener implements ActionListener, VarTrace,
     }
 
     public void processEvent(EventObject eventObject, Object obj, int subtype) {
-        ActionEvent e = (ActionEvent) eventObject;
-
         TclObject tobj = null;
 
         if ((varName != null) && (varName.length() != 0)) {

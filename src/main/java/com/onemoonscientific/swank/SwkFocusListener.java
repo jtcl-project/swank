@@ -25,17 +25,9 @@
 package com.onemoonscientific.swank;
 
 import tcl.lang.*;
-
 import java.awt.*;
 import java.awt.event.*;
-
-import java.lang.*;
-
 import java.util.*;
-
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.text.*;
 
 public class SwkFocusListener implements FocusListener, SwkListener {
 
@@ -83,7 +75,11 @@ public class SwkFocusListener implements FocusListener, SwkListener {
     }
 
     public void processEvent(EventObject eventObject, Object obj, int subtype) {
+        if (!(eventObject instanceof FocusEvent)) {
+            return;
+        }
         FocusEvent e = (FocusEvent) eventObject;
+
         ArrayList<SwkBinding> bindings = null;
         Vector tagList = ((SwkWidget) component).getTagList();
 
