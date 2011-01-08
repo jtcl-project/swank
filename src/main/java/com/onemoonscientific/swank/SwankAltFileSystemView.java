@@ -6,7 +6,6 @@ import java.io.*;
 
 import java.lang.reflect.*;
 
-import java.util.*;
 
 import javax.swing.filechooser.*;
 
@@ -38,10 +37,12 @@ public class SwankAltFileSystemView extends FileSystemView {
         this.interp = interp;
     }
 
+    @Override
     public File createFileObject(File dir, String filename) {
         return new SwankFile(interp, dir.getPath(), filename);
     }
 
+    @Override
     public File createFileObject(String path) {
         return new SwankFile(interp, path);
     }
@@ -75,6 +76,7 @@ public class SwankAltFileSystemView extends FileSystemView {
     return new File(interp.getResult().toString());
     }
      */
+    @Override
     public File getDefaultDirectory() {
         //    Return the user's default starting directory for the file chooser.
         if (smode) {
@@ -91,6 +93,7 @@ public class SwankAltFileSystemView extends FileSystemView {
         }
     }
 
+    @Override
     public File[] getFiles(File dir, boolean useFileHiding) {
         if (debug) {
             System.out.println("getFiles " + dir);
@@ -118,6 +121,7 @@ public class SwankAltFileSystemView extends FileSystemView {
     /*static FileSystemView getFileSystemView() {
     }
      */
+    @Override
     public File getHomeDirectory() {
         if (smode) {
             return super.getHomeDirectory();
@@ -133,6 +137,7 @@ public class SwankAltFileSystemView extends FileSystemView {
         }
     }
 
+    @Override
     public File getParentDirectory(File dir) {
         if (debug) {
             System.out.println("getParent " + dir.getName());
@@ -151,6 +156,7 @@ public class SwankAltFileSystemView extends FileSystemView {
         }
     }
 
+    @Override
     public File[] getRoots() {
         if (debug) {
             System.out.println("getRoots");
@@ -165,6 +171,7 @@ public class SwankAltFileSystemView extends FileSystemView {
         }
     }
 
+    @Override
     public String getSystemDisplayName(File f) {
         if (debug) {
             System.out.println("getSystemDisplayName " + f.toString());
@@ -190,6 +197,7 @@ public class SwankAltFileSystemView extends FileSystemView {
     return icon;
     }
      */
+    @Override
     public String getSystemTypeDescription(File f) {
         if (debug) {
             System.out.println("getSystemTypeDescription " + f.toString());
@@ -211,6 +219,7 @@ public class SwankAltFileSystemView extends FileSystemView {
          */
     }
 
+    @Override
     public boolean isComputerNode(File dir) {
         if (debug) {
             System.out.println("isCN " + dir);
@@ -241,6 +250,7 @@ public class SwankAltFileSystemView extends FileSystemView {
          */
     }
 
+    @Override
     public boolean isDrive(File dir) {
         if (debug) {
             System.out.println("isDrive " + dir);
@@ -272,6 +282,7 @@ public class SwankAltFileSystemView extends FileSystemView {
          */
     }
 
+    @Override
     public boolean isFileSystem(File dir) {
         if (debug) {
             System.out.println("isFS " + dir);
@@ -303,6 +314,7 @@ public class SwankAltFileSystemView extends FileSystemView {
          */
     }
 
+    @Override
     public boolean isFileSystemRoot(File dir) {
         if (debug) {
             System.out.println("isFSRoot " + dir);
@@ -334,6 +346,7 @@ public class SwankAltFileSystemView extends FileSystemView {
          */
     }
 
+    @Override
     public boolean isFloppyDrive(File dir) {
         if (debug) {
             System.out.println("isFloppyDrive " + dir);
@@ -365,6 +378,7 @@ public class SwankAltFileSystemView extends FileSystemView {
          **/
     }
 
+    @Override
     public boolean isHiddenFile(File f) {
         boolean isHiddenFile = false;
 
@@ -381,6 +395,7 @@ public class SwankAltFileSystemView extends FileSystemView {
         return isHiddenFile;
     }
 
+    @Override
     public boolean isParent(File folder, File file) {
         if (debug) {
             System.out.println("isParent " + folder + " " + file);
@@ -416,6 +431,7 @@ public class SwankAltFileSystemView extends FileSystemView {
          */
     }
 
+    @Override
     public boolean isRoot(File f) {
         if (debug) {
             System.out.println("isRoot");
@@ -441,6 +457,7 @@ public class SwankAltFileSystemView extends FileSystemView {
         return isRoot;
     }
 
+    @Override
     public Boolean isTraversable(File f) {
         if (debug) {
             System.out.println("isTravers " + f.getPath());
@@ -451,7 +468,7 @@ public class SwankAltFileSystemView extends FileSystemView {
         if (smode) {
             isTraversable = super.isTraversable(f);
         } else {
-            isTraversable = new Boolean(true);
+            isTraversable = Boolean.valueOf(true);
         }
 
         if (debug) {
@@ -474,7 +491,7 @@ public class SwankAltFileSystemView extends FileSystemView {
          */
     }
 
-    class FileSystemRoot extends File {
+    static class FileSystemRoot extends File {
 
         public FileSystemRoot(File f) {
             super(f, "");
@@ -484,6 +501,7 @@ public class SwankAltFileSystemView extends FileSystemView {
             super(s);
         }
 
+        @Override
         public boolean isDirectory() {
             return true;
         }

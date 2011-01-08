@@ -24,16 +24,7 @@
  */
 package com.onemoonscientific.swank;
 
-import tcl.lang.*;
-
 import java.awt.*;
-
-import java.io.*;
-
-import java.lang.*;
-
-import java.util.*;
-
 import javax.swing.*;
 import javax.swing.border.*;
 
@@ -41,6 +32,7 @@ public class SwkBorder extends AbstractBorder {
 
     private int width = 6;
 
+    @Override
     public void paintBorder(Component c, Graphics g, int x, int y, int w, int h) {
         int i1 = 0;
         int i2 = 0;
@@ -115,21 +107,23 @@ public class SwkBorder extends AbstractBorder {
         }
     }
 
+    @Override
     public Insets getBorderInsets(Component c) {
         if (c instanceof JRootPane) {
             c = c.getParent();
         }
-        int width = (int) ((SwkWidget) c).getBorderWidth();
+        int bWidth = (int) ((SwkWidget) c).getBorderWidth();
         Insets eBI = ((SwkWidget) c).getEmptyBorderInsets();
 
         if (eBI == null) {
-            return new Insets(width, width, width, width);
+            return new Insets(bWidth, bWidth, bWidth, bWidth);
         } else {
-            return new Insets(width + eBI.top, width + eBI.left,
-                    width + eBI.bottom, width + eBI.right);
+            return new Insets(bWidth + eBI.top, bWidth + eBI.left,
+                    bWidth + eBI.bottom, bWidth + eBI.right);
         }
     }
 
+    @Override
     public boolean isBorderOpaque() {
         return true;
     }

@@ -29,14 +29,8 @@ import tcl.pkg.java.ReflectObject;
 
 import java.awt.*;
 import java.awt.event.*;
-
-import java.lang.*;
-
 import java.util.*;
-
 import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.text.*;
 
 public class SwkActionListener implements ActionListener, SwkListener {
 
@@ -73,8 +67,6 @@ public class SwkActionListener implements ActionListener, SwkListener {
             System.out.println(
                     "SwkActionListener: processEvent on event thread");
         }
-
-        ActionEvent e = (ActionEvent) eventObject;
 
         if ((menu != null) && (menu.length() != 0)) {
             TclObject tObj = (TclObject) Widgets.getWidget(interp, menu);

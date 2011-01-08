@@ -25,19 +25,10 @@
 package com.onemoonscientific.swank;
 
 import tcl.lang.*;
-
-import java.awt.*;
 import java.awt.event.*;
-
 import java.io.*;
-
-import java.lang.*;
-
 import java.util.*;
-
 import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.text.*;
 
 public class SwkBind {
 
@@ -100,15 +91,12 @@ public class SwkBind {
                 swkBinding.subtype = SwkBinding.PRESS;
 
                 if (eventChar == '1') {
-                    ;
                     swkBinding.detail = InputEvent.BUTTON1_MASK;
                     swkBinding.mod |= InputEvent.BUTTON1_DOWN_MASK;
                 } else if (eventChar == '2') {
-                    ;
                     swkBinding.detail = InputEvent.BUTTON2_MASK;
                     swkBinding.mod |= InputEvent.BUTTON2_DOWN_MASK;
                 } else if (eventChar == '3') {
-                    ;
                     swkBinding.detail = InputEvent.BUTTON3_MASK;
                     swkBinding.mod |= InputEvent.BUTTON3_DOWN_MASK;
                 }
@@ -208,15 +196,12 @@ public class SwkBind {
                                 } else if ((swkBinding.type == SwkBinding.MOUSE)
                                         || (swkBinding.type == SwkBinding.MOUSEMOTION)) {
                                     if (eCh == '1') {
-                                        ;
                                         swkBinding.detail = InputEvent.BUTTON1_MASK;
                                         swkBinding.mod |= InputEvent.BUTTON1_DOWN_MASK;
                                     } else if (eCh == '2') {
-                                        ;
                                         swkBinding.mod |= InputEvent.BUTTON2_DOWN_MASK;
                                         swkBinding.detail = InputEvent.BUTTON2_MASK;
                                     } else if (eCh == '3') {
-                                        ;
                                         swkBinding.mod |= InputEvent.BUTTON3_DOWN_MASK;
                                         swkBinding.detail = InputEvent.BUTTON3_MASK;
                                     }

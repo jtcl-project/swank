@@ -24,7 +24,6 @@
  */
 package com.onemoonscientific.swank;
 
-import com.onemoonscientific.swank.canvas.SwkShape;
 
 import tcl.lang.*;
 import tcl.pkg.java.ReflectObject;
@@ -996,7 +995,6 @@ public class SwankUtil {
             return ("");
         }
 
-        TclObject list = TclList.newInstance();
         StringBuffer sBuf = new StringBuffer();
         String family = font.getFamily();
 
@@ -2407,10 +2405,10 @@ public class SwankUtil {
                 helpobject = helpClass.newInstance();
                 helpmethod = helpClass.getMethod("setTarget", new Class[]{Component.class, String.class});
 
-                hasJHelp = new Boolean(true);
+                hasJHelp = Boolean.valueOf(true);
                 System.out.println("class does exist");
             } catch (Exception e) {
-                hasJHelp = new Boolean(false);
+                hasJHelp =  Boolean.valueOf(false);
                 System.out.println("class doesn't exist");
             }
         }

@@ -25,16 +25,8 @@
 package com.onemoonscientific.swank;
 
 import tcl.lang.*;
-
 import java.awt.*;
-import java.awt.event.*;
-
-import java.lang.*;
-
 import java.util.*;
-
-import javax.swing.*;
-import javax.swing.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -62,8 +54,6 @@ public class SwkAppListener implements PropertyChangeListener, SwkListener {
     }
 
     public void processEvent(EventObject eventObject, Object obj, int subtype) {
-        PropertyChangeEvent e = (PropertyChangeEvent) eventObject;
-
         SwkBinding binding;
         int buttonMaswk;
         int i;

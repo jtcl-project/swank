@@ -9,33 +9,15 @@ package com.onemoonscientific.swank;
 
 import tcl.lang.*;
 import tcl.pkg.java.ReflectObject;
-
 import java.awt.*;
-import java.awt.event.*;
-import java.awt.print.*;
-
-import java.io.IOException;
-
-import java.lang.*;
-
-import java.net.URL;
-
 import java.util.*;
-
 import javax.swing.*;
-import javax.swing.event.*;
 import javax.swing.table.*;
-import javax.swing.text.*;
-import javax.swing.text.html.*;
-import javax.swing.tree.*;
 
 public class SwkCell implements TableCellRenderer {
 
     static Hashtable resourceDB = null;
     String command = null;
-    String className = null;
-    int active = 0;
-    TclObject tclObject = null;
     Interp interp;
 
     public SwkCell(Interp interp) {

@@ -24,14 +24,6 @@
  */
 package com.onemoonscientific.swank;
 
-import tcl.lang.*;
-
-import java.awt.*;
-
-import java.lang.*;
-
-import java.util.*;
-
 import javax.swing.*;
 
 public class SwkBinding implements Comparable {
@@ -81,6 +73,7 @@ public class SwkBinding implements Comparable {
         return SwkEventType.getStringRep(type, subtype, count, mod, detail, keyStroke);
     }
 
+    @Override
     public String toString() {
         return SwkEventType.getStringRep(type, subtype, count, mod, detail, keyStroke) + " " + command;
     }
