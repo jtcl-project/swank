@@ -25,17 +25,8 @@
 package com.onemoonscientific.swank;
 
 import tcl.lang.*;
-import tcl.pkg.java.ReflectObject;
-
-import java.awt.*;
-import java.awt.event.*;
-
-import java.io.*;
-
 import java.util.*;
 
-import javax.swing.*;
-import javax.swing.event.*;
 
 /** This class implements the Jacl event command.
  * @author Bruce A. Johnson
@@ -43,7 +34,7 @@ import javax.swing.event.*;
  */
 public class EventCmd implements Command {
 
-    public static Map virtualEvents = new LinkedHashMap();
+    final public static Map virtualEvents = new LinkedHashMap();
     /** Method called to process the bind command.
      * @param interp The interpreter in which this command is active.
      * @param argv Array of TclObjects containing arguments to the bind command.

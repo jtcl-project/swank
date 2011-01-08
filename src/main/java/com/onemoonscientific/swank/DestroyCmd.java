@@ -26,13 +26,8 @@ package com.onemoonscientific.swank;
 
 import tcl.lang.*;
 import tcl.pkg.java.ReflectObject;
-
 import java.awt.*;
-
-import java.io.*;
-
 import java.util.*;
-
 import javax.swing.*;
 
 public class DestroyCmd implements Command {
@@ -57,6 +52,7 @@ public class DestroyCmd implements Command {
 
         (new GetValueOnEventThread() {
 
+            @Override
             public void run() {
                 destroyWidgets(interp, widgetNames);
             }

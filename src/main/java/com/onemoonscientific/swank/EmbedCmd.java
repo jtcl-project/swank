@@ -26,16 +26,7 @@ package com.onemoonscientific.swank;
 
 import tcl.lang.*;
 import tcl.pkg.java.ReflectObject;
-
 import java.awt.*;
-
-import java.io.*;
-
-import java.lang.*;
-
-import java.util.*;
-
-import javax.swing.*;
 
 public class EmbedCmd implements Command {
 
@@ -65,6 +56,7 @@ public class EmbedCmd implements Command {
     public static void add(final Container container, final Component component) {
         (new UpdateOnEventThread() {
 
+            @Override
             public void run() {
                 container.setLayout(new BorderLayout());
                 container.add(component, BorderLayout.CENTER);
