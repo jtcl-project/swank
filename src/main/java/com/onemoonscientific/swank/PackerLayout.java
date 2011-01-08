@@ -24,13 +24,8 @@
 package com.onemoonscientific.swank;
 
 import tcl.lang.*;
-
 import java.awt.*;
-
-import java.lang.*;
-
 import java.util.*;
-
 import javax.swing.*;
 
 public class PackerLayout implements LayoutManager2 {
@@ -212,9 +207,7 @@ public class PackerLayout implements LayoutManager2 {
         value_object_table.put(SIDE_OPT_RIGHT, SIDE_OBJ_RIGHT);
     }
     private Hashtable component_table;
-    private Component firstcomp;
-    private Component lastcomp;
-    // This is kind of wacky, but there does not seem to
+     // This is kind of wacky, but there does not seem to
     // be any way to "update" the options of a component
     // in a Java layout manager. To implement "update",
     // we just call add() again except that we set
@@ -405,7 +398,6 @@ public class PackerLayout implements LayoutManager2 {
                     //this is an int option so we need to find out which
                     //record member we will assign the int to
                     value = value_table.get(argv[i].toString());
-                    ;
 
                     //temp check for fatal case
                     if (value == null) {
@@ -562,7 +554,8 @@ public class PackerLayout implements LayoutManager2 {
             //System.out.println("put pack record in table");
         }
     }
-public static void checkPackArgs(Interp interp, String spec, Component comp)
+
+    public static void checkPackArgs(Interp interp, String spec, Component comp)
             throws TclException {
         int i;
         int max;
@@ -805,9 +798,6 @@ public static void checkPackArgs(Interp interp, String spec, Component comp)
         }
     }
 
-
-
-  
     /**
      * Removes the specified component from the layout.
      * @param comp the component to remove
@@ -1365,16 +1355,14 @@ public static void checkPackArgs(Interp interp, String spec, Component comp)
     /**
      * Returns the String representation of this class...
      */
+    @Override
     public String toString() {
         return getClass().getName();
     }
 
     //there is one of these records for each widget packed
     //into a window, it stores the pack info for that widget
-    class PackRecord {
-
-        Component prev = null;
-        Component next = null;
+    static class PackRecord {
         public int[] padx = {DEFAULT_PADX, DEFAULT_PADX};
         public int[] pady = {DEFAULT_PADY, DEFAULT_PADY};
         public int[] ipadx = {DEFAULT_IPADX, DEFAULT_IPADX};

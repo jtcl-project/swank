@@ -25,7 +25,6 @@
 package com.onemoonscientific.swank;
 
 import tcl.lang.*;
-import tcl.pkg.java.ReflectObject;
 import java.awt.*;
 import java.util.*;
 import javax.swing.*;
@@ -132,7 +131,7 @@ public class PackCmd implements Command {
                     "wrong # args: should be \"pack info window\"");
         }
         Component comp = Widgets.getComponent(interp, argv[2].toString());
-        ArrayList<String> settings = (new Info()).exec(comp, argv[2].toString());
+        ArrayList<String> settings = (new Info()).exec(comp);
 
         if (settings.size() < 3) {
             throw new TclException(interp,
@@ -346,12 +345,10 @@ public class PackCmd implements Command {
     class Info extends GetValueOnEventThread {
 
         Component component = null;
-        String parentName = null;
         ArrayList<String> settings;
 
-        ArrayList<String> exec(final Component component, final String parentName) {
+        ArrayList<String> exec(final Component component) {
             this.component = component;
-            this.parentName = parentName;
             execOnThread();
 
             return settings;
@@ -411,7 +408,7 @@ public class PackCmd implements Command {
         }
     }
 
-    class Slaves extends GetValueOnEventThread {
+    static class Slaves extends GetValueOnEventThread {
 
         Component component = null;
         String[] names = null;
@@ -437,7 +434,7 @@ public class PackCmd implements Command {
         }
     }
 
-    class Forget extends UpdateOnEventThread {
+    static class Forget extends UpdateOnEventThread {
 
         Component[] comps = null;
 

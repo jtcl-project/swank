@@ -26,13 +26,7 @@ package com.onemoonscientific.swank;
 
 import tcl.lang.*;
 import tcl.pkg.java.ReflectObject;
-
 import java.awt.*;
-
-import java.io.*;
-
-import java.util.*;
-
 import javax.swing.*;
 
 public class LowerCmd implements Command {
@@ -60,6 +54,7 @@ public class LowerCmd implements Command {
     public static void lower(final Component component) {
         (new UpdateOnEventThread() {
 
+            @Override
             public void run() {
                 if (component instanceof JFrame) {
                     ((JFrame) component).toBack();
