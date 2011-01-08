@@ -25,16 +25,10 @@
 package com.onemoonscientific.swank;
 
 import tcl.lang.*;
-import tcl.pkg.java.ReflectObject;
-
-import java.awt.*;
-
-import java.util.*;
-
-import javax.swing.*;
 
 public class EventRecorderCmd implements Command {
 
+    static private EventRecorder eventRecorder = null;
     static final private int OPT_COUNT = 0;
     static final private int OPT_GET = 1;
     static final private int OPT_LIST = 2;
@@ -61,7 +55,7 @@ public class EventRecorderCmd implements Command {
                     throw new TclNumArgsException(interp, 1, argv, "");
                 }
 
-                interp.setResult(EventRecorder.eventCount());
+                interp.setResult(eventRecorder.eventCount());
 
                 break;
             }
@@ -73,12 +67,12 @@ public class EventRecorderCmd implements Command {
 
                 int index = TclInteger.get(interp, argv[2]);
 
-                if (index >= EventRecorder.eventCount()) {
+                if (index >= eventRecorder.eventCount()) {
                     throw new TclException(interp,
                             "event \"" + index + "\" doesn't exist");
                 }
 
-                interp.setResult(EventRecorder.get(index));
+                interp.setResult(eventRecorder.get(index));
 
                 break;
             }
@@ -88,7 +82,7 @@ public class EventRecorderCmd implements Command {
                     throw new TclNumArgsException(interp, 1, argv, "");
                 }
 
-                EventRecorder.get(interp);
+                eventRecorder.get(interp);
 
                 break;
             }
@@ -97,8 +91,11 @@ public class EventRecorderCmd implements Command {
                 if (argv.length != 2) {
                     throw new TclNumArgsException(interp, 1, argv, "");
                 }
-
-                EventRecorder.start();
+                if (eventRecorder != null) {
+                    eventRecorder.stop();
+                }
+                eventRecorder = new EventRecorder();
+                eventRecorder.start();
 
                 break;
             }
@@ -107,8 +104,8 @@ public class EventRecorderCmd implements Command {
                 if (argv.length != 2) {
                     throw new TclNumArgsException(interp, 1, argv, "");
                 }
-
-                EventRecorder.stop();
+                eventRecorder.stop();
+                eventRecorder = null;
 
                 break;
             }

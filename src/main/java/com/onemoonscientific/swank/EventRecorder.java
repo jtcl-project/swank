@@ -4,39 +4,29 @@ import tcl.lang.*;
 
 import java.awt.*;
 import java.awt.event.*;
-
 import java.util.*;
-
 import javax.swing.JPopupMenu;
 
 public class EventRecorder implements AWTEventListener {
 
-    static EventRecorder eventRecorder = null;
-    static ArrayList eventList = new ArrayList();
-    static long startTime = -1;
-    static Point lastLoc = null;
-    static String lastCompName = null;
+     ArrayList eventList = new ArrayList();
+     long startTime = -1;
+     Point lastLoc = null;
+     String lastCompName = null;
 
-    public static void start() {
-        if (eventRecorder != null) {
-            stop();
-        }
-
+    public  void start() {
+ 
         startTime = -1;
         eventList.clear();
-        eventRecorder = new EventRecorder();
 
         long flags = AWTEvent.MOUSE_EVENT_MASK
                 | AWTEvent.MOUSE_MOTION_EVENT_MASK | AWTEvent.KEY_EVENT_MASK;
-        Toolkit.getDefaultToolkit().addAWTEventListener(eventRecorder, flags);
+        Toolkit.getDefaultToolkit().addAWTEventListener(this, flags);
     }
 
-    public static void stop() {
-        if (eventRecorder != null) {
-            Toolkit.getDefaultToolkit().removeAWTEventListener(eventRecorder);
-        }
-
-        eventRecorder = null;
+    public  void stop() {
+            Toolkit.getDefaultToolkit().removeAWTEventListener(this);
+       
     }
 
     public void eventDispatched(AWTEvent event) {
@@ -128,8 +118,6 @@ public class EventRecorder implements AWTEventListener {
             eventList.add(sbuf.toString());
         } else if (event instanceof KeyEvent) {
             KeyEvent keyEvent = (KeyEvent) event;
-            Component component = keyEvent.getComponent();
-            String name = component.getName();
 
             if (keyEvent.isConsumed()) {
                 return;
@@ -158,15 +146,15 @@ public class EventRecorder implements AWTEventListener {
         }
     }
 
-    public static int eventCount() {
+    public  int eventCount() {
         return eventList.size();
     }
 
-    public static String get(int i) {
+    public  String get(int i) {
         return (String) eventList.get(i);
     }
 
-    public static void get(Interp interp) throws TclException {
+    public  void get(Interp interp) throws TclException {
         TclObject list = TclList.newInstance();
 
         for (int i = 0, n = eventList.size(); i < n; i++) {
