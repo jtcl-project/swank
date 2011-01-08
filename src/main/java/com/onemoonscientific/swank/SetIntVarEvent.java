@@ -2,11 +2,6 @@ package com.onemoonscientific.swank;
 
 import tcl.lang.*;
 
-import java.awt.*;
-import java.awt.event.*;
-
-import java.util.*;
-
 public class SetIntVarEvent extends SetVarEvent {
 
     int value = 0;
@@ -18,6 +13,7 @@ public class SetIntVarEvent extends SetVarEvent {
         this.value = value;
     }
 
+    @Override
     void setObject() {
         tObj = TclInteger.newInstance(value);
     }

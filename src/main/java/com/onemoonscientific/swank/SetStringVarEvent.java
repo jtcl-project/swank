@@ -2,11 +2,6 @@ package com.onemoonscientific.swank;
 
 import tcl.lang.*;
 
-import java.awt.*;
-import java.awt.event.*;
-
-import java.util.*;
-
 public class SetStringVarEvent extends SetVarEvent {
 
     String value = null;
@@ -38,6 +33,7 @@ public class SetStringVarEvent extends SetVarEvent {
         this.onlyIfVarNonExistant = onlyIfVarNonExistant;
     }
 
+    @Override
     void setObject() {
         if (value != null) {
             tObj = TclString.newInstance(value);

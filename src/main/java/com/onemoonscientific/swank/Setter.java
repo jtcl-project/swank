@@ -90,6 +90,7 @@ public class Setter extends UpdateOnEventThread {
     }
 
     // XXX what if widget has been destroyed before running?
+    @Override
     public void run() {
         widget.setValues(this, iOpt);
     }

@@ -2,11 +2,6 @@ package com.onemoonscientific.swank;
 
 import tcl.lang.*;
 
-import java.awt.*;
-import java.awt.event.*;
-
-import java.util.*;
-
 public class SetDoubleVarEvent extends SetVarEvent {
 
     double value = 0;
@@ -19,6 +14,7 @@ public class SetDoubleVarEvent extends SetVarEvent {
         this.value = value;
     }
 
+    @Override
     void setObject() {
         tObj = TclDouble.newInstance(value);
     }

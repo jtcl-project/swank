@@ -2,11 +2,6 @@ package com.onemoonscientific.swank;
 
 import tcl.lang.*;
 
-import java.awt.*;
-import java.awt.event.*;
-
-import java.util.*;
-
 public abstract class SetVarEvent extends TclEvent {
 
     Interp interp = null;
@@ -33,8 +28,7 @@ public abstract class SetVarEvent extends TclEvent {
                 setVar = false;
 
                 try {
-                    TclObject tObjTest = interp.getVar(var1, var2,
-                            TCL.GLOBAL_ONLY);
+                    interp.getVar(var1, var2, TCL.GLOBAL_ONLY);
                 } catch (TclException tclException) {
                     setVar = true;
                 }

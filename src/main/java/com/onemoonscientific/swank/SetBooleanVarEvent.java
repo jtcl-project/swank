@@ -2,11 +2,6 @@ package com.onemoonscientific.swank;
 
 import tcl.lang.*;
 
-import java.awt.*;
-import java.awt.event.*;
-
-import java.util.*;
-
 public class SetBooleanVarEvent extends SetVarEvent {
 
     boolean value = false;
@@ -19,6 +14,7 @@ public class SetBooleanVarEvent extends SetVarEvent {
         this.value = value;
     }
 
+    @Override
     void setObject() {
         tObj = TclBoolean.newInstance(value);
     }
