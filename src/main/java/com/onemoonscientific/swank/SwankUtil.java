@@ -847,7 +847,7 @@ public class SwankUtil {
                             "Couldn't load image " + imageFile);
                 }
 
-                ImageCmd.images.put(imageName, image);
+                ImageCmd.addImage(interp,imageName,image);
                 image.setDescription(imageName);
             }
 
@@ -930,7 +930,7 @@ public class SwankUtil {
                 }
 
                 BufferedImage bufferedImage = makeBufferedImage(imageIcon);
-                ImageCmd.images.put(imageName, bufferedImage);
+                ImageCmd.addImage(interp,imageName, bufferedImage);
 
                 return (bufferedImage);
             } else {

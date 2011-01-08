@@ -26,23 +26,17 @@ package com.onemoonscientific.swank;
 
 import tcl.lang.*;
 import tcl.pkg.java.ReflectObject;
-
 import java.awt.*;
 import java.awt.image.*;
-
-import java.io.*;
-
 import java.net.*;
-
 import java.util.*;
-
 import javax.swing.*;
 
 public class ImageCmd implements Command {
 
-    public static Hashtable images = new Hashtable();
-    static Hashtable builtinImages = new Hashtable();
-    static int iImage = 0;
+    private final static Hashtable images = new Hashtable();
+    private final static Hashtable builtinImages = new Hashtable();
+    private static int iImage = 0;
     static final private String[] builtinImageNames = {
         "error", "gray12", "gray25", "gray50", "gray75", "hourglass", "info",
         "question", "questhead", "warning",};
@@ -366,7 +360,12 @@ public class ImageCmd implements Command {
             }
         }
     }
-
+    public static void addImage(final Interp interp, final String imageName,final BufferedImage image) {
+        images.put(imageName, image);
+    }
+    public static void addImage(final Interp interp, final String imageName,final ImageIcon image) {
+        images.put(imageName, image);
+    }
     public static Object getImage(String imageName) {
         Object imageObject = builtinImages.get(imageName);
 
