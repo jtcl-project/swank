@@ -9,10 +9,7 @@ package com.onemoonscientific.swank;
 
 import tcl.lang.*;
 import tcl.pkg.java.ReflectObject;
-
-import java.awt.EventQueue;
 import java.awt.Color;
-
 import javax.swing.*;
 
 class SwkJTabbedPaneWidgetCmd implements Command {
@@ -210,7 +207,7 @@ class SwkJTabbedPaneWidgetCmd implements Command {
         interp.setResult(index);
     }
 
-    class Add extends UpdateOnEventThread {
+    static class Add extends UpdateOnEventThread {
 
         SwkJTabbedPane swkjtabbedpane = null;
         JComponent jcomp = null;
@@ -225,12 +222,13 @@ class SwkJTabbedPaneWidgetCmd implements Command {
             execOnThread();
         }
 
+        @Override
         public void run() {
             swkjtabbedpane.add(jcomp, label);
         }
     }
 
-    class GetSelected extends GetValueOnEventThread {
+    static class GetSelected extends GetValueOnEventThread {
 
         SwkJTabbedPane swkjtabbedpane = null;
         int index = -1;
@@ -242,12 +240,13 @@ class SwkJTabbedPaneWidgetCmd implements Command {
             return index;
         }
 
+        @Override
         public void run() {
             index = swkjtabbedpane.getSelectedIndex();
         }
     }
 
-    class SetSelected extends UpdateOnEventThread {
+    static class SetSelected extends UpdateOnEventThread {
 
         SwkJTabbedPane swkjtabbedpane = null;
         int index = -1;
@@ -258,6 +257,7 @@ class SwkJTabbedPaneWidgetCmd implements Command {
             execOnThread();
         }
 
+        @Override
         public void run() {
             swkjtabbedpane.setSelectedIndex(index);
         }
@@ -267,7 +267,6 @@ class SwkJTabbedPaneWidgetCmd implements Command {
 
         SwkJTabbedPane swkjtabbedpane = null;
         int index = -1;
-        TclObject[] argv = null;
         Color foreground = null;
         Color background = null;
         String title = null;
@@ -281,7 +280,6 @@ class SwkJTabbedPaneWidgetCmd implements Command {
                 final TclObject[] argv) throws TclException {
             this.swkjtabbedpane = swkjtabbedpane;
             this.index = index;
-            this.argv = new TclObject[argv.length];
             if (((argv.length - start) % 2) != 0) {
                 throw new TclNumArgsException(interp, 0, argv,
                         "-option value ? -option value? ...");
@@ -312,6 +310,7 @@ class SwkJTabbedPaneWidgetCmd implements Command {
             execOnThread();
         }
 
+        @Override
         public void run() {
             if (background != null) {
                 swkjtabbedpane.setBackgroundAt(index, background);
@@ -357,7 +356,6 @@ class SwkJTabbedPaneWidgetCmd implements Command {
     class TabCGet extends GetValueOnEventThread {
 
         SwkJTabbedPane swkjtabbedpane = null;
-        TclObject item = null;
         int index = -1;
         String errMessage = null;
         String sItem = null;
@@ -366,7 +364,6 @@ class SwkJTabbedPaneWidgetCmd implements Command {
         void exec(final SwkJTabbedPane swkjtabbedpane, final TclObject item,
                 final int index) throws TclException {
             this.swkjtabbedpane = swkjtabbedpane;
-            this.item = item;
             this.index = index;
             this.sItem = item.toString();
 
@@ -379,13 +376,14 @@ class SwkJTabbedPaneWidgetCmd implements Command {
             interp.setResult(result);
         }
 
+        @Override
         public void run() {
             //swkjtabbedpane.tabCGet(interp, item, index);
             result = swkjtabbedpane.tabCGet(sItem, index);
         }
     }
 
-    class GetTabCount extends GetValueOnEventThread {
+    static class GetTabCount extends GetValueOnEventThread {
 
         SwkJTabbedPane swkjtabbedpane = null;
         int count = -1;
@@ -397,6 +395,7 @@ class SwkJTabbedPaneWidgetCmd implements Command {
             return count;
         }
 
+        @Override
         public void run() {
             count = swkjtabbedpane.getTabCount();
         }

@@ -9,20 +9,7 @@ package com.onemoonscientific.swank;
 
 import tcl.lang.*;
 import tcl.pkg.java.ReflectObject;
-
-import java.awt.*;
-
-import java.io.*;
-
-import java.lang.*;
-
-import java.net.*;
-
-import java.util.*;
-
 import javax.swing.*;
-import javax.swing.text.*;
-import javax.swing.tree.*;
 
 class SwkJMenuBarWidgetCmd implements Command {
 
@@ -176,9 +163,7 @@ class SwkJMenuBarWidgetCmd implements Command {
     class Add extends GetValueOnEventThread {
 
         SwkJMenuBar swkjmenubar = null;
-        JComponent jcomp = null;
         String menuName = "";
-        SwkWidget swkWidget = null;
         SwkJMenu cascade = null;
 
         SwkJMenu exec(final SwkJMenuBar swkjmenubar, final String menuName) {
@@ -198,6 +183,7 @@ class SwkJMenuBarWidgetCmd implements Command {
             return cascade;
         }
 
+        @Override
         public void run() {
             if (cascade == null) {
                 cascade = new SwkJMenu(interp, menuName);

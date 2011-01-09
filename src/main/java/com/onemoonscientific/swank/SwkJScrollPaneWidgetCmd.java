@@ -10,8 +10,6 @@ package com.onemoonscientific.swank;
 import tcl.lang.*;
 import tcl.pkg.java.ReflectObject;
 
-import java.awt.EventQueue;
-
 import javax.swing.*;
 
 class SwkJScrollPaneWidgetCmd implements Command {
@@ -119,7 +117,7 @@ class SwkJScrollPaneWidgetCmd implements Command {
         (new Add()).exec(swkjscrollpane, jcomp);
     }
 
-    class Add extends UpdateOnEventThread {
+    static class Add extends UpdateOnEventThread {
 
         static final int LEFT = 0;
         static final int TOP = 1;
@@ -134,6 +132,7 @@ class SwkJScrollPaneWidgetCmd implements Command {
             execOnThread();
         }
 
+        @Override
         public void run() {
             swkjscrollpane.setViewportView(jcomp);
         }

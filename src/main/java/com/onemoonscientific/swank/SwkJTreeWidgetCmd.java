@@ -184,7 +184,7 @@ class SwkJTreeWidgetCmd implements Command {
         }
     }
 
-    class NodeAdd extends UpdateOnEventThread {
+    static class NodeAdd extends UpdateOnEventThread {
 
         SwkJTree swkjtree;
         int[] iNodes = null;
@@ -198,6 +198,7 @@ class SwkJTreeWidgetCmd implements Command {
             execOnThread();
         }
 
+        @Override
         public void run() {
             DefaultTreeModel model = (DefaultTreeModel) swkjtree.getModel();
 
@@ -217,7 +218,7 @@ class SwkJTreeWidgetCmd implements Command {
         }
     }
 
-    class Path extends GetValueOnEventThread {
+    static class Path extends GetValueOnEventThread {
 
         SwkJTree swkjtree;
         TreePath treePath = null;
@@ -229,6 +230,7 @@ class SwkJTreeWidgetCmd implements Command {
             return treePath;
         }
 
+        @Override
         public void run() {
             treePath = swkjtree.getSelectionPath();
         }

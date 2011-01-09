@@ -10,18 +10,6 @@ package com.onemoonscientific.swank;
 import tcl.lang.*;
 import tcl.pkg.java.ReflectObject;
 
-import java.awt.*;
-
-import java.io.*;
-
-import java.net.*;
-
-import java.util.*;
-
-import javax.swing.*;
-import javax.swing.text.*;
-import javax.swing.tree.*;
-
 class SwkJCheckBoxMenuItemWidgetCmd implements Command {
 
     static final private String[] validCmds = {
@@ -36,7 +24,6 @@ class SwkJCheckBoxMenuItemWidgetCmd implements Command {
     static final private int OPT_SELECT = 5;
     static final private int OPT_TOGGLE = 6;
     static boolean gotDefaults = false;
-    int index;
 
     public static String[] getValidCmds() {
         return validCmds;
@@ -186,7 +173,7 @@ class SwkJCheckBoxMenuItemWidgetCmd implements Command {
 
     }
 
-    class Select extends GetValueOnEventThread {
+    static class Select extends GetValueOnEventThread {
 
         boolean mode = false;
         SwkJCheckBoxMenuItem swkjcheckbox;
@@ -199,6 +186,7 @@ class SwkJCheckBoxMenuItemWidgetCmd implements Command {
             return buttonSettings;
         }
 
+        @Override
         public void run() {
             if (!swkjcheckbox.isEnabled()) {
                 return;
@@ -208,7 +196,7 @@ class SwkJCheckBoxMenuItemWidgetCmd implements Command {
             buttonSettings = swkjcheckbox.commandListener.getButtonSettings();
         }
     }
-   class ButtonState {
+   static class ButtonState {
         final private boolean enabled;
         final private String varName;
         final private String varValue;
@@ -220,7 +208,7 @@ class SwkJCheckBoxMenuItemWidgetCmd implements Command {
             this.selected = selected;
         }
    }
-   class Toggle extends GetValueOnEventThread {
+   static class Toggle extends GetValueOnEventThread {
 
         SwkJCheckBoxMenuItem swkjcheckbox;
         SwkCheckButtonListener.ButtonSettings buttonSettings;
@@ -231,6 +219,7 @@ class SwkJCheckBoxMenuItemWidgetCmd implements Command {
             return buttonSettings;
         }
 
+        @Override
         public void run() {
             if (swkjcheckbox.isEnabled()) {
                 swkjcheckbox.setSelected(!swkjcheckbox.isSelected());

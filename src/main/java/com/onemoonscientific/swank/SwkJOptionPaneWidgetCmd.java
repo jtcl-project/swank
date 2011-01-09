@@ -9,20 +9,7 @@ package com.onemoonscientific.swank;
 
 import tcl.lang.*;
 import tcl.pkg.java.ReflectObject;
-
-import java.awt.*;
-
-import java.io.*;
-
-import java.lang.*;
-
-import java.net.*;
-
-import java.util.*;
-
 import javax.swing.*;
-import javax.swing.text.*;
-import javax.swing.tree.*;
 
 class SwkJOptionPaneWidgetCmd implements Command {
 
@@ -129,7 +116,6 @@ class SwkJOptionPaneWidgetCmd implements Command {
 
     class Dialog extends GetValueOnEventThread {
 
-        int index = -1;
         String title = "";
         Object result = null;
         boolean alwaysOnTop = true;
@@ -145,6 +131,7 @@ class SwkJOptionPaneWidgetCmd implements Command {
             }
         }
 
+        @Override
         public void run() {
             JDialog dialog = swkjoptionpane.createDialog(null, title);
             dialog.setAlwaysOnTop(alwaysOnTop);

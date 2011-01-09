@@ -11,18 +11,8 @@ import tcl.lang.*;
 import tcl.pkg.java.ReflectObject;
 
 import java.awt.*;
-
-import java.io.*;
-
-import java.lang.*;
-
-import java.net.*;
-
 import java.util.*;
-
-import javax.swing.*;
 import javax.swing.text.*;
-import javax.swing.tree.*;
 
 class SwkJTextPaneWidgetCmd implements Command {
 
@@ -732,7 +722,7 @@ class SwkJTextPaneWidgetCmd implements Command {
         }
     }
 
-    class Index extends GetValueOnEventThread {
+    static class Index extends GetValueOnEventThread {
 
         SwkJTextPane swkjtextpane = null;
         String indexArg = null;
@@ -746,12 +736,13 @@ class SwkJTextPaneWidgetCmd implements Command {
             return index;
         }
 
+        @Override
         public void run() {
             index = swkjtextpane.doc.getIndex(swkjtextpane, indexArg);
         }
     }
 
-    class Add extends UpdateOnEventThread {
+    static class Add extends UpdateOnEventThread {
 
         SwkJTextPane swkjtextpane = null;
         String arg0 = null;
@@ -769,6 +760,7 @@ class SwkJTextPaneWidgetCmd implements Command {
             execOnThread();
         }
 
+        @Override
         public void run() {
             Style style = swkjtextpane.getStyle(arg1);
             int index = swkjtextpane.doc.getIndexLC(swkjtextpane, arg2);
@@ -799,13 +791,12 @@ class SwkJTextPaneWidgetCmd implements Command {
         }
     }
 
-    class StyleRemove extends UpdateOnEventThread {
+    static class StyleRemove extends UpdateOnEventThread {
 
         SwkJTextPane swkjtextpane = null;
         String arg1 = null;
         String arg2 = null;
         String arg3 = null;
-        String[] marks = null;
         int mode = 0;
 
         void removeStyle(final SwkJTextPane swkjtextpane, final String arg1) {
@@ -825,6 +816,7 @@ class SwkJTextPaneWidgetCmd implements Command {
             execOnThread();
         }
 
+        @Override
         public void run() {
             if (mode == 0) {
                 swkjtextpane.doc.removeStyle(swkjtextpane, arg1);
@@ -837,7 +829,7 @@ class SwkJTextPaneWidgetCmd implements Command {
         }
     }
 
-    class StyleSet extends UpdateOnEventThread {
+    static class StyleSet extends UpdateOnEventThread {
 
         SwkJTextPane swkjtextpane = null;
         Style style = null;
@@ -848,12 +840,13 @@ class SwkJTextPaneWidgetCmd implements Command {
             execOnThread();
         }
 
+        @Override
         public void run() {
             swkjtextpane.doc.styleUpdated(swkjtextpane, style, false);
         }
     }
 
-    class StyleGet extends GetValueOnEventThread {
+    static class StyleGet extends GetValueOnEventThread {
 
         SwkJTextPane swkjtextpane = null;
         String arg1 = null;
@@ -870,6 +863,7 @@ class SwkJTextPaneWidgetCmd implements Command {
             return style;
         }
 
+        @Override
         public void run() {
             style = swkjtextpane.getStyle(arg1);
 
@@ -880,7 +874,7 @@ class SwkJTextPaneWidgetCmd implements Command {
         }
     }
 
-    class TagGet extends GetValueOnEventThread {
+    static class TagGet extends GetValueOnEventThread {
 
         static final int RANGES = 0;
         static final int NAMES = 1;
@@ -908,6 +902,7 @@ class SwkJTextPaneWidgetCmd implements Command {
             return resultList;
         }
 
+        @Override
         public void run() {
             switch (mode) {
                 case RANGES:
@@ -948,7 +943,7 @@ class SwkJTextPaneWidgetCmd implements Command {
         }
     }
 
-    class MarkSet extends UpdateOnEventThread {
+    static class MarkSet extends UpdateOnEventThread {
 
         SwkJTextPane swkjtextpane = null;
         String arg1 = null;
@@ -980,6 +975,7 @@ class SwkJTextPaneWidgetCmd implements Command {
             execOnThread();
         }
 
+        @Override
         public void run() {
             if (mode == 0) {
                 swkjtextpane.doc.setMark(swkjtextpane, arg1, arg2);
@@ -991,23 +987,25 @@ class SwkJTextPaneWidgetCmd implements Command {
         }
     }
 
-    class MarkGet extends GetValueOnEventThread {
+    static class MarkGet extends GetValueOnEventThread {
 
         SwkJTextPane swkjtextpane = null;
         ArrayList result = null;
 
         ArrayList exec(final SwkJTextPane swkjtextpane) {
+            this.swkjtextpane = swkjtextpane;
             execOnThread();
 
             return result;
         }
 
+        @Override
         public void run() {
             result = swkjtextpane.doc.getMarks();
         }
     }
 
-    class Compare extends GetValueOnEventThread {
+    static class Compare extends GetValueOnEventThread {
 
         SwkJTextPane swkjtextpane = null;
         String arg1 = "";
@@ -1026,13 +1024,14 @@ class SwkJTextPaneWidgetCmd implements Command {
             return result;
         }
 
+        @Override
         public void run() {
             result = swkjtextpane.doc.compareIndices(swkjtextpane, arg1, op,
                     arg2);
         }
     }
 
-    class Search extends GetValueOnEventThread {
+    static class Search extends GetValueOnEventThread {
 
         SwkJTextPane swkjtextpane = null;
         String patternString = null;
@@ -1054,6 +1053,7 @@ class SwkJTextPaneWidgetCmd implements Command {
             return result;
         }
 
+        @Override
         public void run() {
             int index1 = swkjtextpane.doc.getIndexLC(swkjtextpane, index1Arg);
             int index2 = index1 + 1;
@@ -1074,7 +1074,7 @@ class SwkJTextPaneWidgetCmd implements Command {
         }
     }
 
-    class Get extends GetValueOnEventThread {
+    static class Get extends GetValueOnEventThread {
 
         SwkJTextPane swkjtextpane = null;
         String index1Arg = null;
@@ -1091,6 +1091,7 @@ class SwkJTextPaneWidgetCmd implements Command {
             return result;
         }
 
+        @Override
         public void run() {
             int index1 = swkjtextpane.doc.getIndexLC(swkjtextpane, index1Arg);
             int index2 = index1 + 1;
@@ -1116,7 +1117,7 @@ class SwkJTextPaneWidgetCmd implements Command {
         }
     }
 
-    class Insert extends GetValueOnEventThread {
+    static class Insert extends GetValueOnEventThread {
 
         SwkJTextPane swkjtextpane = null;
         String indexArg = null;
@@ -1135,6 +1136,7 @@ class SwkJTextPaneWidgetCmd implements Command {
             execOnThread();
         }
 
+        @Override
         public void run() {
             int index = 0;
 
@@ -1242,7 +1244,7 @@ class SwkJTextPaneWidgetCmd implements Command {
         }
     }
 
-    class Delete extends GetValueOnEventThread {
+    static class Delete extends GetValueOnEventThread {
 
         SwkJTextPane swkjtextpane = null;
         String firstArg = null;
@@ -1256,6 +1258,7 @@ class SwkJTextPaneWidgetCmd implements Command {
             execOnThread();
         }
 
+        @Override
         public void run() {
             int index1 = 0;
 
@@ -1323,6 +1326,7 @@ class SwkJTextPaneWidgetCmd implements Command {
             execOnThread();
         }
 
+        @Override
         public void run() {
             int index1 = 0;
 
@@ -1368,6 +1372,7 @@ class SwkJTextPaneWidgetCmd implements Command {
             return rect;
         }
 
+        @Override
         public void run() {
             int index1 = 0;
 
@@ -1396,7 +1401,7 @@ class SwkJTextPaneWidgetCmd implements Command {
         }
     }
 
-    class Window extends GetValueOnEventThread {
+    static class Window extends GetValueOnEventThread {
 
         SwkJTextPane swkjtextpane = null;
         String indexArg = null;
@@ -1412,6 +1417,7 @@ class SwkJTextPaneWidgetCmd implements Command {
             execOnThread();
         }
 
+        @Override
         public void run() {
             int index1 = 0;
 

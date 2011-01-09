@@ -10,17 +10,6 @@ package com.onemoonscientific.swank;
 import tcl.lang.*;
 import tcl.pkg.java.ReflectObject;
 
-import java.awt.*;
-
-import java.io.*;
-
-import java.net.*;
-
-import java.util.*;
-
-import javax.swing.*;
-import javax.swing.text.*;
-import javax.swing.tree.*;
 
 class SwkJRadioButtonMenuItemWidgetCmd implements Command {
 
@@ -35,7 +24,6 @@ class SwkJRadioButtonMenuItemWidgetCmd implements Command {
     static final private int OPT_INVOKE = 4;
     static final private int OPT_SELECT = 5;
     static boolean gotDefaults = false;
-    int index;
 
     public static String[] getValidCmds() {
         return validCmds;
@@ -169,7 +157,7 @@ class SwkJRadioButtonMenuItemWidgetCmd implements Command {
 
     }
 
-    class Select extends GetValueOnEventThread {
+    static class Select extends GetValueOnEventThread {
 
         boolean mode = false;
         SwkJRadioButtonMenuItem swkjradiobutton;
@@ -182,6 +170,7 @@ class SwkJRadioButtonMenuItemWidgetCmd implements Command {
             return buttonSettings;
         }
 
+        @Override
         public void run() {
             if (!swkjradiobutton.isEnabled()) {
                 return;
@@ -191,7 +180,7 @@ class SwkJRadioButtonMenuItemWidgetCmd implements Command {
             buttonSettings = swkjradiobutton.commandListener.getButtonSettings();
         }
     }
-   class ButtonState {
+   static class ButtonState {
         final private boolean enabled;
         final private String varName;
         final private String varValue;
@@ -203,7 +192,7 @@ class SwkJRadioButtonMenuItemWidgetCmd implements Command {
             this.selected = selected;
         }
    }
-   class Toggle extends GetValueOnEventThread {
+   static class Toggle extends GetValueOnEventThread {
 
         SwkJRadioButtonMenuItem swkjradiobutton;
         CommandVarListenerSettings buttonSettings;
@@ -214,6 +203,7 @@ class SwkJRadioButtonMenuItemWidgetCmd implements Command {
             return buttonSettings;
         }
 
+        @Override
         public void run() {
             if (swkjradiobutton.isEnabled()) {
                 swkjradiobutton.setSelected(!swkjradiobutton.isSelected());

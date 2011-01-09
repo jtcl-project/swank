@@ -26,17 +26,8 @@ package com.onemoonscientific.swank;
 
 import tcl.lang.*;
 import tcl.pkg.java.ReflectObject;
-
 import java.awt.*;
 
-import java.io.File;
-
-import java.lang.*;
-
-import java.util.*;
-
-import javax.swing.*;
-import javax.swing.text.*;
 
 class SwkJColorChooserWidgetCmd implements Command {
 
@@ -142,7 +133,7 @@ class SwkJColorChooserWidgetCmd implements Command {
         }
     }
 
-    class Choose extends GetValueOnEventThread {
+    static class Choose extends GetValueOnEventThread {
 
         SwkJColorChooser swkjcolorchooser;
         Color color = null;
@@ -159,8 +150,9 @@ class SwkJColorChooserWidgetCmd implements Command {
             return color;
         }
 
+        @Override
         public void run() {
-            color = swkjcolorchooser.showDialog(swkjcolorchooser.getParent(),
+            color = SwkJColorChooser.showDialog(swkjcolorchooser.getParent(),
                     title, initialColor);
         }
     }

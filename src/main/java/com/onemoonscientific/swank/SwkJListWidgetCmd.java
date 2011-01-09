@@ -9,11 +9,8 @@ package com.onemoonscientific.swank;
 
 import tcl.lang.*;
 import tcl.pkg.java.ReflectObject;
-
 import java.awt.*;
-
 import java.util.ArrayList;
-
 import javax.swing.*;
 
 class SwkJListWidgetCmd implements Command {
@@ -40,7 +37,6 @@ class SwkJListWidgetCmd implements Command {
     static final private int OPT_XVIEW = 14;
     static final private int OPT_YVIEW = 15;
     static boolean gotDefaults = false;
-    int index;
     Interp interp = null;
 
     public static String[] getValidCmds() {
@@ -65,7 +61,6 @@ class SwkJListWidgetCmd implements Command {
         }
 
         final SwkJList swkjlist = (SwkJList) ReflectObject.get(interp, tObj);
-        Result idxResult = new Result();
 
         switch (opt) {
             case OPT_CGET:
@@ -435,7 +430,7 @@ class SwkJListWidgetCmd implements Command {
                 } else if (argv.length == 3) {
                     swkjlist.getIndex(argv[2].toString(), -1, idxResult);
                     idxResult.checkError(interp);
-                    index = idxResult.i;
+                    int index = idxResult.i;
 
                     double fx1 = (1.0 * index) / maxSize;
 
@@ -568,7 +563,7 @@ class SwkJListWidgetCmd implements Command {
                 } else if (argv.length == 3) {
                     swkjlist.getIndex(argv[2].toString(), -1, idxResult);
                     idxResult.checkError(interp);
-                    index = idxResult.i;
+                    int index = idxResult.i;
 
                     if (swkjlist.model.getSize() == 0) {
                         fy1 = 1.0;
@@ -714,6 +709,7 @@ class SwkJListWidgetCmd implements Command {
             return rect;
         }
 
+        @Override
         public void run() {
             Result result = new Result();
             int index = 0;
@@ -755,7 +751,7 @@ class SwkJListWidgetCmd implements Command {
         }
     }
 
-    class CurrentSelection extends GetValueOnEventThread {
+    static class CurrentSelection extends GetValueOnEventThread {
 
         SwkJList swkjlist;
         int[] selected = null;
@@ -791,6 +787,7 @@ class SwkJListWidgetCmd implements Command {
             }
         }
 
+        @Override
         public void run() {
             int first = 0;
             Result result = new Result();
@@ -871,6 +868,7 @@ class SwkJListWidgetCmd implements Command {
             }
         }
 
+        @Override
         public void run() {
             int first = 0;
             Result result = new Result();
@@ -915,7 +913,7 @@ class SwkJListWidgetCmd implements Command {
         }
     }
 
-    class Size extends GetValueOnEventThread {
+    static class Size extends GetValueOnEventThread {
 
         SwkJList swkjlist = null;
         int size = 0;
@@ -927,6 +925,7 @@ class SwkJListWidgetCmd implements Command {
             return size;
         }
 
+        @Override
         public void run() {
             size = swkjlist.model.getSize();
         }
@@ -949,6 +948,7 @@ class SwkJListWidgetCmd implements Command {
             }
         }
 
+        @Override
         public void run() {
             int index = 0;
             Result result = new Result();
@@ -996,6 +996,7 @@ class SwkJListWidgetCmd implements Command {
             return index;
         }
 
+        @Override
         public void run() {
             Result result = new Result();
 

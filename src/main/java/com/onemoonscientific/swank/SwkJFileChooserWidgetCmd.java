@@ -26,17 +26,11 @@ package com.onemoonscientific.swank;
 
 import tcl.lang.*;
 import tcl.pkg.java.ReflectObject;
-
 import java.awt.*;
-
 import java.io.File;
 
-import java.lang.*;
-
-import java.util.*;
 
 import javax.swing.*;
-import javax.swing.text.*;
 
 class SwkJFileChooserWidgetCmd implements Command {
 
@@ -211,10 +205,8 @@ class SwkJFileChooserWidgetCmd implements Command {
         (new Filter()).exec(swkjfilechooser, filter);
     }
 
-    class Open extends GetValueOnEventThread {
+    static class Open extends GetValueOnEventThread {
 
-        int index = -1;
-        String item = null;
         SwkJFileChooser swkjfilechooser;
         Component dParent = null;
         File[] files = null;
@@ -227,6 +219,7 @@ class SwkJFileChooserWidgetCmd implements Command {
             return files;
         }
 
+        @Override
         public void run() {
             swkjfilechooser.setVisible(true);
 
@@ -245,10 +238,8 @@ class SwkJFileChooserWidgetCmd implements Command {
         }
     }
 
-    class Save extends GetValueOnEventThread {
+    static class Save extends GetValueOnEventThread {
 
-        int index = -1;
-        String item = null;
         SwkJFileChooser swkjfilechooser;
         Component dParent = null;
         File file = null;
@@ -261,6 +252,7 @@ class SwkJFileChooserWidgetCmd implements Command {
             return file;
         }
 
+        @Override
         public void run() {
             swkjfilechooser.setVisible(true);
 
@@ -272,7 +264,7 @@ class SwkJFileChooserWidgetCmd implements Command {
         }
     }
 
-    class Filter extends UpdateOnEventThread {
+    static class Filter extends UpdateOnEventThread {
 
         SwkFileFilter filter = null;
         SwkJFileChooser swkjfilechooser = null;
@@ -284,6 +276,7 @@ class SwkJFileChooserWidgetCmd implements Command {
             execOnThread();
         }
 
+        @Override
         public void run() {
             swkjfilechooser.addChoosableFileFilter(filter);
         }

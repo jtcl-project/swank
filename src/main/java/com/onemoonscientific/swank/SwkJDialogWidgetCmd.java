@@ -9,20 +9,7 @@ package com.onemoonscientific.swank;
 
 import tcl.lang.*;
 import tcl.pkg.java.ReflectObject;
-
-import java.awt.*;
-
-import java.io.*;
-
-import java.lang.*;
-
-import java.net.*;
-
-import java.util.*;
-
 import javax.swing.*;
-import javax.swing.text.*;
-import javax.swing.tree.*;
 
 class SwkJDialogWidgetCmd implements Command {
 
@@ -127,7 +114,7 @@ class SwkJDialogWidgetCmd implements Command {
         (new Add()).exec(swkjdialog, jcomp);
     }
 
-    class Add extends UpdateOnEventThread {
+    static class Add extends UpdateOnEventThread {
 
         SwkJDialog swkjdialog = null;
         JComponent jcomp = null;
@@ -138,6 +125,7 @@ class SwkJDialogWidgetCmd implements Command {
             execOnThread();
         }
 
+        @Override
         public void run() {
             swkjdialog.add(jcomp);
         }

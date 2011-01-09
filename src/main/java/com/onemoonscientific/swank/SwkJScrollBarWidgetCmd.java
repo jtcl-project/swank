@@ -10,11 +10,6 @@ package com.onemoonscientific.swank;
 import tcl.lang.*;
 import tcl.pkg.java.ReflectObject;
 
-import java.awt.Rectangle;
-
-import javax.swing.plaf.ScrollBarUI;
-import javax.swing.plaf.basic.BasicScrollBarUI;
-
 class SwkJScrollBarWidgetCmd implements Command {
 
     static final private String[] validCmds = {
@@ -214,7 +209,7 @@ class SwkJScrollBarWidgetCmd implements Command {
         (new Set()).exec(swkjscrollbar, firstFraction, lastFraction);
     }
 
-    class Delta extends GetValueOnEventThread {
+    static class Delta extends GetValueOnEventThread {
 
         SwkJScrollBar swkjscrollbar;
         double result = 0;
@@ -231,6 +226,7 @@ class SwkJScrollBarWidgetCmd implements Command {
             return result;
         }
 
+        @Override
         public void run() {
             int min = swkjscrollbar.getMinimum();
             int max = swkjscrollbar.getMaximum();
@@ -243,7 +239,7 @@ class SwkJScrollBarWidgetCmd implements Command {
         }
     }
 
-    class Fraction extends GetValueOnEventThread {
+    static class Fraction extends GetValueOnEventThread {
 
         SwkJScrollBar swkjscrollbar;
         double result = 0;
@@ -260,6 +256,7 @@ class SwkJScrollBarWidgetCmd implements Command {
             return result;
         }
 
+        @Override
         public void run() {
             int min = swkjscrollbar.getMinimum();
             int max = swkjscrollbar.getMaximum();
@@ -288,7 +285,7 @@ class SwkJScrollBarWidgetCmd implements Command {
         }
     }
 
-    class Get extends GetValueOnEventThread {
+    static class Get extends GetValueOnEventThread {
 
         SwkJScrollBar swkjscrollbar;
         double[] result = new double[2];
@@ -300,6 +297,7 @@ class SwkJScrollBarWidgetCmd implements Command {
             return result;
         }
 
+        @Override
         public void run() {
             int min = swkjscrollbar.getMinimum();
             int max = swkjscrollbar.getMaximum();
@@ -311,7 +309,7 @@ class SwkJScrollBarWidgetCmd implements Command {
         }
     }
 
-    class Set extends UpdateOnEventThread {
+    static class Set extends UpdateOnEventThread {
 
         SwkJScrollBar swkjscrollbar;
         double firstFraction = 0.0;
@@ -325,6 +323,7 @@ class SwkJScrollBarWidgetCmd implements Command {
             execOnThread();
         }
 
+        @Override
         public void run() {
             int min = swkjscrollbar.getMinimum();
             int max = swkjscrollbar.getMaximum();

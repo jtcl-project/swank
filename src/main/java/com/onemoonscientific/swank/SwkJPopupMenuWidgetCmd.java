@@ -10,20 +10,6 @@ package com.onemoonscientific.swank;
 import tcl.lang.*;
 import tcl.pkg.java.ReflectObject;
 
-import java.awt.*;
-
-import java.io.*;
-
-import java.lang.*;
-
-import java.net.*;
-
-import java.util.*;
-
-import javax.swing.*;
-import javax.swing.text.*;
-import javax.swing.tree.*;
-
 class SwkJPopupMenuWidgetCmd implements Command {
 
     static final private String[] validCmds = {
@@ -134,7 +120,6 @@ class SwkJPopupMenuWidgetCmd implements Command {
     class Delete extends UpdateOnEventThread {
 
         SwkJPopupMenu swkjpopupmenu = null;
-        TclObject firstArg = null;
         TclObject lastArg = null;
         String sIndex = null;
         String sIndexLast = null;
@@ -143,7 +128,6 @@ class SwkJPopupMenuWidgetCmd implements Command {
 
         void exec(final SwkJPopupMenu swkjpopupmenu, final TclObject firstArg,
                 final TclObject lastArg) {
-            this.firstArg = firstArg;
             this.lastArg = lastArg;
             this.swkjpopupmenu = swkjpopupmenu;
 
@@ -164,6 +148,7 @@ class SwkJPopupMenuWidgetCmd implements Command {
             execOnThread();
         }
 
+        @Override
         public void run() {
             if (sIndex != null) {
                 try {

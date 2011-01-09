@@ -46,7 +46,6 @@ class SwkJTableWidgetCmd implements Command {
     static final private int OPT_COLUMNWIDTH = 17;
     static final private int OPT_COLUMNRESIZABLE = 18;
     static boolean gotDefaults = false;
-    int index;
     Interp interp = null;
 
     public static String[] getValidCmds() {
@@ -472,22 +471,21 @@ class SwkJTableWidgetCmd implements Command {
         interp.setResult(resizable);
     }
 
-    class Sort extends UpdateOnEventThread {
+    static class Sort extends UpdateOnEventThread {
 
         SwkJTable swkjtable = null;
         int iCol = 0;
         int status = TableSorter.NOT_SORTED;
-        String sortMode = null;
 
         void exec(final SwkJTable swkjtable, final int iCol, final int status,
                 final String sortMode) {
             this.swkjtable = swkjtable;
             this.iCol = iCol;
             this.status = status;
-            this.sortMode = sortMode;
             execOnThread();
         }
 
+        @Override
         public void run() {
             ((TableSorter) swkjtable.getModel()).setSortingStatus(iCol, status);
         }
@@ -507,13 +505,14 @@ class SwkJTableWidgetCmd implements Command {
             execOnThread();
         }
 
+        @Override
         public void run() {
             swkjtable.swkTableModel.setColumnClass(interp, iCol,
                     (Class) colClass);
         }
     }
 
-    class Row extends GetValueOnEventThread {
+    static class Row extends GetValueOnEventThread {
 
         SwkJTable swkjtable = null;
         int inVal = 0;
@@ -530,6 +529,7 @@ class SwkJTableWidgetCmd implements Command {
             return result;
         }
 
+        @Override
         public void run() {
             if (rowForIndex) {
                 result = ((TableSorter) swkjtable.getModel()).modelIndex(inVal);
@@ -539,7 +539,7 @@ class SwkJTableWidgetCmd implements Command {
         }
     }
 
-    class Update extends UpdateOnEventThread {
+    static class Update extends UpdateOnEventThread {
 
         static final int DATA = 0;
         static final int STRUCTURE = 1;
@@ -558,6 +558,7 @@ class SwkJTableWidgetCmd implements Command {
             execOnThread();
         }
 
+        @Override
         public void run() {
             if (mode == DATA) {
                 swkjtable.swkTableModel.fireTableChanged(new TableModelEvent(
@@ -568,7 +569,7 @@ class SwkJTableWidgetCmd implements Command {
         }
     }
 
-    class Set extends UpdateOnEventThread {
+    static class Set extends UpdateOnEventThread {
 
         SwkJTable swkjtable = null;
         int iRow = 0;
@@ -586,6 +587,7 @@ class SwkJTableWidgetCmd implements Command {
             execOnThread();
         }
 
+        @Override
         public void run() {
             if (useSorted) {
                 swkjtable.getModel().setValueAt(value, iRow, iCol);
@@ -602,7 +604,7 @@ class SwkJTableWidgetCmd implements Command {
         }
     }
 
-    class Get extends GetValueOnEventThread {
+    static class Get extends GetValueOnEventThread {
 
         SwkJTable swkjtable = null;
         int iRow = 0;
@@ -621,6 +623,7 @@ class SwkJTableWidgetCmd implements Command {
             return tblObject;
         }
 
+        @Override
         public void run() {
             if (useSorted) {
                 tblObject = swkjtable.getModel().getValueAt(iRow, iCol);
@@ -637,7 +640,7 @@ class SwkJTableWidgetCmd implements Command {
         }
     }
 
-    class SelectionSet extends UpdateOnEventThread {
+    static class SelectionSet extends UpdateOnEventThread {
 
         final static int CLEAR = 0;
         final static int SET = 1;
@@ -660,6 +663,7 @@ class SwkJTableWidgetCmd implements Command {
             execOnThread();
         }
 
+        @Override
         public void run() {
             int nRows = swkjtable.getRows();
 
@@ -704,7 +708,7 @@ class SwkJTableWidgetCmd implements Command {
         }
     }
 
-    class SelectionGet extends GetValueOnEventThread {
+    static class SelectionGet extends GetValueOnEventThread {
 
         final static int COUNT_ROWS = 0;
         final static int GET_ROWS = 1;
@@ -729,6 +733,7 @@ class SwkJTableWidgetCmd implements Command {
             return selectedRows;
         }
 
+        @Override
         public void run() {
             if (mode == COUNT_ROWS) {
                 nSelected = swkjtable.getSelectedRowCount();
@@ -741,7 +746,7 @@ class SwkJTableWidgetCmd implements Command {
         }
     }
 
-    class ShowRow extends UpdateOnEventThread {
+    static class ShowRow extends UpdateOnEventThread {
 
         SwkJTable swkjtable = null;
         int row1 = 0;
@@ -754,6 +759,7 @@ class SwkJTableWidgetCmd implements Command {
             execOnThread();
         }
 
+        @Override
         public void run() {
             Rectangle rect1 = swkjtable.getCellRect(row1, 0, true);
             Rectangle rect2 = swkjtable.getCellRect(row2, 0, true);
@@ -762,7 +768,7 @@ class SwkJTableWidgetCmd implements Command {
         }
     }
 
-    class ConvertColumn extends GetValueOnEventThread {
+    static class ConvertColumn extends GetValueOnEventThread {
 
         SwkJTable swkjtable = null;
         int column = 0;
@@ -776,12 +782,13 @@ class SwkJTableWidgetCmd implements Command {
             return result;
         }
 
+        @Override
         public void run() {
             result = swkjtable.convertColumnIndexToModel(column);
         }
     }
 
-    class RowOrColumnAtPoint extends GetValueOnEventThread {
+    static class RowOrColumnAtPoint extends GetValueOnEventThread {
 
         SwkJTable swkjtable = null;
         int x = 0;
@@ -800,6 +807,7 @@ class SwkJTableWidgetCmd implements Command {
             return result;
         }
 
+        @Override
         public void run() {
             if (rowMode) {
                 result = swkjtable.rowAtPoint(new Point(x, y));
@@ -810,7 +818,7 @@ class SwkJTableWidgetCmd implements Command {
         }
     }
 
-    class SetColumnWidth extends UpdateOnEventThread {
+    static class SetColumnWidth extends UpdateOnEventThread {
 
         SwkJTable swkjtable = null;
         int column = 0;
@@ -823,6 +831,7 @@ class SwkJTableWidgetCmd implements Command {
             execOnThread();
         }
 
+        @Override
         public void run() {
             TableColumnModel cM = swkjtable.getColumnModel();
             if (column < cM.getColumnCount()) {
@@ -839,7 +848,7 @@ class SwkJTableWidgetCmd implements Command {
         }
     }
 
-    class GetColumnWidth extends GetValueOnEventThread {
+    static class GetColumnWidth extends GetValueOnEventThread {
 
         SwkJTable swkjtable = null;
         int column = 0;
@@ -853,6 +862,7 @@ class SwkJTableWidgetCmd implements Command {
             return width;
         }
 
+        @Override
         public void run() {
             TableColumnModel cM = swkjtable.getColumnModel();
             if (column < cM.getColumnCount()) {
@@ -862,7 +872,7 @@ class SwkJTableWidgetCmd implements Command {
         }
     }
 
-    class SetColumnResizable extends UpdateOnEventThread {
+    static class SetColumnResizable extends UpdateOnEventThread {
 
         SwkJTable swkjtable = null;
         int column = 0;
@@ -876,6 +886,7 @@ class SwkJTableWidgetCmd implements Command {
             execOnThread();
         }
 
+        @Override
         public void run() {
             TableColumnModel cM = swkjtable.getColumnModel();
             if (column < cM.getColumnCount()) {
@@ -885,7 +896,7 @@ class SwkJTableWidgetCmd implements Command {
         }
     }
 
-    class GetColumnResizable extends UpdateOnEventThread {
+    static class GetColumnResizable extends UpdateOnEventThread {
 
         SwkJTable swkjtable = null;
         int column = 0;
@@ -900,6 +911,7 @@ class SwkJTableWidgetCmd implements Command {
             return resizable;
         }
 
+        @Override
         public void run() {
             TableColumnModel cM = swkjtable.getColumnModel();
             if (column < cM.getColumnCount()) {

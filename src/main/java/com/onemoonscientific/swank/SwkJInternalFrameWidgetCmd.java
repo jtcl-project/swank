@@ -9,20 +9,7 @@ package com.onemoonscientific.swank;
 
 import tcl.lang.*;
 import tcl.pkg.java.ReflectObject;
-
-import java.awt.*;
-
-import java.io.*;
-
-import java.lang.*;
-
-import java.net.*;
-
-import java.util.*;
-
 import javax.swing.*;
-import javax.swing.text.*;
-import javax.swing.tree.*;
 
 class SwkJInternalFrameWidgetCmd implements Command {
 
@@ -129,9 +116,8 @@ class SwkJInternalFrameWidgetCmd implements Command {
         (new Add()).exec(swkjinternalframe, jcomp, argv[3].toString().intern());
     }
 
-    class Add extends UpdateOnEventThread {
+    static class Add extends UpdateOnEventThread {
 
-        boolean mode = false;
         SwkJInternalFrame swkjinternalframe = null;
         JComponent jcomp = null;
         String label = null;
@@ -144,6 +130,7 @@ class SwkJInternalFrameWidgetCmd implements Command {
             execOnThread();
         }
 
+        @Override
         public void run() {
             swkjinternalframe.add(jcomp, label);
         }

@@ -237,7 +237,7 @@ class SwkJSplitPaneWidgetCmd implements Command {
         interp.setResult(list);
     }
 
-    class Add extends UpdateOnEventThread {
+    static class Add extends UpdateOnEventThread {
 
         static final int LEFT = 0;
         static final int TOP = 1;
@@ -262,6 +262,7 @@ class SwkJSplitPaneWidgetCmd implements Command {
             execOnThread();
         }
 
+        @Override
         public void run() {
             int nComps = 1;
 
@@ -345,7 +346,7 @@ class SwkJSplitPaneWidgetCmd implements Command {
         }
     }
 
-    class Forget extends UpdateOnEventThread {
+    static class Forget extends UpdateOnEventThread {
 
         SwkJSplitPane swkjsplitpane = null;
         JComponent[] jcomps = null;
@@ -356,6 +357,7 @@ class SwkJSplitPaneWidgetCmd implements Command {
             execOnThread();
         }
 
+        @Override
         public void run() {
             for (int i = 0; i < jcomps.length; i++) {
                 if (jcomps[i] != null) {
@@ -365,10 +367,9 @@ class SwkJSplitPaneWidgetCmd implements Command {
         }
     }
 
-    class Panes extends GetValueOnEventThread {
+    static class Panes extends GetValueOnEventThread {
 
         SwkJSplitPane swkjsplitpane = null;
-        JComponent[] jcomps = null;
         String[] names = {null, null};
 
         String[] exec(final SwkJSplitPane swkjsplitpane) {
@@ -378,6 +379,7 @@ class SwkJSplitPaneWidgetCmd implements Command {
             return names;
         }
 
+        @Override
         public void run() {
             Component comp = swkjsplitpane.getTopComponent();
             int iComp = 0;

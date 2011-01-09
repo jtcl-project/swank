@@ -10,17 +10,6 @@ package com.onemoonscientific.swank;
 import tcl.lang.*;
 import tcl.pkg.java.ReflectObject;
 
-import java.awt.*;
-
-import java.io.*;
-
-import java.net.*;
-
-import java.util.*;
-
-import javax.swing.*;
-import javax.swing.text.*;
-import javax.swing.tree.*;
 
 class SwkJButtonWidgetCmd implements Command {
 
@@ -32,7 +21,6 @@ class SwkJButtonWidgetCmd implements Command {
     static final private int OPT_FLASH = 2;
     static final private int OPT_INVOKE = 3;
     static boolean gotDefaults = false;
-    int index;
 
     public static String[] getValidCmds() {
         return validCmds;

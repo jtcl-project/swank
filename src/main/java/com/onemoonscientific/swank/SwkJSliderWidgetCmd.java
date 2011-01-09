@@ -199,24 +199,22 @@ class SwkJSliderWidgetCmd implements Command {
         swkjslider.sliderChangeListener.tclActionVar(buttonSettings);
     }
 
-    class Coords extends GetValueOnEventThread {
+    static class Coords extends GetValueOnEventThread {
 
         SwkJSlider swkjslider = null;
-        int size = 0;
-        double value = 0.0;
         boolean hasValue = false;
         Point pt = new Point();
 
         Point exec(final SwkJSlider swkjslider, final boolean hasValue,
                 final double value) {
             this.swkjslider = swkjslider;
-            this.value = value;
             this.hasValue = hasValue;
             execOnThread();
 
             return pt;
         }
 
+        @Override
         public void run() {
             Dimension size = swkjslider.getSize();
             double to = swkjslider.getTo();
@@ -246,14 +244,12 @@ class SwkJSliderWidgetCmd implements Command {
         }
     }
 
-    class Get extends GetValueOnEventThread {
+    static class Get extends GetValueOnEventThread {
 
         SwkJSlider swkjslider = null;
-        int size = 0;
         int x = 0;
         int y = 0;
         boolean hasValue = false;
-        Point pt = new Point();
         TclObject result = null;
 
         TclObject exec(final SwkJSlider swkjslider, final boolean hasValue,
@@ -267,6 +263,7 @@ class SwkJSliderWidgetCmd implements Command {
             return result;
         }
 
+        @Override
         public void run() {
             if (!hasValue) {
                 if (swkjslider.resolution >= 1.0) {
@@ -302,7 +299,7 @@ class SwkJSliderWidgetCmd implements Command {
         }
     }
 
-    class Set extends GetValueOnEventThread {
+    static class Set extends GetValueOnEventThread {
 
         SwkJSlider swkjslider = null;
         double value = 0.0;
@@ -315,6 +312,7 @@ class SwkJSliderWidgetCmd implements Command {
             return sliderSettings;
         }
 
+        @Override
         public void run() {
             if (swkjslider.isEnabled()) {
                 swkjslider.setDValue(value);

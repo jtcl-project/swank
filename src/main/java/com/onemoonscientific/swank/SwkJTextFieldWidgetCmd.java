@@ -9,20 +9,11 @@ package com.onemoonscientific.swank;
 
 import tcl.lang.*;
 import tcl.pkg.java.ReflectObject;
-
 import java.awt.*;
 
-import java.io.*;
-
-import java.lang.*;
-
-import java.net.*;
-
-import java.util.*;
 
 import javax.swing.*;
 import javax.swing.text.*;
-import javax.swing.tree.*;
 
 class SwkJTextFieldWidgetCmd implements Command {
         enum SelMode {
@@ -164,7 +155,6 @@ class SwkJTextFieldWidgetCmd implements Command {
     static final private int OPT_VALIDATE = 10;
     static final private int OPT_XVIEW = 11;
     static boolean gotDefaults = false;
-    int index;
     Interp interp = null;
 
     public static String[] getValidCmds() {
@@ -281,7 +271,7 @@ class SwkJTextFieldWidgetCmd implements Command {
                 if (argv.length == 2) {
                     (new ViewValues()).exec(swkjtextfield);
                 } else if (argv.length == 3) {
-                    index = getIndex2(interp, swkjtextfield, argv, -1);
+                    final int index = getIndex2(interp, swkjtextfield, argv, -1);
 
                     SwingUtilities.invokeLater(new Runnable() {
 
@@ -459,6 +449,7 @@ class SwkJTextFieldWidgetCmd implements Command {
 
         }
 
+        @Override
         public void run() {
             Result result = new Result();
             swkjtextfield.getIndex(item, 0, result);
@@ -493,6 +484,7 @@ class SwkJTextFieldWidgetCmd implements Command {
 
         }
 
+        @Override
         public void run() {
             if (!swkjtextfield.isEditable()) {
                 return;
@@ -527,6 +519,7 @@ class SwkJTextFieldWidgetCmd implements Command {
             return objResult;
         }
 
+        @Override
         public void run() {
             if (!swkjtextfield.isEnabled()) {
                 return;
@@ -576,6 +569,7 @@ class SwkJTextFieldWidgetCmd implements Command {
             return index;
         }
 
+        @Override
         public void run() {
             Result result = new Result();
             swkjtextfield.getIndex(item, endVal, result);
@@ -589,7 +583,7 @@ class SwkJTextFieldWidgetCmd implements Command {
             index = result.i;
         }
     }
-   class Delete extends GetValueOnEventThread {
+   static class Delete extends GetValueOnEventThread {
 
         SwkJTextField swkjtextfield = null;
         String firstPos = null;
@@ -605,6 +599,7 @@ class SwkJTextFieldWidgetCmd implements Command {
             return errMessage;
         }
 
+        @Override
         public void run() {
             if (!swkjtextfield.isEditable()) {
                 return;
@@ -636,12 +631,11 @@ class SwkJTextFieldWidgetCmd implements Command {
         }
     }
 
-    class Insert extends GetValueOnEventThread {
+    static class Insert extends GetValueOnEventThread {
 
         SwkJTextField swkjtextfield = null;
         String strIndex = null;
         String text = null;
-        String errMessage = null;
 
         void exec(final SwkJTextField swkjtextfield, final String strIndex,
                 final String text) throws TclException {
@@ -651,6 +645,7 @@ class SwkJTextFieldWidgetCmd implements Command {
             execOnThread();
         }
 
+        @Override
         public void run() {
             if (!swkjtextfield.isEditable()) {
                 return;
@@ -686,6 +681,7 @@ class SwkJTextFieldWidgetCmd implements Command {
             interp.setResult(list);
         }
 
+        @Override
         public void run() {
             BoundedRangeModel brm = swkjtextfield.getHorizontalVisibility();
             fx1 = (1.0 * brm.getValue()) / (brm.getMaximum()
