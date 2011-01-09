@@ -10,8 +10,6 @@ import java.io.FilenameFilter;
 
 public class SwkFilenameFilter implements FilenameFilter {
 
-    private static String TYPE_UNKNOWN = "Type Unknown";
-    private static String HIDDEN_FILE = "Hidden File";
     private Hashtable filters = null;
     private String description = null;
     private String fullDescription = null;
@@ -68,8 +66,6 @@ public class SwkFilenameFilter implements FilenameFilter {
                 if (Util.stringMatch(fileName, filter)) {
                     return true;
                 }
-
-                ;
             }
         }
 
@@ -84,8 +80,6 @@ public class SwkFilenameFilter implements FilenameFilter {
             if ((i > 0) && (i < (filename.length() - 1))) {
                 return filename.substring(i + 1).toLowerCase();
             }
-
-            ;
         }
 
         return null;

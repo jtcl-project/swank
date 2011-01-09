@@ -25,16 +25,7 @@
 package com.onemoonscientific.swank;
 
 import tcl.lang.*;
-import tcl.pkg.java.ReflectObject;
-
 import java.awt.*;
-
-import java.io.*;
-
-import java.lang.*;
-
-import java.util.*;
-
 import javax.swing.*;
 
 public class SwkCmd implements Command {
@@ -79,7 +70,6 @@ public class SwkCmd implements Command {
         WidgetCmd(Interp interp, TclObject[] argv) {
             this.interp = interp;
             this.argv = new TclObject[argv.length];
-            ;
 
             for (int i = 0; i < argv.length; i++) {
                 argv[i].preserve();

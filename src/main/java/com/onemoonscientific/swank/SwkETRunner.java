@@ -25,15 +25,7 @@
 package com.onemoonscientific.swank;
 
 import tcl.lang.*;
-
 import java.awt.*;
-
-import java.io.*;
-
-import java.lang.*;
-
-import java.util.*;
-
 import javax.swing.*;
 
 public class SwkETRunner {
@@ -78,7 +70,6 @@ public class SwkETRunner {
         WidgetCmd(Interp interp, TclObject[] argv) {
             this.interp = interp;
             this.argv = new TclObject[argv.length];
-            ;
 
             for (int i = 0; i < argv.length; i++) {
                 argv[i].preserve();

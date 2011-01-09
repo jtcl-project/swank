@@ -25,15 +25,7 @@
 package com.onemoonscientific.swank;
 
 import tcl.lang.*;
-
 import java.awt.*;
-
-import java.io.*;
-
-import java.lang.*;
-
-import java.util.*;
-
 import javax.swing.*;
 
 public class SwkCmdET implements Command {
@@ -120,7 +112,7 @@ public class SwkCmdET implements Command {
         }
     }
 
-    class ETWait implements Runnable {
+    static class ETWait implements Runnable {
 
         public void run() {
             System.out.println("waiting " + System.currentTimeMillis());

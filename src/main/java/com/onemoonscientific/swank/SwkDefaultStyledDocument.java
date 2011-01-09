@@ -25,16 +25,8 @@
 package com.onemoonscientific.swank;
 
 import tcl.lang.*;
-
 import java.awt.*;
-import java.awt.event.*;
-
-import java.lang.*;
-
 import java.util.*;
-import java.util.regex.*;
-
-import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
@@ -1064,7 +1056,6 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
 
         Element elem = null;
         int charIndex = 0;
-        int endOffset = endPosition.getOffset();
         boolean foundOffset = false;
         int j = 0;
 
@@ -1224,8 +1215,7 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
         if ((high - low) < 2) {
             return;
         }
-
-        int middle = (low + high) / 2;
+        int middle = (low + high) >>> 1;
         shuttlesort(to, from, low, middle);
         shuttlesort(to, from, middle, high);
 
@@ -1257,34 +1247,33 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
     }
 
     public String getRangeString(String tagName, int mode) {
-        int[] indexes = getRangeArray(tagName);
+        int[] rangeIndexes = getRangeArray(tagName);
 
-        if (indexes == null) {
+        if (rangeIndexes == null) {
             return null;
         }
 
         if (mode == 0) {
-            return (getRangeString(indexes));
+            return (getRangeString(rangeIndexes));
         } else {
-            return (getRangeString(indexes, mode));
+            return (getRangeString(rangeIndexes, mode));
         }
     }
 
     public int getRangeOffset(String tagName, int mode) {
-        int[] indexes = getRangeArray(tagName);
+        int[] rangeIndexes = getRangeArray(tagName);
 
-        if (indexes == null) {
+        if (rangeIndexes == null) {
             return -1;
         }
 
-        return (getRangeOffset(indexes, mode));
+        return (getRangeOffset(rangeIndexes, mode));
     }
 
     public int[] getRangeArray(String tagName) {
         Hashtable ht = (Hashtable) styleHash.get(tagName);
         String[] styleList = null;
         Style nextStyle = null;
-        TclObject list = TclList.newInstance();
         rangeOffsets.setSize(0);
 
         if (ht != null) {
@@ -1325,8 +1314,8 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
                         }
                     }
 
-                    rangeOffsets.addElement(new Integer(start));
-                    rangeOffsets.addElement(new Integer(end));
+                    rangeOffsets.addElement(Integer.valueOf(start));
+                    rangeOffsets.addElement(Integer.valueOf(end));
                 }
             }
         }
@@ -1519,8 +1508,6 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
 
     boolean isWordChar(int offset) {
         char ch;
-        int endOffset = endPosition.getOffset();
-
         try {
             ch = getText(offset, 1).charAt(0);
         } catch (BadLocationException badLoc) {
@@ -1534,7 +1521,7 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
         }
     }
 
-    class SwkPosition {
+    static class SwkPosition {
 
         Position position = null;
         Position.Bias bias = Position.Bias.Forward;

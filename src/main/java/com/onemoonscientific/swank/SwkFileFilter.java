@@ -1,13 +1,9 @@
 package com.onemoonscientific.swank;
 
 import tcl.lang.*;
-
 import java.io.File;
-
 import java.util.Enumeration;
 import java.util.Hashtable;
-
-import javax.swing.*;
 import javax.swing.filechooser.*;
 
 public class SwkFileFilter extends FileFilter {
@@ -86,8 +82,6 @@ public class SwkFileFilter extends FileFilter {
             if ((i > 0) && (i < (filename.length() - 1))) {
                 return filename.substring(i + 1).toLowerCase();
             }
-
-            ;
         }
 
         return null;

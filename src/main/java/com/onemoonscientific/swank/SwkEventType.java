@@ -24,20 +24,10 @@
  */
 package com.onemoonscientific.swank;
 
-import tcl.lang.*;
 
-import java.awt.*;
 import java.awt.event.*;
-
-import java.io.*;
-
-import java.lang.*;
-
 import java.util.*;
-
 import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.text.*;
 
 public class SwkEventType {
 
@@ -471,7 +461,7 @@ public class SwkEventType {
         this.subtype = flags;
         this.detail = detail;
 
-        Character SimpleChar = new Character(simpleChar);
+        Character SimpleChar = Character.valueOf(simpleChar);
         simpleMap.put(SimpleChar, new Integer(detail));
     }
 

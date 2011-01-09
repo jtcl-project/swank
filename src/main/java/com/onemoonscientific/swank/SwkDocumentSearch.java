@@ -24,15 +24,7 @@
  */
 package com.onemoonscientific.swank;
 
-import java.awt.*;
-import java.awt.event.*;
-
-import java.lang.*;
-
-import java.util.*;
 import java.util.regex.*;
-
-import javax.swing.*;
 import javax.swing.text.*;
 
 public class SwkDocumentSearch {

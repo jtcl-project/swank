@@ -98,12 +98,7 @@ public class SwkColorPicker implements Command {
 
     class Option extends GetValueOnEventThread {
 
-        int index = -1;
         String title = "";
-        String[] options = null;
-        String defaultOption = "";
-        String strResult = "";
-        int result = -1;
         boolean showOpacity = false;
         Color color;
         Component dParent = null;

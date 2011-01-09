@@ -29,7 +29,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
-
 public class SwkCommandListener implements ActionListener, SwkListener {
 
     Interp interp;
