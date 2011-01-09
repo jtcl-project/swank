@@ -55,9 +55,8 @@ public class ${widgetType}Cmd implements Command {
        }
     }
 
-   class CmdProc implements Runnable {
+   static class CmdProc implements Runnable {
 	Interp interp;
-	TclObject[] argv = null;
         String widgetName  = "";
         ${widgetType} ${widgetVar} = null;
 
@@ -85,7 +84,6 @@ public class ${widgetType}Cmd implements Command {
                 "bad window path name \"" + argv[1].toString() + "\"");
         }
 
-       String cmdName = argv[0].toString();
        String  widgetName = argv[1].toString();
 
         CmdProc cmdProc = new CmdProc(interp,widgetName);

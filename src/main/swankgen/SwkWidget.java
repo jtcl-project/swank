@@ -47,7 +47,7 @@ public class ${widgetType} extends ${widget} implements SwkWidget, Printable$spe
     static TreeMap validCmdsTM = new TreeMap();
     static {
          for (int i=0;i< validCmds.length;i++) {
-               validCmdsTM.put(validCmds[i],new Integer(i));
+               validCmdsTM.put(validCmds[i],Integer.valueOf(i));
          }
     }
 
@@ -69,7 +69,9 @@ public class ${widgetType} extends ${widget} implements SwkWidget, Printable$spe
         tagList.add("swank");
         tagList.add("all");
     }
-
+    public String getClassName() {
+        return className;
+    }
     public static void getWidgetOptions(Interp interp) throws TclException {
            TclObject result = TclList.newInstance();
            for (int i=0, n=validCmds.length;i<n;i++) {
@@ -176,17 +178,14 @@ public class ${widgetType} extends ${widget} implements SwkWidget, Printable$spe
             getAllConfigurations(interp,jgetAll.roValues);
     }
    class JGetAll implements Runnable {
-        ${widgetType} ${widgetVar};
         ArrayList roValues = null;
         JGetAll( ${widgetType} ${widgetVar}) {
-                this.${widgetVar} = ${widgetVar};
         }
         public void run() {
 		roValues = getAllConfigurations();
         }
     }
     ArrayList getAllConfigurations() {
-           int nCmds = validCmds.length;
            ArrayList results = new ArrayList();
            Enumeration e = ${widgetType}.resourceDB.keys();
            while (e.hasMoreElements()) {
@@ -305,7 +304,7 @@ public class ${widgetType} extends ${widget} implements SwkWidget, Printable$spe
         }
         return result;
     }
-   class JGet implements Runnable {
+   static class JGet implements Runnable {
         ${widgetType} ${widgetVar};
         int opt = 0;
 	String result = "";
@@ -335,11 +334,7 @@ public class ${widgetType} extends ${widget} implements SwkWidget, Printable$spe
     }
 
   class ResourceDefaultsSetter implements Runnable {
-        Interp interp;
-        ${widgetType} ${widgetVar};
         ResourceDefaultsSetter(Interp interp, ${widgetType} ${widgetVar}) {
-                this.interp = interp;
-                this.${widgetVar} = ${widgetVar};
         }
 
         public void run() {

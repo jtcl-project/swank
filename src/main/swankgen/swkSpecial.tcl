@@ -2786,7 +2786,7 @@ Dimension dSize = new Dimension(scrollRegion[1][0]-scrollRegion[0][0],scrollRegi
         SwkKeyCommandListener keyCommandListener = null;
         SwkFocusListener focusListener = null;
         SwkComponentListener componentListener = null;
-        SwkChangeListener changeListener = null;
+        SwkChangeListener swkChangeListener = null;
         SwkMouseMotionListener mouseMotionListener = null;
 	int mouseX = 0;
 	int mouseY = 0;
@@ -2855,10 +2855,10 @@ Dimension dSize = new Dimension(scrollRegion[1][0]-scrollRegion[0][0],scrollRegi
             this.componentListener = componentListener;
         }
         public SwkChangeListener getChangeListener() {
-            return(changeListener);
+            return(swkChangeListener);
         }
-        public void setChangeListener(SwkChangeListener changeListener) {
-            this.changeListener = changeListener;
+        public void setChangeListener(SwkChangeListener swkChangeListener) {
+            this.swkChangeListener = swkChangeListener;
         }
         
         public SwkKeyListener getKeyListener() {
@@ -2882,18 +2882,6 @@ Dimension dSize = new Dimension(scrollRegion[1][0]-scrollRegion[0][0],scrollRegi
         }
         
     }
-    
-    
-    set specialGets [concat  $specialGets {{setClassName java.lang.String ClassName -class}}]
-    append specialMethods "
-    public void setClassName(String className) \{
-        this.className = className.intern();
-    \}
-    public String getClassName() \{
-        return(className);
-    \}
-    "
-    
     
     append specialMethods "
     $closeMethod

@@ -200,7 +200,7 @@ append specialInits {
                                     return;
                                 }
                                 Hashtable labels = new Hashtable();
-                                labels.put(new Integer(0),new JLabel("0"));
+                                labels.put(Integer.valueOf(0),new JLabel("0"));
                                 jslider.setLabelTable(labels);
                                 double dValue = getDValue();
                                 jslider.setMinimum(0);
@@ -228,7 +228,7 @@ append specialInits {
                                 int incr = jslider.getMajorTickSpacing();
                                 for (int i=jslider.getMinimum();i<=jslider.getMaximum();i += incr) {
 					String labelValue = nf.format(convertValue(i));
-                                        labels.put(new Integer(i),new JLabel(labelValue));
+                                        labels.put(Integer.valueOf(i),new JLabel(labelValue));
                                 }
                                 jslider.setLabelTable(labels);
                                 }
