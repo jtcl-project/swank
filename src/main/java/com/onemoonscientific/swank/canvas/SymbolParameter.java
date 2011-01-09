@@ -2,11 +2,9 @@ package com.onemoonscientific.swank.canvas;
 
 import tcl.lang.*;
 
-import java.awt.geom.*;
-
 public class SymbolParameter extends CanvasParameter {
 
-    private static String name = "symbol";
+    private static final String name = "symbol";
     private static int defValue = 3;
     private int newValue = defValue;
 
@@ -18,13 +16,6 @@ public class SymbolParameter extends CanvasParameter {
         return defValue + "";
     }
 
-    public boolean isParameterLabel(String s) {
-        if ((s.length() > 3) && "-symbol".startsWith(s)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 
     public int parseSymbolType(String symbolName) {
         int symbolType = -1;
@@ -87,6 +78,7 @@ public class SymbolParameter extends CanvasParameter {
         return TclString.newInstance(symbolType);
     }
 
+    @Override
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
             throws TclException {
         newValue = -1;

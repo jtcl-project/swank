@@ -35,17 +35,9 @@
 package com.onemoonscientific.swank.canvas;
 
 import com.onemoonscientific.swank.*;
-
 import tcl.lang.*;
-
 import java.awt.*;
-import java.awt.geom.*;
-import java.awt.image.*;
-
-import java.lang.*;
-
 import java.util.*;
-
 import javax.swing.*;
 
 public class ItemWindow extends SwkShape {
@@ -54,7 +46,6 @@ public class ItemWindow extends SwkShape {
         new WindowParameter(), new AnchorParameter(),
         new WidthParameter(), new HeightParameter(), new TagsParameter(),
         new TransformerParameter(),};
-    static Map parameterMap = new TreeMap();
 
     static {
         initializeParameters(parameters, parameterMap);
@@ -84,10 +75,6 @@ public class ItemWindow extends SwkShape {
 
     public CanvasParameter[] getParameters() {
         return parameters;
-    }
-
-    public Map getParameterMap() {
-        return parameterMap;
     }
 
     public void configShape(Interp interp, SwkImageCanvas swkCanvas,

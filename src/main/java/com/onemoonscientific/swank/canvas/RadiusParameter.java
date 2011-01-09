@@ -2,11 +2,9 @@ package com.onemoonscientific.swank.canvas;
 
 import tcl.lang.*;
 
-import java.awt.geom.*;
-
 public class RadiusParameter extends CanvasParameter {
 
-    private static String name = "radius";
+    private static final String name = "radius";
     private static double defValue = 90.0;
     double newValue = defValue;
 
@@ -15,15 +13,7 @@ public class RadiusParameter extends CanvasParameter {
     }
 
     public String getDefault() {
-        return defValue + "";
-    }
-
-    public boolean isParameterLabel(String s) {
-        if ((s.length() > 3) && "-radius".startsWith(s)) {
-            return true;
-        } else {
-            return false;
-        }
+        return String.valueOf(defValue);
     }
 
     public TclObject getValue(Interp interp, SwkShape swkShape)
@@ -37,6 +27,7 @@ public class RadiusParameter extends CanvasParameter {
         return TclDouble.newInstance(radius);
     }
 
+    @Override
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
             throws TclException {
         newValue = TclDouble.get(interp, arg);

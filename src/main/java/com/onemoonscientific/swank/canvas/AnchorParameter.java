@@ -6,24 +6,15 @@ import tcl.lang.*;
 
 public class AnchorParameter extends CanvasParameter {
 
-    private static String name = "anchor";
     private static String defValue = "";
     private float[] newValue = null;
 
     public String getName() {
-        return name;
+        return "anchor";
     }
 
     public String getDefault() {
         return defValue;
-    }
-
-    public boolean isParameterLabel(String s) {
-        if ((s.length() > 3) && "-anchor".startsWith(s)) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     public TclObject getValue(Interp interp, SwkShape swkShape)
@@ -36,6 +27,7 @@ public class AnchorParameter extends CanvasParameter {
                 ((TextInterface) swkShape).getAnchor()));
     }
 
+    @Override
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
             throws TclException {
         newValue = SwankUtil.getAnchor(interp, arg);

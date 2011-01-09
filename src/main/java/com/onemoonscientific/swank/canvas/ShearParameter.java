@@ -6,7 +6,7 @@ import java.awt.geom.*;
 
 public class ShearParameter extends CanvasParameter {
 
-    private static String name = "shear";
+    private static final String name = "shear";
     private static String defValue = "0.0 0.0";
     private float xShear = 0.0f;
     private float yShear = 0.0f;
@@ -17,14 +17,6 @@ public class ShearParameter extends CanvasParameter {
 
     public String getDefault() {
         return defValue;
-    }
-
-    public boolean isParameterLabel(String s) {
-        if ((s.length() > 3) && "-shear".startsWith(s)) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     public TclObject getValue(Interp interp, SwkShape swkShape)
@@ -40,6 +32,7 @@ public class ShearParameter extends CanvasParameter {
         return list;
     }
 
+    @Override
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
             throws TclException {
         TclObject[] shearList = TclList.getElements(interp, arg);

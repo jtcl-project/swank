@@ -55,7 +55,7 @@ public class BoxPlotShapeComplete extends SwkShape implements NumberRange, PlotI
                 new PaintParameter(),
 		new RLabelParameter(), new RMinParameter(), new RMaxParameter(), new RAutoParameter(),
                 new TransformerParameter()};
-	static Map parameterMap = new TreeMap();
+	static TreeMap parameterMap = new TreeMap();
 
 	static {
 		initializeParameters(parameters, parameterMap);
@@ -175,7 +175,7 @@ public class BoxPlotShapeComplete extends SwkShape implements NumberRange, PlotI
 		return parameters;
 	}
 
-	public Map getParameterMap() {
+	public TreeMap getParameterMap() {
 		return parameterMap;
 	}
 

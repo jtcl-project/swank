@@ -15,15 +15,7 @@ public class HeightParameter extends CanvasParameter {
     }
 
     public String getDefault() {
-        return defValue + "";
-    }
-
-    public boolean isParameterLabel(String s) {
-        if ((s.length() > 3) && "-height".startsWith(s)) {
-            return true;
-        } else {
-            return false;
-        }
+        return String.valueOf(defValue);
     }
 
     public TclObject getValue(Interp interp, SwkShape swkShape)
@@ -35,6 +27,7 @@ public class HeightParameter extends CanvasParameter {
         return (TclDouble.newInstance(swkShape.height));
     }
 
+    @Override
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
             throws TclException {
         newValue = (float) SwankUtil.getTkSizeD(interp,

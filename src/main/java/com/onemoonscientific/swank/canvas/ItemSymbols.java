@@ -51,7 +51,6 @@ public class ItemSymbols extends SwkShape implements SymbolInterface {
         new SymbolParameter(), new RadiusParameter(), new RotateParameter(),
         new ShearParameter(), new TagsParameter(), new StateParameter(), new NodeParameter(),
         new TransformerParameter(),};
-    static Map parameterMap = new TreeMap();
 
     static {
         initializeParameters(parameters, parameterMap);
@@ -194,10 +193,6 @@ public class ItemSymbols extends SwkShape implements SymbolInterface {
 
     public CanvasParameter[] getParameters() {
         return parameters;
-    }
-
-    public Map getParameterMap() {
-        return parameterMap;
     }
 
     public String getType() {

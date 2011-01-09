@@ -53,7 +53,6 @@ public class ItemRectangle extends SwkShape implements TextInterface {
         new TransformerParameter(), new RotateParameter(), new ShearParameter(),
         new StateParameter(), new NodeParameter(),
         new TextParameter(), new FontParameter(), new AnchorParameter(), new TextcolorParameter(),};
-    static Map parameterMap = new TreeMap();
 
     static {
         initializeParameters(parameters, parameterMap);
@@ -143,10 +142,6 @@ public class ItemRectangle extends SwkShape implements TextInterface {
 
     public CanvasParameter[] getParameters() {
         return parameters;
-    }
-
-    public Map getParameterMap() {
-        return parameterMap;
     }
 
     public String getType() {

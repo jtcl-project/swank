@@ -8,10 +8,6 @@ import java.awt.*;
 import java.awt.geom.*;
 import java.awt.image.*;
 
-import java.lang.*;
-
-import java.util.*;
-
 import javax.swing.*;
 
 public class TextureParameter extends CanvasParameter {
@@ -27,14 +23,6 @@ public class TextureParameter extends CanvasParameter {
 
     public String getDefault() {
         return "";
-    }
-
-    public boolean isParameterLabel(String s) {
-        if ((s.length() > 3) && "-texture".startsWith(s)) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     public static TexturePaint getFromImage(Interp interp, TclObject arg)
@@ -69,6 +57,7 @@ public class TextureParameter extends CanvasParameter {
         return (TclString.newInstance(swkShape.imageName));
     }
 
+    @Override
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
             throws TclException {
         newName = arg.toString();

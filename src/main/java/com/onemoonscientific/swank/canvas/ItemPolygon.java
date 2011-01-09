@@ -52,7 +52,6 @@ public class ItemPolygon extends SwkShape {
         new FillParameter(), new OutlineParameter(), new RotateParameter(),
         new ShearParameter(), new TagsParameter(), new StateParameter(), new NodeParameter(),
         new TransformerParameter(),};
-    static Map parameterMap = new TreeMap();
 
     static {
         initializeParameters(parameters, parameterMap);
@@ -115,10 +114,6 @@ public class ItemPolygon extends SwkShape {
 
     public CanvasParameter[] getParameters() {
         return parameters;
-    }
-
-    public Map getParameterMap() {
-        return parameterMap;
     }
 
     public String getType() {

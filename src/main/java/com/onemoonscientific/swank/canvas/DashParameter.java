@@ -7,7 +7,6 @@ import tcl.lang.*;
 public class DashParameter extends CanvasParameter {
 
     private static String name = "dash";
-    private static double[] defValue = {};
     String dashString = "";
     boolean dashIntPattern = false;
     float[] dash = null;
@@ -20,14 +19,6 @@ public class DashParameter extends CanvasParameter {
         return "";
     }
 
-    public boolean isParameterLabel(String s) {
-        if (s.equals("-dash")) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     public TclObject getValue(Interp interp, SwkShape swkShape)
             throws TclException {
         if (swkShape == null) {
@@ -37,6 +28,7 @@ public class DashParameter extends CanvasParameter {
         return TclString.newInstance(swkShape.getDashString());
     }
 
+    @Override
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
             throws TclException {
         dashString = arg.toString();

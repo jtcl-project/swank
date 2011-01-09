@@ -162,7 +162,6 @@ public class ItemLine extends SwkShape {
         new TransformerParameter(), new CapstyleParameter(),
         new JoinstyleParameter(), new ArrowParameter(), new ArrowShapeParameter(), new EndstyleParameter(), new StartstyleParameter()
     };
-    static Map parameterMap = new TreeMap();
 
     static {
         initializeParameters(parameters, parameterMap);
@@ -563,10 +562,6 @@ public class ItemLine extends SwkShape {
 
     public CanvasParameter[] getParameters() {
         return parameters;
-    }
-
-    public Map getParameterMap() {
-        return parameterMap;
     }
 
     public String getType() {

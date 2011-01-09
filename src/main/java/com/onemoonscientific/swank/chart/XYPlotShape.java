@@ -56,7 +56,7 @@ public class XYPlotShape extends SwkShape implements DatasetShape, NumberDomain,
     static CanvasParameter[] parameters = {
        new TagsParameter(), new DatasetParameter(), new FillParameter()
     };
-    static Map parameterMap = new TreeMap();
+    static TreeMap parameterMap = new TreeMap();
 
     static {
         initializeParameters(parameters, parameterMap);
@@ -234,7 +234,7 @@ public class XYPlotShape extends SwkShape implements DatasetShape, NumberDomain,
         return parameters;
     }
 
-    public Map getParameterMap() {
+    public TreeMap getParameterMap() {
         return parameterMap;
     }
 

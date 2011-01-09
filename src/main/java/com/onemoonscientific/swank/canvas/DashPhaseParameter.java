@@ -13,15 +13,7 @@ public class DashPhaseParameter extends CanvasParameter {
     }
 
     public String getDefault() {
-        return defValue + "";
-    }
-
-    public boolean isParameterLabel(String s) {
-        if ((s.length() > 6) && "-dashphase".startsWith(s)) {
-            return true;
-        } else {
-            return false;
-        }
+        return String.valueOf(defValue);
     }
 
     public TclObject getValue(Interp interp, SwkShape swkShape)
@@ -33,6 +25,7 @@ public class DashPhaseParameter extends CanvasParameter {
         return TclDouble.newInstance(swkShape.getDashPhase());
     }
 
+    @Override
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
             throws TclException {
         newValue = (float) TclDouble.get(interp, arg);

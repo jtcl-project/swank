@@ -4,7 +4,7 @@ import tcl.lang.*;
 
 public class StateParameter extends CanvasParameter {
 
-    private static String name = "state";
+    private static final String name = "state";
     private static int defValue = SwkShape.ACTIVE;
     private byte newValue = SwkShape.ACTIVE;
 
@@ -13,16 +13,9 @@ public class StateParameter extends CanvasParameter {
     }
 
     public String getDefault() {
-        return defValue + "";
+        return "normal";
     }
 
-    public boolean isParameterLabel(String s) {
-        if ((s.length() > 3) && "-state".startsWith(s)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 
     public TclObject getValue(Interp interp, SwkShape swkShape)
             throws TclException {
@@ -33,6 +26,7 @@ public class StateParameter extends CanvasParameter {
         return TclString.newInstance(swkShape.getStateString());
     }
 
+    @Override
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
             throws TclException {
         String stateString = arg.toString();

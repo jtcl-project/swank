@@ -18,14 +18,6 @@ public class WidthParameter extends CanvasParameter {
         return defValue + "";
     }
 
-    public boolean isParameterLabel(String s) {
-        if ((s.length() > 3) && "-width".startsWith(s)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     public TclObject getValue(Interp interp, SwkShape swkShape)
             throws TclException {
         if (swkShape == null) {
@@ -35,6 +27,7 @@ public class WidthParameter extends CanvasParameter {
         return (TclDouble.newInstance(swkShape.width));
     }
 
+    @Override
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
             throws TclException {
         newValue = (float) SwankUtil.getTkSizeD(interp,

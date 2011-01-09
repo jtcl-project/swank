@@ -1,18 +1,9 @@
 package com.onemoonscientific.swank.canvas;
 
 import com.onemoonscientific.swank.*;
-
 import tcl.lang.*;
-
 import java.awt.*;
 import java.awt.geom.*;
-import java.awt.image.*;
-
-import java.lang.*;
-
-import java.util.*;
-
-import javax.swing.*;
 
 public class GradientParameter extends CanvasParameter {
 
@@ -28,14 +19,6 @@ public class GradientParameter extends CanvasParameter {
 
     public String getDefault() {
         return "";
-    }
-
-    public boolean isParameterLabel(String s) {
-        if ((s.length() > 3) && "-gradient".startsWith(s)) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     public TclObject getValue(Interp interp, SwkShape swkShape)
@@ -83,6 +66,7 @@ public class GradientParameter extends CanvasParameter {
         return (TclString.newInstance(result));
     }
 
+    @Override
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
             throws TclException {
         if (arg.toString().equals("")) {

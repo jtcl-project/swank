@@ -22,7 +22,6 @@
  *
  *
  */
-
 /**
  *
  * @author  JOHNBRUC
@@ -49,13 +48,13 @@ import org.jfree.ui.RectangleInsets;
 import org.jfree.ui.Size2D;
 import org.jfree.ui.VerticalAlignment;
 
-
 public class LegendShape extends SwkShape {
+
     static CanvasParameter[] parameters = {
         new TagsParameter(), new EdgeParameter(), new PlotParameter()
     };
     static Map parameterMap = new TreeMap();
-    
+
     static {
         initializeParameters(parameters, parameterMap);
     }
@@ -63,24 +62,24 @@ public class LegendShape extends SwkShape {
     BoxPlotShapeComplete boxPlotShape = null;
     String plotTag = "";
     LegendTitle legend = null;
-    
     Rectangle2D.Double plotArea = null;
     RectangleEdge edge = RectangleEdge.BOTTOM;
     String edgeString = "bottom";
-    
+
     public LegendShape() {
         setShape(null);
         initLegend();
     }
+
     void initLegend() {
         SwkImageCanvas canvas = getCanvas();
         if (canvas != null) {
             try {
                 SwkShape plotShape = canvas.getShape(plotTag);
                 if (plotShape instanceof XYPlotShape) {
-                    xyPlotShape = (XYPlotShape)  plotShape;
+                    xyPlotShape = (XYPlotShape) plotShape;
                 } else if (plotShape instanceof BoxPlotShapeComplete) {
-                    boxPlotShape = (BoxPlotShapeComplete)  plotShape;
+                    boxPlotShape = (BoxPlotShapeComplete) plotShape;
                 }
             } catch (SwkException swkE) {
             }
@@ -97,23 +96,24 @@ public class LegendShape extends SwkShape {
             }
         }
     }
+
     public void coords(SwkImageCanvas canvas, double[] coords)
-    throws SwkException {
-        
+            throws SwkException {
+
         if (coords.length != 4) {
-            throw new SwkException("wrong # coordinates: expected 4, got " +
-                    coords.length);
+            throw new SwkException("wrong # coordinates: expected 4, got "
+                    + coords.length);
         }
-        
-        
+
+
         if ((storeCoords == null) || (storeCoords.length != coords.length)) {
             storeCoords = new double[coords.length];
         }
-        
+
         System.arraycopy(coords, 0, storeCoords, 0, coords.length);
         applyCoordinates();
     }
-    
+
     public void applyCoordinates() {
         AffineTransform aT = new AffineTransform();
         aT.translate(storeCoords[0], storeCoords[1]);
@@ -124,20 +124,17 @@ public class LegendShape extends SwkShape {
         plotArea = new Rectangle2D.Double();
         plotArea.setFrameFromDiagonal(storeCoords[0], storeCoords[1],
                 storeCoords[2], storeCoords[3]);
-        
+
     }
-    
+
     public CanvasParameter[] getParameters() {
         return parameters;
     }
-    
-    public Map getParameterMap() {
-        return parameterMap;
-    }
-    
+
     public String getType() {
         return "vector";
     }
+
     void drawLegend(Graphics2D g2, Rectangle2D area) {
         if (legend == null) {
             throw new IllegalArgumentException("Null 't' argument.");
@@ -155,16 +152,15 @@ public class LegendShape extends SwkShape {
         }
         RectangleConstraint constraint = new RectangleConstraint(
                 areaWidth, new Range(0.0, areaWidth), LengthConstraintType.RANGE,
-                areaHeight, new Range(0.0, areaHeight), LengthConstraintType.RANGE
-                );
+                areaHeight, new Range(0.0, areaHeight), LengthConstraintType.RANGE);
         Size2D size = legend.arrange(g2, constraint);
         Rectangle2D legendArea = createAlignedRectangle2D(size, area, legend.getHorizontalAlignment(), VerticalAlignment.BOTTOM);
         legend.draw(g2, legendArea, null);
         area.setRect(area.getX(), area.getY(), area.getWidth(), area.getHeight() - size.height);
-        
+
     }
     // Copied from JFreeChart, need to build own implementation
-    
+
     /**
      * Creates a rectangle that is aligned to the frame.
      *
@@ -194,40 +190,43 @@ public class LegendShape extends SwkShape {
         } else if (vAlign == VerticalAlignment.BOTTOM) {
             y = frame.getMaxY() - dimensions.height;
         }
-        
+
         return new Rectangle2D.Double(
-                x, y, dimensions.width, dimensions.height
-                );
+                x, y, dimensions.width, dimensions.height);
     }
-    
+
     public void paintShape(Graphics2D g2) {
         initLegend();
         if (legend != null) {
             Rectangle2D rect = (Rectangle2D) plotArea.clone();
-            drawLegend(g2,rect);
+            drawLegend(g2, rect);
         }
     }
-    
-    
+
     static class EdgeParameter extends StringParameter {
+
         private static String name = "edge";
-        
+
         EdgeParameter() {
             CanvasParameter.addParameter(this);
         }
-        
+
         public String getName() {
             return name;
         }
-        
+
+        public String getDefault() {
+            return "";
+        }
+
         public String getValue(SwkShape swkShape) {
             return ((LegendShape) swkShape).edgeString;
         }
-        
+
         public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
             String edgeString = getNewValue();
             RectangleEdge edge = RectangleEdge.BOTTOM;
-            
+
             if ("bottom".equals(edgeString)) {
                 edge = RectangleEdge.BOTTOM;
             } else if ("top".equals(edgeString)) {
@@ -237,30 +236,35 @@ public class LegendShape extends SwkShape {
             } else if ("right".equals(edgeString)) {
                 edge = RectangleEdge.RIGHT;
             }
-            
+
             ((LegendShape) swkShape).edgeString = edgeString;
             ((LegendShape) swkShape).edge = edge;
         }
     }
+
     static class PlotParameter extends StringParameter {
+
         private static String name = "plot";
-        
+
         PlotParameter() {
             CanvasParameter.addParameter(this);
         }
-        
+
         public String getName() {
             return name;
         }
-        
+
+        public String getDefault() {
+            return "";
+        }
+
         public String getValue(SwkShape swkShape) {
             return ((LegendShape) swkShape).plotTag;
         }
-        
+
         public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
             String tag = getNewValue();
             ((LegendShape) swkShape).plotTag = tag;
         }
     }
-    
 }

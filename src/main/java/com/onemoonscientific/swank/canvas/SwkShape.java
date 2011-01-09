@@ -25,13 +25,9 @@
 package com.onemoonscientific.swank.canvas;
 
 import com.onemoonscientific.swank.*;
-
 import tcl.lang.*;
-
 import java.awt.*;
 import java.awt.geom.*;
-
-import java.lang.*;
 
 import java.util.*;
 
@@ -54,13 +50,10 @@ public abstract class SwkShape implements SwkShapeConfig {
     Point2D gradPt1 = null;
     Point2D gradPt2 = null;
     TexturePaint texturePaint = null;
-    String imageName = "";
     Color outline = Color.black;
     BasicStroke stroke = null;
     boolean newStroke = false;
-    boolean newTransform = false;
     float width = (float) 1.0;
-    float height = (float) 1.0;
     Transformer transformer = null;
     float rotate = 0.0f;
     float xShear = 0.0f;
@@ -70,6 +63,7 @@ public abstract class SwkShape implements SwkShapeConfig {
     String[] tagNames = null;
     SwkImageCanvas canvas = null;
     boolean selected = false;
+    static TreeMap parameterMap = new TreeMap();
 
     public SwkShape() {
     }
@@ -77,6 +71,10 @@ public abstract class SwkShape implements SwkShapeConfig {
     public SwkShape(Shape shape, SwkImageCanvas canvas) {
         this.shape = shape;
         this.canvas = canvas;
+    }
+
+    public TreeMap getParameterMap() {
+        return parameterMap;
     }
 
     public int getState() {
@@ -758,10 +756,6 @@ public abstract class SwkShape implements SwkShapeConfig {
         }
     }
 
-    public Map getParameterMap() {
-        return null;
-    }
-
     public static void initializeParameters(CanvasParameter[] params, Map map) {
         for (int i = 0; i < params.length; i++) {
             map.put(((CanvasParameter) params[i]).getName(), params[i]);
@@ -773,7 +767,7 @@ public abstract class SwkShape implements SwkShapeConfig {
     }
 
     public CanvasParameter getPar(String argString) {
-        Map map = getParameterMap();
+        TreeMap map = getParameterMap();
 
         if (map == null) {
             return null;

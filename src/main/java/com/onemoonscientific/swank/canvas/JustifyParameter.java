@@ -2,11 +2,9 @@ package com.onemoonscientific.swank.canvas;
 
 import tcl.lang.*;
 
-import java.awt.geom.*;
-
 public class JustifyParameter extends CanvasParameter {
 
-    private static String name = "justify";
+    private static final String name = "justify";
     private static String defValue = "";
     private String newValue = defValue;
 
@@ -16,14 +14,6 @@ public class JustifyParameter extends CanvasParameter {
 
     public String getDefault() {
         return defValue;
-    }
-
-    public boolean isParameterLabel(String s) {
-        if ((s.length() > 3) && "-justify".startsWith(s)) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     public TclObject getValue(Interp interp, SwkShape swkShape)
@@ -37,6 +27,7 @@ public class JustifyParameter extends CanvasParameter {
         return TclString.newInstance(swkLine.smooth);
     }
 
+    @Override
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
             throws TclException {
         if (arg == null) {

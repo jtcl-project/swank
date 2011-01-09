@@ -57,7 +57,7 @@ public class CategoryPlotShapeComplete extends SwkShape implements DatasetShape,
        new RLabelParameter(), new RMinParameter(), new RMaxParameter(), new RAutoParameter(),
        new TransformerParameter()
     };
-    static Map parameterMap = new TreeMap();
+    static TreeMap parameterMap = new TreeMap();
 
     static {
         initializeParameters(parameters, parameterMap);
@@ -202,7 +202,7 @@ public class CategoryPlotShapeComplete extends SwkShape implements DatasetShape,
         return parameters;
     }
 
-    public Map getParameterMap() {
+    public TreeMap getParameterMap() {
         return parameterMap;
     }
 

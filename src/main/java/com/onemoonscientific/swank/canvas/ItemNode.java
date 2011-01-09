@@ -52,7 +52,6 @@ public class ItemNode extends SwkShape {
         new FillParameter(), new OutlineParameter(), new TagsParameter(),
         new TransformerParameter(), new RotateParameter(), new ShearParameter(),
         new StateParameter(), new NodeParameter(),};
-    static Map parameterMap = new TreeMap();
 
     static {
         initializeParameters(parameters, parameterMap);
@@ -93,10 +92,6 @@ public class ItemNode extends SwkShape {
 
     public CanvasParameter[] getParameters() {
         return parameters;
-    }
-
-    public Map getParameterMap() {
-        return parameterMap;
     }
 
     public String getType() {

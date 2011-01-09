@@ -1,12 +1,7 @@
 package com.onemoonscientific.swank.canvas;
 
-import com.onemoonscientific.swank.*;
-
 import tcl.lang.*;
-
 import java.util.*;
-
-import javax.swing.SwingUtilities;
 
 public abstract class CanvasParameter implements CanvasParameterConfigure,
         Cloneable {
@@ -23,10 +18,7 @@ public abstract class CanvasParameter implements CanvasParameterConfigure,
         new TextWidthParameter(), new TextureParameter(),
         new TransformerParameter(), new WidthParameter()
     };
-    static Map stdMap = null;
-    String name = "";
-    String defValue = "";
-    SwkShape swkShape = null;
+    static TreeMap stdMap = null;
 
     public Object clone() {
         try {
@@ -85,20 +77,29 @@ public abstract class CanvasParameter implements CanvasParameterConfigure,
     return  name.hashCode();
     }
      */
+    @Override
     public String toString() {
-        return "CanvasParameter: " + name;
+        return "CanvasParameter: " + getName();
     }
 
-    public String getName() {
-        return name;
-    }
+    abstract public String getName();
 
-    public String getDefault() {
-        return defValue;
-    }
+    abstract public String getDefault();
 
     public boolean isParameterLabel(String s) {
-        return s.equals(name);
+        boolean value = false;
+        if (s.length() > 3) {
+            if (s.charAt(0) == '-') {
+                if (getName().startsWith(s.substring(1))) {
+                    value = true;
+                }
+            } else {
+                if (getName().startsWith(s)) {
+                    value = true;
+                }
+            }
+        }
+        return value;
     }
 
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
@@ -126,7 +127,7 @@ public abstract class CanvasParameter implements CanvasParameterConfigure,
         return getPar(stdMap, arg);
     }
 
-    public static CanvasParameter getPar(Map map, String arg) {
+    public static CanvasParameter getPar(TreeMap map, String arg) {
         String searchArg = null;
 
         if (arg.charAt(0) == '-') {
@@ -135,9 +136,8 @@ public abstract class CanvasParameter implements CanvasParameterConfigure,
             searchArg = arg;
         }
 
-        TreeMap parMap = (TreeMap) map;
         SortedMap tailMap = null;
-        tailMap = parMap.tailMap(searchArg.substring(0, 1));
+        tailMap = map.tailMap(searchArg.substring(0, 1));
 
         Iterator iter = tailMap.values().iterator();
         CanvasParameter par = null;

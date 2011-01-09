@@ -53,7 +53,6 @@ public class ItemBitmap extends SwkShape {
     static CanvasParameter[] parameters = {
         new BitmapParameter(), new TagsParameter(), new StateParameter(), new NodeParameter(),
         new TransformerParameter(),};
-    static Map parameterMap = new TreeMap();
 
     static {
         initializeParameters(parameters, parameterMap);
@@ -96,10 +95,6 @@ public class ItemBitmap extends SwkShape {
 
     public CanvasParameter[] getParameters() {
         return parameters;
-    }
-
-    public Map getParameterMap() {
-        return parameterMap;
     }
 
     public String getType() {

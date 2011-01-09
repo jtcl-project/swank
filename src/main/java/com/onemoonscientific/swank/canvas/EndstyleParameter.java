@@ -2,11 +2,9 @@ package com.onemoonscientific.swank.canvas;
 
 import tcl.lang.*;
 
-import java.awt.BasicStroke;
-
 public class EndstyleParameter extends CanvasParameter {
 
-    private static String name = "endstyle";
+    private static final String name = "endstyle";
     private static String defValue = "none";
     ItemLine.EndPointStyle newValue = ItemLine.EndPointStyle.NONE;
 
@@ -16,14 +14,6 @@ public class EndstyleParameter extends CanvasParameter {
 
     public String getDefault() {
         return defValue + "";
-    }
-
-    public boolean isParameterLabel(String s) {
-        if ((s.length() > 3) && "-arrow".startsWith(s)) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     public TclObject getValue(Interp interp, SwkShape swkShape)
@@ -36,6 +26,7 @@ public class EndstyleParameter extends CanvasParameter {
         return TclString.newInstance(type);
     }
 
+    @Override
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
             throws TclException {
         if (arg.toString().startsWith("circle")) {

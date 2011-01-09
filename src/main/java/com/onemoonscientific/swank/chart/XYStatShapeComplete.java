@@ -22,7 +22,6 @@
  *
  *
  */
-
 /**
  *
  * @author  JOHNBRUC
@@ -52,21 +51,20 @@ import java.awt.geom.*;
 import java.util.*;
 import java.text.DecimalFormat;
 
-
 public class XYStatShapeComplete extends XYPlotShape {
+
     static CanvasParameter[] parameters = {
-        new TagsParameter(),  new DatasetParameter(), new LegendStateParameter(), new LegendLocParameter(),
-         new PaintParameter(), new SplineParameter(),
-         new DLabelParameter(), new DMinParameter(), new DMaxParameter(), new DAutoParameter(),
-         new RLabelParameter(), new RMinParameter(), new RMaxParameter(), new RAutoParameter(),
-         new TransformerParameter(),new WidthParameter(), new FillParameter(), new GradientParameter()
- };
-    static Map parameterMap = new TreeMap();
+        new TagsParameter(), new DatasetParameter(), new LegendStateParameter(), new LegendLocParameter(),
+        new PaintParameter(), new SplineParameter(),
+        new DLabelParameter(), new DMinParameter(), new DMaxParameter(), new DAutoParameter(),
+        new RLabelParameter(), new RMinParameter(), new RMaxParameter(), new RAutoParameter(),
+        new TransformerParameter(), new WidthParameter(), new FillParameter(), new GradientParameter()
+    };
+    static TreeMap parameterMap = new TreeMap();
 
     static {
         initializeParameters(parameters, parameterMap);
     }
-
     String plotType = "xystatplot";
 
     public XYStatShapeComplete() {
@@ -75,28 +73,32 @@ public class XYStatShapeComplete extends XYPlotShape {
         plot.setRangeAxis(new NumberAxis());
         plot.setDomainAxis(new NumberAxis());
         setShape(rect2D);
- 	setFill(Color.gray);
-	setWidth(0.95);
-   }
-        public String getType() {
-            return plotType;
-        }
-    public void paintShape(Graphics2D g2) {
-		if (getFillGradient() != null) {
-			renderer.setSeriesPaint(0, getFillGradient());
-		} else {
-                    renderer.setSeriesPaint(0, getFill());
-		}
-		XYData data = (XYData) plot.getDataset();
-	        data.setDeltaX(getWidth());
-	    super.paintShape(g2);
+        setFill(Color.gray);
+        setWidth(0.95);
     }
-    public  void setRenderer() {
+
+    public String getType() {
+        return plotType;
+    }
+
+    public void paintShape(Graphics2D g2) {
+        if (getFillGradient() != null) {
+            renderer.setSeriesPaint(0, getFillGradient());
+        } else {
+            renderer.setSeriesPaint(0, getFill());
+        }
+        XYData data = (XYData) plot.getDataset();
+        data.setDeltaX(getWidth());
+        super.paintShape(g2);
+    }
+
+    public void setRenderer() {
         renderer = new StatisticalXYBarRenderer();
         plot.setRenderer(renderer);
-        XYToolTipGenerator generator = new DCXYToolTipGenerator("{0} {1} {2} {3}", new DecimalFormat("0.000"), new DecimalFormat("0.000") );  
+        XYToolTipGenerator generator = new DCXYToolTipGenerator("{0} {1} {2} {3}", new DecimalFormat("0.000"), new DecimalFormat("0.000"));
         renderer.setToolTipGenerator(generator);
     }
+
     public void setDataset(Dataset dataset) {
         if (dataset instanceof XYTableStatsData) {
             plot.setDataset((XYTableStatsData) dataset);
@@ -106,10 +108,9 @@ public class XYStatShapeComplete extends XYPlotShape {
     public CanvasParameter[] getParameters() {
         return parameters;
     }
-    	public Map getParameterMap() {
-		return parameterMap;
-	}
 
-
+    public TreeMap getParameterMap() {
+        return parameterMap;
+    }
 }
 

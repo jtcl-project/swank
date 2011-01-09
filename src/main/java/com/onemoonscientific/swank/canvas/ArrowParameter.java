@@ -15,15 +15,7 @@ public class ArrowParameter extends CanvasParameter {
     }
 
     public String getDefault() {
-        return defValue + "";
-    }
-
-    public boolean isParameterLabel(String s) {
-        if ((s.length() > 3) && "-arrow".startsWith(s)) {
-            return true;
-        } else {
-            return false;
-        }
+        return defValue;
     }
 
     public TclObject getValue(Interp interp, SwkShape swkShape)

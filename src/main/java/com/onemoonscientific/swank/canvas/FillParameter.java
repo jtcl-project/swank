@@ -1,15 +1,12 @@
 package com.onemoonscientific.swank.canvas;
 
 import com.onemoonscientific.swank.*;
-
 import tcl.lang.*;
-
 import java.awt.*;
 
 public class FillParameter extends CanvasParameter {
 
-    private static String name = "fill";
-    private static Color defValue = null;
+    private static final String name = "fill";
     private Color newValue = null;
 
     public String getName() {
@@ -47,6 +44,7 @@ public class FillParameter extends CanvasParameter {
         return (TclString.newInstance(SwankUtil.parseColor(colorVal)));
     }
 
+    @Override
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
             throws TclException {
         newValue = SwankUtil.getColor(interp, arg);

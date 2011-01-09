@@ -8,23 +8,27 @@ import org.jfree.chart.axis.NumberAxis;
 
 class RMinParameter extends DoubleParameter {
 
-	private static String name = "rmin";
+    private static String name = "rmin";
 
-	RMinParameter() {
-		CanvasParameter.addParameter(this);
-	}
+    RMinParameter() {
+        CanvasParameter.addParameter(this);
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public double getValue(SwkShape swkShape) {
-		NumberAxis axis = (NumberAxis) ((NumberRange) swkShape).getRangeAxis();
-		return axis.getLowerBound();
-	}
+    public String getDefault() {
+        return "";
+    }
 
-	public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
-		NumberAxis axis = (NumberAxis) ((NumberRange) swkShape).getRangeAxis();
-		axis.setLowerBound(getNewValue());
-	}
+    public double getValue(SwkShape swkShape) {
+        NumberAxis axis = (NumberAxis) ((NumberRange) swkShape).getRangeAxis();
+        return axis.getLowerBound();
+    }
+
+    public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
+        NumberAxis axis = (NumberAxis) ((NumberRange) swkShape).getRangeAxis();
+        axis.setLowerBound(getNewValue());
+    }
 }

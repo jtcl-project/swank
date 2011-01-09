@@ -1,7 +1,6 @@
 package com.onemoonscientific.swank.canvas;
 
 import com.onemoonscientific.swank.*;
-
 import tcl.lang.*;
 
 public class TextWidthParameter extends CanvasParameter {
@@ -15,15 +14,7 @@ public class TextWidthParameter extends CanvasParameter {
     }
 
     public String getDefault() {
-        return defValue + "";
-    }
-
-    public boolean isParameterLabel(String s) {
-        if ((s.length() > 3) && "-width".startsWith(s)) {
-            return true;
-        } else {
-            return false;
-        }
+        return String.valueOf(defValue);
     }
 
     public TclObject getValue(Interp interp, SwkShape swkShape)
@@ -35,6 +26,7 @@ public class TextWidthParameter extends CanvasParameter {
         return (TclDouble.newInstance(((ItemText) swkShape).width));
     }
 
+    @Override
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
             throws TclException {
         newValue = (float) SwankUtil.getTkSizeD(interp,

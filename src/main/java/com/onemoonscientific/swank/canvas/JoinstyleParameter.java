@@ -1,12 +1,11 @@
 package com.onemoonscientific.swank.canvas;
 
 import tcl.lang.*;
-
 import java.awt.BasicStroke;
 
 public class JoinstyleParameter extends CanvasParameter {
 
-    private static String name = "joinstyle";
+    private static final String name = "joinstyle";
     private static String defValue = "miter";
     private int newValue = BasicStroke.JOIN_MITER;
 
@@ -15,16 +14,9 @@ public class JoinstyleParameter extends CanvasParameter {
     }
 
     public String getDefault() {
-        return defValue + "";
+        return defValue;
     }
 
-    public boolean isParameterLabel(String s) {
-        if ((s.length() > 3) && "-joinstyle".startsWith(s)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 
     public TclObject getValue(Interp interp, SwkShape swkShape)
             throws TclException {
@@ -54,6 +46,7 @@ public class JoinstyleParameter extends CanvasParameter {
         return TclString.newInstance(join);
     }
 
+    @Override
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
             throws TclException {
         if (arg.toString().startsWith("bevel")) {

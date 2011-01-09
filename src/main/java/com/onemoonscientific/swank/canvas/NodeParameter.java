@@ -1,14 +1,12 @@
 package com.onemoonscientific.swank.canvas;
 
-import com.onemoonscientific.swank.*;
 
 import tcl.lang.*;
 
-import java.util.ArrayList;
 
 public class NodeParameter extends CanvasParameter {
 
-    private static String name = "node";
+    private static final String name = "node";
     private static String defValue = "";
     private String newValue = null;
 
@@ -18,14 +16,6 @@ public class NodeParameter extends CanvasParameter {
 
     public String getDefault() {
         return defValue;
-    }
-
-    public boolean isParameterLabel(String s) {
-        if ((s.length() > 3) && "-node".startsWith(s)) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     public TclObject getValue(Interp interp, SwkShape swkShape)
@@ -39,6 +29,7 @@ public class NodeParameter extends CanvasParameter {
         return TclString.newInstance(value);
     }
 
+    @Override
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
             throws TclException {
         newValue = arg.toString();

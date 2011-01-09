@@ -8,7 +8,8 @@ import org.jfree.chart.axis.NumberAxis;
 
 class DLabelParameter extends StringParameter {
 
-	private static String name = "dlabel";
+	private static final String name = "dlabel";
+    private static final String defValue = "";
 
 	DLabelParameter() {
 		CanvasParameter.addParameter(this);
@@ -18,7 +19,11 @@ class DLabelParameter extends StringParameter {
 		return name;
 	}
 
-	public String getValue(SwkShape swkShape) {
+     public String getDefault() {
+        return defValue;
+    }
+
+     public String getValue(SwkShape swkShape) {
 		NumberAxis axis = (NumberAxis) ((NumberDomain) swkShape).getDomainAxis();
 		return axis.getLabel();
 	}

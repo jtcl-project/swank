@@ -2,8 +2,6 @@ package com.onemoonscientific.swank.canvas;
 
 import tcl.lang.*;
 
-import java.awt.geom.*;
-
 public class TransformerParameter extends CanvasParameter {
 
     private static String name = "transformer";
@@ -16,14 +14,6 @@ public class TransformerParameter extends CanvasParameter {
 
     public String getDefault() {
         return defValue + "";
-    }
-
-    public boolean isParameterLabel(String s) {
-        if ((s.length() > 3) && "-transformer".startsWith(s)) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     public TclObject getValue(Interp interp, SwkShape swkShape)
@@ -43,6 +33,7 @@ public class TransformerParameter extends CanvasParameter {
         return TclString.newInstance("");
     }
 
+    @Override
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
             throws TclException {
         newValue = arg.toString();

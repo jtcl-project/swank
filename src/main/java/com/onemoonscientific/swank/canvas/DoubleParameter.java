@@ -16,22 +16,8 @@ public abstract class DoubleParameter extends CanvasParameter {
     private static double defValue = 1.0;
     double newValue = defValue;
 
-    public String getName() {
-        return name;
-    }
 
-    public String getDefault() {
-        return defValue + "";
-    }
-
-    public boolean isParameterLabel(String s) {
-        if ((s.length() > 3) && ("-" + name).startsWith(s)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
+ 
     public abstract double getValue(SwkShape swkShape);
 
     public TclObject getValue(Interp interp, SwkShape swkShape)
@@ -47,6 +33,7 @@ public abstract class DoubleParameter extends CanvasParameter {
         return newValue;
     }
 
+    @Override
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
             throws TclException {
         newValue = TclDouble.get(interp, arg);

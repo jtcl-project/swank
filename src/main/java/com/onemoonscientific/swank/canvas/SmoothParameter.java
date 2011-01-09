@@ -2,8 +2,6 @@ package com.onemoonscientific.swank.canvas;
 
 import tcl.lang.*;
 
-import java.awt.geom.*;
-
 public class SmoothParameter extends CanvasParameter {
 
     private static String name = "smooth";
@@ -18,14 +16,6 @@ public class SmoothParameter extends CanvasParameter {
         return defValue;
     }
 
-    public boolean isParameterLabel(String s) {
-        if ((s.length() > 3) && "-smooth".startsWith(s)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     public TclObject getValue(Interp interp, SwkShape swkShape)
             throws TclException {
         if (swkShape == null) {
@@ -37,6 +27,7 @@ public class SmoothParameter extends CanvasParameter {
         return TclString.newInstance(swkLine.smooth);
     }
 
+    @Override
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
             throws TclException {
         boolean doSmooth = false;

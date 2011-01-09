@@ -35,13 +35,8 @@
 package com.onemoonscientific.swank.canvas;
 
 import com.onemoonscientific.swank.*;
-
-import tcl.lang.*;
-
 import java.awt.*;
 import java.awt.geom.*;
-
-import java.lang.*;
 
 import java.util.*;
 
@@ -54,7 +49,6 @@ public class ItemAnnotation extends ItemLine implements TextInterface {
         new TransformerParameter(), new CapstyleParameter(),
         new JoinstyleParameter(), new ArrowShapeParameter(),
         new TextParameter(), new FontParameter(), new TextcolorParameter(),};
-    static Map parameterMap = new TreeMap();
 
     static {
         initializeParameters(parameters, parameterMap);
@@ -101,6 +95,7 @@ public class ItemAnnotation extends ItemLine implements TextInterface {
         textPar = TextParameters.setTextColor(textPar, newValue);
     }
 
+    @Override
     public void paintShape(Graphics2D g2) {
         if (stroke != null) {
             g2.setStroke(stroke);
@@ -172,14 +167,12 @@ public class ItemAnnotation extends ItemLine implements TextInterface {
         return parameters;
     }
 
-    public Map getParameterMap() {
-        return parameterMap;
-    }
-
+    @Override
     public String getType() {
         return "annotation";
     }
 
+    @Override
     public void drawHandles(Graphics2D g2) {
         if (shape != null) {
             double[] xy = {storeCoords[0], storeCoords[1], storeCoords[2], storeCoords[3]};
@@ -192,6 +185,7 @@ public class ItemAnnotation extends ItemLine implements TextInterface {
         }
     }
 
+    @Override
     public int hitHandles(double testX, double testY) {
         int hitIndex = -1;
         if (shape != null) {
@@ -209,6 +203,7 @@ public class ItemAnnotation extends ItemLine implements TextInterface {
         return hitIndex;
     }
 
+    @Override
     public Cursor getHandleCursor(int handle) {
         final Cursor cursor;
         switch (handle) {

@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage;
 
 public class ImageParameter extends CanvasParameter {
 
-    private static String name = "image";
+    private static final String name = "image";
     private static String defValue = "";
     private BufferedImage newImage = null;
     private String newName = null;
@@ -19,14 +19,6 @@ public class ImageParameter extends CanvasParameter {
 
     public String getDefault() {
         return defValue;
-    }
-
-    public boolean isParameterLabel(String s) {
-        if ((s.length() > 3) && "-image".startsWith(s)) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     public TclObject getValue(Interp interp, SwkShape swkShape)

@@ -15,16 +15,9 @@ public class ArcStyleParameter extends CanvasParameter {
     }
 
     public String getDefault() {
-        return defValue + "";
+        return defValue;
     }
 
-    public boolean isParameterLabel(String s) {
-        if ((s.length() > 3) && "-style".startsWith(s)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 
     public TclObject getValue(Interp interp, SwkShape swkShape)
             throws TclException {
@@ -60,6 +53,7 @@ public class ArcStyleParameter extends CanvasParameter {
         }
     }
 
+    @Override
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
             throws TclException {
         if (arg.toString().startsWith("pie")) {

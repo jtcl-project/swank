@@ -17,6 +17,9 @@ class DMaxParameter extends DoubleParameter {
 	public String getName() {
 		return name;
 	}
+    public String getDefault() {
+        return "";
+    }
 
 	public double getValue(SwkShape swkShape) {
 		NumberAxis axis = (NumberAxis) ((NumberDomain) swkShape).getDomainAxis();

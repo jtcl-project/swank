@@ -1,9 +1,7 @@
 package com.onemoonscientific.swank.canvas;
 
 import com.onemoonscientific.swank.*;
-
 import tcl.lang.*;
-
 import java.awt.*;
 
 public class TextcolorParameter extends CanvasParameter {
@@ -18,14 +16,6 @@ public class TextcolorParameter extends CanvasParameter {
 
     public String getDefault() {
         return "";
-    }
-
-    public boolean isParameterLabel(String s) {
-        if ((s.length() > 3) && "-textcolor".startsWith(s)) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     public TclObject getValue(Interp interp, SwkShape swkShape)
@@ -45,6 +35,7 @@ public class TextcolorParameter extends CanvasParameter {
         return (TclString.newInstance(SwankUtil.parseColor(colorVal)));
     }
 
+    @Override
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
             throws TclException {
         newValue = SwankUtil.getColor(interp, arg);

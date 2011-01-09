@@ -30,14 +30,8 @@
 package com.onemoonscientific.swank.canvas;
 
 import com.onemoonscientific.swank.*;
-
-import tcl.lang.*;
-
 import java.awt.*;
 import java.awt.geom.*;
-
-import java.lang.*;
-
 import java.util.*;
 
 public class ItemArc extends SwkShape {
@@ -48,7 +42,6 @@ public class ItemArc extends SwkShape {
         new FillParameter(), new OutlineParameter(), new StateParameter(),
         new RotateParameter(), new ShearParameter(), new TagsParameter(),
         new TransformerParameter(), new WidthParameter(), new NodeParameter(),};
-    static Map parameterMap = new TreeMap();
 
     static {
         initializeParameters(parameters, parameterMap);
@@ -63,10 +56,6 @@ public class ItemArc extends SwkShape {
 
         // FIXME  should get from ExtentParameter
         arc2D.setAngleExtent(90);
-    }
-
-    public Map getParameterMap() {
-        return parameterMap;
     }
 
     public void coords(SwkImageCanvas canvas, double[] coords)

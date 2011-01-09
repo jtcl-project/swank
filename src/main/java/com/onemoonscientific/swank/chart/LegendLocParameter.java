@@ -7,20 +7,25 @@ import com.onemoonscientific.swank.canvas.SwkShape;
 
 class LegendLocParameter extends StringParameter {
 
-	private static String name = "legendloc";
-	LegendLocParameter() {
-		CanvasParameter.addParameter(this);
-	}
+    private static String name = "legendloc";
 
-	public String getName() {
-		return name;
-	}
+    LegendLocParameter() {
+        CanvasParameter.addParameter(this);
+    }
 
-	public String getValue(SwkShape swkShape) {
-		return ((PlotInterface) swkShape).getLegendLoc();
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
-                ((PlotInterface) swkShape).setLegendLoc(getNewValue());
-	}
+    public String getDefault() {
+        return "";
+    }
+
+    public String getValue(SwkShape swkShape) {
+        return ((PlotInterface) swkShape).getLegendLoc();
+    }
+
+    public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
+        ((PlotInterface) swkShape).setLegendLoc(getNewValue());
+    }
 }

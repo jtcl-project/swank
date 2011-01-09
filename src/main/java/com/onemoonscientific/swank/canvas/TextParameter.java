@@ -1,7 +1,5 @@
 package com.onemoonscientific.swank.canvas;
 
-import com.onemoonscientific.swank.*;
-
 import tcl.lang.*;
 
 public class TextParameter extends CanvasParameter {
@@ -16,14 +14,6 @@ public class TextParameter extends CanvasParameter {
 
     public String getDefault() {
         return defValue;
-    }
-
-    public boolean isParameterLabel(String s) {
-        if ((s.length() > 3) && "-text".startsWith(s)) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     public TclObject getValue(Interp interp, SwkShape swkShape)
@@ -41,6 +31,7 @@ public class TextParameter extends CanvasParameter {
         }
     }
 
+    @Override
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
             throws TclException {
         if (arg == null) {

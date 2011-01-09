@@ -15,17 +15,10 @@ public class AngleStartParameter extends CanvasParameter {
     }
 
     public String getDefault() {
-        return defValue + "";
+        return String.valueOf(defValue);
     }
 
-    public boolean isParameterLabel(String s) {
-        if ((s.length() > 3) && "-start".startsWith(s)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
+ 
     public TclObject getValue(Interp interp, SwkShape swkShape)
             throws TclException {
         if (swkShape == null) {
@@ -41,6 +34,7 @@ public class AngleStartParameter extends CanvasParameter {
         }
     }
 
+    @Override
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
             throws TclException {
         newValue = TclDouble.get(interp, arg);

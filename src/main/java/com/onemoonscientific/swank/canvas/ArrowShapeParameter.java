@@ -20,14 +20,6 @@ public class ArrowShapeParameter extends CanvasParameter {
         return defValue;
     }
 
-    public boolean isParameterLabel(String s) {
-        if ((s.length() > 3) && "-arrowshape".startsWith(s)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     public TclObject getValue(Interp interp, SwkShape swkShape)
             throws TclException {
         if ((swkShape == null) || !(swkShape instanceof ItemLine)) {
@@ -43,6 +35,7 @@ public class ArrowShapeParameter extends CanvasParameter {
         return list;
     }
 
+    @Override
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
             throws TclException {
         TclObject[] arrowShapeList = TclList.getElements(interp, arg);

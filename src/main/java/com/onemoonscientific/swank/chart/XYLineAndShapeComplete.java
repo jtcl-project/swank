@@ -29,23 +29,13 @@
  */
 package com.onemoonscientific.swank.chart;
 
-import com.onemoonscientific.swank.*;
 import com.onemoonscientific.swank.canvas.*;
-
-import org.jfree.chart.ChartRenderingInfo;
 import org.jfree.chart.axis.*;
 import org.jfree.chart.plot.*;
 import org.jfree.chart.labels.XYToolTipGenerator;
-import org.jfree.chart.labels.StandardXYToolTipGenerator;
 import org.jfree.chart.renderer.xy.*;
-
-import org.jfree.ui.RectangleEdge;
-
-import tcl.lang.*;
-
 import java.awt.*;
 import java.awt.geom.*;
-
 import java.util.*;
 import java.text.DecimalFormat;
 
@@ -58,7 +48,7 @@ public class XYLineAndShapeComplete extends XYPlotShape {
         new DLabelParameter(), new DMinParameter(), new DMaxParameter(), new DAutoParameter(),
         new RLabelParameter(), new RMinParameter(), new RMaxParameter(), new RAutoParameter(),
         new TransformerParameter()};
-    static Map parameterMap = new TreeMap();
+    static TreeMap parameterMap = new TreeMap();
 
     static {
         initializeParameters(parameters, parameterMap);
@@ -78,7 +68,7 @@ public class XYLineAndShapeComplete extends XYPlotShape {
         return parameters;
     }
 
-    public Map getParameterMap() {
+    public TreeMap getParameterMap() {
         return parameterMap;
     }
         public String getType() {

@@ -18,6 +18,10 @@ class DMinParameter extends DoubleParameter {
 		return name;
 	}
 
+    public String getDefault() {
+        return "";
+    }
+
 	public double getValue(SwkShape swkShape) {
 		NumberAxis axis = (NumberAxis) ((NumberDomain) swkShape).getDomainAxis();
 		return axis.getLowerBound();

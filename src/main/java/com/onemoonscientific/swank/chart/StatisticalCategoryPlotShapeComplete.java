@@ -53,7 +53,7 @@ public class StatisticalCategoryPlotShapeComplete extends SwkShape implements Da
 		new TagsParameter(), new DatasetParameter(), new FillParameter(), new LegendStateParameter(), new LegendLocParameter(),
 		new RLabelParameter(), new RMinParameter(), new RMaxParameter(), new RAutoParameter(),
 		new TransformerParameter()};
-	static Map parameterMap = new TreeMap();
+	static TreeMap parameterMap = new TreeMap();
 
 	static {
 		initializeParameters(parameters, parameterMap);
@@ -182,7 +182,7 @@ public class StatisticalCategoryPlotShapeComplete extends SwkShape implements Da
 		return parameters;
 	}
 
-	public Map getParameterMap() {
+	public TreeMap getParameterMap() {
 		return parameterMap;
 	}
 

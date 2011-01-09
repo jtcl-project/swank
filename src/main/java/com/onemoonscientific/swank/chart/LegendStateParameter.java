@@ -7,20 +7,25 @@ import com.onemoonscientific.swank.canvas.SwkShape;
 
 class LegendStateParameter extends BooleanParameter {
 
-	private static String name = "legendstate";
-	LegendStateParameter() {
-		CanvasParameter.addParameter(this);
-	}
+    private static String name = "legendstate";
 
-	public String getName() {
-		return name;
-	}
+    LegendStateParameter() {
+        CanvasParameter.addParameter(this);
+    }
 
-	public boolean getValue(SwkShape swkShape) {
-		return ((PlotInterface) swkShape).getLegendState();
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
-                ((PlotInterface) swkShape).setLegendState(getNewValue());
-	}
+    public String getDefault() {
+        return "";
+    }
+
+    public boolean getValue(SwkShape swkShape) {
+        return ((PlotInterface) swkShape).getLegendState();
+    }
+
+    public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
+        ((PlotInterface) swkShape).setLegendState(getNewValue());
+    }
 }

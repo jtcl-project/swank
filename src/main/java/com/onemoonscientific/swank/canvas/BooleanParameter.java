@@ -16,20 +16,8 @@ public abstract class BooleanParameter extends CanvasParameter {
     private static boolean defValue = false;
     boolean newValue = defValue;
 
-    public String getName() {
-        return name;
-    }
-
     public String getDefault() {
         return defValue + "";
-    }
-
-    public boolean isParameterLabel(String s) {
-        if ((s.length() > 3) && ("-" + name).startsWith(s)) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     public boolean getValue(SwkShape swkShape) {
@@ -49,6 +37,7 @@ public abstract class BooleanParameter extends CanvasParameter {
         return newValue;
     }
 
+    @Override
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
             throws TclException {
         newValue = TclBoolean.get(interp, arg);

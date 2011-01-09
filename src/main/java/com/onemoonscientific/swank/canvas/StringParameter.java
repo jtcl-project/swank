@@ -13,24 +13,8 @@ import tcl.lang.*;
  */
 public abstract class StringParameter extends CanvasParameter {
 
-    private static String defValue = "";
-    String newValue = defValue;
+    String newValue = "";
 
-    public String getName() {
-        return name;
-    }
-
-    public String getDefault() {
-        return defValue;
-    }
-
-    public boolean isParameterLabel(String s) {
-        if ((s.length() > 3) && ("-" + name).startsWith(s)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 
     public abstract String getValue(SwkShape swkShape);
 
@@ -47,6 +31,7 @@ public abstract class StringParameter extends CanvasParameter {
         return TclString.newInstance(getValue(swkShape));
     }
 
+    @Override
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
             throws TclException {
         newValue = arg.toString();
