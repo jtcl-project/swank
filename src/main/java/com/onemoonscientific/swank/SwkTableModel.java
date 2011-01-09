@@ -25,20 +25,11 @@
 package com.onemoonscientific.swank;
 
 import tcl.lang.*;
-
-import java.awt.*;
-import java.awt.event.*;
-
-import java.lang.*;
-
 import java.text.*;
-
 import java.util.*;
-
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
-import javax.swing.text.*;
 
 public class SwkTableModel extends AbstractTableModel
         implements TableModelListener {
@@ -154,12 +145,12 @@ public class SwkTableModel extends AbstractTableModel
     }
 
     public void setColumnClass(Interp interp, int c, Class colClass) {
-        colTable.put(new Integer(c), colClass);
+        colTable.put(Integer.valueOf(c), colClass);
         tableChanged(new TableModelEvent(this));
     }
 
     public Class getColumnClass(int c) {
-        Class colClass = (Class) colTable.get(new Integer(c));
+        Class colClass = (Class) colTable.get(Integer.valueOf(c));
 
         if (colClass != null) {
             return (colClass);
@@ -188,6 +179,7 @@ public class SwkTableModel extends AbstractTableModel
         return getNCols();
     }
 
+    @Override
     public boolean isCellEditable(int row, int col) {
         return tableEditable;
     }
@@ -210,6 +202,7 @@ public class SwkTableModel extends AbstractTableModel
     return row;
     }
      */
+    @Override
     public void setValueAt(Object value, int row, int col) {
         if (useCommand) {
             if ((command == null) || command.equals("")) {
@@ -274,17 +267,18 @@ public class SwkTableModel extends AbstractTableModel
     }
 
     void checkColumns() {
-        int nCols = getNCols();
+        int n = getNCols();
 
-        for (int i = columnArrays.size(); i <= nCols; i++) {
+        for (int i = columnArrays.size(); i <= n; i++) {
             columnArrays.add(new ArrayList());
         }
 
-        for (int i = headers.size(); i <= nCols; i++) {
+        for (int i = headers.size(); i <= n; i++) {
             headers.add(String.valueOf(i));
         }
     }
 
+    @Override
     public String getColumnName(int col) {
         if (useCommand) {
             if ((command == null) || command.equals("")) {

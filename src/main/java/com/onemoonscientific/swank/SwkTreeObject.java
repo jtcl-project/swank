@@ -26,10 +26,6 @@ package com.onemoonscientific.swank;
 
 import tcl.lang.*;
 
-import java.lang.*;
-
-import java.util.*;
-
 public class SwkTreeObject {
 
     private Interp interp = null;
@@ -40,6 +36,7 @@ public class SwkTreeObject {
         this.string = string;
     }
 
+    @Override
     public String toString() {
         try {
             TclObject[] argv = TclList.getElements(interp,

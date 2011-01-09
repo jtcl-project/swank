@@ -26,13 +26,7 @@ package com.onemoonscientific.swank;
 
 import tcl.lang.*;
 import tcl.pkg.java.ReflectObject;
-
 import java.awt.*;
-
-import java.io.*;
-
-import java.util.*;
-
 import javax.swing.*;
 import java.lang.reflect.*;
 
@@ -121,6 +115,7 @@ public class WmCmd implements Command {
 
                 (new UpdateOnEventThread() {
 
+            @Override
                     public void run() {
                         if (object instanceof Frame) {
                             ((Frame) object).setExtendedState(Frame.NORMAL);
@@ -227,6 +222,7 @@ public class WmCmd implements Command {
                 final String title = argv[3].toString().intern();
                 (new UpdateOnEventThread() {
 
+            @Override
                     public void run() {
                         ((JFrame) object).setTitle(title);
                     }
@@ -245,6 +241,7 @@ public class WmCmd implements Command {
 
                 (new UpdateOnEventThread() {
 
+            @Override
                     public void run() {
                         ((Window) object).setVisible(false);
                     }
@@ -373,6 +370,7 @@ public class WmCmd implements Command {
             return rectangle;
         }
 
+        @Override
         public void run() {
             Dimension size = null;
             Point location = null;
@@ -436,6 +434,7 @@ public class WmCmd implements Command {
             execOnThread();
         }
 
+        @Override
         public void run() {
             JRootPane jRoot = null;
             Window window = (Window) object;
@@ -505,6 +504,7 @@ public class WmCmd implements Command {
             execOnThread();
         }
 
+        @Override
         public void run() {
             if (object instanceof JFrame) {
                 JFrame jframe = (JFrame) object;

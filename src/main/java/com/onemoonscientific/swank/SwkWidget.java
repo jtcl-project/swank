@@ -25,16 +25,9 @@
 package com.onemoonscientific.swank;
 
 import tcl.lang.*;
-
 import java.awt.*;
-
-import java.io.*;
-
-import java.lang.*;
-
 import java.util.*;
 
-import javax.swing.*;
 
 public interface SwkWidget {
 

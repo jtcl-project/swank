@@ -25,15 +25,6 @@
 package com.onemoonscientific.swank;
 
 import tcl.lang.*;
-import tcl.pkg.java.ReflectObject;
-
-import java.awt.*;
-
-import java.io.*;
-
-import java.lang.*;
-
-import java.util.*;
 
 public class ThreadCmd implements Command {
 
@@ -41,7 +32,7 @@ public class ThreadCmd implements Command {
             throws TclException {
         int i;
         TclObject tObj;
-        Thread[] threads = new Thread[Thread.currentThread().activeCount()];
+        Thread[] threads = new Thread[Thread.activeCount()];
         Thread.enumerate(threads);
         System.out.println("Active thread is "
                 + Thread.currentThread().getName());

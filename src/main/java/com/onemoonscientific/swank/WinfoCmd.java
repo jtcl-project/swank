@@ -26,15 +26,8 @@ package com.onemoonscientific.swank;
 
 import tcl.lang.*;
 import tcl.pkg.java.ReflectObject;
-
 import java.awt.*;
-
-import java.io.*;
-
-import java.lang.*;
-
 import java.util.*;
-
 import javax.swing.*;
 
 public class WinfoCmd implements Command {
@@ -382,7 +375,7 @@ public class WinfoCmd implements Command {
         }
     }
 
-    class GetChildren extends GetValueOnEventThread {
+    static class GetChildren extends GetValueOnEventThread {
 
         Component comp = null;
         ArrayList<String> childList = new ArrayList<String>();
@@ -394,6 +387,7 @@ public class WinfoCmd implements Command {
             return childList;
         }
 
+        @Override
         public void run() {
             getChildren(comp);
         }
@@ -440,7 +434,7 @@ public class WinfoCmd implements Command {
         try {
             if (object instanceof JFrame) {
                 Window window = (Window) object;
-                size = ((JFrame) window).getRootPane().getSize();
+                size = ((JFrame) object).getRootPane().getSize();
                 wLocation = window.getLocationOnScreen();
                 location = window.getLocation();
             } else if (object instanceof Window) {
@@ -528,15 +522,12 @@ public class WinfoCmd implements Command {
             return rectangle;
         }
 
+        @Override
         public void run() {
-            Dimension size = null;
-            Point location = null;
             JRootPane jRoot;
             if (object instanceof JWindow) {
                 JWindow window = (JWindow) object;
                 jRoot = window.getRootPane();
-                size = jRoot.getSize();
-                location = window.getLocation();
             }
 
             rectangle = getGeometry(interp, object, widgetName);
@@ -564,7 +555,7 @@ public class WinfoCmd implements Command {
         }
     }
 
-    class Depth extends GetValueOnEventThread {
+    static class Depth extends GetValueOnEventThread {
 
         Object object = null;
         int pixelSize;
@@ -576,12 +567,13 @@ public class WinfoCmd implements Command {
             return pixelSize;
         }
 
+        @Override
         public void run() {
             pixelSize = ((Component) object).getColorModel().getPixelSize();
         }
     }
 
-    class Winfo extends GetValueOnEventThread {
+    static class Winfo extends GetValueOnEventThread {
 
         Object object = null;
         boolean viewable = false;
@@ -595,20 +587,17 @@ public class WinfoCmd implements Command {
             execOnThread();
         }
 
+        @Override
         public void run() {
             Point wLocation = null;
             Point pLocation = null;
             Dimension size;
             if (object instanceof JFrame) {
                 Window window = (Window) object;
-                size = ((JFrame) window).getRootPane().getSize();
-                wLocation = window.getLocationOnScreen();
                 locationOnScreen = window.getLocation();
                 preferredSize = ((JFrame) window).getRootPane().getPreferredSize();
             } else if (object instanceof Window) {
                 Window window = (Window) object;
-                size = window.getSize();
-                wLocation = window.getLocationOnScreen();
                 locationOnScreen = window.getLocation();
                 preferredSize = window.getPreferredSize();
             } else if (object instanceof Component) {

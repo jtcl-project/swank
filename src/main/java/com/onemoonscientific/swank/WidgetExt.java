@@ -52,10 +52,6 @@ public class WidgetExt extends Extension {
         "scrollbar", "text", "filedialog", "spinbox", "jtoolbar"
     };
 
-    public static String[] getWidgets() {
-        return validCmds;
-    }
-
     public void init(Interp interp) {
         Extension.loadOnDemand(interp, "button",
                 "com.onemoonscientific.swank.SwkJButtonCmd");

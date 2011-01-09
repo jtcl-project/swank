@@ -25,15 +25,7 @@
 package com.onemoonscientific.swank;
 
 import tcl.lang.*;
-
-import java.awt.*;
-import java.awt.event.*;
-
-import java.lang.*;
-
 import java.util.*;
-
-import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.tree.*;
 

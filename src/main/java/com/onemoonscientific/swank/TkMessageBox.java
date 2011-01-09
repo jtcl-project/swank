@@ -118,7 +118,7 @@ public class TkMessageBox implements Command {
                     options[j] = choices[j].toString();
                 }
 
-                if ((defaultValue == "") && (options.length > 0)) {
+                if ((defaultValue.equals("")) && (options.length > 0)) {
                     defaultValue = options[0];
                 }
             } else {
@@ -156,7 +156,6 @@ public class TkMessageBox implements Command {
 
     class Option extends GetValueOnEventThread {
 
-        int index = -1;
         String title = "";
         String message = "";
         int messageType = 0;
@@ -185,6 +184,7 @@ public class TkMessageBox implements Command {
             }
         }
 
+        @Override
         public void run() {
             if (optionMode) {
                 result = JOptionPane.showOptionDialog(dParent, message, title, 0,

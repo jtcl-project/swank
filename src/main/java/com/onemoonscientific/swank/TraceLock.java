@@ -24,8 +24,6 @@
  */
 package com.onemoonscientific.swank;
 
-import tcl.lang.*;
-
 public interface TraceLock {
 
     public void setTraceLock(boolean newValue);

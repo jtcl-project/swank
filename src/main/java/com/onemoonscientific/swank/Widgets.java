@@ -26,14 +26,8 @@ package com.onemoonscientific.swank;
 
 import tcl.lang.*;
 import tcl.pkg.java.ReflectObject;
-
-
 import java.awt.*;
-
-import java.lang.*;
-
 import java.util.*;
-
 import javax.swing.*;
 
 public class Widgets {

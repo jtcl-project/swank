@@ -1,16 +1,11 @@
 package com.onemoonscientific.swank;
 
 import tcl.lang.*;
-
-import java.awt.*;
 import java.awt.event.*;
-
 import java.util.*;
 
 class TextMouseEvent extends TclEvent {
 
-    Interp interp = null;
-    String cmd = null;
     SwkJTextPane swkJTextPane = null;
     MouseEvent event = null;
     Vector bindings = null;
@@ -19,7 +14,6 @@ class TextMouseEvent extends TclEvent {
 
     TextMouseEvent(Interp interp, SwkJTextPane swkJTextPane, MouseEvent event,
             Vector bindings, int type, int subtype) {
-        this.interp = interp;
         this.swkJTextPane = swkJTextPane;
         this.event = event;
         this.bindings = bindings;
