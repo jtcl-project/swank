@@ -45,7 +45,8 @@ public class PasswordCmd implements Command {
                     "bad window path name \"" + argv[1].toString() + "\"");
         }
 
-        SwkWidget swkwidget = (SwkWidget) ReflectObject.get(interp, tObj);
+        // fixme, what are we using argv[1] for
+        // SwkWidget swkwidget = (SwkWidget) ReflectObject.get(interp, tObj);
         String title = argv[2].toString();
         PasswordValue pwValue = (new Password()).exec(null, title);
         TclObject pwObj = ReflectObject.newInstance(interp, PasswordValue.class, pwValue);

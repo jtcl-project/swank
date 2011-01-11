@@ -290,8 +290,7 @@ public class PlaceCmd implements Command {
 
         }
         PlacerLayout.checkPlaceArgs(interp, strippedArgs.toString(), null);
-        (new Configure()).exec(parent, comps, strippedArgs.toString(),
-                firstWindow, lastWindow);
+        (new Configure()).exec(parent, comps, strippedArgs.toString());
     }
 
     PlacerLayout getLayout(Container master) {
@@ -354,7 +353,7 @@ public class PlaceCmd implements Command {
         }
     }
 
-    class Slaves extends GetValueOnEventThread {
+    static class Slaves extends GetValueOnEventThread {
 
         Component component = null;
         String[] names = null;
@@ -380,7 +379,7 @@ public class PlaceCmd implements Command {
         }
     }
 
-    class Forget extends UpdateOnEventThread {
+    static class Forget extends UpdateOnEventThread {
 
         Component[] comps = null;
 
@@ -414,17 +413,13 @@ public class PlaceCmd implements Command {
 
         Container parent = null;
         String strippedArgs = null;
-        int firstWindow = 0;
-        int lastWindow = 0;
         Component[] comps = null;
 
         void exec(final Container parent, final Component[] comps,
-                String strippedArgs, int firstWindow, int lastWindow) {
+                String strippedArgs) {
             this.comps = comps;
             this.parent = parent;
             this.strippedArgs = strippedArgs;
-            this.firstWindow = firstWindow;
-            this.lastWindow = lastWindow;
             execOnThread();
         }
 

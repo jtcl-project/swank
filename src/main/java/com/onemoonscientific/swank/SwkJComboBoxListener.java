@@ -260,6 +260,9 @@ public class SwkJComboBoxListener implements ActionListener, VarTrace,
     }
 
     public void processEvent(EventObject eventObject, Object obj, int subtype) {
+        if (!(eventObject instanceof ActionEvent)) {
+            return;
+        }
         ActionEvent e = (ActionEvent) eventObject;
         //   System.out.println("Process Event" + this);
         if (EventQueue.isDispatchThread()) {

@@ -45,22 +45,9 @@ import tcl.lang.*;
  */
 public class WidgetExt extends Extension {
     /*
-     * Create all the commands in the Simple package.
+     * Create all the commands in the Swank package.
      */
-    private static final String[] validCmds = {
-        "button", "checkbutton", "entry", "frame", "html", "jcombobox",
-        "jdesktoppane", "jdialog", "jfilechooser", "jinternalframe", "jmenu",
-        "jmenubar", "joptionpane", "jpasswordfield", "jpopupmenu",
-        "jprogressbar", "jscrollpane", "jsplitpane", "jtabbedpane", "jtable",
-        "jtree", "jwindow", "label", "labelframe", "listbox", "menu",
-        "menubutton", "message", "panedwindow", "radiobutton", "scale",
-        "scrollbar", "text",
-    };
-
-    public static String[] getWidgets() {
-        return validCmds;
-    }
-
+ 
     public void init(Interp interp) {
         Extension.loadOnDemand(interp, "button",
             "com.onemoonscientific.swank.SwkJButtonCmd");

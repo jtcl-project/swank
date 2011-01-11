@@ -30,7 +30,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
-
 public class SwkMouseMotionListener implements MouseMotionListener, SwkListener {
 
     Interp interp;
@@ -86,6 +85,9 @@ public class SwkMouseMotionListener implements MouseMotionListener, SwkListener 
     }
 
     public void processEvent(EventObject eventObject, Object obj, int subtype) {
+        if (!(eventObject instanceof MouseEvent)) {
+            return;
+        }
         try {
             MouseEvent e = (MouseEvent) eventObject;
 

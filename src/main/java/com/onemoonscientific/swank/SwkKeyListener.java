@@ -104,6 +104,9 @@ public class SwkKeyListener implements KeyListener, SwkListener {
     }
 
     public void processEvent(EventObject eventObject, Object obj, int subtype) {
+        if (!(eventObject instanceof KeyEvent)) {
+            return;
+        }
         KeyEvent e = (KeyEvent) eventObject;
 
         //System.out.println("key event "+e.toString()); 

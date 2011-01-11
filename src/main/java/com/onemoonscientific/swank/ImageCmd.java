@@ -230,7 +230,7 @@ public class ImageCmd implements Command {
                 BufferedImage destImage = scale(interp, sourceImage, scaleValue,
                         offset, sourceImage);
 
-                //images.put(argv[2].toString(),destImage);
+                images.put(argv[2].toString(),destImage);
                 break;
             }
 

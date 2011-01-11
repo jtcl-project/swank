@@ -68,6 +68,11 @@ public class ImageSelection extends TransferHandler implements Transferable {
     }
 
     public java.awt.datatransfer.DataFlavor[] getTransferDataFlavors() {
-        return flavors;
+        DataFlavor[] dataFlavors = new DataFlavor[flavors.length];
+        int i = 0;
+        for (DataFlavor dataFlavor:flavors) {
+            dataFlavors[i++] = dataFlavor;
+        }
+        return dataFlavors;
     }
 }
