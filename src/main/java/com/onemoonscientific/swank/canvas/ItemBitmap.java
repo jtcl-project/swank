@@ -35,17 +35,7 @@
 package com.onemoonscientific.swank.canvas;
 
 import com.onemoonscientific.swank.*;
-
-import tcl.lang.*;
-
 import java.awt.*;
-import java.awt.geom.*;
-import java.awt.image.*;
-
-import java.lang.*;
-
-import java.util.*;
-
 import javax.swing.*;
 
 public class ItemBitmap extends SwkShape {
@@ -72,6 +62,7 @@ public class ItemBitmap extends SwkShape {
         return image;
     }
 
+    @Override
     public void coords(SwkImageCanvas canvas, double[] coords)
             throws SwkException {
         if (coords.length != 2) {
@@ -82,6 +73,7 @@ public class ItemBitmap extends SwkShape {
         System.arraycopy(coords, 0, storeCoords, 0, 2);
     }
 
+    @Override
     public void paintShape(Graphics2D g2) {
         if (image != null) {
             int imageWidth = image.getIconWidth();

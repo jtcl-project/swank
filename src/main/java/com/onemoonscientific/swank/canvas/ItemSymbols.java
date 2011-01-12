@@ -35,15 +35,9 @@
 package com.onemoonscientific.swank.canvas;
 
 import com.onemoonscientific.swank.*;
-
-import tcl.lang.*;
-
 import java.awt.*;
 import java.awt.geom.*;
 
-import java.lang.*;
-
-import java.util.*;
 
 public class ItemSymbols extends SwkShape implements SymbolInterface {
 
@@ -58,7 +52,6 @@ public class ItemSymbols extends SwkShape implements SymbolInterface {
     float radius = 2.0f;
     int symbolType = 3;
     GeneralPath gPath = null;
-    boolean closePath = false;
 
     public ItemSymbols(Shape shape, SwkImageCanvas canvas) {
         super(shape, canvas);
@@ -82,6 +75,7 @@ public class ItemSymbols extends SwkShape implements SymbolInterface {
         return radius;
     }
 
+    @Override
     public void coords(SwkImageCanvas canvas, double[] coords)
             throws SwkException {
         if (coords.length < 2) {
@@ -106,6 +100,7 @@ public class ItemSymbols extends SwkShape implements SymbolInterface {
         applyCoordinates();
     }
 
+    @Override
     public void applyCoordinates() {
         for (int i = 0; i < storeCoords.length; i += 2) {
             addSymbol((float) storeCoords[i], (float) storeCoords[i + 1], radius);

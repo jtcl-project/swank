@@ -37,8 +37,6 @@ package com.onemoonscientific.swank.canvas;
 import com.onemoonscientific.swank.*;
 import tcl.lang.*;
 import java.awt.*;
-import java.util.*;
-import javax.swing.*;
 
 public class ItemWindow extends SwkShape {
 
@@ -50,10 +48,9 @@ public class ItemWindow extends SwkShape {
     static {
         initializeParameters(parameters, parameterMap);
     }
-    ImageIcon image;
     String windowName = "";
-    int width = 0;
-    int height = 0;
+    int winWidth = 0;
+    int winHeight = 0;
     PlacerLayout placer = null;
     SwkWidget window = null;
 
@@ -62,6 +59,7 @@ public class ItemWindow extends SwkShape {
         storeCoords = new double[2];
     }
 
+    @Override
     public void coords(SwkImageCanvas canvas, double[] coords)
             throws SwkException {
         if (coords.length != 2) {
@@ -73,6 +71,7 @@ public class ItemWindow extends SwkShape {
         storeCoords[1] = coords[1];
     }
 
+    @Override
     public void configShape(Interp interp, SwkImageCanvas swkCanvas,
             TclObject[] argv, int start) throws TclException {
         for (int i = start; i < argv.length; i += 2) {
@@ -88,6 +87,7 @@ public class ItemWindow extends SwkShape {
         super.configShape(interp, swkCanvas, argv, start);
     }
 
+    @Override
     public void applyCoordinates() {
         addWindow();
     }
@@ -125,14 +125,14 @@ public class ItemWindow extends SwkShape {
         sbuf.append(" -y ");
         sbuf.append((int) storeCoords[1]);
 
-        if (width != 0) {
+        if (winWidth != 0) {
             sbuf.append(" -width ");
-            sbuf.append(width);
+            sbuf.append(winWidth);
         }
 
-        if (height != 0) {
+        if (winHeight != 0) {
             sbuf.append(" -height ");
-            sbuf.append(height);
+            sbuf.append(winHeight);
         }
 
         Container parent = (Container) canvas.getComponent();

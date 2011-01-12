@@ -20,6 +20,7 @@ public abstract class CanvasParameter implements CanvasParameterConfigure,
     };
     static TreeMap stdMap = null;
 
+    @Override
     public Object clone() {
         try {
             return super.clone();

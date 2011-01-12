@@ -42,8 +42,6 @@ import java.awt.font.*;
 import java.awt.geom.*;
 import java.text.*;
 
-import java.util.*;
-
 public class ItemText extends SwkShape implements TextInterface {
 
     static BreakIterator wordIterator = BreakIterator.getWordInstance();
@@ -56,7 +54,6 @@ public class ItemText extends SwkShape implements TextInterface {
         initializeParameters(parameters, parameterMap);
     }
     TextParameters textPar = TextParameters.getDefault();
-    int[] ends = null;
     Rectangle2D.Float rf2 = new Rectangle2D.Float();
 
     ItemText(Shape shape, SwkImageCanvas canvas) {
@@ -67,6 +64,7 @@ public class ItemText extends SwkShape implements TextInterface {
         fill = Color.BLACK;
     }
 
+    @Override
     public void coords(SwkImageCanvas canvas, double[] coords)
             throws SwkException {
         if (coords.length != 2) {
@@ -78,6 +76,7 @@ public class ItemText extends SwkShape implements TextInterface {
         setY(coords[1]);
     }
 
+    @Override
     public void paintShape(Graphics2D g2) {
         shape = textPar.paint(g2, getCanvas().getFontRenderContext(), this, storeCoords[0], storeCoords[1]);
     }
@@ -135,6 +134,7 @@ public class ItemText extends SwkShape implements TextInterface {
         textPar = TextParameters.setTextColor(textPar, newValue);
     }
 
+    @Override
     public boolean hitShape(double x1, double y1) {
         boolean result = false;
         if (shape != null) {
@@ -176,6 +176,7 @@ public class ItemText extends SwkShape implements TextInterface {
 
     }
 
+    @Override
     public void drawHandles(Graphics2D g2) {
         if (shape != null) {
             Rectangle2D bounds = shape.getBounds2D();
@@ -192,6 +193,7 @@ public class ItemText extends SwkShape implements TextInterface {
         }
     }
 
+    @Override
     public int hitHandles(double testX, double testY) {
         int hitIndex = -1;
         if (shape != null) {
@@ -214,6 +216,7 @@ public class ItemText extends SwkShape implements TextInterface {
         return hitIndex;
     }
 
+    @Override
     public Cursor getHandleCursor(int handle) {
         final Cursor cursor;
         switch (handle) {

@@ -34,8 +34,6 @@
  */
 package com.onemoonscientific.swank.canvas;
 
-import com.onemoonscientific.swank.*;
-
 public class HitShape {
 
     final int handle;

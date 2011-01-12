@@ -621,6 +621,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
             swkcanvas.repaint();
         }
 
+        @Override
         public void run() {
             try {
                 if (raiseMode) {
@@ -773,6 +774,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
             swkcanvas.repaint();
         }
 
+        @Override
         public void run() {
             try {
                 Vector shapeList = swkcanvas.getShapesWithTags(tagName);
@@ -786,7 +788,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
         }
     }
 
-    class Zoom extends GetValueOnEventThread {
+    static class Zoom extends GetValueOnEventThread {
 
         SwkImageCanvas swkcanvas = null;
         double zoom = 0;
@@ -813,6 +815,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
             swkcanvas.repaint();
         }
 
+        @Override
         public void run() {
             if (setValue) {
                 swkcanvas.setZoom(zoom);
@@ -822,12 +825,11 @@ public class SwkImageCanvasWidgetCmd implements Command {
         }
     }
 
-    class Move extends GetValueOnEventThread {
+    static class Move extends GetValueOnEventThread {
 
         SwkImageCanvas swkcanvas = null;
         double dX = 0;
         double dY = 0;
-        boolean setValue = false;
         String tagName = null;
 
         void exec(Interp interp, SwkImageCanvas swkcanvas, TclObject[] argv)
@@ -844,6 +846,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
             swkcanvas.repaint();
         }
 
+        @Override
         public void run() {
             try {
                 Vector shapeList = swkcanvas.getShapesWithTags(tagName);
@@ -867,7 +870,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
         }
     }
 
-    class ShapeXY extends GetValueOnEventThread {
+    static class ShapeXY extends GetValueOnEventThread {
 
         SwkImageCanvas swkcanvas = null;
         double[] xy;
@@ -907,6 +910,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
             interp.setResult(resultList);
         }
 
+        @Override
         public void run() {
             try {
                 SwkShape swkShape = (SwkShape) swkcanvas.getShape(tagName);
@@ -931,7 +935,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
         }
     }
 
-    class HSelect extends GetValueOnEventThread {
+    static class HSelect extends GetValueOnEventThread {
 
         SwkImageCanvas swkcanvas = null;
         boolean setValue = false;
@@ -950,6 +954,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
             swkcanvas.repaint();
         }
 
+        @Override
         public void run() {
             try {
                 Vector shapeList = swkcanvas.getShapesWithTags(tagName);
@@ -963,7 +968,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
         }
     }
 
-    class GetTags extends GetValueOnEventThread {
+    static class GetTags extends GetValueOnEventThread {
 
         SwkImageCanvas swkcanvas = null;
         ArrayList tagList = null;
@@ -992,6 +997,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
             interp.setResult(list);
         }
 
+        @Override
         public void run() {
             try {
                 Vector shapeList = swkcanvas.getShapesWithTags(tagName);
@@ -1005,10 +1011,9 @@ public class SwkImageCanvasWidgetCmd implements Command {
         }
     }
 
-    class Index extends GetValueOnEventThread {
+    static class Index extends GetValueOnEventThread {
 
         SwkImageCanvas swkcanvas = null;
-        Vector shapeList = null;
         String tagName = "";
         int index = 0;
         SwkShape swkShape = null;
@@ -1046,7 +1051,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
         }
     }
 
-    class Delete extends UpdateOnEventThread {
+    static class Delete extends UpdateOnEventThread {
 
         SwkImageCanvas swkcanvas = null;
         String[] tags = null;
@@ -1063,6 +1068,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
             swkcanvas.repaint();
         }
 
+        @Override
         public void run() {
             try {
                 swkcanvas.delete(tags);
@@ -1071,7 +1077,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
         }
     }
 
-    class DTags extends UpdateOnEventThread {
+    static class DTags extends UpdateOnEventThread {
 
         SwkImageCanvas swkcanvas = null;
         String tagName = null;
@@ -1093,6 +1099,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
             swkcanvas.repaint();
         }
 
+        @Override
         public void run() {
             try {
                 Vector shapeList = swkcanvas.getShapesWithTags(tagName);
@@ -1106,7 +1113,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
         }
     }
 
-    class AddTag extends UpdateOnEventThread {
+    static class AddTag extends UpdateOnEventThread {
 
         SwkImageCanvas swkcanvas = null;
         String[] args = null;
@@ -1125,6 +1132,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
             swkcanvas.repaint();
         }
 
+        @Override
         public void run() {
             try {
                 Vector shapeList = swkcanvas.getShapesWithTags(args);
@@ -1139,7 +1147,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
         }
     }
 
-    class TransformerSet extends UpdateOnEventThread {
+    static class TransformerSet extends UpdateOnEventThread {
 
         SwkImageCanvas swkcanvas = null;
         double[] values = null;
@@ -1165,6 +1173,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
             swkcanvas.repaint();
         }
 
+        @Override
         public void run() {
             Transformer transformer = swkcanvas.getTransformer(name);
 
@@ -1177,7 +1186,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
         }
     }
 
-    class TransformerGet extends GetValueOnEventThread {
+    static class TransformerGet extends GetValueOnEventThread {
 
         SwkImageCanvas swkcanvas = null;
         double[] values = null;
@@ -1205,6 +1214,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
 
         }
 
+        @Override
         public void run() {
             Transformer transformer = swkcanvas.getTransformer(name);
             if (transformer != null) {
@@ -1214,7 +1224,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
         }
     }
 
-    class CanvasType {
+    static class CanvasType {
 
         Class myTypeClass = null;
         int myNCoords = 0;
@@ -1225,7 +1235,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
         }
     }
 
-    class AddShape extends UpdateOnEventThread {
+    static class AddShape extends UpdateOnEventThread {
 
         SwkImageCanvas swkcanvas = null;
         SwkShape swkShape = null;
@@ -1236,6 +1246,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
             execOnThread();
         }
 
+        @Override
         public void run() {
             try {
                 swkcanvas.addShape(swkShape);
@@ -1247,7 +1258,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
         }
     }
 
-    class Search extends GetValueOnEventThread {
+    static class Search extends GetValueOnEventThread {
 
         public static final int NEXT = 0;
         public static final int PREVIOUS = 1;
@@ -1395,6 +1406,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
             }
         }
 
+        @Override
         public void run() {
             try {
                 switch (mode) {
@@ -1454,9 +1466,9 @@ public class SwkImageCanvasWidgetCmd implements Command {
             shapeList = new ArrayList();
             for (Enumeration e = swkcanvas.rootNode.depthFirstEnumeration(); e.hasMoreElements();) {
                 ItemTreeNode node = (ItemTreeNode) e.nextElement();
-                SwkShape swkShape = (SwkShape) node.getUserObject();
-                if (swkShape != null) {
-                    shapeList.add(new Integer(swkShape.id));
+                SwkShape searchShape = (SwkShape) node.getUserObject();
+                if (searchShape != null) {
+                    shapeList.add(new Integer(searchShape.id));
                 }
             }
         }
@@ -1466,7 +1478,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
             shapeList = new ArrayList();
 
             for (int i = 0, n = shapes.size(); i < n; i++) {
-                shapeList.add(new Integer(((SwkShape) shapes.elementAt(i)).id));
+                shapeList.add(Integer.valueOf(((SwkShape) shapes.elementAt(i)).id));
             }
         }
 
@@ -1476,7 +1488,6 @@ public class SwkImageCanvasWidgetCmd implements Command {
             SwkShape startShape = null;
             Rectangle2D bounds = null;
             double max = Double.MAX_VALUE;
-            Line2D line = new Line2D.Double();
             double[] tcoords = new double[6];
             double tx1 = 0.0;
             double ty1 = 0.0;
@@ -1494,23 +1505,23 @@ public class SwkImageCanvasWidgetCmd implements Command {
             }
             for (Enumeration e = swkcanvas.rootNode.depthFirstEnumeration(); e.hasMoreElements();) {
                 ItemTreeNode node = (ItemTreeNode) e.nextElement();
-                SwkShape swkShape = (SwkShape) node.getUserObject();
-                if (swkShape == null) {
+                SwkShape searchShape = (SwkShape) node.getUserObject();
+                if (searchShape == null) {
                     continue;
                 }
-                if (swkShape == startShape) {
+                if (searchShape == startShape) {
                     break;
                 }
                 bounds = null;
 
-                if (swkShape.shape == null) {
-                    if (swkShape.hitShape(pt.getX(), pt.getY())) {
-                        bestShape = swkShape;
+                if (searchShape.shape == null) {
+                    if (searchShape.hitShape(pt.getX(), pt.getY())) {
+                        bestShape = searchShape;
                         max = 0;
                     }
                 } else {
-                    if ((swkShape.fill != null) || (swkShape.fillGradient != null) || (swkShape.texturePaint != null)) {
-                        bounds = swkShape.shape.getBounds2D();
+                    if ((searchShape.fill != null) || (searchShape.fillGradient != null) || (searchShape.texturePaint != null)) {
+                        bounds = searchShape.shape.getBounds2D();
 
                         if (halo != 0.0f) {
                             bounds.setRect(bounds.getX() - halo,
@@ -1520,10 +1531,10 @@ public class SwkImageCanvasWidgetCmd implements Command {
 
                         if (bounds.contains(pt)) {
                             max = 0;
-                            bestShape = swkShape;
+                            bestShape = searchShape;
                         }
                     } else {
-                        PathIterator pI = swkShape.shape.getPathIterator(null);
+                        PathIterator pI = searchShape.shape.getPathIterator(null);
                         boolean intersects = false;
                         double dis2 = Double.MAX_VALUE;
 
@@ -1559,7 +1570,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
 
                         if (dis < max) {
                             max = dis;
-                            bestShape = swkShape;
+                            bestShape = searchShape;
                         }
                     }
 
@@ -1572,10 +1583,10 @@ public class SwkImageCanvasWidgetCmd implements Command {
             Enumeration e = swkcanvas.swkShapes.elements();
 
             while (e.hasMoreElements()) {
-                swkShape = (SwkShape) e.nextElement();
+                SwkShape searchShape = (SwkShape) e.nextElement();
 
-                if (swkShape.shape != null) {
-                    bounds = swkShape.shape.getBounds2D();
+                if (searchShape.shape != null) {
+                    bounds = searchShape.shape.getBounds2D();
                 } else {
                     bounds = null;
                 }
@@ -1587,7 +1598,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
                             shapeList = new ArrayList();
                         }
 
-                        shapeList.add(new Integer(swkShape.id));
+                        shapeList.add(new Integer(searchShape.id));
                     }
                 }
             }

@@ -128,7 +128,7 @@ public class StrokeParameters {
      * @return the dash
      */
     public float[] getDash() {
-        return dash;
+        return dash.clone();
     }
 
     /**

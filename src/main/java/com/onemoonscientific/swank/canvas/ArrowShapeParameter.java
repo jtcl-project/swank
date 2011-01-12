@@ -2,8 +2,6 @@ package com.onemoonscientific.swank.canvas;
 
 import tcl.lang.*;
 
-import java.awt.geom.*;
-
 public class ArrowShapeParameter extends CanvasParameter {
 
     private static String name = "arrowshape";

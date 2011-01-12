@@ -24,18 +24,9 @@
  */
 package com.onemoonscientific.swank.canvas;
 
-import com.onemoonscientific.swank.*;
 
 import tcl.lang.*;
-
 import java.awt.*;
-
-import java.io.*;
-
-import java.lang.*;
-
-import java.util.*;
-
 import javax.swing.*;
 
 public class SwkCmdET implements Command {
@@ -94,7 +85,6 @@ public class SwkCmdET implements Command {
         WidgetCmd(Interp interp, TclObject[] argv) {
             this.interp = interp;
             this.argv = new TclObject[argv.length];
-            ;
 
             for (int i = 0; i < argv.length; i++) {
                 this.argv[i] = argv[i].duplicate();
@@ -117,7 +107,7 @@ public class SwkCmdET implements Command {
         }
     }
 
-    class ETWait implements Runnable {
+    static class ETWait implements Runnable {
 
         public void run() {
         }

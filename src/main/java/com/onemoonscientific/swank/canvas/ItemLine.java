@@ -35,15 +35,8 @@
 package com.onemoonscientific.swank.canvas;
 
 import com.onemoonscientific.swank.*;
-
-import tcl.lang.*;
-
 import java.awt.*;
 import java.awt.geom.*;
-
-import java.lang.*;
-
-import java.util.*;
 
 public class ItemLine extends SwkShape {
 
@@ -53,10 +46,12 @@ public class ItemLine extends SwkShape {
         },
         SQUARE("square") {
 
+            @Override
             double[] getPoly() {
                 return (new double[12]);
             }
 
+            @Override
             double[] calcShape(double[] shapePars, double x1, double y1, double x2, double y2, double[] poly) {
                 double[] thetaTrig = calcSquare(shapePars, x1, y1, x2, y2, poly);
                 return thetaTrig;
@@ -64,10 +59,12 @@ public class ItemLine extends SwkShape {
         },
         CIRCLE("circle") {
 
+            @Override
             double[] getPoly() {
                 return (new double[4]);
             }
 
+            @Override
             double[] calcShape(double[] shapePars, double x1, double y1, double x2, double y2, double[] poly) {
                 double[] thetaTrig = calcCircle(shapePars, x1, y1, x2, y2, poly);
                 return thetaTrig;
@@ -75,10 +72,12 @@ public class ItemLine extends SwkShape {
         },
         DIAMOND("diamond") {
 
+            @Override
             double[] getPoly() {
                 return (new double[10]);
             }
 
+            @Override
             double[] calcShape(double[] shapePars, double x1, double y1, double x2, double y2, double[] poly) {
                 double[] thetaTrig = calcDiamond(shapePars, x1, y1, x2, y2, poly);
                 return thetaTrig;
@@ -86,10 +85,12 @@ public class ItemLine extends SwkShape {
         },
         ARROW("arrow") {
 
+            @Override
             double[] getPoly() {
                 return (new double[12]);
             }
 
+            @Override
             double[] calcShape(double[] shapePars, double x1, double y1, double x2, double y2, double[] poly) {
                 double[] thetaTrig = calcArrow(shapePars, x1, y1, x2, y2, poly);
                 return thetaTrig;
@@ -187,6 +188,7 @@ public class ItemLine extends SwkShape {
         fill = null;
     }
 
+    @Override
     public void paintShape(Graphics2D g2) {
         if (stroke != null) {
             g2.setStroke(stroke);
@@ -244,6 +246,7 @@ public class ItemLine extends SwkShape {
         }
     }
 
+    @Override
     public void coords(SwkImageCanvas canvas, double[] coords)
             throws SwkException {
         float x1;
@@ -256,6 +259,7 @@ public class ItemLine extends SwkShape {
         applyCoordinates();
     }
 
+    @Override
     public void applyCoordinates() {
         double[] shapePars = {arrowShapeA, arrowShapeB, arrowShapeC, width};
         AffineTransform aT = new AffineTransform();
@@ -564,6 +568,7 @@ public class ItemLine extends SwkShape {
         return "line";
     }
 
+    @Override
     public void drawHandles(Graphics2D g2) {
         if (shape != null) {
             double[] xy = {storeCoords[0], storeCoords[1], storeCoords[2], storeCoords[3]};
@@ -576,6 +581,7 @@ public class ItemLine extends SwkShape {
         }
     }
 
+    @Override
     public int hitHandles(double testX, double testY) {
         int hitIndex = -1;
         if (shape != null) {
@@ -593,6 +599,7 @@ public class ItemLine extends SwkShape {
         return hitIndex;
     }
 
+    @Override
     public Cursor getHandleCursor(int handle) {
         final Cursor cursor;
         switch (handle) {

@@ -35,15 +35,9 @@
 package com.onemoonscientific.swank.canvas;
 
 import com.onemoonscientific.swank.*;
-
-import tcl.lang.*;
-
 import java.awt.*;
 import java.awt.geom.*;
 
-import java.lang.*;
-
-import java.util.*;
 
 public class ItemNode extends SwkShape {
 
@@ -64,6 +58,7 @@ public class ItemNode extends SwkShape {
         rect2D = (Rectangle2D) shape;
     }
 
+    @Override
     public void coords(SwkImageCanvas canvas, double[] coords)
             throws SwkException {
         if (coords.length != 2) {
@@ -80,12 +75,14 @@ public class ItemNode extends SwkShape {
         applyCoordinates();
     }
 
+    @Override
     public void applyCoordinates() {
         AffineTransform aT = new AffineTransform();
         genGradient(aT);
         //shape = aT.createTransformedShape(rect2D);
     }
 
+    @Override
     public void paintShape(Graphics2D g2) {
         super.paintShape(g2);
     }

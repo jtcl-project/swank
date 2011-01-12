@@ -2,8 +2,6 @@ package com.onemoonscientific.swank.canvas;
 
 import tcl.lang.*;
 
-import java.awt.BasicStroke;
-
 public class ArrowParameter extends CanvasParameter {
 
     private static String name = "arrow";
@@ -38,6 +36,7 @@ public class ArrowParameter extends CanvasParameter {
         return TclString.newInstance(arrow);
     }
 
+    @Override
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
             throws TclException {
         if (arg.toString().startsWith("both")) {

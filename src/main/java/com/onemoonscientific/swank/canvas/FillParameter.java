@@ -17,6 +17,7 @@ public class FillParameter extends CanvasParameter {
         return "";
     }
 
+    @Override
     public boolean isParameterLabel(String s) {
         if ((s.length() > 3) && "-fill".startsWith(s)) {
             return true;

@@ -32,7 +32,6 @@ package com.onemoonscientific.swank.canvas;
 import com.onemoonscientific.swank.*;
 import java.awt.*;
 import java.awt.geom.*;
-import java.util.*;
 
 public class ItemArc extends SwkShape {
 
@@ -46,7 +45,6 @@ public class ItemArc extends SwkShape {
     static {
         initializeParameters(parameters, parameterMap);
     }
-    String imageName = "";
     Arc2D arc2D = null;
 
     ItemArc(Shape shape, SwkImageCanvas canvas) {
@@ -58,6 +56,7 @@ public class ItemArc extends SwkShape {
         arc2D.setAngleExtent(90);
     }
 
+    @Override
     public void coords(SwkImageCanvas canvas, double[] coords)
             throws SwkException {
         if (coords.length != 4) {
@@ -73,6 +72,7 @@ public class ItemArc extends SwkShape {
         return "arc";
     }
 
+    @Override
     public void applyCoordinates() {
         checkCoordinates(storeCoords);
 

@@ -37,7 +37,7 @@ public class TextParameter extends CanvasParameter {
         if (arg == null) {
             newValue = "";
         } else {
-            newValue = new String(arg.toString());
+            newValue = arg.toString();
         }
     }
 

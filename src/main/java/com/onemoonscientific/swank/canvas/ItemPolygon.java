@@ -35,15 +35,8 @@
 package com.onemoonscientific.swank.canvas;
 
 import com.onemoonscientific.swank.*;
-
-import tcl.lang.*;
-
 import java.awt.*;
 import java.awt.geom.*;
-
-import java.lang.*;
-
-import java.util.*;
 
 public class ItemPolygon extends SwkShape {
 
@@ -65,6 +58,7 @@ public class ItemPolygon extends SwkShape {
         fill = null;
     }
 
+    @Override
     public void coords(SwkImageCanvas canvas, double[] coords)
             throws SwkException {
         if (coords.length < 4) {
@@ -87,6 +81,7 @@ public class ItemPolygon extends SwkShape {
         applyCoordinates();
     }
 
+    @Override
     public void applyCoordinates() {
         gPath.reset();
 

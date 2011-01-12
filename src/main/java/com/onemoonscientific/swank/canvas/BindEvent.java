@@ -2,15 +2,11 @@ package com.onemoonscientific.swank.canvas;
 
 import tcl.lang.*;
 
-import java.awt.*;
-import java.awt.event.*;
-
 import java.util.*;
 
 class BindEvent extends TclEvent {
 
     Interp interp = null;
-    String cmd = null;
     SwkCanvas swkCanvas = null;
     EventObject event = null;
     int type = 0;

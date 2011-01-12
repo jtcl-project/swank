@@ -35,18 +35,9 @@
 package com.onemoonscientific.swank.canvas;
 
 import com.onemoonscientific.swank.*;
-
-import tcl.lang.*;
-
 import java.awt.*;
 import java.awt.geom.*;
 import java.awt.image.*;
-
-import java.lang.*;
-
-import java.util.*;
-
-import javax.swing.*;
 
 public class ItemImage extends SwkShape {
 
@@ -72,6 +63,7 @@ public class ItemImage extends SwkShape {
         return bufferedImage;
     }
 
+    @Override
     public boolean hitShape(double x1, double y1) {
         boolean hit = false;
         if (bufferedImage != null) {
@@ -85,9 +77,9 @@ public class ItemImage extends SwkShape {
             double x = storeCoords[0];
             double y = storeCoords[1];
             aT.rotate(this.rotate, x, y);
-            double width = bufferedImage.getWidth();
-            double height = bufferedImage.getHeight();
-            Rectangle2D.Double rf1 = new Rectangle2D.Double(x, y, width, height);
+            double imageWidth = bufferedImage.getWidth();
+            double imageHeight = bufferedImage.getHeight();
+            Rectangle2D.Double rf1 = new Rectangle2D.Double(x, y, imageWidth, imageHeight);
             Rectangle2D rf1d = aT.createTransformedShape(rf1).getBounds2D();
             shape = rf1d;
 
@@ -96,6 +88,7 @@ public class ItemImage extends SwkShape {
         return hit;
     }
 
+    @Override
     public void coords(SwkImageCanvas canvas, double[] coords)
             throws SwkException {
         if (coords.length != 2) {

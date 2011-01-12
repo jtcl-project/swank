@@ -2,12 +2,11 @@ package com.onemoonscientific.swank.canvas;
 
 import java.util.Enumeration;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
-import javax.swing.tree.DefaultTreeModel;
 
 class ItemTreeNode extends DefaultMutableTreeNode {
 
+    @Override
     public Enumeration postorderEnumeration() {
         return new PostorderEnumeration(this);
     }
@@ -16,6 +15,7 @@ class ItemTreeNode extends DefaultMutableTreeNode {
         return new PostorderEnumeration(this, true);
     }
 
+    @Override
     public Enumeration depthFirstEnumeration() {
         return postorderEnumeration();
     }

@@ -25,16 +25,8 @@
  */
 package com.onemoonscientific.swank.canvas;
 
-import com.onemoonscientific.swank.*;
-
-import tcl.lang.*;
-
-import java.awt.*;
 import java.awt.geom.*;
 
-import java.lang.*;
-
-import java.util.*;
 
 //Algorithm from http://www.antigrain.com/research/bezier_interpolation/
 class BezierPath {

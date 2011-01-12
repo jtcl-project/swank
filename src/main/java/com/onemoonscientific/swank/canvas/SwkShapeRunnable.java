@@ -59,8 +59,8 @@ public class SwkShapeRunnable implements Runnable {
 
                 if (shapeList != null) {
                     for (int i = 0; i < shapeList.size(); i++) {
-                        SwkShape swkShape = (SwkShape) shapeList.elementAt(i);
-                        configShape(swkShape);
+                        SwkShape runShape = (SwkShape) shapeList.elementAt(i);
+                        configShape(runShape);
                     }
 
                     if (shapeList.size() > 0) {

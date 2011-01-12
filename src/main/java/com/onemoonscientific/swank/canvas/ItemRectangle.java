@@ -35,15 +35,8 @@
 package com.onemoonscientific.swank.canvas;
 
 import com.onemoonscientific.swank.*;
-
-import tcl.lang.*;
-
 import java.awt.*;
 import java.awt.geom.*;
-
-import java.lang.*;
-
-import java.util.*;
 
 public class ItemRectangle extends SwkShape implements TextInterface {
 
@@ -58,9 +51,7 @@ public class ItemRectangle extends SwkShape implements TextInterface {
         initializeParameters(parameters, parameterMap);
     }
     TextParameters textPar = TextParameters.getDefault();
-    String imageName = "";
     Rectangle2D rect2D = null;
-    Color textColor = null;
 
     ItemRectangle(Shape shape, SwkImageCanvas canvas) {
         super(shape, canvas);
@@ -99,6 +90,7 @@ public class ItemRectangle extends SwkShape implements TextInterface {
         textPar = TextParameters.setTextColor(textPar, newValue);
     }
 
+    @Override
     public void coords(SwkImageCanvas canvas, double[] coords)
             throws SwkException {
         if (coords.length != 4) {
@@ -117,6 +109,7 @@ public class ItemRectangle extends SwkShape implements TextInterface {
         applyCoordinates();
     }
 
+    @Override
     public void applyCoordinates() {
         checkCoordinates(storeCoords);
         rect2D.setFrame(storeCoords[0], storeCoords[1],
@@ -132,6 +125,7 @@ public class ItemRectangle extends SwkShape implements TextInterface {
         shape = aT.createTransformedShape(rect2D);
     }
 
+    @Override
     public void paintShape(Graphics2D g2) {
         super.paintShape(g2);
         double x = (storeCoords[0] + storeCoords[2]) / 2.0;

@@ -8,26 +8,14 @@
 package com.onemoonscientific.swank.canvas;
 
 import com.onemoonscientific.swank.*;
-
 import tcl.lang.*;
 import tcl.pkg.java.ReflectObject;
-
 import java.awt.*;
 import java.awt.datatransfer.*;
-import java.awt.font.*;
 import java.awt.geom.*;
-
 import java.io.*;
-
-import java.lang.*;
-
-import java.net.*;
-
 import java.util.*;
 
-import javax.swing.*;
-import javax.swing.text.*;
-import javax.swing.tree.*;
 
 public class SwkCanvasWidgetCmd implements Command {
 
@@ -987,7 +975,6 @@ public class SwkCanvasWidgetCmd implements Command {
         SwkImageCanvas swkcanvas = null;
         double dX = 0;
         double dY = 0;
-        boolean setValue = false;
         String tagName = null;
 
         void exec(Interp interp, SwkImageCanvas swkcanvas, TclObject[] argv)
@@ -1221,7 +1208,6 @@ public class SwkCanvasWidgetCmd implements Command {
     static class Index extends GetValueOnEventThread {
 
         SwkImageCanvas swkcanvas = null;
-        Vector shapeList = null;
         String tagName = "";
         int index = 0;
         SwkShape swkShape = null;
@@ -1247,13 +1233,13 @@ public class SwkCanvasWidgetCmd implements Command {
         @Override
         public void run() {
             try {
-                Vector shapeList = swkcanvas.getShapesWithTags(tagName);
+                Vector indexShapeList = swkcanvas.getShapesWithTags(tagName);
 
-                if (shapeList.size() == 0) {
+                if (indexShapeList.size() == 0) {
                     return;
                 }
 
-                swkShape = (SwkShape) shapeList.elementAt(0);
+                swkShape = (SwkShape) indexShapeList.elementAt(0);
             } catch (SwkException swkE) {
             }
         }
@@ -1690,9 +1676,9 @@ public class SwkCanvasWidgetCmd implements Command {
             shapeList = new ArrayList();
             for (Enumeration e = swkcanvas.rootNode.depthFirstEnumeration(); e.hasMoreElements();) {
                 ItemTreeNode node = (ItemTreeNode) e.nextElement();
-                SwkShape swkShape = (SwkShape) node.getUserObject();
-                if (swkShape != null) {
-                    shapeList.add(new Integer(swkShape.id));
+                SwkShape nodeShape = (SwkShape) node.getUserObject();
+                if (nodeShape != null) {
+                    shapeList.add(Integer.valueOf(nodeShape.id));
                 }
             }
         }
@@ -1702,7 +1688,7 @@ public class SwkCanvasWidgetCmd implements Command {
             shapeList = new ArrayList();
 
             for (int i = 0, n = shapes.size(); i < n; i++) {
-                shapeList.add(new Integer(((SwkShape) shapes.elementAt(i)).id));
+                shapeList.add(Integer.valueOf(((SwkShape) shapes.elementAt(i)).id));
             }
         }
 
@@ -1712,7 +1698,6 @@ public class SwkCanvasWidgetCmd implements Command {
             SwkShape startShape = null;
             Rectangle2D bounds = null;
             double max = Double.MAX_VALUE;
-            Line2D line = new Line2D.Double();
             double[] tcoords = new double[6];
             double tx1 = 0.0;
             double ty1 = 0.0;
@@ -1831,7 +1816,7 @@ public class SwkCanvasWidgetCmd implements Command {
                             shapeList = new ArrayList();
                         }
 
-                        shapeList.add(new Integer(swkShape.id));
+                        shapeList.add(Integer.valueOf(swkShape.id));
                     }
                 }
             }

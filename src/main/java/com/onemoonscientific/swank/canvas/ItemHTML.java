@@ -35,19 +35,10 @@
 package com.onemoonscientific.swank.canvas;
 
 import com.onemoonscientific.swank.*;
-
-import tcl.lang.*;
-
 import java.awt.*;
 import java.awt.font.*;
 import java.awt.geom.*;
-import java.awt.image.*;
 
-import java.lang.*;
-
-import java.text.*;
-
-import java.util.*;
 
 import javax.swing.*;
 
@@ -62,9 +53,6 @@ public class ItemHTML extends SwkShape implements TextInterface {
         initializeParameters(parameters, parameterMap);
     }
     TextParameters textPar = TextParameters.getDefault();
-    double x = 0.0;
-    double y = 0.0;
-    int[] ends = null;
     Rectangle2D.Double rect2D = new Rectangle2D.Double();
     JLabel jLabel = new JLabel();
 
@@ -78,6 +66,7 @@ public class ItemHTML extends SwkShape implements TextInterface {
         jLabel.setVerticalAlignment(SwingConstants.TOP);
     }
 
+    @Override
     public void coords(SwkImageCanvas canvas, double[] coords)
             throws SwkException {
         if (coords.length != 4) {
@@ -93,6 +82,7 @@ public class ItemHTML extends SwkShape implements TextInterface {
         applyCoordinates();
     }
 
+    @Override
     public void applyCoordinates() {
         checkCoordinates(storeCoords);
         AffineTransform aT = new AffineTransform();
@@ -109,6 +99,7 @@ public class ItemHTML extends SwkShape implements TextInterface {
                 storeCoords[2] - storeCoords[0], storeCoords[3] - storeCoords[1]);
     }
 
+    @Override
     public void checkCoordinates(double[] coords) {
         double hold;
 
@@ -129,6 +120,7 @@ public class ItemHTML extends SwkShape implements TextInterface {
         }
     }
 
+    @Override
     public void paintShape(Graphics2D g2) {
         paint(g2, getCanvas().getFontRenderContext());
     }
@@ -185,6 +177,7 @@ public class ItemHTML extends SwkShape implements TextInterface {
         textPar = TextParameters.setTextColor(textPar, newValue);
     }
 
+    @Override
     public boolean hitShape(double x1, double y1) {
         boolean result = false;
         if (shape != null) {

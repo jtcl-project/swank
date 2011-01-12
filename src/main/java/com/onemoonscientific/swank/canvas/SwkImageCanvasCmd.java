@@ -7,30 +7,10 @@
  */
 package com.onemoonscientific.swank.canvas;
 
-import com.onemoonscientific.swank.*;
 
 import tcl.lang.*;
-import tcl.pkg.java.ReflectObject;
-
 import java.awt.*;
-import java.awt.datatransfer.*;
-import java.awt.font.*;
-import java.awt.geom.*;
-import java.awt.print.*;
-
-import java.io.IOException;
-
-import java.lang.*;
-
-import java.net.URL;
-
-import java.util.*;
-
 import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.text.*;
-import javax.swing.text.html.*;
-import javax.swing.tree.*;
 
 /** This class implements the SwkImageCanvas command. */
 public class SwkImageCanvasCmd implements Command {
@@ -73,9 +53,6 @@ public class SwkImageCanvasCmd implements Command {
                     "bad window path name \"" + argv[1].toString() + "\"");
         }
 
-        SwkImageCanvas swkcanvas = null;
-        String className = argv[0].toString().substring(0, 1).toUpperCase()
-                + argv[0].toString().substring(1);
 
         /*if (Widgets.exists(interp,argv[1].toString())) {
         swkcanvas = (SwkImageCanvas) Widgets.get(interp, argv[1].toString());
@@ -106,7 +83,6 @@ public class SwkImageCanvasCmd implements Command {
         //Widgets.addNewWidget(interp, argv[1].toString(), tObj);
         }
          */
-        swkcanvas.setCreated(true);
         interp.setResult(argv[1].toString());
     }
 

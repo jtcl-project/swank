@@ -92,6 +92,7 @@ public class ItemConnector extends ItemLine implements TextInterface {
         textPar = TextParameters.setTextColor(textPar, newValue);
     }
 
+    @Override
     public void paintShape(Graphics2D g2) {
         if (stroke != null) {
             g2.setStroke(stroke);
@@ -151,6 +152,7 @@ public class ItemConnector extends ItemLine implements TextInterface {
         textPar.paint(g2, getCanvas().getFontRenderContext(), this, textX, textY);
     }
 
+    @Override
     public void coords(SwkImageCanvas canvas, double[] coords)
             throws SwkException {
         float x1;
@@ -163,6 +165,7 @@ public class ItemConnector extends ItemLine implements TextInterface {
         applyCoordinates();
     }
 
+    @Override
     public void applyCoordinates() {
         double[] shapePars = {arrowShapeA, arrowShapeB, arrowShapeC, width};
         AffineTransform aT = new AffineTransform();

@@ -400,7 +400,7 @@ public class SwkImageCanvas implements SwkCanvasType {
                         throw new SwkException("Invalid canvas item id "
                                 + iElem + " " + lastShapeId);
                     } else {
-                        swkShape = (SwkShape) swkShapes.get(new Integer(iElem));
+                        swkShape = (SwkShape) swkShapes.get(Integer.valueOf(iElem));
 
                         if (swkShape == null) {
                             throw new SwkException(

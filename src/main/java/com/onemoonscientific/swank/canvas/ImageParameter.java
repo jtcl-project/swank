@@ -34,6 +34,7 @@ public class ImageParameter extends CanvasParameter {
         }
     }
 
+    @Override
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
             throws TclException {
         newImage = SwankUtil.getBufferedImage(interp, arg);

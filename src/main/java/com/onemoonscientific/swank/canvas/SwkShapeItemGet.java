@@ -26,7 +26,6 @@ public class SwkShapeItemGet implements Runnable {
 
     String tag = null;
     String parString = null;
-    CanvasParameter[] parameters = null;
     SwkImageCanvas swkCanvas = null;
     SwkShape swkShape = null;
     Interp interp = null;

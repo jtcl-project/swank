@@ -99,7 +99,7 @@ public class TextParameters {
      * @return the dash
      */
     public float[] getAnchor() {
-        return anchor;
+        return anchor.clone();
     }
 
     /**
@@ -205,14 +205,14 @@ public class TextParameters {
 
         g2.setPaint(getTextColor());
 
-        String text = this.getText();
+        String paintText = this.getText();
         Rectangle2D rf1d = null;
-        if ((text == null) || (text.equals(""))) {
+        if ((paintText == null) || (paintText.equals(""))) {
             return new Rectangle2D.Float((float) x, (float) y,
                     1, 1);
         }
-        int nLines = getLineBreaks(fRC, paintFont, text, swkShape.width);
-        String textLine = text;
+        int nLines = getLineBreaks(fRC, paintFont, paintText, swkShape.width);
+        String textLine = paintText;
         float width2 = 0;
         Point2D point2D = new Point2D.Double(x, y);
         Rectangle2D unionRect = new Rectangle2D.Double();
@@ -225,7 +225,7 @@ public class TextParameters {
         y = (int) point2D.getY();
         for (int i = 0; i < nLines; i++) {
             if (nLines > 1) {
-                textLine = text.substring(ends[i], ends[i + 1]).trim();
+                textLine = paintText.substring(ends[i], ends[i + 1]).trim();
             }
 
             float width1 = (float) (paintFont.getStringBounds(textLine, fRC).getWidth());

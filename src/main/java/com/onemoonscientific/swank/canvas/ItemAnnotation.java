@@ -38,7 +38,6 @@ import com.onemoonscientific.swank.*;
 import java.awt.*;
 import java.awt.geom.*;
 
-import java.util.*;
 
 public class ItemAnnotation extends ItemLine implements TextInterface {
 
@@ -151,6 +150,7 @@ public class ItemAnnotation extends ItemLine implements TextInterface {
 
     }
 
+    @Override
     public void coords(SwkImageCanvas canvas, double[] coords)
             throws SwkException {
         float x1;
@@ -163,6 +163,7 @@ public class ItemAnnotation extends ItemLine implements TextInterface {
         applyCoordinates();
     }
 
+    @Override
     public String getType() {
         return "annotation";
     }
