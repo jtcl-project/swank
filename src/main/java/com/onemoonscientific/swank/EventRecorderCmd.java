@@ -28,7 +28,8 @@ import tcl.lang.*;
 
 public class EventRecorderCmd implements Command {
 
-    static private EventRecorder eventRecorder = null;
+    static private EventRecorder eventRecorder = new EventRecorder();
+
     static final private int OPT_COUNT = 0;
     static final private int OPT_GET = 1;
     static final private int OPT_LIST = 2;

@@ -135,7 +135,7 @@ public class PackCmd implements Command {
 
         if (settings.size() < 3) {
             throw new TclException(interp,
-                    "window \"" + argv[2].toString() + "\" isn't placed");
+                    "window \"" + argv[2].toString() + "\" isn't packed");
         }
  
         TclObject result = TclList.newInstance();

@@ -54,6 +54,7 @@ public abstract class SwkShape implements SwkShapeConfig {
     BasicStroke stroke = null;
     boolean newStroke = false;
     float width = (float) 1.0;
+    float height = (float) 1.0;
     Transformer transformer = null;
     float rotate = 0.0f;
     float xShear = 0.0f;
@@ -64,6 +65,8 @@ public abstract class SwkShape implements SwkShapeConfig {
     SwkImageCanvas canvas = null;
     boolean selected = false;
     static TreeMap parameterMap = new TreeMap();
+    String imageName="";
+    boolean newTransform = false;
 
     public SwkShape() {
     }

@@ -16,21 +16,13 @@ import java.awt.event.*;
 import java.awt.font.*;
 import java.awt.geom.*;
 import java.awt.image.BufferedImage;
-
-import java.io.File;
 import java.io.OutputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-
 import java.util.*;
-
 import java.util.Map.Entry;
 import javax.imageio.ImageIO;
-
 import javax.swing.SwingUtilities;
-import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.event.TreeModelListener;
 import javax.swing.event.TreeModelEvent;
@@ -104,9 +96,6 @@ public class SwkImageCanvas implements SwkCanvasType {
     String className = null;
     LinkedList children = null;
     Vector virtualBindings = null;
-    int active = 0;
-    boolean created = false;
-    TclObject tclObject = null;
     final Interp interp;
     boolean isCreated = false;
     Insets emptyBorderInsets = new Insets(0, 0, 0, 0);
@@ -118,17 +107,7 @@ public class SwkImageCanvas implements SwkCanvasType {
     int insertOnTime = 0;
     int[][] scrollRegion = new int[2][2];
     float[] anchor = {0.0f, 0.0f};
-    double borderWidth = 0;
-    Color highlightBackground = Color.white;
-    Color highlightColor = Color.red;
-    int highlightThickness;
-    int padx;
-    int pady;
-    String relief = null;
-    String xScrollCommand = null;
-    String yScrollCommand = null;
     Graphics g1 = null;
-    BasicStroke stroke = new BasicStroke();
     double zoom = 1.0;
     AffineTransform canvasTransform = new AffineTransform();
     Hashtable transformerHash = new Hashtable();
@@ -145,21 +124,10 @@ public class SwkImageCanvas implements SwkCanvasType {
     HitShape eventCurrentShape = null;
     SwkShape lastShapeScanned = null;
     int handle = -1;
-    Point currentPt = new Point(0, 0);
-    String currentTag = null;
-    String previousTag = null;
-    TclObject[] currentTags = null;
-    TclObject[] previousTags = null;
-    Hashtable focusHash = null;
-    Hashtable mouseHash = null;
-    Hashtable mouseMotionHash = null;
-    Hashtable keyHash = null;
     Map tagHash = new LinkedHashMap(1);
     Vector tagVec = new Vector();
     int swkwidth = 1;
     int swkheight = 1;
-    int mouseX = 0;
-    int mouseY = 0;
     Component component = null;
     BufferedImage bufOffscreen = null;
 
@@ -182,7 +150,7 @@ public class SwkImageCanvas implements SwkCanvasType {
         transformerHash.put("fp", fpTransformer);
     }
 
-    class MyTreeModelListener implements TreeModelListener {
+    static class MyTreeModelListener implements TreeModelListener {
 
         public void treeNodesChanged(TreeModelEvent e) {
             DefaultMutableTreeNode node;
@@ -314,11 +282,11 @@ public class SwkImageCanvas implements SwkCanvasType {
     }
 
     public void setAnchor(float[] anchor) {
-        this.anchor = anchor;
+        this.anchor = anchor.clone();
     }
 
     public float[] getAnchor() {
-        return (anchor);
+        return (anchor.clone());
     }
 
     public void setEventCurrentShape(HitShape shape) {
@@ -395,7 +363,7 @@ public class SwkImageCanvas implements SwkCanvasType {
     }
 
     public void addShape(SwkShape shape) throws SwkException {
-        swkShapes.put(new Integer(shape.id), shape);
+        swkShapes.put(Integer.valueOf(shape.id), shape);
 
         if (shape.tagNames != null) {
             setTags(shape.tagNames, shape);
@@ -478,7 +446,7 @@ public class SwkImageCanvas implements SwkCanvasType {
         for (int i = 0; i < shapes.size(); i++) {
             swkShape = (SwkShape) shapes.elementAt(i);
             swkShape.dispose();
-            swkShapes.remove(new Integer(swkShape.id));
+            swkShapes.remove(Integer.valueOf(swkShape.id));
 
             for (Object o : swkShape.tags.entrySet()) {
                 Entry entry = (Entry) o;
@@ -645,7 +613,7 @@ public class SwkImageCanvas implements SwkCanvasType {
                 }
 
                 if (intValid) {
-                    SwkShape swkShape = (SwkShape) swkShapes.get(new Integer(
+                    SwkShape swkShape = (SwkShape) swkShapes.get(Integer.valueOf(
                             iElem));
 
                     if (swkShape == null) {
@@ -952,7 +920,7 @@ public class SwkImageCanvas implements SwkCanvasType {
         }
     }
 
-    class NodeBounds {
+    static class NodeBounds {
 
         final ItemTreeNode node;
         final Rectangle2D rect;

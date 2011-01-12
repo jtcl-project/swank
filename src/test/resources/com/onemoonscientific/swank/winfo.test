@@ -183,25 +183,25 @@ test winfo-6.5 {"winfo exists" command} {
 catch {destroy .b}
 button .b -text "Help"
 update
-test winfo-7.1 {"winfo pathname" command} {
+test winfo-7.1 {"winfo pathname" command} tkOnly {
     list [catch {winfo pathname} msg] $msg
 } {1 {wrong # args: should be "winfo pathname ?-displayof window? id"}}
-test winfo-7.2 {"winfo pathname" command} {
+test winfo-7.2 {"winfo pathname" command} tkOnly {
     list [catch {winfo pathname a b} msg] $msg
 } {1 {wrong # args: should be "winfo pathname ?-displayof window? id"}}
-test winfo-7.3 {"winfo pathname" command} {
+test winfo-7.3 {"winfo pathname" command} tkOnly {
     list [catch {winfo pathname a b c d} msg] $msg
 } {1 {wrong # args: should be "winfo pathname ?-displayof window? id"}}
-test winfo-7.4 {"winfo pathname" command} {
+test winfo-7.4 {"winfo pathname" command} tkOnly {
     list [catch {winfo pathname -displayof geek 25} msg] $msg
 } {1 {bad window path name "geek"}}
-test winfo-7.5 {"winfo pathname" command} {
+test winfo-7.5 {"winfo pathname" command} tkOnly {
     list [catch {winfo pathname xyz} msg] $msg
 } {1 {expected integer but got "xyz"}}
-test winfo-7.6 {"winfo pathname" command} {
+test winfo-7.6 {"winfo pathname" command} tkOnly {
     list [catch {winfo pathname 224} msg] $msg
 } {1 {window id "224" doesn't exist in this application}}
-test winfo-7.7 {"winfo pathname" command} {
+test winfo-7.7 {"winfo pathname" command} tkOnly {
     winfo pathname -displayof .b [winfo id .]
 } {.}
 test winfo-7.8 {"winfo pathname" command} {unixOnly testwrapper} {
@@ -261,40 +261,40 @@ test winfo-9.7 {"winfo viewable" command} {
 wm deiconify .
 deleteWindows
 
-test winfo-10.1 {"winfo visualid" command} {
+test winfo-10.1 {"winfo visualid" command} tkOnly {
     list [catch {winfo visualid} msg] $msg
 } {1 {wrong # args: should be "winfo visualid window"}}
 test winfo-10.2 {"winfo visualid" command} {
     list [catch {winfo visualid gorp} msg] $msg
 } {1 {bad window path name "gorp"}}
-test winfo-10.3 {"winfo visualid" command} {
+test winfo-10.3 {"winfo visualid" command} tkOnly {
     expr 2+[winfo visualid .]-[winfo visualid .]
 } {2}
 
-test winfo-11.1 {"winfo visualid" command} {
+test winfo-11.1 {"winfo visualid" command} tkOnly {
     list [catch {winfo visualsavailable} msg] $msg
 } {1 {wrong # args: should be "winfo visualsavailable window ?includeids?"}}
-test winfo-11.2 {"winfo visualid" command} {
+test winfo-11.2 {"winfo visualid" command} tkOnly {
     list [catch {winfo visualsavailable gorp} msg] $msg
 } {1 {bad window path name "gorp"}}
-test winfo-11.3 {"winfo visualid" command} {
+test winfo-11.3 {"winfo visualid" command} tkOnly {
     list [catch {winfo visualsavailable . includeids foo} msg] $msg
 } {1 {wrong # args: should be "winfo visualsavailable window ?includeids?"}}
 test winfo-11.4 {"winfo visualid" command} {
     llength [lindex [winfo visualsa .] 0]
 } {2}
-test winfo-11.5 {"winfo visualid" command} {
+test winfo-11.5 {"winfo visualid" command} tkOnly {
     llength [lindex [winfo visualsa . includeids] 0]
 } {3}
-test winfo-11.6 {"winfo visualid" command} {
+test winfo-11.6 {"winfo visualid" command} tkOnly {
     set x [lindex [lindex [winfo visualsa . includeids] 0] 2]
     expr $x + 2 - $x
 } {2}
 
-test winfo-12.1 {GetDisplayOf procedure} {
+test winfo-12.1 {GetDisplayOf procedure} tkOnly {
     list [catch {winfo atom - foo x} msg] $msg
 } {1 {wrong # args: should be "winfo atom ?-displayof window? name"}}
-test winfo-12.2 {GetDisplayOf procedure} {
+test winfo-12.2 {GetDisplayOf procedure} tkOnly {
     list [catch {winfo atom -d bad_window x} msg] $msg
 } {1 {bad window path name "bad_window"}}
 

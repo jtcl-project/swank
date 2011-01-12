@@ -11,23 +11,11 @@ import com.onemoonscientific.swank.*;
 
 import tcl.lang.*;
 import tcl.pkg.java.ReflectObject;
-
-import java.awt.*;
-import java.awt.datatransfer.*;
-import java.awt.font.*;
 import java.awt.geom.*;
-
 import java.io.*;
-
-import java.lang.*;
-
-import java.net.*;
 
 import java.util.*;
 
-import javax.swing.*;
-import javax.swing.text.*;
-import javax.swing.tree.*;
 
 public class SwkImageCanvasWidgetCmd implements Command {
 
@@ -277,6 +265,11 @@ public class SwkImageCanvasWidgetCmd implements Command {
                 }
                 if (oStream != null) {
                     swkImageCanvas.save(owidth, oheight, oStream);
+                    try {
+                        oStream.close();
+                    } catch (IOException ioE) {
+                        throw new TclException(interp,ioE.getMessage());
+                    }
                 } else {
                     throw new TclException(interp, "Not an output stream or fle");
                 }
@@ -511,7 +504,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
         interp.setResult(list);
     }
 
-    class CoordsGet extends GetValueOnEventThread {
+    static class CoordsGet extends GetValueOnEventThread {
 
         SwkImageCanvas swkcanvas = null;
         String tagName = "";
@@ -539,6 +532,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
             interp.setResult(list);
         }
 
+        @Override
         public void run() {
             try {
                 Vector shapes = swkcanvas.getShapesWithTags(tagName);
@@ -571,6 +565,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
             execOnThread();
         }
 
+        @Override
         public void run() {
             try {
                 Vector shapes = swkcanvas.getShapesWithTags(tagName);
@@ -640,7 +635,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
         }
     }
 
-    class Hit extends GetValueOnEventThread {
+    static class Hit extends GetValueOnEventThread {
 
         SwkImageCanvas swkcanvas = null;
         double x = 0;
@@ -662,6 +657,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
             interp.setResult(result);
         }
 
+        @Override
         public void run() {
             try {
                 SwkShape swkShape = (SwkShape) swkcanvas.getShape(tagName);
@@ -674,7 +670,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
         }
     }
 
-    class Type extends GetValueOnEventThread {
+    static class Type extends GetValueOnEventThread {
 
         SwkImageCanvas swkcanvas = null;
         String tagName = "";
@@ -693,6 +689,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
             interp.setResult(result);
         }
 
+        @Override
         public void run() {
             try {
                 Vector shapes = swkcanvas.getShapesWithTags(tagName);
@@ -709,7 +706,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
         }
     }
 
-    class BBox extends GetValueOnEventThread {
+    static class BBox extends GetValueOnEventThread {
 
         SwkImageCanvas swkcanvas = null;
         String[] tags = null;
@@ -742,6 +739,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
             }
         }
 
+        @Override
         public void run() {
             try {
                 rect = swkcanvas.getShapeBounds(tags);
@@ -750,7 +748,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
         }
     }
 
-    class Scale extends UpdateOnEventThread {
+    static class Scale extends UpdateOnEventThread {
 
         SwkImageCanvas swkcanvas = null;
         double xOrigin = 0;
@@ -1033,6 +1031,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
             interp.setResult(index);
         }
 
+        @Override
         public void run() {
             try {
                 Vector shapeList = swkcanvas.getShapesWithTags(tagName);
