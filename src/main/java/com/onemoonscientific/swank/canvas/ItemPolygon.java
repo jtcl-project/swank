@@ -112,10 +112,6 @@ public class ItemPolygon extends SwkShape {
         shape = aT.createTransformedShape(gPath);
     }
 
-    public CanvasParameter[] getParameters() {
-        return parameters;
-    }
-
     public String getType() {
         return "polygon";
     }

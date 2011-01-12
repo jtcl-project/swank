@@ -93,10 +93,6 @@ public class ItemBitmap extends SwkShape {
 
     }
 
-    public CanvasParameter[] getParameters() {
-        return parameters;
-    }
-
     public String getType() {
         return "bitmap";
     }

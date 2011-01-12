@@ -133,10 +133,6 @@ public class ItemHTML extends SwkShape implements TextInterface {
         paint(g2, getCanvas().getFontRenderContext());
     }
 
-    public CanvasParameter[] getParameters() {
-        return parameters;
-    }
-
     public String getType() {
         return "htext";
     }

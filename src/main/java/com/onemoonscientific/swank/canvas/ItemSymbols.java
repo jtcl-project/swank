@@ -191,10 +191,6 @@ public class ItemSymbols extends SwkShape implements SymbolInterface {
         }
     }
 
-    public CanvasParameter[] getParameters() {
-        return parameters;
-    }
-
     public String getType() {
         return "symbols";
     }

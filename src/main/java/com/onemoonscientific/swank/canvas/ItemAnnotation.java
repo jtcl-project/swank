@@ -163,11 +163,6 @@ public class ItemAnnotation extends ItemLine implements TextInterface {
         applyCoordinates();
     }
 
-    public CanvasParameter[] getParameters() {
-        return parameters;
-    }
-
-    @Override
     public String getType() {
         return "annotation";
     }

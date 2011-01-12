@@ -118,10 +118,6 @@ public class ItemEllipse extends SwkShape implements TextInterface {
         return "oval";
     }
 
-    public CanvasParameter[] getParameters() {
-        return parameters;
-    }
-
     public void applyCoordinates() {
         checkCoordinates(storeCoords);
 

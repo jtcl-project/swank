@@ -14,6 +14,7 @@ import tcl.lang.TclObject;
 import tcl.lang.TclString;
 
 import java.util.Vector;
+import java.util.TreeMap;
 
 import javax.swing.SwingUtilities;
 
@@ -54,15 +55,14 @@ public class SwkShapeItemGet implements Runnable {
 
             return getParValue(par, configStyle);
         } else {
-            CanvasParameter[] pars = swkShape.getParameters();
-            if (pars == null) {
+            TreeMap<String,CanvasParameter> parameterMap = swkShape.getParameterMap();
+            if (parameterMap == null) {
                 throw new TclException(interp,
                         "Canvas Parameter doesn't exist for Swank Item \"" + tag + "\"");
             }
             TclObject result = TclList.newInstance();
-
-            for (int i = 0; i < pars.length; i++) {
-                TclObject value = getParValue(pars[i], configStyle);
+            for (CanvasParameter canvasPar:parameterMap.values()) {
+                TclObject value = getParValue(canvasPar, configStyle);
                 TclList.append(interp, result, value);
             }
 

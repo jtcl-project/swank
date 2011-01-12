@@ -90,10 +90,6 @@ public class ItemNode extends SwkShape {
         super.paintShape(g2);
     }
 
-    public CanvasParameter[] getParameters() {
-        return parameters;
-    }
-
     public String getType() {
         return "node";
     }

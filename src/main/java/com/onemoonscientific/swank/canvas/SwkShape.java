@@ -64,7 +64,7 @@ public abstract class SwkShape implements SwkShapeConfig {
     String[] tagNames = null;
     SwkImageCanvas canvas = null;
     boolean selected = false;
-    static TreeMap parameterMap = new TreeMap();
+    static TreeMap<String,CanvasParameter> parameterMap = new TreeMap<String,CanvasParameter>();
     String imageName="";
     boolean newTransform = false;
 
@@ -76,7 +76,7 @@ public abstract class SwkShape implements SwkShapeConfig {
         this.canvas = canvas;
     }
 
-    public TreeMap getParameterMap() {
+    public TreeMap<String,CanvasParameter> getParameterMap() {
         return parameterMap;
     }
 
@@ -400,7 +400,6 @@ public abstract class SwkShape implements SwkShapeConfig {
         }
     }
 
-    public abstract CanvasParameter[] getParameters();
 
     public void configOld(Interp interp, TclObject[] argv, int start)
             throws TclException {
@@ -412,7 +411,6 @@ public abstract class SwkShape implements SwkShapeConfig {
 
     public void configShape(Interp interp, SwkImageCanvas swkCanvas,
             TclObject[] argv, int start) throws TclException {
-        Map parameterMap = getParameterMap();
         CanvasParameter[] setPars = new CanvasParameter[(argv.length - start) / 2];
 
         boolean gotPar = false;
@@ -518,10 +516,8 @@ public abstract class SwkShape implements SwkShapeConfig {
         interp.resetResult();
 
         if (argv.length == start) {
-            CanvasParameter[] pars = getParameters();
-
-            for (int i = 0; i < pars.length; i++) {
-                TclObject list2 = itemGet(interp, pars[i].getName(), true);
+            for (CanvasParameter canvasPar:parameterMap.values()) {
+                TclObject list2 = itemGet(interp, canvasPar.getName(), true);
                 TclList.append(interp, list, list2);
             }
 
@@ -770,7 +766,7 @@ public abstract class SwkShape implements SwkShapeConfig {
     }
 
     public CanvasParameter getPar(String argString) {
-        TreeMap map = getParameterMap();
+        TreeMap<String,CanvasParameter> map = getParameterMap();
 
         if (map == null) {
             return null;

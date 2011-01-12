@@ -118,10 +118,6 @@ public class ItemImage extends SwkShape {
 
     }
 
-    public CanvasParameter[] getParameters() {
-        return parameters;
-    }
-
     public String getType() {
         return "image";
     }

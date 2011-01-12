@@ -100,10 +100,6 @@ public class ItemGPath extends SwkShape {
         shape = aT.createTransformedShape(gPath);
     }
 
-    public CanvasParameter[] getParameters() {
-        return parameters;
-    }
-
     public String getType() {
         return "line";
     }

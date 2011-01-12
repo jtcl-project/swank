@@ -73,10 +73,6 @@ public class ItemArc extends SwkShape {
         return "arc";
     }
 
-    public CanvasParameter[] getParameters() {
-        return parameters;
-    }
-
     public void applyCoordinates() {
         checkCoordinates(storeCoords);
 

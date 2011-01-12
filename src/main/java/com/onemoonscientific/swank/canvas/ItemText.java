@@ -82,9 +82,6 @@ public class ItemText extends SwkShape implements TextInterface {
         shape = textPar.paint(g2, getCanvas().getFontRenderContext(), this, storeCoords[0], storeCoords[1]);
     }
 
-    public CanvasParameter[] getParameters() {
-        return parameters;
-    }
 
     public String getType() {
         return "text";

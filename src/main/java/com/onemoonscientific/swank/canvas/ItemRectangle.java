@@ -140,10 +140,6 @@ public class ItemRectangle extends SwkShape implements TextInterface {
         textPar.paint(g2, getCanvas().getFontRenderContext(), this, x, y);
     }
 
-    public CanvasParameter[] getParameters() {
-        return parameters;
-    }
-
     public String getType() {
         return "rectangle";
     }

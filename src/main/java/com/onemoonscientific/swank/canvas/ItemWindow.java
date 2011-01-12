@@ -73,10 +73,6 @@ public class ItemWindow extends SwkShape {
         storeCoords[1] = coords[1];
     }
 
-    public CanvasParameter[] getParameters() {
-        return parameters;
-    }
-
     public void configShape(Interp interp, SwkImageCanvas swkCanvas,
             TclObject[] argv, int start) throws TclException {
         for (int i = start; i < argv.length; i += 2) {
