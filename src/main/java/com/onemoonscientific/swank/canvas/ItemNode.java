@@ -50,7 +50,6 @@ public class ItemNode extends SwkShape {
     static {
         initializeParameters(parameters, parameterMap);
     }
-    TextParameters textPar = TextParameters.getDefault();
     Rectangle2D rect2D = null;
 
     ItemNode(Shape shape, SwkImageCanvas canvas) {

@@ -1,16 +1,8 @@
 package com.onemoonscientific.swank.canvas3D;
 
-import com.onemoonscientific.swank.*;
-
-import tcl.lang.*;
-
-import java.lang.*;
-
 import java.util.*;
-
 import javax.media.j3d.*;
 
-import javax.vecmath.*;
 
 
 public class NvBranchGroup extends BranchGroup {

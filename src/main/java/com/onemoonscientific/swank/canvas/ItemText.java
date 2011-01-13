@@ -54,7 +54,6 @@ public class ItemText extends SwkShape implements TextInterface {
         initializeParameters(parameters, parameterMap);
     }
     TextParameters textPar = TextParameters.getDefault();
-    Rectangle2D.Float rf2 = new Rectangle2D.Float();
 
     ItemText(Shape shape, SwkImageCanvas canvas) {
         super(shape, canvas);
@@ -180,11 +179,9 @@ public class ItemText extends SwkShape implements TextInterface {
     public void drawHandles(Graphics2D g2) {
         if (shape != null) {
             Rectangle2D bounds = shape.getBounds2D();
-            double x1 = bounds.getMinX();
             double y1 = bounds.getMinY();
             double x2 = bounds.getMaxX();
             double y2 = bounds.getMaxY();
-            double xm = (x1 + x2) / 2;
             double ym = (y1 + y2) / 2;
             double[] xy = {x2, ym};
             for (int i = 0; i < xy.length; i += 2) {
@@ -198,11 +195,9 @@ public class ItemText extends SwkShape implements TextInterface {
         int hitIndex = -1;
         if (shape != null) {
             Rectangle2D bounds = shape.getBounds2D();
-            double x1 = bounds.getMinX();
             double y1 = bounds.getMinY();
             double x2 = bounds.getMaxX();
             double y2 = bounds.getMaxY();
-            double xm = (x1 + x2) / 2;
             double ym = (y1 + y2) / 2;
             double[] xy = {x2, ym};
 

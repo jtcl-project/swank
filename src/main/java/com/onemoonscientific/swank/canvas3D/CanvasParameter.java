@@ -1,12 +1,10 @@
 package com.onemoonscientific.swank.canvas3D;
 
-import com.onemoonscientific.swank.*;
 
 import tcl.lang.*;
 
 import java.util.*;
 
-import javax.swing.SwingUtilities;
 
 
 public abstract class CanvasParameter implements CanvasParameterConfigure,
@@ -16,7 +14,6 @@ public abstract class CanvasParameter implements CanvasParameterConfigure,
     static Map stdMap = null;
     String name = "";
     String defValue = "";
-    SwkShape swkShape = null;
 
     public Object clone() {
         try {

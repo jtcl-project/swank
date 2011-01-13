@@ -25,7 +25,7 @@ class BindEvent extends TclEvent {
         this.subtype = subtype;
 
         if (currentTag != null) {
-            this.currentTag = new String(currentTag);
+            this.currentTag = currentTag;
         }
 
         if (previousTag != null) {

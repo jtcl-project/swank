@@ -68,8 +68,7 @@ public class SwkImageCanvas implements SwkCanvasType {
         "-location", "-maximumsize", "-minimumsize", "-name", "-opaque", "-padx",
         "-pady", "-preferredsize", "-relief", "-requestfocusenabled",
         "-scrollregion", "-size", "-tooltiptext", "-verifyinputwhenfocustarget",
-        "-visible", "-width", "-xscrollcommand", "-yscrollcommand",
-    };
+        "-visible", "-width", "-xscrollcommand", "-yscrollcommand",};
     private static final int OPT_ALIGNMENTX = 0;
     private static final int OPT_ALIGNMENTY = 1;
     private static final int OPT_ANCHOR = 2;
@@ -123,9 +122,6 @@ public class SwkImageCanvas implements SwkCanvasType {
     String className = null;
     LinkedList children = null;
     Vector virtualBindings = null;
-    int active = 0;
-    boolean created = false;
-    TclObject tclObject = null;
     final Interp interp;
     boolean isCreated = false;
     Insets emptyBorderInsets = new Insets(0, 0, 0, 0);
@@ -137,17 +133,6 @@ public class SwkImageCanvas implements SwkCanvasType {
     int insertOnTime = 0;
     int[][] scrollRegion = new int[2][2];
     float[] anchor = {0.0f, 0.0f};
-    double borderWidth = 0;
-    Color highlightBackground = Color.white;
-    Color highlightColor = Color.red;
-    int highlightThickness;
-    int padx;
-    int pady;
-    String relief = null;
-    String xScrollCommand = null;
-    String yScrollCommand = null;
-    Graphics g1 = null;
-    BasicStroke stroke = new BasicStroke();
     double zoom = 1.0;
     AffineTransform canvasTransform = new AffineTransform();
     Hashtable transformerHash = new Hashtable();
@@ -160,24 +145,12 @@ public class SwkImageCanvas implements SwkCanvasType {
     SwkShape lastShape = null;
     SwkShape eventCurrentShape = null;
     SwkShape lastShapeScanned = null;
-    Point currentPt = new Point(0, 0);
-    String currentTag = null;
-    String previousTag = null;
-    TclObject[] currentTags = null;
-    TclObject[] previousTags = null;
-    Hashtable focusHash = null;
-    Hashtable mouseHash = null;
-    Hashtable mouseMotionHash = null;
-    Hashtable keyHash = null;
     Hashtable tagHash = new Hashtable();
     Vector tagVec = new Vector();
     int swkwidth = 1;
     int swkheight = 1;
-    int mouseX = 0;
-    int mouseY = 0;
     Component component = null;
     SimpleUniverse universe = null;
-    View view = null;
     TransformGroup objTransM = null;
     TransformGroup objTrans = null;
     Point3d eyePosition = new Point3d(0, 0, 100.0f);
@@ -197,10 +170,10 @@ public class SwkImageCanvas implements SwkCanvasType {
 
         Material material = new Material();
 
-        material.setAmbientColor(.0f,1.0f,0.0f);
-        material.setEmissiveColor(0.0f,1.0f,0.0f);
+        material.setAmbientColor(.0f, 1.0f, 0.0f);
+        material.setEmissiveColor(0.0f, 1.0f, 0.0f);
         material.setDiffuseColor(0.0f, 1.0f, 0.0f);
-        material.setSpecularColor(0.0f,1.0f,0.0f);
+        material.setSpecularColor(0.0f, 1.0f, 0.0f);
         material.setShininess(100.0f);
         defaultAppearance.setMaterial(material);
 
@@ -325,11 +298,11 @@ public class SwkImageCanvas implements SwkCanvasType {
     }
 
     public void setAnchor(float[] anchor) {
-        this.anchor = anchor;
+        this.anchor = anchor.clone();
     }
 
     public float[] getAnchor() {
-        return (anchor);
+        return (anchor.clone());
     }
 
     public void setEventCurrentShape(SwkShape shape) {
@@ -410,7 +383,7 @@ public class SwkImageCanvas implements SwkCanvasType {
 
         lastShape = shape;
 
-        swkShapes.put(new Integer(shape.id), shape);
+        swkShapes.put(Integer.valueOf(shape.id), shape);
 
         if (shape.tagNames != null) {
             setTags(shape.tagNames, shape);
@@ -436,10 +409,10 @@ public class SwkImageCanvas implements SwkCanvasType {
                     iElem = Integer.parseInt(arg);
 
                     if ((iElem < 0) || (iElem >= lastShapeId)) {
-                        throw new SwkException("Invalid canvas item id " +
-                                iElem + " " + lastShapeId);
+                        throw new SwkException("Invalid canvas item id "
+                                + iElem + " " + lastShapeId);
                     } else {
-                        swkShape = (SwkShape) swkShapes.get(new Integer(iElem));
+                        swkShape = (SwkShape) swkShapes.get(Integer.valueOf(iElem));
 
                         if (swkShape == null) {
                             throw new SwkException(
@@ -520,7 +493,7 @@ public class SwkImageCanvas implements SwkCanvasType {
 
         for (int i = 0; i < shapes.size(); i++) {
             swkShape = (SwkShape) shapes.elementAt(i);
-            swkShapes.remove(new Integer(swkShape.id));
+            swkShapes.remove(Integer.valueOf(swkShape.id));
             e = swkShape.tags.elements();
 
             while (e.hasMoreElements()) {
@@ -659,12 +632,12 @@ public class SwkImageCanvas implements SwkCanvasType {
                 }
 
                 if (intValid) {
-                    SwkShape swkShape = (SwkShape) swkShapes.get(new Integer(
+                    SwkShape swkShape = (SwkShape) swkShapes.get(Integer.valueOf(
                             iElem));
 
                     if (swkShape == null) {
-                        throw new SwkException("Invalid canvas item id (null) " +
-                                iElem);
+                        throw new SwkException("Invalid canvas item id (null) "
+                                + iElem);
                     } else {
                         shapeHash.put(swkShape, swkShape);
                     }
@@ -988,7 +961,7 @@ public class SwkImageCanvas implements SwkCanvasType {
 
     public int setChild(Shape3D shape, int iChild) {
         if ((iChild >= 0) && (iChild < objTrans.numChildren())) {
-            if ((objTrans != null) && (shape != null)) {
+            if (shape != null) {
                 NvBranchGroup newBG = new NvBranchGroup();
 
                 // fixme newBG.setCapability(NvBranchGroup.ALLOW_DETACH);
@@ -1005,18 +978,17 @@ public class SwkImageCanvas implements SwkCanvasType {
 
     public int removeChild(int iChild) {
         if ((iChild >= 0) && (iChild < objTrans.numChildren())) {
-            if (objTrans != null) {
-                objTrans.removeChild(iChild);
+            objTrans.removeChild(iChild);
 
-                NvBranchGroup nvBG;
+            NvBranchGroup nvBG;
 
-                for (int i = 0; i < objTrans.numChildren(); i++) {
-                    nvBG = (NvBranchGroup) objTrans.getChild(i);
-                    nvBG.iChild = i;
-                }
-
-                return (objTrans.numChildren());
+            for (int i = 0; i < objTrans.numChildren(); i++) {
+                nvBG = (NvBranchGroup) objTrans.getChild(i);
+                nvBG.iChild = i;
             }
+
+            return (objTrans.numChildren());
+
         }
 
         return (-1);
@@ -1062,7 +1034,6 @@ public class SwkImageCanvas implements SwkCanvasType {
         Transform3D t3D = new Transform3D();
         Vector3d v3d = new Vector3d();
         int nSpheres = coords.length / 3;
-        Color white = Color.WHITE;
         NvBranchGroup bG = new NvBranchGroup();
 
         for (int i = 0; i < nSpheres; i++) {

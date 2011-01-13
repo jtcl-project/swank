@@ -22,7 +22,6 @@ class SwkJSpinnerWidgetCmd implements Command {
     static final private int OPT_GET = 2;
     static final private int OPT_SET = 3;
     static boolean gotDefaults = false;
-    int index;
 
     public static String[] getValidCmds() {
         return validCmds;

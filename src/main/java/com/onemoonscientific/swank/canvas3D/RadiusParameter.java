@@ -1,21 +1,7 @@
 package com.onemoonscientific.swank.canvas3D;
 
-import com.onemoonscientific.swank.*;
-
-import com.sun.j3d.utils.geometry.*;
-
 import tcl.lang.*;
 
-import java.awt.*;
-import java.awt.geom.*;
-
-import java.lang.*;
-
-import java.util.*;
-
-import javax.media.j3d.*;
-
-import javax.vecmath.*;
 
 public class RadiusParameter extends CanvasParameter {
     private static String name = "radius";

@@ -11,25 +11,13 @@ import com.onemoonscientific.swank.*;
 
 import tcl.lang.*;
 import tcl.pkg.java.ReflectObject;
-
 import java.awt.*;
 import java.awt.datatransfer.*;
-import java.awt.font.*;
 import java.awt.geom.*;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
-
-import java.io.*;
-
-import java.lang.*;
-
-import java.net.*;
-
 import java.util.*;
 
-import javax.swing.*;
-import javax.swing.text.*;
-import javax.swing.tree.*;
 
 public class SwkCanvasWidgetCmd implements Command {
 
@@ -688,7 +676,7 @@ public class SwkCanvasWidgetCmd implements Command {
         interp.setResult(list);
     }
 
-    class CoordsGet extends GetValueOnEventThread {
+    static class CoordsGet extends GetValueOnEventThread {
 
         SwkImageCanvas swkcanvas = null;
         String tagName = "";
