@@ -64,13 +64,13 @@ proc arrowSetup c {
     set tmp [expr $v(x2)+100]
     $c create line $tmp [expr $v(y)-125] $tmp [expr $v(y)-75] \
 	    -width $v(width) \
-	    -arrow both -arrowshape "$v(a) $v(b) $v(c)"
+	    -startstyle square -endstyle arrow -arrowshape "$v(a) $v(b) $v(c)"
     $c create line [expr $tmp-25] $v(y) [expr $tmp+25] $v(y) \
 	    -width $v(width) \
-	    -arrow both -arrowshape "$v(a) $v(b) $v(c)"
+	    -startstyle square -endstyle arrow -arrowshape "$v(a) $v(b) $v(c)"
     $c create line [expr $tmp-25] [expr $v(y)+75] [expr $tmp+25] \
 	    [expr $v(y)+125] -width $v(width) \
-	    -arrow both -arrowshape "$v(a) $v(b) $v(c)"
+	    -startstyle square -endstyle arrow -arrowshape "$v(a) $v(b) $v(c)"
 
     # Create a bunch of other arrows and text items showing the
     # current dimensions.
@@ -78,22 +78,22 @@ proc arrowSetup c {
     set tmp [expr $v(x2)+10]
     $c create line $tmp [expr $v(y)-5*$v(width)] \
 	    $tmp [expr $v(y)-$deltaY] \
-	    -arrow both -arrowshape $v(smallTips)
+	    -startstyle arrow -endstyle arrow -arrowshape $v(smallTips)
     $c create text [expr $v(x2)+15] [expr $v(y)-$deltaY+5*$v(c)] \
 	    -text $v(c) -anchor w
     set tmp [expr $v(x1)-10]
     $c create line $tmp [expr $v(y)-5*$v(width)] \
 	    $tmp [expr $v(y)+5*$v(width)] \
-	    -arrow both -arrowshape $v(smallTips)
+	    -startstyle arrow -endstyle arrow -arrowshape $v(smallTips)
     $c create text [expr $v(x1)-15] $v(y) -text $v(width) -anchor e
     set tmp [expr $v(y)+5*$v(width)+10*$v(c)+10]
     $c create line [expr $v(x2)-10*$v(a)] $tmp $v(x2) $tmp \
-	    -arrow both -arrowshape $v(smallTips)
+	    -startstyle arrow -endstyle arrow -arrowshape $v(smallTips)
     $c create text [expr $v(x2)-5*$v(a)] [expr $tmp+5] \
 	    -text $v(a) -anchor n
     set tmp [expr $tmp+25]
     $c create line [expr $v(x2)-10*$v(b)] $tmp $v(x2) $tmp \
-	    -arrow both -arrowshape $v(smallTips)
+	    -startstyle arrow -endstyle arrow -arrowshape $v(smallTips)
     $c create text [expr $v(x2)-5*$v(b)] [expr $tmp+5] \
 	    -text $v(b) -anchor n
 

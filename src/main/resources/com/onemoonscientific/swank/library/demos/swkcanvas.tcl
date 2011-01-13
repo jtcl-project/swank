@@ -9,7 +9,7 @@ if {![info exists widgetDemo]} {
     error "This script should be run from the \"widget\" demo."
 }
 
-set w .plot
+set w .swkcanvas
 catch {destroy $w}
 toplevel $w
 wm title $w "Plot Demonstration"

@@ -9,7 +9,7 @@ if {![info exists widgetDemo]} {
     error "This script should be run from the \"widget\" demo."
 }
 
-set w .menubutton
+set w .menubu
 catch {destroy $w}
 toplevel $w
 wm title $w "Menu Button Demonstration"
