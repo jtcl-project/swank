@@ -344,7 +344,6 @@ class SwkJMenuWidgetCmd implements Command {
                     j += 2;
                 }
             }
-
             TclObject tObj = (TclObject) Widgets.getWidget(interp, menuName);
 
             if (tObj == null) {
@@ -603,8 +602,8 @@ class SwkJMenuWidgetCmd implements Command {
                 }
                 swkWidget = (SwkWidget) jmenuItem;
             } else if (itemType.startsWith("check")) {
-                SwkJCheckBoxMenuItem jmenuItem = new SwkJCheckBoxMenuItem(interp, "");
-System.out.println("cas " + jmenuItem);
+                SwkJCheckBoxMenuItem jmenuItem;
+                jmenuItem = new SwkJCheckBoxMenuItem(interp, "");
                 if (insertPos != -1) {
                     swkjmenu.insert(jmenuItem, insertPos);
                 } else {
@@ -613,7 +612,6 @@ System.out.println("cas " + jmenuItem);
                 swkWidget = (SwkWidget) jmenuItem;
             } else if (itemType.startsWith("radio")) {
                 SwkJRadioButtonMenuItem jmenuItem = new SwkJRadioButtonMenuItem(interp, "");
-System.out.println("cas " + jmenuItem);
                 if (insertPos != -1) {
                     swkjmenu.insert(jmenuItem, insertPos);
                 } else {

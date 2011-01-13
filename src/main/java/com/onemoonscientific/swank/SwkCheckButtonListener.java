@@ -35,7 +35,7 @@ public class SwkCheckButtonListener implements ActionListener, VarTrace,
         SwkListener {
 
     Interp interp;
-    JToggleButton component;
+    AbstractButton component;
 
     ButtonSettings getButtonSettings() {
         buttonSettings.setEnabled(component.isEnabled());
@@ -88,7 +88,7 @@ public class SwkCheckButtonListener implements ActionListener, VarTrace,
 
     SwkCheckButtonListener(Interp interp, Component component) {
         this.interp = interp;
-        this.component = (JToggleButton) component;
+        this.component = (AbstractButton) component;
     }
 
     public void traceProc(Interp interp, String string1, String string2,
@@ -287,7 +287,7 @@ public class SwkCheckButtonListener implements ActionListener, VarTrace,
         }
 
         String value;
-        if (((SwkJCheckBox) component).isSelected()) {
+        if (component.isSelected()) {
             value = buttonSettings.getValue();
         } else {
             value = buttonSettings.getOffValue();

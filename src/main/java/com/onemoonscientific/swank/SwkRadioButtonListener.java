@@ -34,7 +34,7 @@ public class SwkRadioButtonListener implements ActionListener, VarTrace,
         SwkListener {
 
     Interp interp;
-    JToggleButton component;
+    AbstractButton component;
     CommandVarListenerSettings buttonSettings = new CommandVarListenerSettings();
 
     CommandVarListenerSettings getButtonSettings() {
@@ -45,7 +45,7 @@ public class SwkRadioButtonListener implements ActionListener, VarTrace,
 
     SwkRadioButtonListener(Interp interp, Component component) {
         this.interp = interp;
-        this.component = (JToggleButton) component;
+        this.component = (AbstractButton) component;
     }
 
     public void traceProc(Interp interp, String string1, String string2,
@@ -145,7 +145,7 @@ public class SwkRadioButtonListener implements ActionListener, VarTrace,
 
         TclObject tObj;
 
-        if (((SwkJRadioButton) component).isSelected()
+        if (component.isSelected()
                 && !(newValue.equals(buttonSettings.getValue()))) {
             actionPerformed(null);
         }
