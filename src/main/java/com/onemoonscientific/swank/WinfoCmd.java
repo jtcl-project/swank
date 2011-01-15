@@ -754,9 +754,8 @@ public class WinfoCmd implements Command {
     static class SwkMouseInfo extends GetValueOnEventThread {
         Component component = null;
         int nButtons = 1;
-        int x = 0;
-        int y = 0;
-        String graphicsDevice = "";
+        int x = -1;
+        int y = -1;
 
         void exec(final Component component) {
             this.component = component;
@@ -766,14 +765,15 @@ public class WinfoCmd implements Command {
         @Override
         public void run() {
             nButtons = MouseInfo.getNumberOfButtons();
-            System.out.println(nButtons);
             PointerInfo pointerInfo = MouseInfo.getPointerInfo();
-            Point pt = pointerInfo.getLocation();
-            x = pt.x;
-            y = pt.y;
-            // fixme should check if device with pointer is same as device with window
-            graphicsDevice = pointerInfo.getDevice().getIDstring();
-        }
+            String pointerDevice = pointerInfo.getDevice().getIDstring();
+            String compDevice = component.getGraphicsConfiguration().getDevice().getIDstring();
+            if (compDevice.equals(pointerDevice)) {
+                Point pt = pointerInfo.getLocation();
+                x = pt.x;
+                y = pt.y;
+            }
+         }
     }
 
     static class Winfo extends GetValueOnEventThread {

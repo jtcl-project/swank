@@ -37,7 +37,7 @@ public abstract class SwkShape implements SwkShapeConfig {
     static public final byte DISABLED = 1;
     static public final byte HIDDEN = 2;
     static BasicStroke bstroke = new BasicStroke();
-    public static int handleSize = 6;
+    public static final int handleSize = 6;
     StrokeParameters strokePar = StrokeParameters.getDefault();
     Shape shape = null;
     ItemTreeNode node = null;
@@ -132,7 +132,7 @@ public abstract class SwkShape implements SwkShapeConfig {
     }
 
     public double[] getStoreCoords() {
-        return storeCoords;
+        return storeCoords.clone();
     }
 
     public AffineTransform getTransform() {
@@ -539,7 +539,7 @@ public abstract class SwkShape implements SwkShapeConfig {
     }
 
     public double[] coords() {
-        return storeCoords;
+        return storeCoords.clone();
     }
 
     public TclObject itemGet(Interp interp, String argString,

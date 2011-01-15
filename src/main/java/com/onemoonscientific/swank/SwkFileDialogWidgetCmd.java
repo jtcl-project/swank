@@ -24,19 +24,19 @@
  */
 package com.onemoonscientific.swank;
 
-import tcl.lang.*;
+import java.awt.Container;
 import tcl.pkg.java.ReflectObject;
-
-import java.awt.*;
-
 import java.io.File;
+import tcl.lang.Command;
+import tcl.lang.Interp;
+import tcl.lang.TclException;
+import tcl.lang.TclIndex;
+import tcl.lang.TclList;
+import tcl.lang.TclNumArgsException;
+import tcl.lang.TclObject;
+import tcl.lang.TclRuntimeError;
+import tcl.lang.TclString;
 
-import java.lang.*;
-
-import java.util.*;
-
-import javax.swing.*;
-import javax.swing.text.*;
 
 class SwkFileDialogWidgetCmd implements Command {
 
@@ -195,8 +195,6 @@ class SwkFileDialogWidgetCmd implements Command {
 
     static class Open extends GetValueOnEventThread {
 
-        int index = -1;
-        String item = null;
         SwkFileDialog swkfiledialog;
         File[] files = null;
 
@@ -207,6 +205,7 @@ class SwkFileDialogWidgetCmd implements Command {
             return files;
         }
 
+        @Override
         public void run() {
             swkfiledialog.setMode(java.awt.FileDialog.LOAD);
             swkfiledialog.setVisible(true);
@@ -220,14 +219,12 @@ class SwkFileDialogWidgetCmd implements Command {
                     }
                 }
             }
-            ((Window) swkfiledialog.getParent()).hide();
+            swkfiledialog.setVisible(false);
         }
     }
 
     static class Save extends GetValueOnEventThread {
 
-        int index = -1;
-        String item = null;
         SwkFileDialog swkfiledialog;
         File file = null;
 
@@ -238,6 +235,7 @@ class SwkFileDialogWidgetCmd implements Command {
             return file;
         }
 
+        @Override
         public void run() {
             swkfiledialog.setMode(java.awt.FileDialog.SAVE);
             swkfiledialog.setVisible(true);
@@ -259,6 +257,7 @@ class SwkFileDialogWidgetCmd implements Command {
             execOnThread();
         }
 
+        @Override
         public void run() {
             swkfiledialog.setFilenameFilter(filter);
         }

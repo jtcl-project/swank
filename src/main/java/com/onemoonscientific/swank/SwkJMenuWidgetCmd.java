@@ -224,9 +224,6 @@ class SwkJMenuWidgetCmd implements Command {
         final int x = TclInteger.get(interp, argv[2]);
         final int y = TclInteger.get(interp, argv[3]);
         final SwkWidget widget = (SwkWidget) ReflectObject.get(interp, tObj2);
-
-        Point point = ((Component) widget).getLocationOnScreen();
-
         (new Post()).exec(swkjmenu, widget, x, y);
     }
 
@@ -374,7 +371,7 @@ class SwkJMenuWidgetCmd implements Command {
         return;
     }
 
-    class Popup extends UpdateOnEventThread {
+    static class Popup extends UpdateOnEventThread {
 
         int x = 0;
         int y = 0;
@@ -390,12 +387,13 @@ class SwkJMenuWidgetCmd implements Command {
             execOnThread();
         }
 
+        @Override
         public void run() {
             swkjmenu.getPopupMenu().show((Component) widget, x, y);
         }
     }
 
-    class Post extends UpdateOnEventThread {
+    static class Post extends UpdateOnEventThread {
 
         int x = 0;
         int y = 0;
@@ -411,6 +409,7 @@ class SwkJMenuWidgetCmd implements Command {
             execOnThread();
         }
 
+        @Override
         public void run() {
             Point point = ((Component) widget).getLocationOnScreen();
             swkjmenu.getPopupMenu().show((Component) widget, x - point.x,
@@ -421,12 +420,10 @@ class SwkJMenuWidgetCmd implements Command {
     class Index extends GetValueOnEventThread {
 
         SwkJMenu swkjmenu = null;
-        TclObject item = null;
         int index = 0;
         String sItem = null;
 
         int exec(final SwkJMenu swkjmenu, final TclObject item) {
-            this.item = item;
             this.swkjmenu = swkjmenu;
 
             try {
@@ -440,6 +437,7 @@ class SwkJMenuWidgetCmd implements Command {
             return index;
         }
 
+        @Override
         public void run() {
             if (sItem != null) {
                 index = swkjmenu.getIndex(sItem, -1);
@@ -450,13 +448,11 @@ class SwkJMenuWidgetCmd implements Command {
     class Invoke extends GetValueOnEventThread {
 
         SwkJMenu swkjmenu = null;
-        TclObject item = null;
         String command = null;
         String sItem = null;
         int compIndex = 0;
 
         String exec(final SwkJMenu swkjmenu, final TclObject item) {
-            this.item = item;
             this.swkjmenu = swkjmenu;
 
             try {
@@ -470,6 +466,7 @@ class SwkJMenuWidgetCmd implements Command {
             return command;
         }
 
+        @Override
         public void run() {
             if (sItem != null) {
                 compIndex = swkjmenu.getIndex(sItem, -1);
@@ -491,7 +488,6 @@ class SwkJMenuWidgetCmd implements Command {
     class Delete extends GetValueOnEventThread {
 
         SwkJMenu swkjmenu = null;
-        TclObject firstArg = null;
         TclObject lastArg = null;
         String sIndex = null;
         String sIndexLast = null;
@@ -500,7 +496,6 @@ class SwkJMenuWidgetCmd implements Command {
 
         void exec(final SwkJMenu swkjmenu, final TclObject firstArg,
                 final TclObject lastArg) {
-            this.firstArg = firstArg;
             this.lastArg = lastArg;
             this.swkjmenu = swkjmenu;
 
@@ -552,7 +547,6 @@ class SwkJMenuWidgetCmd implements Command {
     class Add extends GetValueOnEventThread {
 
         SwkJMenu swkjmenu = null;
-        JComponent jcomp = null;
         String itemType = "";
         String menuName = "";
         SwkWidget swkWidget = null;
@@ -591,6 +585,7 @@ class SwkJMenuWidgetCmd implements Command {
             return cascade;
         }
 
+        @Override
         public void run() {
             //JComponent jcomp = null;
             if (itemType.equals("command")) {
@@ -684,6 +679,7 @@ class SwkJMenuWidgetCmd implements Command {
             execOnThread();
         }
 
+        @Override
         public void run() {
             if (sIndex != null) {
                 index = swkjmenu.getIndex(sIndex, -1);

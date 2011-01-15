@@ -161,6 +161,7 @@ public class WmCmd implements Command {
 
                 (new UpdateOnEventThread() {
 
+            @Override
                     public void run() {
                         if (object instanceof Frame) {
                             ((Frame) object).setExtendedState(Frame.ICONIFIED
@@ -358,7 +359,7 @@ public class WmCmd implements Command {
         (new ProtocolSet()).exec(object, closeMode, command);
     }
 
-    class GeometryGet extends GetValueOnEventThread {
+    static class GeometryGet extends GetValueOnEventThread {
 
         Object object = null;
         Rectangle rectangle = null;
@@ -410,7 +411,7 @@ public class WmCmd implements Command {
         }
     }
 
-    class GeometrySet extends UpdateOnEventThread {
+    static class GeometrySet extends UpdateOnEventThread {
 
         boolean setLocation = false;
         boolean setSize = false;
@@ -419,7 +420,6 @@ public class WmCmd implements Command {
         int y = 0;
         int w = 0;
         int h = 0;
-        SwkJRadioButton swkjradiobutton;
 
         void exec(final Object object, final boolean setLocation,
                 final boolean setSize, final int x, final int y, final int w,
@@ -470,7 +470,7 @@ public class WmCmd implements Command {
         }
     }
 
-    class ProtocolSet extends UpdateOnEventThread {
+    static class ProtocolSet extends UpdateOnEventThread {
 
         Object object = null;
         int closeOp = 0;
@@ -484,6 +484,7 @@ public class WmCmd implements Command {
             execOnThread();
         }
 
+        @Override
         public void run() {
             if (object instanceof SwkJFrame) {
                 SwkJFrame jframe = (SwkJFrame) object;
@@ -493,7 +494,7 @@ public class WmCmd implements Command {
         }
     }
 
-    class AlwaysOnTop extends UpdateOnEventThread {
+    static class AlwaysOnTop extends UpdateOnEventThread {
 
         Object object = null;
         boolean value = false;

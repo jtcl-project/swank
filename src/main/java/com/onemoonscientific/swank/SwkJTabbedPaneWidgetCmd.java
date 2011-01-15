@@ -357,7 +357,6 @@ class SwkJTabbedPaneWidgetCmd implements Command {
 
         SwkJTabbedPane swkjtabbedpane = null;
         int index = -1;
-        String errMessage = null;
         String sItem = null;
         String result = null;
 
@@ -368,17 +367,11 @@ class SwkJTabbedPaneWidgetCmd implements Command {
             this.sItem = item.toString();
 
             execOnThread();
-
-            if (errMessage != null) {
-                throw new TclException(interp, errMessage);
-            }
-
             interp.setResult(result);
         }
 
         @Override
         public void run() {
-            //swkjtabbedpane.tabCGet(interp, item, index);
             result = swkjtabbedpane.tabCGet(sItem, index);
         }
     }

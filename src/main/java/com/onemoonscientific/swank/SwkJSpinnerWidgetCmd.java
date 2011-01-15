@@ -106,7 +106,12 @@ class SwkJSpinnerWidgetCmd implements Command {
                     String value = (new Get()).exec(swkjspinner);
                     interp.setResult(value);
                 } else {
-                    String value = (new Set()).exec(interp, swkjspinner, argv[2]);
+                     double dValue = 0.0;
+                     try {
+                          dValue = TclDouble.get(interp, argv[2]);
+                     } catch (TclException tclE) {
+                     }
+                    String value = (new Set()).exec(swkjspinner, argv[2].toString(),dValue);
                     interp.setResult(value);
                 }
                 break;
@@ -142,37 +147,28 @@ class Get extends GetValueOnEventThread {
 
 class Set extends GetValueOnEventThread {
 
-    Interp interp;
     SwkJSpinner swkjspinner = null;
     String sValue;
     double dValue;
     String value = "";
+    SpinnerModel model = null;
 
-    String exec(final Interp interp, final SwkJSpinner swkjspinner, TclObject arg) throws TclException {
-        this.interp = interp;
+    String exec(final SwkJSpinner swkjspinner, final String sValue, final double dValue) throws TclException {
+        this.sValue = sValue;
+        this.dValue = dValue;
         this.swkjspinner = swkjspinner;
-        SpinnerModel model = swkjspinner.getModel();
-        if (arg != null) {
-            if ((model == null) || !(model instanceof SpinnerNumberModel)) {
-                sValue = arg.toString().trim();
-                dValue = 0.0;
-            } else {
-                dValue = TclDouble.get(interp, arg);
-                sValue = null;
-            }
-        }
+        model = swkjspinner.getModel();
         execOnThread();
         return value;
     }
 
     @Override
     public void run() {
-        if (sValue == null) {
-            swkjspinner.setValue(new Double(dValue));
-        } else {
+        if ((model == null) || !(model instanceof SpinnerNumberModel)) {
             swkjspinner.setValue(sValue);
+        } else {
+           swkjspinner.setValue(new Double(dValue));
         }
-
         Object object = swkjspinner.getValue();
         if (object == null) {
             value = "";

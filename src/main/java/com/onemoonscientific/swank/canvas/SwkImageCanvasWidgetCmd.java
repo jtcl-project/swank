@@ -1468,7 +1468,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
                 ItemTreeNode node = (ItemTreeNode) e.nextElement();
                 SwkShape searchShape = (SwkShape) node.getUserObject();
                 if (searchShape != null) {
-                    shapeList.add(new Integer(searchShape.id));
+                    shapeList.add(Integer.valueOf(searchShape.id));
                 }
             }
         }
@@ -1598,7 +1598,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
                             shapeList = new ArrayList();
                         }
 
-                        shapeList.add(new Integer(searchShape.id));
+                        shapeList.add(Integer.valueOf(searchShape.id));
                     }
                 }
             }

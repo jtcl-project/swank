@@ -462,7 +462,7 @@ public class SwkEventType {
         this.detail = detail;
 
         Character SimpleChar = Character.valueOf(simpleChar);
-        simpleMap.put(SimpleChar, new Integer(detail));
+        simpleMap.put(SimpleChar, Integer.valueOf(detail));
     }
 
     static int getSimpleCode(Character sChar) {

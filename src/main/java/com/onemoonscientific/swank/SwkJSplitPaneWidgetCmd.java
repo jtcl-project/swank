@@ -314,19 +314,21 @@ class SwkJSplitPaneWidgetCmd implements Command {
                 case RIGHT:
                     jcomps[1] = jcomps[0];
                     jcomps[0] = null;
+                    swkjsplitpane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+                    break;
 
                 case LEFT:
                     swkjsplitpane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
-
                     break;
 
                 case BOTTOM:
                     jcomps[1] = jcomps[0];
                     jcomps[0] = null;
+                    swkjsplitpane.setOrientation(JSplitPane.VERTICAL_SPLIT);
+                    break;
 
                 case TOP:
                     swkjsplitpane.setOrientation(JSplitPane.VERTICAL_SPLIT);
-
                     break;
             }
 

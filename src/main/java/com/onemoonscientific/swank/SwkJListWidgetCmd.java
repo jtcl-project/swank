@@ -493,8 +493,8 @@ class SwkJListWidgetCmd implements Command {
                             Dimension extentSize = jvp.getExtentSize();
 
                             double fx1 = (1.0 * pt.x) / listSize.width;
-                            int units = TclInteger.get(interp, argv[3]);
-                            double incrX = listSize.width / maxSize;
+                            int units = TclInteger.getInt(interp, argv[3]);
+                            int incrX = listSize.width / maxSize;
                             pt.x = (int) ((fx1 * listSize.width) + (incrX * units));
 
                             if ((pt.x + extentSize.width) > listSize.width) {
@@ -1059,7 +1059,7 @@ class SwkJListWidgetCmd implements Command {
         }
     }
 
-    class Nearest extends GetValueOnEventThread {
+    static class Nearest extends GetValueOnEventThread {
 
         SwkJList swkjlist = null;
         int y = 0;

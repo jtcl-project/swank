@@ -86,7 +86,11 @@ public class SwkBinding implements Comparable {
         return result;
     }
 
-    public boolean equals(SwkBinding testBinding) {
+    public boolean equals(Object object) {
+        if (!(object instanceof SwkBinding)) {
+            return false;
+        } 
+        SwkBinding testBinding = (SwkBinding) object;
         if (type != testBinding.type) {
             return false;
         } else if (subtype != testBinding.subtype) {

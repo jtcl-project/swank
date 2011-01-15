@@ -182,10 +182,6 @@ class SwkJSliderWidgetCmd implements Command {
             throw new TclNumArgsException(interp, 2, argv, "x y");
         }
 
-        int x;
-        int y;
-        x = TclInteger.get(interp, argv[2]);
-        y = TclInteger.get(interp, argv[3]);
     }
 
     void set(final Interp interp, final SwkJSlider swkjslider,

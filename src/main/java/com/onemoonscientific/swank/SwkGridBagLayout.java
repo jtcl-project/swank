@@ -16,15 +16,14 @@
  */
 package com.onemoonscientific.swank;
 
-import tcl.lang.*;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.util.Hashtable;
+import java.util.Iterator;
 
-import java.awt.*;
-
-import java.lang.*;
-
-import java.util.*;
-
-import javax.swing.*;
 
 public class SwkGridBagLayout extends GridBagLayout {
 
@@ -224,22 +223,27 @@ public class SwkGridBagLayout extends GridBagLayout {
         rowWeights[row] = weight;
     }
 
+    @Override
     public Dimension maximumLayoutSize(Container target) {
         return super.preferredLayoutSize(target);
     }
 
+    @Override
     public float getLayoutAlignmentX(Container target) {
         return super.getLayoutAlignmentX(target);
     }
 
+    @Override
     public float getLayoutAlignmentY(Container target) {
         return super.getLayoutAlignmentY(target);
     }
 
+    @Override
     public void invalidateLayout(Container target) {
         super.invalidateLayout(target);
     }
 
+    @Override
     public void addLayoutComponent(Component comp, Object constraints) {
         super.addLayoutComponent(comp, constraints);
     }
@@ -248,6 +252,7 @@ public class SwkGridBagLayout extends GridBagLayout {
         super.addLayoutComponent(comp, constraints);
     }
 
+    @Override
     public void removeLayoutComponent(Component comp) {
         GridBagConstraints gconstr = getConstraints(comp);
 
@@ -257,33 +262,25 @@ public class SwkGridBagLayout extends GridBagLayout {
         super.removeLayoutComponent(comp);
     }
 
+    @Override
     public Dimension preferredLayoutSize(Container target) {
         return (super.preferredLayoutSize(target));
     }
 
+    @Override
     public Dimension minimumLayoutSize(Container target) {
         int i;
-        Insets insets = target.getInsets();
-        Container target2 = target;
-        Dimension cdim = null;
-
-        if (target instanceof JComponent) {
-            JRootPane jroot = ((JComponent) target).getRootPane();
-
-            if (jroot != null) {
-                target2 = jroot.getParent();
-            }
-        }
-
-        cdim = super.minimumLayoutSize(target);
+        Dimension cdim = super.minimumLayoutSize(target);
 
         return cdim;
     }
 
+    @Override
     public void layoutContainer(Container target) {
         super.layoutContainer(target);
     }
 
+    @Override
     public String toString() {
         return getClass().getName();
     }

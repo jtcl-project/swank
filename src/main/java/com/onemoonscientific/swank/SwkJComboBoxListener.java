@@ -24,18 +24,19 @@
  */
 package com.onemoonscientific.swank;
 
-import tcl.lang.*;
-
-import java.awt.*;
+import java.awt.Component;
+import java.awt.EventQueue;
 import java.awt.event.*;
-
-import java.lang.*;
-
 import java.util.*;
-
-import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.JComboBox;
+import javax.swing.SwingUtilities;
 import javax.swing.text.*;
+import tcl.lang.Interp;
+import tcl.lang.TCL;
+import tcl.lang.TclException;
+import tcl.lang.TclObject;
+import tcl.lang.TclString;
+import tcl.lang.VarTrace;
 
 public class SwkJComboBoxListener implements ActionListener, VarTrace,
         SwkListener {
@@ -260,11 +261,7 @@ public class SwkJComboBoxListener implements ActionListener, VarTrace,
     }
 
     public void processEvent(EventObject eventObject, Object obj, int subtype) {
-        if (!(eventObject instanceof ActionEvent)) {
-            return;
-        }
-        ActionEvent e = (ActionEvent) eventObject;
-        //   System.out.println("Process Event" + this);
+         //   System.out.println("Process Event" + this);
         if (EventQueue.isDispatchThread()) {
             System.out.println(
                     "Warning: ComboBoxListener processEvent is on EventThread");
@@ -299,6 +296,7 @@ public class SwkJComboBoxListener implements ActionListener, VarTrace,
             return intResult;
         }
 
+        @Override
         public void run() {
             intResult = component.getItemCount();
         }
@@ -316,6 +314,7 @@ public class SwkJComboBoxListener implements ActionListener, VarTrace,
             return result;
         }
 
+        @Override
         public void run() {
             result = component.getItemAt(index).toString();
         }

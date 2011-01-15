@@ -56,13 +56,6 @@ public class ImageTestCmd implements Command {
                             "option ?arg arg ...?");
                 }
 
-                int x = TclInteger.get(interp, argv[3]);
-                int y = TclInteger.get(interp, argv[3]);
-                int width = TclInteger.get(interp, argv[3]);
-                int height = TclInteger.get(interp, argv[3]);
-                int timWidth = TclInteger.get(interp, argv[3]);
-                int timHeight = TclInteger.get(interp, argv[3]);
-
                 break;
             }
 
