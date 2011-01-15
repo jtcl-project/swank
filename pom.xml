@@ -41,6 +41,25 @@
 	</dependencies>
 	<build>
 		<plugins>
+       <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <executions>
+                  <execution>
+                    <id>add-source</id>
+                    <phase>generate-sources</phase>
+                    <goals>
+                      <goal>add-source</goal>
+                    </goals>
+                    <configuration>
+                      <sources>
+                          <source>${basedir}/target/generated-sources</source>
+                      </sources>
+                    </configuration>
+                  </execution>
+                </executions>
+            </plugin>      
+ 
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
@@ -81,7 +100,27 @@
 							</arguments>
 						</configuration>
 					</execution>
-
+                                    <execution>
+                                                <id>tcltests</id>
+                                                <phase>test</phase>
+                                                <goals>
+                                                        <goal>exec</goal>
+                                                </goals>
+                                                <configuration>
+                                                        <executable>java</executable>
+                                                        <classpathScope>compile</classpathScope>
+                                                        <arguments>
+                                                                <argument>-classpath</argument>
+                                                                <classpath/>
+                                                                <argument>tcl.lang.SwkShell</argument>
+                                                                <argument>src/test/resources/com/onemoonscientific/swank/all.tcl</argument>
+                                                                <argument>-outfile</argument>
+                                                                <argument>/Users/brucejohnson/Development/swank3/test.out</argument>
+                                                        </arguments>
+                                                        <outputFile>${project.build.directory}/tcltests.txt</outputFile>
+                                                </configuration>
+                                        </execution>
+ 
 				</executions>
 			</plugin>
 			<plugin>
@@ -101,6 +140,7 @@ Adjust comment following to include or exclude
 					</excludes>
 				</configuration>
 			</plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
@@ -124,22 +164,6 @@ Adjust comment following to include or exclude
 						</configuration>
 					</execution>
 				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.2</version>
-				<configuration>
-					<includes>
-						<include>**</include>
-					</includes>
-					<archive>
-						<manifest>
-							<mainClass>tcl.lang.SwkShell</mainClass>
-						</manifest>
-						<manifestEntries> </manifestEntries>
-					</archive>
-				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -182,7 +206,32 @@ Adjust comment following to include or exclude
 					</execution>
 				</executions>
 			</plugin>
-
 		</plugins>
 	</build>
+	<reporting>
+     <plugins>
+     <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>findbugs-maven-plugin</artifactId>
+        <version>2.1</version>
+        <configuration>
+          <threshold>Normal</threshold>
+          <effort>Default</effort>
+          <excludeFilterFile>${basedir}/findbugs-exclude-filter.xml</excludeFilterFile>
+       </configuration>
+      </plugin>
+
+     <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>2.3</version>
+        <configuration>
+          <configLocation>${basedir}/checkstyle.xml</configLocation>
+          <enableRulesSummary>false</enableRulesSummary>
+          <headerFile>${basedir}/license-header.txt</headerFile>
+        </configuration>
+      </plugin>
+ 
+     </plugins>
+	</reporting>
 </project>
