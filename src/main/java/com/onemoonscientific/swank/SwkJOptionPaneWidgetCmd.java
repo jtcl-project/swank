@@ -13,12 +13,12 @@ import javax.swing.*;
 
 class SwkJOptionPaneWidgetCmd implements Command {
 
-    static final private String[] validCmds = {
+    private static final String[] validCmds = {
         "cget", "configure", "dialog"
     };
-    static final private int OPT_CGET = 0;
-    static final private int OPT_CONFIGURE = 1;
-    static final private int OPT_DIALOG = 2;
+    private static final int OPT_CGET = 0;
+    private static final int OPT_CONFIGURE = 1;
+    private static final int OPT_DIALOG = 2;
     static boolean gotDefaults = false;
     Interp interp = null;
     SwkJOptionPane swkjoptionpane = null;

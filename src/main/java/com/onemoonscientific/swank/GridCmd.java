@@ -36,30 +36,30 @@ public class GridCmd implements Command {
      * @param interp
      * @param argv
      * @throws TclException  */
-    static final private int GRID_X = 1;
-    static final private int GRID_Y = 2;
-    static final private int GRID_HEIGHT = 4;
-    static final private int GRID_WIDTH = 8;
-    static final private int GRID_PADX = 16;
-    static final private int GRID_PADY = 32;
-    static final private int GRID_IPADX = 64;
-    static final private int GRID_IPADY = 128;
-    static final private int GRID_ANCHOR = 256;
-    static final private String[] validCmds = {
+    private static final int GRID_X = 1;
+    private static final int GRID_Y = 2;
+    private static final int GRID_HEIGHT = 4;
+    private static final int GRID_WIDTH = 8;
+    private static final int GRID_PADX = 16;
+    private static final int GRID_PADY = 32;
+    private static final int GRID_IPADX = 64;
+    private static final int GRID_IPADY = 128;
+    private static final int GRID_ANCHOR = 256;
+    private static final String[] validCmds = {
         "bbox", "columnconfigure", "configure", "forget", "info", "location",
         "propagate", "remove", "rowconfigure", "size", "slaves"
     };
-    static final private int OPT_BBOX = 0;
-    static final private int OPT_COLUMNCONFIGURE = 1;
-    static final private int OPT_CONFIGURE = 2;
-    static final private int OPT_FORGET = 3;
-    static final private int OPT_INFO = 4;
-    static final private int OPT_LOCATION = 5;
-    static final private int OPT_PROPAGATE = 6;
-    static final private int OPT_REMOVE = 7;
-    static final private int OPT_ROWCONFIGURE = 8;
-    static final private int OPT_SIZE = 9;
-    static final private int OPT_SLAVES = 10;
+    private static final int OPT_BBOX = 0;
+    private static final int OPT_COLUMNCONFIGURE = 1;
+    private static final int OPT_CONFIGURE = 2;
+    private static final int OPT_FORGET = 3;
+    private static final int OPT_INFO = 4;
+    private static final int OPT_LOCATION = 5;
+    private static final int OPT_PROPAGATE = 6;
+    private static final int OPT_REMOVE = 7;
+    private static final int OPT_ROWCONFIGURE = 8;
+    private static final int OPT_SIZE = 9;
+    private static final int OPT_SLAVES = 10;
     //  Interp interp = null;
 
     public void cmdProc(final Interp interp, final TclObject[] argv)

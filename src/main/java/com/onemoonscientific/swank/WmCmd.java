@@ -32,41 +32,41 @@ import java.lang.reflect.*;
 
 public class WmCmd implements Command {
 
-    static final private String[] validCmds = {"alwaysontop",
+    private static final String[] validCmds = {"alwaysontop",
         "aspect", "client", "colormapwindows", "command", "deiconify",
         "focusmodel", "frame", "geometry", "grid", "group", "iconbitmap",
         "iconify", "iconmask", "iconname", "iconposition", "iconwindow",
         "maxsize", "minsize", "overrideredirect", "positionfrom", "protocol",
         "resizable", "sizefrom", "state", "title", "transient", "withdraw"
     };
-    static final private int OPT_ALWAYSONTOP = 0;
-    static final private int OPT_ASPECT = 1;
-    static final private int OPT_CLIENT = 2;
-    static final private int OPT_COLORMAPWINDOWS = 3;
-    static final private int OPT_COMMAND = 4;
-    static final private int OPT_DEICONIFY = 5;
-    static final private int OPT_FOCUSMODEL = 6;
-    static final private int OPT_FRAME = 7;
-    static final private int OPT_GEOMETRY = 8;
-    static final private int OPT_GRID = 9;
-    static final private int OPT_GROUP = 10;
-    static final private int OPT_ICONBITMAP = 11;
-    static final private int OPT_ICONIFY = 12;
-    static final private int OPT_ICONMASK = 13;
-    static final private int OPT_ICONNAME = 14;
-    static final private int OPT_ICONCOMPOSITION = 15;
-    static final private int OPT_ICONWINDOW = 16;
-    static final private int OPT_MAXSIZE = 17;
-    static final private int OPT_MINSIZE = 18;
-    static final private int OPT_OVERRIDEREDIRECT = 19;
-    static final private int OPT_POSITIONFROM = 20;
-    static final private int OPT_PROTOCOL = 21;
-    static final private int OPT_RESIZABLE = 22;
-    static final private int OPT_SIZEFROM = 23;
-    static final private int OPT_STATE = 24;
-    static final private int OPT_TITLE = 25;
-    static final private int OPT_TRANSIENT = 26;
-    static final private int OPT_WITHDRAW = 27;
+    private static final int OPT_ALWAYSONTOP = 0;
+    private static final int OPT_ASPECT = 1;
+    private static final int OPT_CLIENT = 2;
+    private static final int OPT_COLORMAPWINDOWS = 3;
+    private static final int OPT_COMMAND = 4;
+    private static final int OPT_DEICONIFY = 5;
+    private static final int OPT_FOCUSMODEL = 6;
+    private static final int OPT_FRAME = 7;
+    private static final int OPT_GEOMETRY = 8;
+    private static final int OPT_GRID = 9;
+    private static final int OPT_GROUP = 10;
+    private static final int OPT_ICONBITMAP = 11;
+    private static final int OPT_ICONIFY = 12;
+    private static final int OPT_ICONMASK = 13;
+    private static final int OPT_ICONNAME = 14;
+    private static final int OPT_ICONCOMPOSITION = 15;
+    private static final int OPT_ICONWINDOW = 16;
+    private static final int OPT_MAXSIZE = 17;
+    private static final int OPT_MINSIZE = 18;
+    private static final int OPT_OVERRIDEREDIRECT = 19;
+    private static final int OPT_POSITIONFROM = 20;
+    private static final int OPT_PROTOCOL = 21;
+    private static final int OPT_RESIZABLE = 22;
+    private static final int OPT_SIZEFROM = 23;
+    private static final int OPT_STATE = 24;
+    private static final int OPT_TITLE = 25;
+    private static final int OPT_TRANSIENT = 26;
+    private static final int OPT_WITHDRAW = 27;
 
     public void cmdProc(final Interp interp, final TclObject[] argv)
             throws TclException {

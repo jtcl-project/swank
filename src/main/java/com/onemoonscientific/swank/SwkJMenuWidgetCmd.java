@@ -16,21 +16,21 @@ import javax.swing.*;
 
 class SwkJMenuWidgetCmd implements Command {
 
-    static final private String[] validCmds = {
+    private static final String[] validCmds = {
         "cget", "configure", "add", "delete", "popup", "post",
         "invoke", "index", "insert", "entrycget", "entryconfigure"
     };
-    static final private int OPT_CGET = 0;
-    static final private int OPT_CONFIGURE = 1;
-    static final private int OPT_ADD = 2;
-    static final private int OPT_DELETE = 3;
-    static final private int OPT_POPUP = 4;
-    static final private int OPT_POST = 5;
-    static final private int OPT_INVOKE = 6;
-    static final private int OPT_INDEX = 7;
-    static final private int OPT_INSERT = 8;
-    static final private int OPT_ENTRYCGET = 9;
-    static final private int OPT_ENTRYCONFIGURE = 10;
+    private static final int OPT_CGET = 0;
+    private static final int OPT_CONFIGURE = 1;
+    private static final int OPT_ADD = 2;
+    private static final int OPT_DELETE = 3;
+    private static final int OPT_POPUP = 4;
+    private static final int OPT_POST = 5;
+    private static final int OPT_INVOKE = 6;
+    private static final int OPT_INDEX = 7;
+    private static final int OPT_INSERT = 8;
+    private static final int OPT_ENTRYCGET = 9;
+    private static final int OPT_ENTRYCONFIGURE = 10;
     static boolean gotDefaults = false;
     Interp interp;
 

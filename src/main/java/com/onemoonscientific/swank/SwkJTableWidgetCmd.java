@@ -20,31 +20,31 @@ import javax.swing.table.TableModel;
 
 class SwkJTableWidgetCmd implements Command {
 
-    static final private String[] validCmds = {
+    private static final String[] validCmds = {
         "cget", "configure", "sort", "column", "rowforindex",
         "indexforrow", "update", "set", "get", "mset", "mget", "setmodel",
         "selection", "showrow", "columnatpoint", "rowatpoint",
         "convertcolumnindextomodel", "columnwidth", "columnresizable"
     };
-    static final private int OPT_CGET = 0;
-    static final private int OPT_CONFIGURE = 1;
-    static final private int OPT_SORT = 2;
-    static final private int OPT_COLUMN = 3;
-    static final private int OPT_ROWFORINDEX = 4;
-    static final private int OPT_INDEXFORROW = 5;
-    static final private int OPT_UPDATE = 6;
-    static final private int OPT_SET = 7;
-    static final private int OPT_GET = 8;
-    static final private int OPT_MSET = 9;
-    static final private int OPT_MGET = 10;
-    static final private int OPT_SETMODEL = 11;
-    static final private int OPT_SELECTION = 12;
-    static final private int OPT_SHOWROW = 13;
-    static final private int OPT_COLUMNATPOINT = 14;
-    static final private int OPT_ROWATPOINT = 15;
-    static final private int OPT_CONVERTCOLUMNINDEXTOMODEL = 16;
-    static final private int OPT_COLUMNWIDTH = 17;
-    static final private int OPT_COLUMNRESIZABLE = 18;
+    private static final int OPT_CGET = 0;
+    private static final int OPT_CONFIGURE = 1;
+    private static final int OPT_SORT = 2;
+    private static final int OPT_COLUMN = 3;
+    private static final int OPT_ROWFORINDEX = 4;
+    private static final int OPT_INDEXFORROW = 5;
+    private static final int OPT_UPDATE = 6;
+    private static final int OPT_SET = 7;
+    private static final int OPT_GET = 8;
+    private static final int OPT_MSET = 9;
+    private static final int OPT_MGET = 10;
+    private static final int OPT_SETMODEL = 11;
+    private static final int OPT_SELECTION = 12;
+    private static final int OPT_SHOWROW = 13;
+    private static final int OPT_COLUMNATPOINT = 14;
+    private static final int OPT_ROWATPOINT = 15;
+    private static final int OPT_CONVERTCOLUMNINDEXTOMODEL = 16;
+    private static final int OPT_COLUMNWIDTH = 17;
+    private static final int OPT_COLUMNRESIZABLE = 18;
     static boolean gotDefaults = false;
     Interp interp = null;
 

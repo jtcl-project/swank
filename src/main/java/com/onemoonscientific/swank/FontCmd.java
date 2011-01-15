@@ -31,17 +31,17 @@ import java.awt.*;
 
 public class FontCmd implements Command {
 
-    static final private String[] validCmds = {
+    private static final String[] validCmds = {
         "actual", "configure", "create", "delete", "families", "measure",
         "metrics", "names",};
-    static final private int OPT_ACTUAL = 0;
-    static final private int OPT_CONFIGURE = 1;
-    static final private int OPT_CREATE = 2;
-    static final private int OPT_DELETE = 3;
-    static final private int OPT_FAMILIES = 4;
-    static final private int OPT_MEASURE = 5;
-    static final private int OPT_METRICS = 6;
-    static final private int OPT_NAMES = 7;
+    private static final int OPT_ACTUAL = 0;
+    private static final int OPT_CONFIGURE = 1;
+    private static final int OPT_CREATE = 2;
+    private static final int OPT_DELETE = 3;
+    private static final int OPT_FAMILIES = 4;
+    private static final int OPT_MEASURE = 5;
+    private static final int OPT_METRICS = 6;
+    private static final int OPT_NAMES = 7;
 
     public void cmdProc(Interp interp, TclObject[] argv)
             throws TclException {

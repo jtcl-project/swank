@@ -30,7 +30,7 @@ import javax.swing.text.*;
 
 public class SelectionCmd implements Command {
 
-    static final private Hashtable hasSelection = new Hashtable();
+    private static final Hashtable hasSelection = new Hashtable();
     static private JTextComponent selectionComponent = null;
     public void cmdProc(Interp interp, TclObject[] argv)
             throws TclException {

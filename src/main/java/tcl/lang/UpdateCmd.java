@@ -31,7 +31,7 @@ public class UpdateCmd implements Command {
      * Valid command options.
      */
 
-    static final private String[] validOpts = {"idletasks",};
+    private static final String[] validOpts = {"idletasks",};
     static final int OPT_IDLETASKS = 0;
 
     /*

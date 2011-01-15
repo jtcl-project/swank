@@ -14,18 +14,18 @@ import javax.swing.*;
 
 class SwkJTabbedPaneWidgetCmd implements Command {
 
-    static final private String[] validCmds = {
+    private static final String[] validCmds = {
         "cget", "configure", "add", "select", "tabconfigure",
         "tabcget", "tabcount", "index"
     };
-    static final private int OPT_CGET = 0;
-    static final private int OPT_CONFIGURE = 1;
-    static final private int OPT_ADD = 2;
-    static final private int OPT_SELECT = 3;
-    static final private int OPT_TABCONFIGURE = 4;
-    static final private int OPT_TABCGET = 5;
-    static final private int OPT_TABCOUNT = 6;
-    static final private int OPT_INDEX = 7;
+    private static final int OPT_CGET = 0;
+    private static final int OPT_CONFIGURE = 1;
+    private static final int OPT_ADD = 2;
+    private static final int OPT_SELECT = 3;
+    private static final int OPT_TABCONFIGURE = 4;
+    private static final int OPT_TABCGET = 5;
+    private static final int OPT_TABCOUNT = 6;
+    private static final int OPT_INDEX = 7;
     static boolean gotDefaults = false;
     Interp interp = null;
 

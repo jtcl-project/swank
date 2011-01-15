@@ -33,13 +33,13 @@ public class PlaceCmd implements Command {
 
     static Hashtable columnTable = new Hashtable();
     static Hashtable rowTable = new Hashtable();
-    static final private String[] validCmds = {
+    private static final String[] validCmds = {
         "configure", "forget", "info", "slaves"
     };
-    static final private int OPT_CONFIGURE = 0;
-    static final private int OPT_FORGET = 1;
-    static final private int OPT_INFO = 2;
-    static final private int OPT_SLAVES = 3;
+    private static final int OPT_CONFIGURE = 0;
+    private static final int OPT_FORGET = 1;
+    private static final int OPT_INFO = 2;
+    private static final int OPT_SLAVES = 3;
     static TclObject configArg = TclString.newInstance("configure");
     Interp interp;
 

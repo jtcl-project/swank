@@ -40,12 +40,12 @@ public class EventCmd implements Command {
      * @param argv Array of TclObjects containing arguments to the bind command.
      * @throws TclException .
      */
-    static final private String[] validCmds = {
+    private static final String[] validCmds = {
         "add", "delete", "generate", "info",};
-    static final private int OPT_ADD = 0;
-    static final private int OPT_DELETE = 1;
-    static final private int OPT_GENERATE = 2;
-    static final private int OPT_INFO = 3;
+    private static final int OPT_ADD = 0;
+    private static final int OPT_DELETE = 1;
+    private static final int OPT_GENERATE = 2;
+    private static final int OPT_INFO = 3;
 
     public void cmdProc(Interp interp, TclObject[] argv)
             throws TclException {

@@ -32,43 +32,43 @@ import javax.swing.*;
 
 public class WinfoCmd implements Command {
 
-    static final private String[] validCmds = {
+    private static final String[] validCmds = {
         "children", "class", "containing", "depth", "exists", "fpixels", "geometry", "height", "ismapped",
         "manager", "mousebuttons", "name", "parent", "pixels", "pointerx", "pointerxy", "pointery", "reqheight", "reqwidth",
         "rootx", "rooty", "screen", "screenheight", "screenwidth", "toplevel", "viewable", "visual", "vrootx", "vrooty", "width",
         "x", "y",};
-    static final private int OPT_CHILDREN = 0;
-    static final private int OPT_CLASS = 1;
-    static final private int OPT_CONTAINING = 2;
-    static final private int OPT_DEPTH = 3;
-    static final private int OPT_EXISTS = 4;
-    static final private int OPT_FPIXELS = 5;
-    static final private int OPT_GEOMETRY = 6;
-    static final private int OPT_HEIGHT = 7;
-    static final private int OPT_ISMAPPED = 8;
-    static final private int OPT_MANAGER = 9;
-    static final private int OPT_MOUSEBUTTONS = 10;
-    static final private int OPT_NAME = 11;
-    static final private int OPT_PARENT = 12;
-    static final private int OPT_PIXELS = 13;
-    static final private int OPT_POINTERX = 14;
-    static final private int OPT_POINTERXY = 15;
-    static final private int OPT_POINTERY = 16;
-    static final private int OPT_REQHEIGHT = 17;
-    static final private int OPT_REQWIDTH = 18;
-    static final private int OPT_ROOTX = 19;
-    static final private int OPT_ROOTY = 20;
-    static final private int OPT_SCREEN = 21;
-    static final private int OPT_SCREENHEIGHT = 22;
-    static final private int OPT_SCREENWIDTH = 23;
-    static final private int OPT_TOPLEVEL = 24;
-    static final private int OPT_VIEWABLE = 25;
-    static final private int OPT_VISUAL = 26;
-    static final private int OPT_VROOTX = 27;
-    static final private int OPT_VROOTY = 28;
-    static final private int OPT_WIDTH = 29;
-    static final private int OPT_X = 30;
-    static final private int OPT_Y = 31;
+    private static final int OPT_CHILDREN = 0;
+    private static final int OPT_CLASS = 1;
+    private static final int OPT_CONTAINING = 2;
+    private static final int OPT_DEPTH = 3;
+    private static final int OPT_EXISTS = 4;
+    private static final int OPT_FPIXELS = 5;
+    private static final int OPT_GEOMETRY = 6;
+    private static final int OPT_HEIGHT = 7;
+    private static final int OPT_ISMAPPED = 8;
+    private static final int OPT_MANAGER = 9;
+    private static final int OPT_MOUSEBUTTONS = 10;
+    private static final int OPT_NAME = 11;
+    private static final int OPT_PARENT = 12;
+    private static final int OPT_PIXELS = 13;
+    private static final int OPT_POINTERX = 14;
+    private static final int OPT_POINTERXY = 15;
+    private static final int OPT_POINTERY = 16;
+    private static final int OPT_REQHEIGHT = 17;
+    private static final int OPT_REQWIDTH = 18;
+    private static final int OPT_ROOTX = 19;
+    private static final int OPT_ROOTY = 20;
+    private static final int OPT_SCREEN = 21;
+    private static final int OPT_SCREENHEIGHT = 22;
+    private static final int OPT_SCREENWIDTH = 23;
+    private static final int OPT_TOPLEVEL = 24;
+    private static final int OPT_VIEWABLE = 25;
+    private static final int OPT_VISUAL = 26;
+    private static final int OPT_VROOTX = 27;
+    private static final int OPT_VROOTY = 28;
+    private static final int OPT_WIDTH = 29;
+    private static final int OPT_X = 30;
+    private static final int OPT_Y = 31;
     Interp interp;
 
     public void cmdProc(Interp interp, TclObject[] argv)

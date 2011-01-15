@@ -31,12 +31,12 @@ import java.awt.*;
 
 class SwkJColorChooserWidgetCmd implements Command {
 
-    static final private String[] validCmds = {
+    private static final String[] validCmds = {
         "configure", "cget", "choose"
     };
-    static final private int OPT_CONFIGURE = 0;
-    static final private int OPT_CGET = 1;
-    static final private int OPT_CHOOSE = 2;
+    private static final int OPT_CONFIGURE = 0;
+    private static final int OPT_CGET = 1;
+    private static final int OPT_CHOOSE = 2;
     static boolean gotDefaults = false;
 
     public static String[] getValidCmds() {

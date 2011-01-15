@@ -33,12 +33,12 @@ import javax.swing.*;
 
 public class ClipboardCmd implements Command, ClipboardOwner {
 
-    static final private String[] validCmds = {
+    private static final String[] validCmds = {
         "append", "clear", "get", "pastewidget",};
-    static final private int OPT_APPEND = 0;
-    static final private int OPT_CLEAR = 1;
-    static final private int OPT_GET = 2;
-    static final private int OPT_PASTEWIDGET = 3;
+    private static final int OPT_APPEND = 0;
+    private static final int OPT_CLEAR = 1;
+    private static final int OPT_GET = 2;
+    private static final int OPT_PASTEWIDGET = 3;
 
     public void cmdProc(Interp interp, TclObject[] argv)
             throws TclException {

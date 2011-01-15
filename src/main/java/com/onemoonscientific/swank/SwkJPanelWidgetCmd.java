@@ -12,10 +12,10 @@ import tcl.pkg.java.ReflectObject;
 
 class SwkJPanelWidgetCmd implements Command {
 
-    static final private String[] validCmds = {
+    private static final String[] validCmds = {
         "cget", "configure",};
-    static final private int OPT_CGET = 0;
-    static final private int OPT_CONFIGURE = 1;
+    private static final int OPT_CGET = 0;
+    private static final int OPT_CONFIGURE = 1;
     static boolean gotDefaults = false;
 
     public static String[] getValidCmds() {

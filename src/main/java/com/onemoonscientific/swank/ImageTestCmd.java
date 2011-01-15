@@ -35,8 +35,8 @@ public class ImageTestCmd implements Command {
 
     static Hashtable images = new Hashtable();
     static int iImage = 0;
-    static final private String[] validCmds = {"changed"};
-    static final private int OPT_CHANGED = 0;
+    private static final String[] validCmds = {"changed"};
+    private static final int OPT_CHANGED = 0;
 
     public void cmdProc(Interp interp, TclObject[] argv)
             throws TclException {

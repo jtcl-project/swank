@@ -35,9 +35,9 @@ import javax.swing.*;
 public class CursorCmd implements Command {
 
     static HashMap cursors = new HashMap();
-    static final private String[] validCmds = {"create", "object",};
-    static final private int OPT_CREATE = 0;
-    static final private int OPT_OBJECT = 1;
+    private static final String[] validCmds = {"create", "object",};
+    private static final int OPT_CREATE = 0;
+    private static final int OPT_OBJECT = 1;
 
     /*
     static {

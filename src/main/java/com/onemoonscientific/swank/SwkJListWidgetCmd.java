@@ -15,27 +15,27 @@ import javax.swing.*;
 
 class SwkJListWidgetCmd implements Command {
 
-    static final private String[] validCmds = {
+    private static final String[] validCmds = {
         "cget", "configure", "activate", "bbox",
         "curselection", "delete", "get", "size", "see", "index", "nearest",
         "insert", "scan", "selection", "xview", "yview"
     };
-    static final private int OPT_CGET = 0;
-    static final private int OPT_CONFIGURE = 1;
-    static final private int OPT_ACTIVATE = 2;
-    static final private int OPT_BBOX = 3;
-    static final private int OPT_CURSELECTION = 4;
-    static final private int OPT_DELETE = 5;
-    static final private int OPT_GET = 6;
-    static final private int OPT_SIZE = 7;
-    static final private int OPT_SEE = 8;
-    static final private int OPT_INDEX = 9;
-    static final private int OPT_NEAREST = 10;
-    static final private int OPT_INSERT = 11;
-    static final private int OPT_SCAN = 12;
-    static final private int OPT_SELECTION = 13;
-    static final private int OPT_XVIEW = 14;
-    static final private int OPT_YVIEW = 15;
+    private static final int OPT_CGET = 0;
+    private static final int OPT_CONFIGURE = 1;
+    private static final int OPT_ACTIVATE = 2;
+    private static final int OPT_BBOX = 3;
+    private static final int OPT_CURSELECTION = 4;
+    private static final int OPT_DELETE = 5;
+    private static final int OPT_GET = 6;
+    private static final int OPT_SIZE = 7;
+    private static final int OPT_SEE = 8;
+    private static final int OPT_INDEX = 9;
+    private static final int OPT_NEAREST = 10;
+    private static final int OPT_INSERT = 11;
+    private static final int OPT_SCAN = 12;
+    private static final int OPT_SELECTION = 13;
+    private static final int OPT_XVIEW = 14;
+    private static final int OPT_YVIEW = 15;
     static boolean gotDefaults = false;
     Interp interp = null;
 

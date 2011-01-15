@@ -30,12 +30,12 @@ public class EventRecorderCmd implements Command {
 
     static private EventRecorder eventRecorder = new EventRecorder();
 
-    static final private int OPT_COUNT = 0;
-    static final private int OPT_GET = 1;
-    static final private int OPT_LIST = 2;
-    static final private int OPT_START = 3;
-    static final private int OPT_STOP = 4;
-    static final private String[] validCmds = {
+    private static final int OPT_COUNT = 0;
+    private static final int OPT_GET = 1;
+    private static final int OPT_LIST = 2;
+    private static final int OPT_START = 3;
+    private static final int OPT_STOP = 4;
+    private static final String[] validCmds = {
         "count", "get", "list", "start", "stop"
     };
 

@@ -19,37 +19,37 @@ import java.util.*;
 
 public class SwkImageCanvasWidgetCmd implements Command {
 
-    static final private String[] validCmds = {
+    private static final String[] validCmds = {
         "create", "itemconfigure",
         "coords", "hit", "itemcget", "find", "move", "scale", "delete", "addtag",
         "bind", "raise", "lower", "dtag", "gettags",
         "index", "newtype", "bbox", "type", "zoom", "transformer", "hselect", "shapexy", "invshapexy",
         "save"
     };
-    static final private int OPT_CREATE = 0;
-    static final private int OPT_ITEMCONFIG = 1;
-    static final private int OPT_COORDS = 2;
-    static final private int OPT_HIT = 3;
-    static final private int OPT_ITEMCGET = 4;
-    static final private int OPT_FIND = 5;
-    static final private int OPT_MOVE = 6;
-    static final private int OPT_SCALE = 7;
-    static final private int OPT_DELETE = 8;
-    static final private int OPT_ADDTAG = 9;
-    static final private int OPT_RAISE = 10;
-    static final private int OPT_LOWER = 11;
-    static final private int OPT_DTAG = 12;
-    static final private int OPT_GETTAGS = 13;
-    static final private int OPT_INDEX = 14;
-    static final private int OPT_NEWTYPE = 15;
-    static final private int OPT_BBOX = 16;
-    static final private int OPT_TYPE = 17;
-    static final private int OPT_ZOOM = 18;
-    static final private int OPT_TRANSFORMER = 19;
-    static final private int OPT_HSELECT = 20;
-    static final private int OPT_SHAPEXY = 21;
-    static final private int OPT_INVSHAPEXY = 22;
-    static final private int OPT_SAVE = 23;
+    private static final int OPT_CREATE = 0;
+    private static final int OPT_ITEMCONFIG = 1;
+    private static final int OPT_COORDS = 2;
+    private static final int OPT_HIT = 3;
+    private static final int OPT_ITEMCGET = 4;
+    private static final int OPT_FIND = 5;
+    private static final int OPT_MOVE = 6;
+    private static final int OPT_SCALE = 7;
+    private static final int OPT_DELETE = 8;
+    private static final int OPT_ADDTAG = 9;
+    private static final int OPT_RAISE = 10;
+    private static final int OPT_LOWER = 11;
+    private static final int OPT_DTAG = 12;
+    private static final int OPT_GETTAGS = 13;
+    private static final int OPT_INDEX = 14;
+    private static final int OPT_NEWTYPE = 15;
+    private static final int OPT_BBOX = 16;
+    private static final int OPT_TYPE = 17;
+    private static final int OPT_ZOOM = 18;
+    private static final int OPT_TRANSFORMER = 19;
+    private static final int OPT_HSELECT = 20;
+    private static final int OPT_SHAPEXY = 21;
+    private static final int OPT_INVSHAPEXY = 22;
+    private static final int OPT_SAVE = 23;
     static boolean gotDefaults = false;
     static SwkImageCanvas swkImageCanvas = null;
     Map newTypes = new HashMap();

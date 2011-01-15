@@ -24,14 +24,14 @@ import com.onemoonscientific.swank.*;
 
 public class SwkJHelpCmd implements Command {
     
-    static final private String[] validCmds = {
+    private static final String[] validCmds = {
         "init", "show" , "enable" , "enablekey" , "popup"
     };
-    static final private int OPT_INIT = 0;
-    static final private int OPT_SHOW = 1;
-    static final private int OPT_ENABLE = 2;
-    static final private int OPT_ENABLEKEY = 3;
-    static final private int OPT_POPUP = 4;
+    private static final int OPT_INIT = 0;
+    private static final int OPT_SHOW = 1;
+    private static final int OPT_ENABLE = 2;
+    private static final int OPT_ENABLEKEY = 3;
+    private static final int OPT_POPUP = 4;
     
     HelpSet mainHS = null;
     HelpBroker mainHB;

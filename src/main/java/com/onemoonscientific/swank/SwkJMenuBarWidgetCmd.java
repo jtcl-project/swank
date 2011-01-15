@@ -13,12 +13,12 @@ import javax.swing.*;
 
 class SwkJMenuBarWidgetCmd implements Command {
 
-    static final private String[] validCmds = {
+    private static final String[] validCmds = {
         "cget", "configure", "add"
     };
-    static final private int OPT_CGET = 0;
-    static final private int OPT_CONFIGURE = 1;
-    static final private int OPT_ADD = 2;
+    private static final int OPT_CGET = 0;
+    private static final int OPT_CONFIGURE = 1;
+    private static final int OPT_ADD = 2;
     static boolean gotDefaults = false;
     Interp interp = null;
 

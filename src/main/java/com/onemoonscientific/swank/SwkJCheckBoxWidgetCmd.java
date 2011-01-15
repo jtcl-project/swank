@@ -12,17 +12,17 @@ import tcl.pkg.java.ReflectObject;
 
 class SwkJCheckBoxWidgetCmd implements Command {
 
-    static final private String[] validCmds = {
+    private static final String[] validCmds = {
         "cget", "configure", "deselect", "flash", "invoke",
         "select", "toggle"
     };
-    static final private int OPT_CGET = 0;
-    static final private int OPT_CONFIGURE = 1;
-    static final private int OPT_DESELECT = 2;
-    static final private int OPT_FLASH = 3;
-    static final private int OPT_INVOKE = 4;
-    static final private int OPT_SELECT = 5;
-    static final private int OPT_TOGGLE = 6;
+    private static final int OPT_CGET = 0;
+    private static final int OPT_CONFIGURE = 1;
+    private static final int OPT_DESELECT = 2;
+    private static final int OPT_FLASH = 3;
+    private static final int OPT_INVOKE = 4;
+    private static final int OPT_SELECT = 5;
+    private static final int OPT_TOGGLE = 6;
     static boolean gotDefaults = false;
 
     public static String[] getValidCmds() {

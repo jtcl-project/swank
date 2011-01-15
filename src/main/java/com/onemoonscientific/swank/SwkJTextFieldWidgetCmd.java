@@ -138,22 +138,22 @@ class SwkJTextFieldWidgetCmd implements Command {
 
         }
 
-    static final private String[] validCmds = {
+    private static final String[] validCmds = {
         "bbox","cget", "configure", "delete", "get", "icursor","index",
         "insert", "scan", "selection", "validate","xview"
     };
-    static final private int OPT_BBOX = 0;
-    static final private int OPT_CGET = 1;
-    static final private int OPT_CONFIGURE = 2;
-    static final private int OPT_DELETE = 3;
-    static final private int OPT_GET = 4;
-    static final private int OPT_ICURSOR = 5;
-    static final private int OPT_INDEX = 6;
-    static final private int OPT_INSERT = 7;
-    static final private int OPT_SCAN = 8;
-    static final private int OPT_SELECTION = 9;
-    static final private int OPT_VALIDATE = 10;
-    static final private int OPT_XVIEW = 11;
+    private static final int OPT_BBOX = 0;
+    private static final int OPT_CGET = 1;
+    private static final int OPT_CONFIGURE = 2;
+    private static final int OPT_DELETE = 3;
+    private static final int OPT_GET = 4;
+    private static final int OPT_ICURSOR = 5;
+    private static final int OPT_INDEX = 6;
+    private static final int OPT_INSERT = 7;
+    private static final int OPT_SCAN = 8;
+    private static final int OPT_SELECTION = 9;
+    private static final int OPT_VALIDATE = 10;
+    private static final int OPT_XVIEW = 11;
     static boolean gotDefaults = false;
     Interp interp = null;
 

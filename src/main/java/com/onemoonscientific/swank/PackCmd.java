@@ -37,14 +37,14 @@ public class PackCmd implements Command {
      * @param interp
      * @param argv
      * @throws TclException  */
-    static final private String[] validCmds = {
+    private static final String[] validCmds = {
         "configure", "forget", "info", "propagate", "slaves"
     };
-    static final private int OPT_CONFIGURE = 0;
-    static final private int OPT_FORGET = 1;
-    static final private int OPT_INFO = 2;
-    static final private int OPT_PROPAGATE = 3;
-    static final private int OPT_SLAVES = 4;
+    private static final int OPT_CONFIGURE = 0;
+    private static final int OPT_FORGET = 1;
+    private static final int OPT_INFO = 2;
+    private static final int OPT_PROPAGATE = 3;
+    private static final int OPT_SLAVES = 4;
     static TclObject configArg = TclString.newInstance("configure");
     Interp interp;
 

@@ -13,13 +13,13 @@ import tcl.pkg.java.ReflectObject;
 
 class SwkJButtonWidgetCmd implements Command {
 
-    static final private String[] validCmds = {
+    private static final String[] validCmds = {
         "cget", "configure", "flash", "invoke"
     };
-    static final private int OPT_CGET = 0;
-    static final private int OPT_CONFIGURE = 1;
-    static final private int OPT_FLASH = 2;
-    static final private int OPT_INVOKE = 3;
+    private static final int OPT_CGET = 0;
+    private static final int OPT_CONFIGURE = 1;
+    private static final int OPT_FLASH = 2;
+    private static final int OPT_INVOKE = 3;
     static boolean gotDefaults = false;
 
     public static String[] getValidCmds() {

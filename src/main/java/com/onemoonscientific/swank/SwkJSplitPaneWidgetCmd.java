@@ -16,14 +16,14 @@ import javax.swing.*;
 
 class SwkJSplitPaneWidgetCmd implements Command {
 
-    static final private String[] validCmds = {
+    private static final String[] validCmds = {
         "cget", "configure", "add", "forget", "panes"
     };
-    static final private int OPT_CGET = 0;
-    static final private int OPT_CONFIGURE = 1;
-    static final private int OPT_ADD = 2;
-    static final private int OPT_FORGET = 3;
-    static final private int OPT_PANES = 4;
+    private static final int OPT_CGET = 0;
+    private static final int OPT_CONFIGURE = 1;
+    private static final int OPT_ADD = 2;
+    private static final int OPT_FORGET = 3;
+    private static final int OPT_PANES = 4;
     static boolean gotDefaults = false;
 
     public static String[] getValidCmds() {

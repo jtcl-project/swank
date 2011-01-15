@@ -16,14 +16,14 @@ import javax.swing.*;
 
 class SwkJComboBoxWidgetCmd implements Command {
 
-    static final private String[] validCmds = {
+    private static final String[] validCmds = {
         "cget", "configure", "remove", "item", "index"
     };
-    static final private int OPT_CGET = 0;
-    static final private int OPT_CONFIGURE = 1;
-    static final private int OPT_REMOVE = 2;
-    static final private int OPT_ITEM = 3;
-    static final private int OPT_INDEX = 4;
+    private static final int OPT_CGET = 0;
+    private static final int OPT_CONFIGURE = 1;
+    private static final int OPT_REMOVE = 2;
+    private static final int OPT_ITEM = 3;
+    private static final int OPT_INDEX = 4;
     static boolean gotDefaults = false;
     int index;
     Interp interp = null;

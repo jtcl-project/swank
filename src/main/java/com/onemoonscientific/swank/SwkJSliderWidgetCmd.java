@@ -18,16 +18,16 @@ import javax.swing.plaf.basic.BasicSliderUI;
 
 class SwkJSliderWidgetCmd implements Command {
 
-    static final private String[] validCmds = {
+    private static final String[] validCmds = {
         "cget", "configure", "coords", "get", "identify",
         "set"
     };
-    static final private int OPT_CGET = 0;
-    static final private int OPT_CONFIGURE = 1;
-    static final private int OPT_COORDS = 2;
-    static final private int OPT_GET = 3;
-    static final private int OPT_IDENTIFY = 4;
-    static final private int OPT_SET = 5;
+    private static final int OPT_CGET = 0;
+    private static final int OPT_CONFIGURE = 1;
+    private static final int OPT_COORDS = 2;
+    private static final int OPT_GET = 3;
+    private static final int OPT_IDENTIFY = 4;
+    private static final int OPT_SET = 5;
     static boolean gotDefaults = false;
 
     public static String[] getValidCmds() {

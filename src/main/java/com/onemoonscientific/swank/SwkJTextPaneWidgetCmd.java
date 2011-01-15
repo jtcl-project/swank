@@ -16,29 +16,29 @@ import javax.swing.text.*;
 
 class SwkJTextPaneWidgetCmd implements Command {
 
-    static final private String[] validCmds = {
+    private static final String[] validCmds = {
         "bbox","cget", "compare","configure", "debug", "delete", "dlineinfo", "dump", "edit", "get", 
         "image", "index", "insert", "mark", "scan", "search", "see", "tag", "window"
     };
-    static final private int OPT_BBOX = 0;
-    static final private int OPT_CGET = 1;
-    static final private int OPT_COMPARE = 2;
-    static final private int OPT_CONFIGURE = 3;
-    static final private int OPT_DEBUG = 4;
-    static final private int OPT_DELETE = 5;
-    static final private int OPT_DLINEINFO = 6;
-    static final private int OPT_DUMP = 7;
-    static final private int OPT_EDIT = 8;
-    static final private int OPT_GET = 9;
-    static final private int OPT_IMAGE = 10;
-    static final private int OPT_INDEX = 11;
-    static final private int OPT_INSERT = 12;
-    static final private int OPT_MARK = 13;
-    static final private int OPT_SCAN = 14;
-    static final private int OPT_SEARCH = 15;
-    static final private int OPT_SEE = 16;
-    static final private int OPT_TAG = 17;
-    static final private int OPT_WINDOW = 18;
+    private static final int OPT_BBOX = 0;
+    private static final int OPT_CGET = 1;
+    private static final int OPT_COMPARE = 2;
+    private static final int OPT_CONFIGURE = 3;
+    private static final int OPT_DEBUG = 4;
+    private static final int OPT_DELETE = 5;
+    private static final int OPT_DLINEINFO = 6;
+    private static final int OPT_DUMP = 7;
+    private static final int OPT_EDIT = 8;
+    private static final int OPT_GET = 9;
+    private static final int OPT_IMAGE = 10;
+    private static final int OPT_INDEX = 11;
+    private static final int OPT_INSERT = 12;
+    private static final int OPT_MARK = 13;
+    private static final int OPT_SCAN = 14;
+    private static final int OPT_SEARCH = 15;
+    private static final int OPT_SEE = 16;
+    private static final int OPT_TAG = 17;
+    private static final int OPT_WINDOW = 18;
     static boolean gotDefaults = false;
     Interp interp = null;
 

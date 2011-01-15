@@ -37,21 +37,21 @@ public class ImageCmd implements Command {
     private final static Hashtable images = new Hashtable();
     private final static Hashtable builtinImages = new Hashtable();
     private static int iImage = 0;
-    static final private String[] builtinImageNames = {
+    private static final String[] builtinImageNames = {
         "error", "gray12", "gray25", "gray50", "gray75", "hourglass", "info",
         "question", "questhead", "warning",};
-    static final private String[] validCmds = {
+    private static final String[] validCmds = {
         "create", "delete", "configure", "types", "names", "object", "edge",
         "scale"
     };
-    static final private int OPT_CREATE = 0;
-    static final private int OPT_DELETE = 1;
-    static final private int OPT_CONFIGURE = 2;
-    static final private int OPT_TYPES = 3;
-    static final private int OPT_NAMES = 4;
-    static final private int OPT_OBJECT = 5;
-    static final private int OPT_EDGE = 6;
-    static final private int OPT_SCALE = 7;
+    private static final int OPT_CREATE = 0;
+    private static final int OPT_DELETE = 1;
+    private static final int OPT_CONFIGURE = 2;
+    private static final int OPT_TYPES = 3;
+    private static final int OPT_NAMES = 4;
+    private static final int OPT_OBJECT = 5;
+    private static final int OPT_EDGE = 6;
+    private static final int OPT_SCALE = 7;
 
     static {
         for (int i = 0; i < builtinImageNames.length; i++) {
