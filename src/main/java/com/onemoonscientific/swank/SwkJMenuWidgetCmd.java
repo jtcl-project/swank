@@ -371,7 +371,7 @@ class SwkJMenuWidgetCmd implements Command {
         return;
     }
 
-    static class Popup extends UpdateOnEventThread {
+    private static class Popup extends UpdateOnEventThread {
 
         int x = 0;
         int y = 0;
@@ -393,7 +393,7 @@ class SwkJMenuWidgetCmd implements Command {
         }
     }
 
-    static class Post extends UpdateOnEventThread {
+    private static class Post extends UpdateOnEventThread {
 
         int x = 0;
         int y = 0;
@@ -417,7 +417,7 @@ class SwkJMenuWidgetCmd implements Command {
         }
     }
 
-    class Index extends GetValueOnEventThread {
+    private class Index extends GetValueOnEventThread {
 
         SwkJMenu swkjmenu = null;
         int index = 0;
@@ -445,7 +445,7 @@ class SwkJMenuWidgetCmd implements Command {
         }
     }
 
-    class Invoke extends GetValueOnEventThread {
+    private class Invoke extends GetValueOnEventThread {
 
         SwkJMenu swkjmenu = null;
         String command = null;
@@ -485,7 +485,7 @@ class SwkJMenuWidgetCmd implements Command {
         }
     }
 
-    class Delete extends GetValueOnEventThread {
+    private class Delete extends GetValueOnEventThread {
 
         SwkJMenu swkjmenu = null;
         TclObject lastArg = null;
@@ -544,7 +544,7 @@ class SwkJMenuWidgetCmd implements Command {
         }
     }
 
-    class Add extends GetValueOnEventThread {
+    private class Add extends GetValueOnEventThread {
 
         SwkJMenu swkjmenu = null;
         String itemType = "";
@@ -634,7 +634,7 @@ class SwkJMenuWidgetCmd implements Command {
         }
     }
 
-    class EntryConfigure extends GetValueOnEventThread {
+    private class EntryConfigure extends GetValueOnEventThread {
 
         SwkJMenu swkjmenu = null;
         TclObject entryArg = null;

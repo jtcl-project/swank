@@ -154,7 +154,7 @@ public class TkMessageBox implements Command {
                 defaultValue, dParent);
     }
 
-    class Option extends GetValueOnEventThread {
+    private class Option extends GetValueOnEventThread {
 
         String title = "";
         String message = "";

@@ -184,7 +184,7 @@ class SwkJTreeWidgetCmd implements Command {
         }
     }
 
-    static class NodeAdd extends UpdateOnEventThread {
+    private static class NodeAdd extends UpdateOnEventThread {
 
         SwkJTree swkjtree;
         int[] iNodes = null;
@@ -218,7 +218,7 @@ class SwkJTreeWidgetCmd implements Command {
         }
     }
 
-    static class Path extends GetValueOnEventThread {
+    private static class Path extends GetValueOnEventThread {
 
         SwkJTree swkjtree;
         TreePath treePath = null;

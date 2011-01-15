@@ -150,7 +150,7 @@ public class SwkImageCanvas implements SwkCanvasType {
         transformerHash.put("fp", fpTransformer);
     }
 
-    static class MyTreeModelListener implements TreeModelListener {
+    private static class MyTreeModelListener implements TreeModelListener {
 
         public void treeNodesChanged(TreeModelEvent e) {
             DefaultMutableTreeNode node;
@@ -920,7 +920,7 @@ public class SwkImageCanvas implements SwkCanvasType {
         }
     }
 
-    static class NodeBounds {
+    private static class NodeBounds {
 
         final ItemTreeNode node;
         final Rectangle2D rect;
@@ -1013,7 +1013,7 @@ public class SwkImageCanvas implements SwkCanvasType {
         }
     }
 
-    class Tag {
+    private class Tag {
 
         int id = -1;
         String name = null;

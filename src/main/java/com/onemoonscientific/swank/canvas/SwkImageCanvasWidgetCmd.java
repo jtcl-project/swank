@@ -504,7 +504,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
         interp.setResult(list);
     }
 
-    static class CoordsGet extends GetValueOnEventThread {
+    private static class CoordsGet extends GetValueOnEventThread {
 
         SwkImageCanvas swkcanvas = null;
         String tagName = "";
@@ -549,7 +549,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
         }
     }
 
-    class CoordsSet extends UpdateOnEventThread {
+    private class CoordsSet extends UpdateOnEventThread {
 
         SwkImageCanvas swkcanvas = null;
         String tagName = "";
@@ -584,7 +584,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
         }
     }
 
-    class RaiseOrLower extends UpdateOnEventThread {
+    private class RaiseOrLower extends UpdateOnEventThread {
 
         SwkImageCanvas swkcanvas = null;
         boolean raiseMode = false;
@@ -636,7 +636,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
         }
     }
 
-    static class Hit extends GetValueOnEventThread {
+    private static class Hit extends GetValueOnEventThread {
 
         SwkImageCanvas swkcanvas = null;
         double x = 0;
@@ -671,7 +671,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
         }
     }
 
-    static class Type extends GetValueOnEventThread {
+    private static class Type extends GetValueOnEventThread {
 
         SwkImageCanvas swkcanvas = null;
         String tagName = "";
@@ -707,7 +707,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
         }
     }
 
-    static class BBox extends GetValueOnEventThread {
+    private static class BBox extends GetValueOnEventThread {
 
         SwkImageCanvas swkcanvas = null;
         String[] tags = null;
@@ -749,7 +749,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
         }
     }
 
-    static class Scale extends UpdateOnEventThread {
+    private static class Scale extends UpdateOnEventThread {
 
         SwkImageCanvas swkcanvas = null;
         double xOrigin = 0;
@@ -788,7 +788,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
         }
     }
 
-    static class Zoom extends GetValueOnEventThread {
+    private static class Zoom extends GetValueOnEventThread {
 
         SwkImageCanvas swkcanvas = null;
         double zoom = 0;
@@ -825,7 +825,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
         }
     }
 
-    static class Move extends GetValueOnEventThread {
+    private static class Move extends GetValueOnEventThread {
 
         SwkImageCanvas swkcanvas = null;
         double dX = 0;
@@ -870,7 +870,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
         }
     }
 
-    static class ShapeXY extends GetValueOnEventThread {
+    private static class ShapeXY extends GetValueOnEventThread {
 
         SwkImageCanvas swkcanvas = null;
         double[] xy;
@@ -935,7 +935,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
         }
     }
 
-    static class HSelect extends GetValueOnEventThread {
+    private static class HSelect extends GetValueOnEventThread {
 
         SwkImageCanvas swkcanvas = null;
         boolean setValue = false;
@@ -968,7 +968,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
         }
     }
 
-    static class GetTags extends GetValueOnEventThread {
+    private static class GetTags extends GetValueOnEventThread {
 
         SwkImageCanvas swkcanvas = null;
         ArrayList tagList = null;
@@ -1011,7 +1011,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
         }
     }
 
-    static class Index extends GetValueOnEventThread {
+    private static class Index extends GetValueOnEventThread {
 
         SwkImageCanvas swkcanvas = null;
         String tagName = "";
@@ -1051,7 +1051,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
         }
     }
 
-    static class Delete extends UpdateOnEventThread {
+    private static class Delete extends UpdateOnEventThread {
 
         SwkImageCanvas swkcanvas = null;
         String[] tags = null;
@@ -1077,7 +1077,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
         }
     }
 
-    static class DTags extends UpdateOnEventThread {
+    private static class DTags extends UpdateOnEventThread {
 
         SwkImageCanvas swkcanvas = null;
         String tagName = null;
@@ -1113,7 +1113,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
         }
     }
 
-    static class AddTag extends UpdateOnEventThread {
+    private static class AddTag extends UpdateOnEventThread {
 
         SwkImageCanvas swkcanvas = null;
         String[] args = null;
@@ -1147,7 +1147,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
         }
     }
 
-    static class TransformerSet extends UpdateOnEventThread {
+    private static class TransformerSet extends UpdateOnEventThread {
 
         SwkImageCanvas swkcanvas = null;
         double[] values = null;
@@ -1186,7 +1186,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
         }
     }
 
-    static class TransformerGet extends GetValueOnEventThread {
+    private static class TransformerGet extends GetValueOnEventThread {
 
         SwkImageCanvas swkcanvas = null;
         double[] values = null;
@@ -1224,7 +1224,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
         }
     }
 
-    static class CanvasType {
+    private static class CanvasType {
 
         Class myTypeClass = null;
         int myNCoords = 0;
@@ -1235,7 +1235,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
         }
     }
 
-    static class AddShape extends UpdateOnEventThread {
+    private static class AddShape extends UpdateOnEventThread {
 
         SwkImageCanvas swkcanvas = null;
         SwkShape swkShape = null;
@@ -1258,7 +1258,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
         }
     }
 
-    static class Search extends GetValueOnEventThread {
+    private static class Search extends GetValueOnEventThread {
 
         public static final int NEXT = 0;
         public static final int PREVIOUS = 1;

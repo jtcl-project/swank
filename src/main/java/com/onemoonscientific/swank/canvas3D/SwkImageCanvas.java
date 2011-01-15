@@ -1157,7 +1157,7 @@ public class SwkImageCanvas implements SwkCanvasType {
     public void close() throws TclException {
     }
 
-    class Tag {
+    private class Tag {
 
         int id = -1;
         String name = null;

@@ -195,7 +195,7 @@ class SwkJSliderWidgetCmd implements Command {
         swkjslider.sliderChangeListener.tclActionVar(buttonSettings);
     }
 
-    static class Coords extends GetValueOnEventThread {
+    private static class Coords extends GetValueOnEventThread {
 
         SwkJSlider swkjslider = null;
         boolean hasValue = false;
@@ -240,7 +240,7 @@ class SwkJSliderWidgetCmd implements Command {
         }
     }
 
-    static class Get extends GetValueOnEventThread {
+    private static class Get extends GetValueOnEventThread {
 
         SwkJSlider swkjslider = null;
         int x = 0;
@@ -295,7 +295,7 @@ class SwkJSliderWidgetCmd implements Command {
         }
     }
 
-    static class Set extends GetValueOnEventThread {
+    private static class Set extends GetValueOnEventThread {
 
         SwkJSlider swkjslider = null;
         double value = 0.0;

@@ -69,7 +69,7 @@ public class BoxAndWhiskerTableData extends BoxAndWhiskerData {
         }
     }
 
-    class SetModel extends GetValueOnEventThread {
+    private class SetModel extends GetValueOnEventThread {
 
         SwkTableModel model;
 

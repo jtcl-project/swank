@@ -74,7 +74,7 @@ public class SwkCell implements TableCellRenderer {
     }
 
     // FIXME
-    public void doCommand(Interp interp, JTable table, boolean hasFocus,
+    private void doCommand(Interp interp, JTable table, boolean hasFocus,
             boolean isSelected, int row, int col, String strValue, String command)
             throws TclException {
         int i;

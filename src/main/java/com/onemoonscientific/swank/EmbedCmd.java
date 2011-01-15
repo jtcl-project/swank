@@ -53,7 +53,7 @@ public class EmbedCmd implements Command {
         add(container, component);
     }
 
-    public static void add(final Container container, final Component component) {
+    private static void add(final Container container, final Component component) {
         (new UpdateOnEventThread() {
 
             @Override

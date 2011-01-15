@@ -114,7 +114,7 @@ class SwkJOptionPaneWidgetCmd implements Command {
         (new Dialog()).exec(argv[2].toString(), alwaysOnTop);
     }
 
-    class Dialog extends GetValueOnEventThread {
+    private class Dialog extends GetValueOnEventThread {
 
         String title = "";
         Object result = null;

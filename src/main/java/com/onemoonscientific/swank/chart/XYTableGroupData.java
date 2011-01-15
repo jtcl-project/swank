@@ -69,7 +69,7 @@ public class XYTableGroupData extends XYData implements TableXYDataset{
            (new SetModel()).exec(model);
          }
     }
-    class SetModel extends GetValueOnEventThread {
+    private class SetModel extends GetValueOnEventThread {
         SwkTableModel model;
         void  exec(SwkTableModel model) {
             this.model = model;

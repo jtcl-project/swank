@@ -327,7 +327,7 @@ public class PlaceCmd implements Command {
         return (masterName);
     }
 
-    class Info extends GetValueOnEventThread {
+    private class Info extends GetValueOnEventThread {
 
         Component component = null;
         ArrayList<String> settings;
@@ -353,7 +353,7 @@ public class PlaceCmd implements Command {
         }
     }
 
-    static class Slaves extends GetValueOnEventThread {
+    private static class Slaves extends GetValueOnEventThread {
 
         Component component = null;
         String[] names = null;
@@ -379,7 +379,7 @@ public class PlaceCmd implements Command {
         }
     }
 
-    static class Forget extends UpdateOnEventThread {
+    private static class Forget extends UpdateOnEventThread {
 
         Component[] comps = null;
 
@@ -409,7 +409,7 @@ public class PlaceCmd implements Command {
         }
     }
 
-    class Configure extends UpdateOnEventThread {
+    private class Configure extends UpdateOnEventThread {
 
         Container parent = null;
         String strippedArgs = null;

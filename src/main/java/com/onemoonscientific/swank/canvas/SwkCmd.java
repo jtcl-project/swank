@@ -65,7 +65,7 @@ public class SwkCmd implements Command {
     void cmdProcET(Interp interp, TclObject[] argv) throws TclException {
     }
 
-    class WidgetCmd implements Runnable {
+    private class WidgetCmd implements Runnable {
 
         Interp interp;
         TclObject[] argv = null;

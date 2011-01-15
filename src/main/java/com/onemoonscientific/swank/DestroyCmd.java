@@ -59,7 +59,7 @@ public class DestroyCmd implements Command {
         }).execOnThread();
     }
 
-    public static void destroyWidgets(final Interp interp,
+    private static void destroyWidgets(final Interp interp,
             final String[] widgetNames) {
         HashSet<Container> topLevels = new HashSet<Container>();
         for (int j = 0; j < widgetNames.length; j++) {
@@ -79,7 +79,7 @@ public class DestroyCmd implements Command {
         destroyWidget(interp, name, null);
     }
 
-    public static void destroyWidget(final Interp interp, final String name, final HashSet topLevels)
+    private static void destroyWidget(final Interp interp, final String name, final HashSet topLevels)
             throws TclException {
         TclObject tObj = (TclObject) Widgets.getWidget(interp, name);
 

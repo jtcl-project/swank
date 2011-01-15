@@ -114,7 +114,7 @@ class SwkJDialogWidgetCmd implements Command {
         (new Add()).exec(swkjdialog, jcomp);
     }
 
-    static class Add extends UpdateOnEventThread {
+    private static class Add extends UpdateOnEventThread {
 
         SwkJDialog swkjdialog = null;
         JComponent jcomp = null;

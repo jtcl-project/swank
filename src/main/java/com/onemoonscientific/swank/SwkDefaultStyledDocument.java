@@ -1521,7 +1521,7 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
         }
     }
 
-    static class SwkPosition {
+    private static class SwkPosition {
 
         Position position = null;
         Position.Bias bias = Position.Bias.Forward;

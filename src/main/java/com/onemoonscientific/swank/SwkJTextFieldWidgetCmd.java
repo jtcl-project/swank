@@ -547,7 +547,7 @@ class SwkJTextFieldWidgetCmd implements Command {
         }
     }
 
-    class Index extends GetValueOnEventThread {
+    private class Index extends GetValueOnEventThread {
 
         SwkJTextField swkjtextfield = null;
         String item = null;
@@ -631,7 +631,7 @@ class SwkJTextFieldWidgetCmd implements Command {
         }
     }
 
-    static class Insert extends GetValueOnEventThread {
+    private static class Insert extends GetValueOnEventThread {
 
         SwkJTextField swkjtextfield = null;
         String strIndex = null;
@@ -665,7 +665,7 @@ class SwkJTextFieldWidgetCmd implements Command {
         }
     }
 
-    class ViewValues extends GetValueOnEventThread {
+    private class ViewValues extends GetValueOnEventThread {
 
         SwkJTextField swkjtextfield = null;
         double fx1 = 0.0;

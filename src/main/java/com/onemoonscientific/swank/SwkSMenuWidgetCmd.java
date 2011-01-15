@@ -137,7 +137,7 @@ class SwkSMenuWidgetCmd implements Command {
         (new Delete()).exec(swksmenu, firstArg, lastArg);
     }
 
-    class Delete extends UpdateOnEventThread {
+    private class Delete extends UpdateOnEventThread {
 
         SwkSMenu swksmenu = null;
         TclObject firstArg = null;

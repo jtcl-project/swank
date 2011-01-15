@@ -71,7 +71,7 @@ public class XYTableData extends XYData  implements TableXYDataset {
              xColumn = -1;
              yColumns = new int[0];
     }
-    class SetModel extends GetValueOnEventThread {
+    private class SetModel extends GetValueOnEventThread {
         SwkTableModel model;
         void  exec(SwkTableModel model) {
             this.model = model;

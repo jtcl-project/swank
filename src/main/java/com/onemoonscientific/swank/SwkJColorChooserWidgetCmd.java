@@ -133,7 +133,7 @@ class SwkJColorChooserWidgetCmd implements Command {
         }
     }
 
-    static class Choose extends GetValueOnEventThread {
+    private static class Choose extends GetValueOnEventThread {
 
         SwkJColorChooser swkjcolorchooser;
         Color color = null;

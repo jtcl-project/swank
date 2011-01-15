@@ -237,7 +237,7 @@ class SwkJSplitPaneWidgetCmd implements Command {
         interp.setResult(list);
     }
 
-    static class Add extends UpdateOnEventThread {
+    private static class Add extends UpdateOnEventThread {
 
         static final int LEFT = 0;
         static final int TOP = 1;
@@ -348,7 +348,7 @@ class SwkJSplitPaneWidgetCmd implements Command {
         }
     }
 
-    static class Forget extends UpdateOnEventThread {
+    private static class Forget extends UpdateOnEventThread {
 
         SwkJSplitPane swkjsplitpane = null;
         JComponent[] jcomps = null;
@@ -369,7 +369,7 @@ class SwkJSplitPaneWidgetCmd implements Command {
         }
     }
 
-    static class Panes extends GetValueOnEventThread {
+    private static class Panes extends GetValueOnEventThread {
 
         SwkJSplitPane swkjsplitpane = null;
         String[] names = {null, null};

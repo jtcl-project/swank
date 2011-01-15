@@ -51,7 +51,7 @@ public class LowerCmd implements Command {
         lower(component);
     }
 
-    public static void lower(final Component component) {
+    private static void lower(final Component component) {
         (new UpdateOnEventThread() {
 
             @Override

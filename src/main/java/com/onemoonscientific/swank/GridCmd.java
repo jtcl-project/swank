@@ -335,7 +335,7 @@ public class GridCmd implements Command {
     }
 //           errMsg = doit( masterObject, gconstr, jcomponents, modOptions);
 
-    String doit(final String masterName, Object masterObject,
+    private String doit(final String masterName, Object masterObject,
             GridBagConstraints gconstr,
             JComponent[] jComps, final String[] windowNames, int modOptions)
             throws IllegalArgumentException {
@@ -436,7 +436,7 @@ public class GridCmd implements Command {
         return null;
     }
 
-    void configureRowColumn(Interp interp, TclObject[] argv, boolean columnMode)
+    private void configureRowColumn(Interp interp, TclObject[] argv, boolean columnMode)
             throws TclException {
         int nArgs = argv.length - 4;
 
@@ -549,7 +549,7 @@ public class GridCmd implements Command {
         }
     }
 
-    int getScreenDistance(Interp interp, Component component,
+    private int getScreenDistance(Interp interp, Component component,
             TclObject argName, TclObject arg) throws TclException {
         int value = 0;
 
@@ -569,7 +569,7 @@ public class GridCmd implements Command {
         return value;
     }
 
-    void getBoundingBox(Interp interp, TclObject[] argv)
+    private void getBoundingBox(Interp interp, TclObject[] argv)
             throws TclException {
         if ((argv.length != 3) && (argv.length != 5) && (argv.length != 7)) {
             throw new TclNumArgsException(interp, 2, argv,
@@ -633,7 +633,7 @@ public class GridCmd implements Command {
         interp.setResult(list);
     }
 
-    void gridForget(Interp interp, TclObject[] argv, int firstWindow)
+    private void gridForget(Interp interp, TclObject[] argv, int firstWindow)
             throws TclException {
         if (argv.length < 3) {
             throw new TclNumArgsException(interp, 2, argv, "window");
@@ -653,7 +653,7 @@ public class GridCmd implements Command {
         (new Forget()).exec(comps);
     }
 
-    void getLocation(Interp interp, TclObject[] argv) throws TclException {
+    private void getLocation(Interp interp, TclObject[] argv) throws TclException {
         if (argv.length != 5) {
             throw new TclNumArgsException(interp, 2, argv, "master x y");
         }
@@ -692,7 +692,7 @@ public class GridCmd implements Command {
         return;
     }
 
-    void getSlaves(Interp interp, TclObject[] argv) throws TclException {
+    private void getSlaves(Interp interp, TclObject[] argv) throws TclException {
         if ((argv.length != 3) && (argv.length != 5)) {
             throw new TclNumArgsException(interp, 2, argv,
                     "window ?-option value...?");
@@ -746,7 +746,7 @@ public class GridCmd implements Command {
     }
 
 
-    void getInfo(Interp interp, TclObject[] argv) throws TclException {
+    private void getInfo(Interp interp, TclObject[] argv) throws TclException {
         if (argv.length != 3) {
             throw new TclNumArgsException(interp, 2, argv, "window");
 
@@ -871,7 +871,7 @@ public class GridCmd implements Command {
 
     }
 
-    void getSizes(Interp interp, TclObject[] argv) throws TclException {
+    private void getSizes(Interp interp, TclObject[] argv) throws TclException {
         if (argv.length != 3) {
             throw new TclNumArgsException(interp, 2, argv, "window");
 
@@ -898,7 +898,7 @@ public class GridCmd implements Command {
 
     }
 
-    void propagate(Interp interp, TclObject[] argv) throws TclException {
+    private void propagate(Interp interp, TclObject[] argv) throws TclException {
         if ((argv.length != 3) && (argv.length != 4)) {
             throw new TclNumArgsException(interp, 2, argv, "window ?boolean?");
 
@@ -934,7 +934,7 @@ public class GridCmd implements Command {
 
     }
 
-    void extendRow(Container master, SwkGridBagLayout gbag, int x, int y)
+    private void extendRow(Container master, SwkGridBagLayout gbag, int x, int y)
             throws IllegalArgumentException {
         Component[] comps = master.getComponents();
 
@@ -1488,7 +1488,7 @@ public class GridCmd implements Command {
 
     }
 
-    class Configure extends GetValueOnEventThread {
+    private class Configure extends GetValueOnEventThread {
 
         GridBagConstraints gconstr = null;
         Object masterObject = null;
@@ -1518,7 +1518,7 @@ public class GridCmd implements Command {
         }
     }
 
-    static class RowColumnGet extends GetValueOnEventThread {
+    private static class RowColumnGet extends GetValueOnEventThread {
 
         Component component = null;
         int index = 0;
@@ -1550,7 +1550,7 @@ public class GridCmd implements Command {
         }
     }
 
-    static class RowColumnConfigure extends UpdateOnEventThread {
+    private static class RowColumnConfigure extends UpdateOnEventThread {
 
         static final int WEIGHT = 1;
         static final int MINSIZE = 2;
@@ -1635,7 +1635,7 @@ public class GridCmd implements Command {
         }
     }
 
-    static class BoundingBox extends GetValueOnEventThread {
+    private static class BoundingBox extends GetValueOnEventThread {
 
         Component component = null;
         int nArgs = 0;
@@ -1708,7 +1708,7 @@ public class GridCmd implements Command {
         }
     }
 
-    static class Forget extends UpdateOnEventThread {
+    private static class Forget extends UpdateOnEventThread {
 
         Component[] comps = null;
 
@@ -1738,7 +1738,7 @@ public class GridCmd implements Command {
         }
     }
 
-    static class Location extends GetValueOnEventThread {
+    private static class Location extends GetValueOnEventThread {
 
         Component component = null;
         int x = -1;
@@ -1838,7 +1838,7 @@ public class GridCmd implements Command {
         }
     }
 
-    static class Slaves extends GetValueOnEventThread {
+    private static class Slaves extends GetValueOnEventThread {
 
         Component component = null;
         ArrayList<String> names = new ArrayList<String>();
@@ -1891,7 +1891,7 @@ public class GridCmd implements Command {
         }
     }
 
-    static class Info extends GetValueOnEventThread {
+    private static class Info extends GetValueOnEventThread {
 
         Component component = null;
         Object constrObject = null;
@@ -1915,7 +1915,7 @@ public class GridCmd implements Command {
         }
     }
 
-    static class Sizes extends GetValueOnEventThread {
+    private static class Sizes extends GetValueOnEventThread {
 
         Component component = null;
         Dimension dim = null;
@@ -1969,7 +1969,7 @@ public class GridCmd implements Command {
         }
     }
 
-    static class Propagate extends GetValueOnEventThread {
+    private static class Propagate extends GetValueOnEventThread {
 
         Component component = null;
         boolean propagate = false;

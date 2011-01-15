@@ -227,37 +227,37 @@ public class BindCmd implements Command {
         }
     }
 
-    public static ArrayList<SwkBinding> getMouseBindings(String tag) {
+    protected static ArrayList<SwkBinding> getMouseBindings(String tag) {
         ArrayList<SwkBinding> bindingVector = (ArrayList<SwkBinding>) mouseTable.get(tag);
 
         return bindingVector;
     }
 
-    public static ArrayList<SwkBinding> getMouseMotionBindings(String tag) {
+    protected static ArrayList<SwkBinding> getMouseMotionBindings(String tag) {
         ArrayList<SwkBinding> bindingVector = (ArrayList<SwkBinding>) mouseMotionTable.get(tag);
 
         return bindingVector;
     }
 
-    public static ArrayList<SwkBinding> getKeyBindings(String tag) {
+    protected static ArrayList<SwkBinding> getKeyBindings(String tag) {
         ArrayList<SwkBinding> bindingVector = (ArrayList<SwkBinding>) keyTable.get(tag);
 
         return bindingVector;
     }
 
-    public static ArrayList<SwkBinding> getFocusBindings(String tag) {
+    protected static ArrayList<SwkBinding> getFocusBindings(String tag) {
         ArrayList<SwkBinding> bindingVector = (ArrayList<SwkBinding>) focusTable.get(tag);
 
         return bindingVector;
     }
 
-    public static ArrayList<SwkBinding> getActivationBindings(String tag) {
+    protected static ArrayList<SwkBinding> getActivationBindings(String tag) {
         ArrayList<SwkBinding> bindingVector = (ArrayList<SwkBinding>) activationTable.get(tag);
 
         return bindingVector;
     }
 
-    public static ArrayList<SwkBinding> getVirtualBindings(String tag) {
+    protected static ArrayList<SwkBinding> getVirtualBindings(String tag) {
         ArrayList<SwkBinding> bindingVector = (ArrayList<SwkBinding>) virtualTable.get(tag);
 
         return bindingVector;
@@ -350,7 +350,7 @@ public class BindCmd implements Command {
      *this class.
      * @param bindingVector This Vector stores all the bindings of this type.
      */
-    public static void setupBinding(Interp interp, SwkBinding binding,
+    private static void setupBinding(Interp interp, SwkBinding binding,
             SwkWidget swkWidget, ArrayList<SwkBinding> bindingVector) throws TclException {
         setupBinding(interp, binding, swkWidget, bindingVector, false);
     }
@@ -365,7 +365,7 @@ public class BindCmd implements Command {
      *this class.
      * @param bindingVector This Vector stores all the bindings of this type.
      */
-    public static void setupBinding(Interp interp, SwkBinding binding,
+    private static void setupBinding(Interp interp, SwkBinding binding,
             SwkWidget swkWidget, ArrayList<SwkBinding> bindingVector, boolean queryBinding) throws TclException {
         if (binding.type == SwkBinding.APP) {
             if (swkAppListener == null) {
@@ -583,7 +583,7 @@ public class BindCmd implements Command {
         }
     }
 
-    public static void getBindings(Interp interp, SwkBinding binding, ArrayList<SwkBinding> bindingVector) throws TclException {
+    private static void getBindings(Interp interp, SwkBinding binding, ArrayList<SwkBinding> bindingVector) throws TclException {
         TclObject results = TclList.newInstance();
         for (SwkBinding swkBinding : bindingVector) {
             if (binding == null) {
@@ -596,7 +596,7 @@ public class BindCmd implements Command {
         interp.setResult(results);
     }
 
-    public static void getBindings(Interp interp, SwkWidget swkWidget) throws TclException {
+    private static void getBindings(Interp interp, SwkWidget swkWidget) throws TclException {
         TclObject results = TclList.newInstance();
         ArrayList<ArrayList<SwkBinding>> bindingVectors = getBindings(swkWidget);
         for (ArrayList<SwkBinding> bindingVector : bindingVectors) {
@@ -607,7 +607,7 @@ public class BindCmd implements Command {
         interp.setResult(results);
     }
 
-    public static void getBindings(Interp interp, String tag) throws TclException {
+    private static void getBindings(Interp interp, String tag) throws TclException {
         TclObject results = TclList.newInstance();
         ArrayList<ArrayList<SwkBinding>> bindingVectors = getBindings(tag);
         for (ArrayList<SwkBinding> bindingVector : bindingVectors) {
@@ -618,7 +618,7 @@ public class BindCmd implements Command {
         interp.setResult(results);
     }
 
-    public static ArrayList<ArrayList<SwkBinding>> getBindings(String tag) {
+    private static ArrayList<ArrayList<SwkBinding>> getBindings(String tag) {
         ArrayList<Hashtable> currentTables = new ArrayList<Hashtable>();
         ArrayList<ArrayList<SwkBinding>> bindingVectors = new ArrayList<ArrayList<SwkBinding>>();
         currentTables.add(focusTable);
@@ -639,7 +639,7 @@ public class BindCmd implements Command {
         return bindingVectors;
     }
 
-    public static ArrayList<ArrayList<SwkBinding>> getBindings(SwkWidget swkWidget) {
+    private static ArrayList<ArrayList<SwkBinding>> getBindings(SwkWidget swkWidget) {
         ArrayList<SwkBinding> bindingVector = null;
         ArrayList<ArrayList<SwkBinding>> bindingVectors = new ArrayList<ArrayList<SwkBinding>>();
         if (swkWidget.getFocusListener() != null) {
@@ -702,7 +702,7 @@ public class BindCmd implements Command {
      * @param className The name of the class of the widget.  Used to lookup bindings for this widgets class.
      * @throws TclException If widget corresponding to tObj can't be found.
      */
-    public static void applyBindings(Interp interp, SwkWidget swkWidget,
+    private static void applyBindings(Interp interp, SwkWidget swkWidget,
             String className) throws TclException {
         int i;
         if (swkWidget == null) {
@@ -1003,11 +1003,11 @@ public class BindCmd implements Command {
         SwkExceptionCmd.doExceptionCmd(interp, sbuf.toString());
     }
 
-    public static void setClassBinding(ArrayList<SwkBinding> bindings, SwkBinding newBinding) {
+    private static void setClassBinding(ArrayList<SwkBinding> bindings, SwkBinding newBinding) {
         SwkBind.setBinding(bindings, newBinding);
     }
 
-    public static void setVirtualBinding(SwkWidget swkWidget,
+    private static void setVirtualBinding(SwkWidget swkWidget,
             SwkBinding newBinding) {
         SwkBinding binding = null;
         ArrayList<SwkBinding> bindings = swkWidget.getVirtualBindings();

@@ -193,7 +193,7 @@ class SwkFileDialogWidgetCmd implements Command {
         (new Filter()).exec(swkfiledialog, filter);
     }
 
-    static class Open extends GetValueOnEventThread {
+    private static class Open extends GetValueOnEventThread {
 
         SwkFileDialog swkfiledialog;
         File[] files = null;
@@ -223,7 +223,7 @@ class SwkFileDialogWidgetCmd implements Command {
         }
     }
 
-    static class Save extends GetValueOnEventThread {
+    private static class Save extends GetValueOnEventThread {
 
         SwkFileDialog swkfiledialog;
         File file = null;
@@ -245,7 +245,7 @@ class SwkFileDialogWidgetCmd implements Command {
         }
     }
 
-    static class Filter extends UpdateOnEventThread {
+    private static class Filter extends UpdateOnEventThread {
 
         SwkFilenameFilter filter = null;
         SwkFileDialog swkfiledialog = null;

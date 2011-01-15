@@ -117,7 +117,7 @@ class SwkJPopupMenuWidgetCmd implements Command {
         (new Delete()).exec(swkjpopupmenu, firstArg, lastArg);
     }
 
-    class Delete extends UpdateOnEventThread {
+    private class Delete extends UpdateOnEventThread {
 
         SwkJPopupMenu swkjpopupmenu = null;
         TclObject lastArg = null;

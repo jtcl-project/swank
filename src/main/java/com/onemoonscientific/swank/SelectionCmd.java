@@ -100,7 +100,7 @@ public class SelectionCmd implements Command {
                selectionComponent = (JTextComponent) object;
            }
     }
-    String getSelection(Interp interp) throws TclException {
+    private String getSelection(Interp interp) throws TclException {
         String focusWindowName = FocusCmd.getFocusWindow();
         String selection = "";
         JTextComponent textComp  = null;

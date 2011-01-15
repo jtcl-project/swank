@@ -209,7 +209,7 @@ class SwkJScrollBarWidgetCmd implements Command {
         (new Set()).exec(swkjscrollbar, firstFraction, lastFraction);
     }
 
-    static class Delta extends GetValueOnEventThread {
+    private static class Delta extends GetValueOnEventThread {
 
         SwkJScrollBar swkjscrollbar;
         double result = 0;
@@ -239,7 +239,7 @@ class SwkJScrollBarWidgetCmd implements Command {
         }
     }
 
-    static class Fraction extends GetValueOnEventThread {
+    private static class Fraction extends GetValueOnEventThread {
 
         SwkJScrollBar swkjscrollbar;
         double result = 0;
@@ -285,7 +285,7 @@ class SwkJScrollBarWidgetCmd implements Command {
         }
     }
 
-    static class Get extends GetValueOnEventThread {
+    private static class Get extends GetValueOnEventThread {
 
         SwkJScrollBar swkjscrollbar;
         double[] result = new double[2];
@@ -309,7 +309,7 @@ class SwkJScrollBarWidgetCmd implements Command {
         }
     }
 
-    static class Set extends UpdateOnEventThread {
+    private static class Set extends UpdateOnEventThread {
 
         SwkJScrollBar swkjscrollbar;
         double firstFraction = 0.0;

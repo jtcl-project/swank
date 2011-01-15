@@ -689,7 +689,7 @@ class SwkJListWidgetCmd implements Command {
         }
     }
 
-    class BoundingBox extends GetValueOnEventThread {
+    private class BoundingBox extends GetValueOnEventThread {
 
         SwkJList swkjlist;
         String item = null;
@@ -751,7 +751,7 @@ class SwkJListWidgetCmd implements Command {
         }
     }
 
-    static class CurrentSelection extends GetValueOnEventThread {
+    private static class CurrentSelection extends GetValueOnEventThread {
 
         SwkJList swkjlist;
         int[] selected = null;
@@ -768,7 +768,7 @@ class SwkJListWidgetCmd implements Command {
         }
     }
 
-    class Delete extends UpdateOnEventThread {
+    private class Delete extends UpdateOnEventThread {
 
         SwkJList swkjlist = null;
         String firstArg = null;
@@ -831,7 +831,7 @@ class SwkJListWidgetCmd implements Command {
         }
     }
 
-    class Items extends GetValueOnEventThread {
+    private class Items extends GetValueOnEventThread {
 
         SwkJList swkjlist = null;
         String firstArg = null;
@@ -913,7 +913,7 @@ class SwkJListWidgetCmd implements Command {
         }
     }
 
-    static class Size extends GetValueOnEventThread {
+    private static class Size extends GetValueOnEventThread {
 
         SwkJList swkjlist = null;
         int size = 0;
@@ -931,7 +931,7 @@ class SwkJListWidgetCmd implements Command {
         }
     }
 
-    class See extends UpdateOnEventThread {
+    private class See extends UpdateOnEventThread {
 
         SwkJList swkjlist = null;
         String item = null;
@@ -976,7 +976,7 @@ class SwkJListWidgetCmd implements Command {
         }
     }
 
-    class Index extends GetValueOnEventThread {
+    private class Index extends GetValueOnEventThread {
 
         SwkJList swkjlist = null;
         String item = null;
@@ -1012,7 +1012,7 @@ class SwkJListWidgetCmd implements Command {
         }
     }
 
-    class Activate extends GetValueOnEventThread {
+    private class Activate extends GetValueOnEventThread {
 
         SwkJList swkjlist = null;
         String item = null;
@@ -1059,7 +1059,7 @@ class SwkJListWidgetCmd implements Command {
         }
     }
 
-    static class Nearest extends GetValueOnEventThread {
+    private static class Nearest extends GetValueOnEventThread {
 
         SwkJList swkjlist = null;
         int y = 0;
@@ -1104,7 +1104,7 @@ class SwkJListWidgetCmd implements Command {
         }
     }
 
-    class Insert extends GetValueOnEventThread {
+    private class Insert extends GetValueOnEventThread {
 
         SwkJList swkjlist = null;
         int size = 0;
@@ -1164,7 +1164,7 @@ class SwkJListWidgetCmd implements Command {
         }
     }
 
-    class Selection extends GetValueOnEventThread {
+    private class Selection extends GetValueOnEventThread {
 
         static final int CLEAR = 0;
         static final int ANCHOR = 1;
@@ -1317,7 +1317,7 @@ class SwkJListWidgetCmd implements Command {
         }
     }
 
-    class Includes extends GetValueOnEventThread {
+    private class Includes extends GetValueOnEventThread {
 
         SwkJList swkjlist = null;
         String item = null;

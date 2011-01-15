@@ -181,7 +181,7 @@ class SwkJComboBoxWidgetCmd implements Command {
         }
     }
 
-    class GetIndex extends GetValueOnEventThread {
+    private class GetIndex extends GetValueOnEventThread {
 
         int index = -1;
         String item = null;
@@ -203,7 +203,7 @@ class SwkJComboBoxWidgetCmd implements Command {
         }
     }
 
-    class RemoveItems extends UpdateOnEventThread {
+    private class RemoveItems extends UpdateOnEventThread {
 
         int index = -1;
 
@@ -225,7 +225,7 @@ class SwkJComboBoxWidgetCmd implements Command {
         }
     }
 
-    class GetItemCount extends GetValueOnEventThread {
+    private class GetItemCount extends GetValueOnEventThread {
 
         int intResult;
 
@@ -239,7 +239,7 @@ class SwkJComboBoxWidgetCmd implements Command {
         }
     }
 
-    class GetItemAt extends GetValueOnEventThread {
+    private class GetItemAt extends GetValueOnEventThread {
 
         String result;
         int index = 0;
@@ -256,7 +256,7 @@ class SwkJComboBoxWidgetCmd implements Command {
         }
     }
 
-    class AddItems extends GetValueOnEventThread {
+    private class AddItems extends GetValueOnEventThread {
 
         Object[] itemObjects = null;
         String s1 = null;

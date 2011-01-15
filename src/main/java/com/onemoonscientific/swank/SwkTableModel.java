@@ -446,7 +446,7 @@ public class SwkTableModel extends AbstractTableModel
         });
     }
 
-    class SwkTableEvent extends TclEvent {
+    private class SwkTableEvent extends TclEvent {
 
         Interp interp = null;
         String cmd = null;

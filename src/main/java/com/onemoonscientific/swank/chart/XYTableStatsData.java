@@ -71,7 +71,7 @@ public class XYTableStatsData extends XYData {
          xColumn = -1;
          meanColumn = -1;
     }
-    class SetModel extends GetValueOnEventThread {
+    private class SetModel extends GetValueOnEventThread {
         SwkTableModel model;
         void  exec(SwkTableModel model) {
             this.model = model;

@@ -117,7 +117,7 @@ class SwkJScrollPaneWidgetCmd implements Command {
         (new Add()).exec(swkjscrollpane, jcomp);
     }
 
-    static class Add extends UpdateOnEventThread {
+    private static class Add extends UpdateOnEventThread {
 
         static final int LEFT = 0;
         static final int TOP = 1;

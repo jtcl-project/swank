@@ -49,7 +49,7 @@ public class RaiseCmd implements Command {
         raise(component);
     }
 
-    public static void raise(final Component component) {
+    private static void raise(final Component component) {
         (new UpdateOnEventThread() {
 
             @Override

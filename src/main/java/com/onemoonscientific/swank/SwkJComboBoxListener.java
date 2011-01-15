@@ -286,7 +286,7 @@ public class SwkJComboBoxListener implements ActionListener, VarTrace,
         }
     }
 
-    class GetItemCount extends GetValueOnEventThread {
+    private class GetItemCount extends GetValueOnEventThread {
 
         int intResult;
 
@@ -302,7 +302,7 @@ public class SwkJComboBoxListener implements ActionListener, VarTrace,
         }
     }
 
-    class GetItemAt extends GetValueOnEventThread {
+    private class GetItemAt extends GetValueOnEventThread {
 
         String result;
         int index = 0;

@@ -53,7 +53,7 @@ public class PasswordCmd implements Command {
         interp.setResult(pwObj);
     }
 
-    public class PasswordValue {
+    private class PasswordValue {
 
         String name = "";
         char[] password = null;
@@ -80,7 +80,7 @@ public class PasswordCmd implements Command {
         }
     }
 
-    class Password extends GetValueOnEventThread {
+    private class Password extends GetValueOnEventThread {
 
         Frame frame = null;
         String title = null;

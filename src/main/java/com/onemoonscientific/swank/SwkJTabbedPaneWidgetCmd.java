@@ -207,7 +207,7 @@ class SwkJTabbedPaneWidgetCmd implements Command {
         interp.setResult(index);
     }
 
-    static class Add extends UpdateOnEventThread {
+    private static class Add extends UpdateOnEventThread {
 
         SwkJTabbedPane swkjtabbedpane = null;
         JComponent jcomp = null;
@@ -228,7 +228,7 @@ class SwkJTabbedPaneWidgetCmd implements Command {
         }
     }
 
-    static class GetSelected extends GetValueOnEventThread {
+    private static class GetSelected extends GetValueOnEventThread {
 
         SwkJTabbedPane swkjtabbedpane = null;
         int index = -1;
@@ -246,7 +246,7 @@ class SwkJTabbedPaneWidgetCmd implements Command {
         }
     }
 
-    static class SetSelected extends UpdateOnEventThread {
+    private static class SetSelected extends UpdateOnEventThread {
 
         SwkJTabbedPane swkjtabbedpane = null;
         int index = -1;
@@ -263,7 +263,7 @@ class SwkJTabbedPaneWidgetCmd implements Command {
         }
     }
 
-    class TabConfigure extends UpdateOnEventThread {
+    private class TabConfigure extends UpdateOnEventThread {
 
         SwkJTabbedPane swkjtabbedpane = null;
         int index = -1;
@@ -353,7 +353,7 @@ class SwkJTabbedPaneWidgetCmd implements Command {
         }
     }
 
-    class TabCGet extends GetValueOnEventThread {
+    private class TabCGet extends GetValueOnEventThread {
 
         SwkJTabbedPane swkjtabbedpane = null;
         int index = -1;
@@ -376,7 +376,7 @@ class SwkJTabbedPaneWidgetCmd implements Command {
         }
     }
 
-    static class GetTabCount extends GetValueOnEventThread {
+    private static class GetTabCount extends GetValueOnEventThread {
 
         SwkJTabbedPane swkjtabbedpane = null;
         int count = -1;

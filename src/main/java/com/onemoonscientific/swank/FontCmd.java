@@ -273,7 +273,7 @@ public class FontCmd implements Command {
         }
     }
 
-    static class Add extends GetValueOnEventThread {
+    private static class Add extends GetValueOnEventThread {
 
         Component comp = null;
         Font font = null;

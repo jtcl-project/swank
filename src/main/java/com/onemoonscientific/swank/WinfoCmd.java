@@ -553,7 +553,7 @@ public class WinfoCmd implements Command {
         }
     }
 
-    static class GetChildren extends GetValueOnEventThread {
+    private static class GetChildren extends GetValueOnEventThread {
 
         Component comp = null;
         ArrayList<String> childList = new ArrayList<String>();
@@ -685,7 +685,7 @@ public class WinfoCmd implements Command {
         return rectangle;
     }
 
-    class GeometryGet extends GetValueOnEventThread {
+    private class GeometryGet extends GetValueOnEventThread {
 
         Object object = null;
         Rectangle rectangle = null;
@@ -733,7 +733,7 @@ public class WinfoCmd implements Command {
         }
     }
 
-    static class Depth extends GetValueOnEventThread {
+    private static class Depth extends GetValueOnEventThread {
 
         Object object = null;
         int pixelSize;
@@ -751,7 +751,7 @@ public class WinfoCmd implements Command {
         }
     }
 
-    static class SwkMouseInfo extends GetValueOnEventThread {
+    private static class SwkMouseInfo extends GetValueOnEventThread {
         Component component = null;
         int nButtons = 1;
         int x = -1;
@@ -776,7 +776,7 @@ public class WinfoCmd implements Command {
          }
     }
 
-    static class Winfo extends GetValueOnEventThread {
+    private static class Winfo extends GetValueOnEventThread {
 
         Object object = null;
         boolean viewable = false;
@@ -823,7 +823,7 @@ public class WinfoCmd implements Command {
         }
     }
 
-    static class Manager extends GetValueOnEventThread {
+    private static class Manager extends GetValueOnEventThread {
 
         Component component = null;
         String manager = "";

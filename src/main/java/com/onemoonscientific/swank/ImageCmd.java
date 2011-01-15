@@ -297,7 +297,7 @@ public class ImageCmd implements Command {
         }
     }
 
-    public static BufferedImage edge(Interp interp, BufferedImage sourceImage,
+    private static BufferedImage edge(Interp interp, BufferedImage sourceImage,
             BufferedImage destImage) {
         float[] edge = {0f, -1f, 0f, -1f, 4f, -1f, 0f, -1f, 0f};
         ConvolveOp op = new ConvolveOp(new Kernel(3, 3, edge),
@@ -306,7 +306,7 @@ public class ImageCmd implements Command {
         return (op.filter(sourceImage, destImage));
     }
 
-    public static BufferedImage scale(Interp interp, BufferedImage sourceImage,
+    private static BufferedImage scale(Interp interp, BufferedImage sourceImage,
             double scaleValue, double offsetValue, BufferedImage destImage) {
         RescaleOp op = new RescaleOp((float) scaleValue, (float) offsetValue,
                 null);
@@ -314,7 +314,7 @@ public class ImageCmd implements Command {
         return (op.filter(sourceImage, destImage));
     }
 
-    public static void configure(Interp interp, ImageIcon image,
+    private static void configure(Interp interp, ImageIcon image,
             TclObject[] argv, int start) throws TclException {
         int i;
 

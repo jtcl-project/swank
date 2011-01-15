@@ -86,7 +86,7 @@ public class SwkImageCanvasCmd implements Command {
         interp.setResult(argv[1].toString());
     }
 
-    class CmdProc implements Runnable {
+    private class CmdProc implements Runnable {
 
         Interp interp;
         TclObject[] argv = null;

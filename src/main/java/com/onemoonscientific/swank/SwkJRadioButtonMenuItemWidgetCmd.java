@@ -157,7 +157,7 @@ class SwkJRadioButtonMenuItemWidgetCmd implements Command {
 
     }
 
-    static class Select extends GetValueOnEventThread {
+    private static class Select extends GetValueOnEventThread {
 
         boolean mode = false;
         SwkJRadioButtonMenuItem swkjradiobutton;

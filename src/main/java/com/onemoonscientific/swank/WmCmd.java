@@ -359,7 +359,7 @@ public class WmCmd implements Command {
         (new ProtocolSet()).exec(object, closeMode, command);
     }
 
-    static class GeometryGet extends GetValueOnEventThread {
+    private static class GeometryGet extends GetValueOnEventThread {
 
         Object object = null;
         Rectangle rectangle = null;
@@ -411,7 +411,7 @@ public class WmCmd implements Command {
         }
     }
 
-    static class GeometrySet extends UpdateOnEventThread {
+    private static class GeometrySet extends UpdateOnEventThread {
 
         boolean setLocation = false;
         boolean setSize = false;
@@ -470,7 +470,7 @@ public class WmCmd implements Command {
         }
     }
 
-    static class ProtocolSet extends UpdateOnEventThread {
+    private static class ProtocolSet extends UpdateOnEventThread {
 
         Object object = null;
         int closeOp = 0;
@@ -494,7 +494,7 @@ public class WmCmd implements Command {
         }
     }
 
-    static class AlwaysOnTop extends UpdateOnEventThread {
+    private static class AlwaysOnTop extends UpdateOnEventThread {
 
         Object object = null;
         boolean value = false;

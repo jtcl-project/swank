@@ -991,7 +991,7 @@ public class SwkCanvas extends javax.swing.JPanel implements SwkWidget, Printabl
         return fRC;
     }
 
-    class Tag {
+    private class Tag {
 
         int id = -1;
         String name = null;
@@ -1140,7 +1140,7 @@ public class SwkCanvas extends javax.swing.JPanel implements SwkWidget, Printabl
         getAllConfigurations(interp, jgetAll.roValues);
     }
 
-    class JGetAll implements Runnable {
+    private class JGetAll implements Runnable {
 
         SwkCanvas swkcanvas;
         ArrayList roValues = null;
@@ -1805,7 +1805,7 @@ public class SwkCanvas extends javax.swing.JPanel implements SwkWidget, Printabl
         return result;
     }
 
-    class JGet implements Runnable {
+    private class JGet implements Runnable {
 
         SwkCanvas swkcanvas;
         int opt = 0;
@@ -1836,7 +1836,7 @@ public class SwkCanvas extends javax.swing.JPanel implements SwkWidget, Printabl
         }
     }
 
-    class ResourceDefaultsSetter implements Runnable {
+    private class ResourceDefaultsSetter implements Runnable {
 
         Interp interp;
         SwkCanvas swkcanvas;

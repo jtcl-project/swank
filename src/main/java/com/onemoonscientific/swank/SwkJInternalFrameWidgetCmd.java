@@ -116,7 +116,7 @@ class SwkJInternalFrameWidgetCmd implements Command {
         (new Add()).exec(swkjinternalframe, jcomp, argv[3].toString().intern());
     }
 
-    static class Add extends UpdateOnEventThread {
+    private static class Add extends UpdateOnEventThread {
 
         SwkJInternalFrame swkjinternalframe = null;
         JComponent jcomp = null;

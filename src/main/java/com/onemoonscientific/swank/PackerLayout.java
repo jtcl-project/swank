@@ -1362,7 +1362,7 @@ public class PackerLayout implements LayoutManager2 {
 
     //there is one of these records for each widget packed
     //into a window, it stores the pack info for that widget
-    static class PackRecord {
+    private static class PackRecord {
         public int[] padx = {DEFAULT_PADX, DEFAULT_PADX};
         public int[] pady = {DEFAULT_PADY, DEFAULT_PADY};
         public int[] ipadx = {DEFAULT_IPADX, DEFAULT_IPADX};

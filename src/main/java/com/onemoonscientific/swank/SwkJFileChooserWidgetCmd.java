@@ -205,7 +205,7 @@ class SwkJFileChooserWidgetCmd implements Command {
         (new Filter()).exec(swkjfilechooser, filter);
     }
 
-    static class Open extends GetValueOnEventThread {
+    private static class Open extends GetValueOnEventThread {
 
         SwkJFileChooser swkjfilechooser;
         Component dParent = null;
@@ -238,7 +238,7 @@ class SwkJFileChooserWidgetCmd implements Command {
         }
     }
 
-    static class Save extends GetValueOnEventThread {
+    private static class Save extends GetValueOnEventThread {
 
         SwkJFileChooser swkjfilechooser;
         Component dParent = null;
@@ -264,7 +264,7 @@ class SwkJFileChooserWidgetCmd implements Command {
         }
     }
 
-    static class Filter extends UpdateOnEventThread {
+    private static class Filter extends UpdateOnEventThread {
 
         SwkFileFilter filter = null;
         SwkJFileChooser swkjfilechooser = null;

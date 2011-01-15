@@ -67,7 +67,7 @@ public class BellCmd implements Command {
         }).execOnThread();
     }
 
-    public static void beep(Object object) {
+    protected static void beep(Object object) {
         if ((object == null) || !(object instanceof Component)) {
             Toolkit.getDefaultToolkit().beep();
         } else {

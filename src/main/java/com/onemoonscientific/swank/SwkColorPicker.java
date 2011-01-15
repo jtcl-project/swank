@@ -96,7 +96,7 @@ public class SwkColorPicker implements Command {
         (new Option()).exec(title, initialColor, showOpacity, frameOrWindow);
     }
 
-    class Option extends GetValueOnEventThread {
+    private class Option extends GetValueOnEventThread {
 
         String title = "";
         boolean showOpacity = false;

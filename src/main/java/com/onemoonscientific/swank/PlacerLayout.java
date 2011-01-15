@@ -1200,24 +1200,24 @@ public class PlacerLayout implements LayoutManager {
 
     //there is one of these records for each widget packed
     //into a window, it stores the pack info for that widget
-    static class PlaceRecord {
+    private static class PlaceRecord {
 
         Component prev = null;
         Component next = null;
-        public Object anchor = DEFAULT_ANCHOR;
-        public Object bordermode = DEFAULT_BORDERMODE;
-        public int x = DEFAULT_X;
-        public int y = DEFAULT_Y;
-        public int width = DEFAULT_WIDTH;
-        public int height = DEFAULT_HEIGHT;
-        public float relx = DEFAULT_RELX;
-        public float rely = DEFAULT_RELY;
-        public float relwidth = DEFAULT_RELWIDTH;
-        public float relheight = DEFAULT_RELHEIGHT;
-        public boolean widthActive = false;
-        public boolean relWidthActive = false;
-        public boolean heightActive = false;
-        public boolean relHeightActive = false;
+        Object anchor = DEFAULT_ANCHOR;
+        Object bordermode = DEFAULT_BORDERMODE;
+        int x = DEFAULT_X;
+        int y = DEFAULT_Y;
+        int width = DEFAULT_WIDTH;
+        int height = DEFAULT_HEIGHT;
+        float relx = DEFAULT_RELX;
+        float rely = DEFAULT_RELY;
+        float relwidth = DEFAULT_RELWIDTH;
+        float relheight = DEFAULT_RELHEIGHT;
+        boolean widthActive = false;
+        boolean relWidthActive = false;
+        boolean heightActive = false;
+        boolean relHeightActive = false;
     }
 }
 

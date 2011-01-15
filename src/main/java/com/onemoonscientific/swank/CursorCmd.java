@@ -108,7 +108,7 @@ public class CursorCmd implements Command {
         }
     }
 
-    public static void create(Interp interp, String cursorName,
+    private static void create(Interp interp, String cursorName,
             TclObject[] argv, int start) throws TclException {
         int i;
 

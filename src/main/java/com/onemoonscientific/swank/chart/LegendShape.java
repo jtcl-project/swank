@@ -203,7 +203,7 @@ public class LegendShape extends SwkShape {
         }
     }
 
-    static class EdgeParameter extends StringParameter {
+    private static class EdgeParameter extends StringParameter {
 
         private static String name = "edge";
 
@@ -242,7 +242,7 @@ public class LegendShape extends SwkShape {
         }
     }
 
-    static class PlotParameter extends StringParameter {
+    private static class PlotParameter extends StringParameter {
 
         private static String name = "plot";
 

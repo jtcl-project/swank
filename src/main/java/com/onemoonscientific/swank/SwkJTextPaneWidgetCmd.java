@@ -722,7 +722,7 @@ class SwkJTextPaneWidgetCmd implements Command {
         }
     }
 
-    static class Index extends GetValueOnEventThread {
+    private static class Index extends GetValueOnEventThread {
 
         SwkJTextPane swkjtextpane = null;
         String indexArg = null;
@@ -742,7 +742,7 @@ class SwkJTextPaneWidgetCmd implements Command {
         }
     }
 
-    static class Add extends UpdateOnEventThread {
+    private static class Add extends UpdateOnEventThread {
 
         SwkJTextPane swkjtextpane = null;
         String arg0 = null;
@@ -791,7 +791,7 @@ class SwkJTextPaneWidgetCmd implements Command {
         }
     }
 
-    static class StyleRemove extends UpdateOnEventThread {
+    private static class StyleRemove extends UpdateOnEventThread {
 
         SwkJTextPane swkjtextpane = null;
         String arg1 = null;
@@ -829,7 +829,7 @@ class SwkJTextPaneWidgetCmd implements Command {
         }
     }
 
-    static class StyleSet extends UpdateOnEventThread {
+    private static class StyleSet extends UpdateOnEventThread {
 
         SwkJTextPane swkjtextpane = null;
         Style style = null;
@@ -846,7 +846,7 @@ class SwkJTextPaneWidgetCmd implements Command {
         }
     }
 
-    static class StyleGet extends GetValueOnEventThread {
+    private static class StyleGet extends GetValueOnEventThread {
 
         SwkJTextPane swkjtextpane = null;
         String arg1 = null;
@@ -874,7 +874,7 @@ class SwkJTextPaneWidgetCmd implements Command {
         }
     }
 
-    static class TagGet extends GetValueOnEventThread {
+    private static class TagGet extends GetValueOnEventThread {
 
         static final int RANGES = 0;
         static final int NAMES = 1;
@@ -943,7 +943,7 @@ class SwkJTextPaneWidgetCmd implements Command {
         }
     }
 
-    static class MarkSet extends UpdateOnEventThread {
+    private static class MarkSet extends UpdateOnEventThread {
 
         SwkJTextPane swkjtextpane = null;
         String arg1 = null;
@@ -987,7 +987,7 @@ class SwkJTextPaneWidgetCmd implements Command {
         }
     }
 
-    static class MarkGet extends GetValueOnEventThread {
+    private static class MarkGet extends GetValueOnEventThread {
 
         SwkJTextPane swkjtextpane = null;
         ArrayList result = null;
@@ -1005,7 +1005,7 @@ class SwkJTextPaneWidgetCmd implements Command {
         }
     }
 
-    static class Compare extends GetValueOnEventThread {
+    private static class Compare extends GetValueOnEventThread {
 
         SwkJTextPane swkjtextpane = null;
         String arg1 = "";
@@ -1031,7 +1031,7 @@ class SwkJTextPaneWidgetCmd implements Command {
         }
     }
 
-    static class Search extends GetValueOnEventThread {
+    private static class Search extends GetValueOnEventThread {
 
         SwkJTextPane swkjtextpane = null;
         String patternString = null;
@@ -1074,7 +1074,7 @@ class SwkJTextPaneWidgetCmd implements Command {
         }
     }
 
-    static class Get extends GetValueOnEventThread {
+    private static class Get extends GetValueOnEventThread {
 
         SwkJTextPane swkjtextpane = null;
         String index1Arg = null;
@@ -1117,7 +1117,7 @@ class SwkJTextPaneWidgetCmd implements Command {
         }
     }
 
-    static class Insert extends GetValueOnEventThread {
+    private static class Insert extends GetValueOnEventThread {
 
         SwkJTextPane swkjtextpane = null;
         String indexArg = null;
@@ -1244,7 +1244,7 @@ class SwkJTextPaneWidgetCmd implements Command {
         }
     }
 
-    static class Delete extends GetValueOnEventThread {
+    private static class Delete extends GetValueOnEventThread {
 
         SwkJTextPane swkjtextpane = null;
         String firstArg = null;
@@ -1315,7 +1315,7 @@ class SwkJTextPaneWidgetCmd implements Command {
         }
     }
 
-    class See extends UpdateOnEventThread {
+    private class See extends UpdateOnEventThread {
 
         SwkJTextPane swkjtextpane = null;
         String indexArg = null;
@@ -1358,7 +1358,7 @@ class SwkJTextPaneWidgetCmd implements Command {
         }
     }
 
-    class BBox extends GetValueOnEventThread {
+    private class BBox extends GetValueOnEventThread {
 
         SwkJTextPane swkjtextpane = null;
         String indexArg = null;
@@ -1401,7 +1401,7 @@ class SwkJTextPaneWidgetCmd implements Command {
         }
     }
 
-    static class Window extends GetValueOnEventThread {
+    private static class Window extends GetValueOnEventThread {
 
         SwkJTextPane swkjtextpane = null;
         String indexArg = null;

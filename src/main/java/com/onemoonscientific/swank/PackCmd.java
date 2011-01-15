@@ -342,7 +342,7 @@ public class PackCmd implements Command {
         return (masterName);
     }
 
-    class Info extends GetValueOnEventThread {
+    private class Info extends GetValueOnEventThread {
 
         Component component = null;
         ArrayList<String> settings;
@@ -368,7 +368,7 @@ public class PackCmd implements Command {
         }
     }
 
-    class Propagate extends GetValueOnEventThread {
+    private class Propagate extends GetValueOnEventThread {
 
         Component component = null;
         boolean propagate = false;
@@ -408,7 +408,7 @@ public class PackCmd implements Command {
         }
     }
 
-    static class Slaves extends GetValueOnEventThread {
+    private static class Slaves extends GetValueOnEventThread {
 
         Component component = null;
         String[] names = null;
@@ -434,7 +434,7 @@ public class PackCmd implements Command {
         }
     }
 
-    static class Forget extends UpdateOnEventThread {
+    private static class Forget extends UpdateOnEventThread {
 
         Component[] comps = null;
 
@@ -464,7 +464,7 @@ public class PackCmd implements Command {
         }
     }
 
-    class Configure extends GetValueOnEventThread {
+    private class Configure extends GetValueOnEventThread {
 
         String specialWindowName = null;
         String parentName = null;

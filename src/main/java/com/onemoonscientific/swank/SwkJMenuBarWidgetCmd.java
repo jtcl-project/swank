@@ -160,7 +160,7 @@ class SwkJMenuBarWidgetCmd implements Command {
         return;
     }
 
-    class Add extends GetValueOnEventThread {
+    private class Add extends GetValueOnEventThread {
 
         SwkJMenuBar swkjmenubar = null;
         String menuName = "";

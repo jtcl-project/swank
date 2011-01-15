@@ -81,7 +81,7 @@ public class SwkCmdET implements Command {
         }
     }
 
-    class WidgetCmd implements Runnable {
+    private class WidgetCmd implements Runnable {
 
         Interp interp;
         TclObject[] argv = null;
@@ -112,7 +112,7 @@ public class SwkCmdET implements Command {
         }
     }
 
-    static class ETWait implements Runnable {
+    private static class ETWait implements Runnable {
 
         public void run() {
             System.out.println("waiting " + System.currentTimeMillis());

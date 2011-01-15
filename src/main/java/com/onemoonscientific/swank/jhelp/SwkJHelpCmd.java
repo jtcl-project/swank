@@ -185,7 +185,7 @@ public class SwkJHelpCmd implements Command {
         CSH.setHelpIDString(comp,targetName);
     }
     
-    class Show extends UpdateOnEventThread {
+    private class Show extends UpdateOnEventThread {
         String errMessage = null;
         String targetName = null;
         

@@ -471,7 +471,7 @@ class SwkJTableWidgetCmd implements Command {
         interp.setResult(resizable);
     }
 
-    static class Sort extends UpdateOnEventThread {
+    private static class Sort extends UpdateOnEventThread {
 
         SwkJTable swkjtable = null;
         int iCol = 0;
@@ -491,7 +491,7 @@ class SwkJTableWidgetCmd implements Command {
         }
     }
 
-    class Column extends UpdateOnEventThread {
+    private class Column extends UpdateOnEventThread {
 
         SwkJTable swkjtable = null;
         int iCol = 0;
@@ -512,7 +512,7 @@ class SwkJTableWidgetCmd implements Command {
         }
     }
 
-    static class Row extends GetValueOnEventThread {
+    private static class Row extends GetValueOnEventThread {
 
         SwkJTable swkjtable = null;
         int inVal = 0;
@@ -539,7 +539,7 @@ class SwkJTableWidgetCmd implements Command {
         }
     }
 
-    static class Update extends UpdateOnEventThread {
+    private static class Update extends UpdateOnEventThread {
 
         static final int DATA = 0;
         static final int STRUCTURE = 1;
@@ -569,7 +569,7 @@ class SwkJTableWidgetCmd implements Command {
         }
     }
 
-    static class Set extends UpdateOnEventThread {
+    private static class Set extends UpdateOnEventThread {
 
         SwkJTable swkjtable = null;
         int iRow = 0;
@@ -604,7 +604,7 @@ class SwkJTableWidgetCmd implements Command {
         }
     }
 
-    static class Get extends GetValueOnEventThread {
+    private static class Get extends GetValueOnEventThread {
 
         SwkJTable swkjtable = null;
         int iRow = 0;
@@ -640,7 +640,7 @@ class SwkJTableWidgetCmd implements Command {
         }
     }
 
-    static class SelectionSet extends UpdateOnEventThread {
+    private static class SelectionSet extends UpdateOnEventThread {
 
         final static int CLEAR = 0;
         final static int SET = 1;
@@ -708,7 +708,7 @@ class SwkJTableWidgetCmd implements Command {
         }
     }
 
-    static class SelectionGet extends GetValueOnEventThread {
+    private static class SelectionGet extends GetValueOnEventThread {
 
         final static int COUNT_ROWS = 0;
         final static int GET_ROWS = 1;
@@ -746,7 +746,7 @@ class SwkJTableWidgetCmd implements Command {
         }
     }
 
-    static class ShowRow extends UpdateOnEventThread {
+    private static class ShowRow extends UpdateOnEventThread {
 
         SwkJTable swkjtable = null;
         int row1 = 0;
@@ -768,7 +768,7 @@ class SwkJTableWidgetCmd implements Command {
         }
     }
 
-    static class ConvertColumn extends GetValueOnEventThread {
+    private static class ConvertColumn extends GetValueOnEventThread {
 
         SwkJTable swkjtable = null;
         int column = 0;
@@ -788,7 +788,7 @@ class SwkJTableWidgetCmd implements Command {
         }
     }
 
-    static class RowOrColumnAtPoint extends GetValueOnEventThread {
+    private static class RowOrColumnAtPoint extends GetValueOnEventThread {
 
         SwkJTable swkjtable = null;
         int x = 0;
@@ -818,7 +818,7 @@ class SwkJTableWidgetCmd implements Command {
         }
     }
 
-    static class SetColumnWidth extends UpdateOnEventThread {
+    private static class SetColumnWidth extends UpdateOnEventThread {
 
         SwkJTable swkjtable = null;
         int column = 0;
@@ -848,7 +848,7 @@ class SwkJTableWidgetCmd implements Command {
         }
     }
 
-    static class GetColumnWidth extends GetValueOnEventThread {
+    private static class GetColumnWidth extends GetValueOnEventThread {
 
         SwkJTable swkjtable = null;
         int column = 0;
@@ -872,7 +872,7 @@ class SwkJTableWidgetCmd implements Command {
         }
     }
 
-    static class SetColumnResizable extends UpdateOnEventThread {
+    private static class SetColumnResizable extends UpdateOnEventThread {
 
         SwkJTable swkjtable = null;
         int column = 0;
@@ -896,7 +896,7 @@ class SwkJTableWidgetCmd implements Command {
         }
     }
 
-    static class GetColumnResizable extends UpdateOnEventThread {
+    private static class GetColumnResizable extends UpdateOnEventThread {
 
         SwkJTable swkjtable = null;
         int column = 0;

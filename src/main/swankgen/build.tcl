@@ -11,6 +11,9 @@ source [file join swankgen setter.tcl]
 set tkcomps {
 }
 set swkRoot [file join java com onemoonscientific swank]
+set swkRoot [file join ../../target generated-sources com onemoonscientific swank]
+file mkdir $swkRoot
+file mkdir [file join $swkRoot canvas]
 set specialImports ""
 set specialVars ""
 set widgets { JButton {SMenuButton JButton} JCheckBox JCheckBoxMenuItem 
