@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<FindBugsFilter>
+  <Match>
+    <Package name="~org\.codehaus.*" />
+  </Match>
+  <Match>
+    <Package name="~tcl\.lang.*" />
+  </Match>
+  <Match>
+    <Package name="~tcl\.pkg.*" />
+  </Match>
+  <Match>
+    <Package name="~org\.jfree.*" />
+  </Match>
+  <Match>
+    <Package name="~tjc.*" />
+  </Match>
+  <Match>
+    <Package name="~com\.onemoonscientific\.swank\.canvas3D" />
+  </Match>
+</FindBugsFilter>
