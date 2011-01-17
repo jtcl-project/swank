@@ -56,7 +56,7 @@ set specialPrints {
 }
 
 append specialInits {
-        swkImageCanvas = new SwkImageCanvas(interp,name,className);
+        swkImageCanvas = new SwkImageCanvas(interp,name);
         swkImageCanvas.setComponent((Component) this);
         addKeyListener(new KeyListener() {
 
