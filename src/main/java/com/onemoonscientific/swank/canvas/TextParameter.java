@@ -2,12 +2,20 @@ package com.onemoonscientific.swank.canvas;
 
 import tcl.lang.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class TextParameter extends CanvasParameter {
 
     private static String name = "text";
     private static String defValue = "";
     private String newValue = defValue;
 
+    /**
+     *
+     * @return
+     */
     public String getName() {
         return name;
     }
@@ -16,6 +24,13 @@ public class TextParameter extends CanvasParameter {
         return defValue;
     }
 
+    /**
+     *
+     * @param interp
+     * @param swkShape
+     * @return
+     * @throws TclException
+     */
     public TclObject getValue(Interp interp, SwkShape swkShape)
             throws TclException {
 // fixme switch to using a TextInterface

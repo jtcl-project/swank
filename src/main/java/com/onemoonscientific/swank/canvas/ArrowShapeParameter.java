@@ -2,6 +2,10 @@ package com.onemoonscientific.swank.canvas;
 
 import tcl.lang.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class ArrowShapeParameter extends CanvasParameter {
 
     private static String name = "arrowshape";
@@ -10,14 +14,29 @@ public class ArrowShapeParameter extends CanvasParameter {
     private double arrowShapeB = 10.0;
     private double arrowShapeC = 3.0;
 
+    /**
+     *
+     * @return
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getDefault() {
         return defValue;
     }
 
+    /**
+     *
+     * @param interp
+     * @param swkShape
+     * @return
+     * @throws TclException
+     */
     public TclObject getValue(Interp interp, SwkShape swkShape)
             throws TclException {
         if ((swkShape == null) || !(swkShape instanceof ItemLine)) {
@@ -33,6 +52,13 @@ public class ArrowShapeParameter extends CanvasParameter {
         return list;
     }
 
+    /**
+     *
+     * @param interp
+     * @param swkCanvas
+     * @param arg
+     * @throws TclException
+     */
     @Override
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
             throws TclException {
@@ -48,6 +74,11 @@ public class ArrowShapeParameter extends CanvasParameter {
         arrowShapeC = TclDouble.get(interp, arrowShapeList[2]);
     }
 
+    /**
+     *
+     * @param swkCanvas
+     * @param swkShape
+     */
     public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
         if ((swkShape != null) && (swkShape instanceof ItemLine)) {
             ItemLine swkLine = (ItemLine) swkShape;

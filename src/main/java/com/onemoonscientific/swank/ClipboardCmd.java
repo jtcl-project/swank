@@ -31,6 +31,10 @@ import java.awt.datatransfer.*;
 
 import javax.swing.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class ClipboardCmd implements Command, ClipboardOwner {
 
     private static final String[] validCmds = {
@@ -40,6 +44,12 @@ public class ClipboardCmd implements Command, ClipboardOwner {
     private static final int OPT_GET = 2;
     private static final int OPT_PASTEWIDGET = 3;
 
+    /**
+     * 
+     * @param interp
+     * @param argv
+     * @throws TclException
+     */
     public void cmdProc(Interp interp, TclObject[] argv)
             throws TclException {
         if (argv.length < 2) {

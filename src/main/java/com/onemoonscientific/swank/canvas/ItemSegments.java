@@ -38,6 +38,10 @@ import com.onemoonscientific.swank.*;
 import java.awt.*;
 import java.awt.geom.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class ItemSegments extends SwkShape {
 
     static CanvasParameter[] parameters = {
@@ -57,6 +61,12 @@ public class ItemSegments extends SwkShape {
         fill = null;
     }
 
+    /**
+     *
+     * @param canvas
+     * @param coords
+     * @throws SwkException
+     */
     @Override
     public void coords(SwkImageCanvas canvas, double[] coords)
             throws SwkException {
@@ -80,8 +90,11 @@ public class ItemSegments extends SwkShape {
         applyCoordinates();
     }
 
+    /**
+     *
+     */
     @Override
-    public void applyCoordinates() {
+    protected void applyCoordinates() {
         gPath.reset();
 
         for (int i = 0; i < storeCoords.length; i += 4) {
@@ -99,6 +112,10 @@ public class ItemSegments extends SwkShape {
         shape = aT.createTransformedShape(gPath);
     }
 
+    /**
+     *
+     * @return
+     */
     public String getType() {
         return "segments";
     }

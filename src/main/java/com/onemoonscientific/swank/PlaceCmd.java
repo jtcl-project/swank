@@ -29,6 +29,10 @@ import java.awt.*;
 import java.util.*;
 import javax.swing.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class PlaceCmd implements Command {
 
     static Hashtable columnTable = new Hashtable();
@@ -43,6 +47,12 @@ public class PlaceCmd implements Command {
     static TclObject configArg = TclString.newInstance("configure");
     Interp interp;
 
+    /**
+     *
+     * @param interp
+     * @param argv
+     * @throws TclException
+     */
     public void cmdProc(final Interp interp, final TclObject[] argv)
             throws TclException {
         int i;

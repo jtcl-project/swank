@@ -24,5 +24,9 @@
  */
 package com.onemoonscientific.swank;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public interface SwkVariable {
 }

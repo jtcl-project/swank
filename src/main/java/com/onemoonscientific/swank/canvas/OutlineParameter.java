@@ -4,6 +4,10 @@ import com.onemoonscientific.swank.*;
 import tcl.lang.*;
 import java.awt.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class OutlineParameter extends CanvasParameter {
 
     private static final String name = "outline";

@@ -3,6 +3,10 @@ package com.onemoonscientific.swank.canvas;
 import tcl.lang.*;
 import java.awt.BasicStroke;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class JoinstyleParameter extends CanvasParameter {
 
     private static final String name = "joinstyle";

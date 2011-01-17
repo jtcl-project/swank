@@ -29,6 +29,10 @@ import tcl.lang.*;
 import java.awt.*;
 import java.util.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class PlacerLayout implements LayoutManager {
     //this hashtable will do the mapping between
     //options and the actual option object
@@ -201,6 +205,7 @@ public class PlacerLayout implements LayoutManager {
 
     /**
      * Constructs a new Placer Layout.
+     * @param interp
      */
     public PlacerLayout(Interp interp) {
         this.interp = interp;
@@ -254,6 +259,12 @@ public class PlacerLayout implements LayoutManager {
         return ret;
     }
 
+    /**
+     *
+     * @param spec
+     * @param comp
+     * @return
+     */
     public boolean updateLayoutComponent(String spec, Component comp) {
         PlaceRecord pr = (PlaceRecord) component_table.get(comp);
 
@@ -268,7 +279,7 @@ public class PlacerLayout implements LayoutManager {
 
     /**
      * Adds the specified component to the layout.
-     * @param name information about attachments
+     * @param spec
      * @param comp the the component to be added
      */
     public void addLayoutComponent(String spec, Component comp) {
@@ -611,6 +622,7 @@ public class PlacerLayout implements LayoutManager {
      * Returns the preferred dimensions for this layout given the
      * components in the specified target container.
      * @param target the component which needs to be laid out
+     * @return
      * @see Container
      * @see #minimumSize
      */
@@ -636,6 +648,7 @@ public class PlacerLayout implements LayoutManager {
      * Returns the minimum dimensions needed to layout the
      * components contained in the specified target container.
      * @param target the component which needs to be laid out
+     * @return
      * @see #preferredSize
      */
     public Dimension minimumLayoutSize(Container target) {
@@ -895,6 +908,11 @@ public class PlacerLayout implements LayoutManager {
     // This method will return the current packing properties
     // of a specific widget like the following format
     // -anchor center -expand 0 -fill none -ipadx 0 -ipady 0 -padx 0 -pady 0 -side top
+    /**
+     *
+     * @param comp
+     * @param sb
+     */
     public void getComponentSettings(final Component comp, final ArrayList<String> sb) {
 
         PlaceRecord pr = (PlaceRecord) component_table.get(comp);
@@ -1000,6 +1018,10 @@ public class PlacerLayout implements LayoutManager {
     }
 
     // "update" functionality workaround
+    /**
+     *
+     * @param bool
+     */
     public void setIgnoreNextRemove(boolean bool) {
         ignore_next_remove = bool;
     }
@@ -1014,8 +1036,10 @@ public class PlacerLayout implements LayoutManager {
 
     /**
      * Adds the specified component to the layout.
-     * @param name information about attachments
+     * @param interp 
      * @param comp the the component to be added
+     * @param spec
+     * @throws TclException
      */
     public static void checkPlaceArgs(Interp interp, String spec, Component comp)
             throws TclException {

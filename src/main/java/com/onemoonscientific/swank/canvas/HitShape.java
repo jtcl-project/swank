@@ -34,6 +34,10 @@
  */
 package com.onemoonscientific.swank.canvas;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class HitShape {
 
     final int handle;
@@ -49,10 +53,18 @@ public class HitShape {
         this.handle = -1;
     }
 
+    /**
+     *
+     * @return
+     */
     public SwkShape getShape() {
         return swkShape;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getHandle() {
         return handle;
     }

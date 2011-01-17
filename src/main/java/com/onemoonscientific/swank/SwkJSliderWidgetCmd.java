@@ -260,6 +260,7 @@ class SwkJSliderWidgetCmd implements Command {
         }
 
         @Override
+        @SuppressWarnings("empty-statement")
         public void run() {
             if (!hasValue) {
                 if (swkjslider.resolution >= 1.0) {

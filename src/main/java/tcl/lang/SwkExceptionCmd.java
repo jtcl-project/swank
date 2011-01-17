@@ -69,12 +69,26 @@ public class SwkExceptionCmd {
         setVar(interp, var1, var2, tObj);
     }
 
+    /**
+     *
+     * @param interp
+     * @param var1
+     * @param var2
+     * @param value
+     */
     public static void setVar(Interp interp, String var1, String var2,
             boolean value) {
         TclObject tObj = TclBoolean.newInstance(value);
         setVar(interp, var1, var2, tObj);
     }
 
+    /**
+     *
+     * @param interp
+     * @param var1
+     * @param var2
+     * @param value
+     */
     public static void setVar(Interp interp, String var1, String var2,
             String value) {
         TclObject tObj = TclString.newInstance(value);

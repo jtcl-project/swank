@@ -33,6 +33,10 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
+/**
+ * 
+ * @author brucejohnson
+ */
 public class SwkJSpinnerListener implements ChangeListener, VarTrace,
         SwkListener {
 
@@ -47,6 +51,14 @@ public class SwkJSpinnerListener implements ChangeListener, VarTrace,
         this.component = (JSpinner) component;
     }
 
+    /**
+     *
+     * @param interp
+     * @param string1
+     * @param string2
+     * @param flags
+     * @throws TclException
+     */
     public void traceProc(Interp interp, String string1, String string2,
             int flags) throws TclException {
         if (EventQueue.isDispatchThread()) {
@@ -57,6 +69,11 @@ public class SwkJSpinnerListener implements ChangeListener, VarTrace,
         setFromVar(interp);
     }
 
+    /**
+     *
+     * @param interp
+     * @throws TclException
+     */
     public void setFromVar(Interp interp) throws TclException {
         if (EventQueue.isDispatchThread()) {
             System.out.println(
@@ -100,6 +117,12 @@ public class SwkJSpinnerListener implements ChangeListener, VarTrace,
         traceLock = false;
     }
 
+    /**
+     *
+     * @param interp
+     * @param name
+     * @throws TclException
+     */
     public void setVarName(Interp interp, String name)
             throws TclException {
         if (EventQueue.isDispatchThread()) {
@@ -155,18 +178,35 @@ public class SwkJSpinnerListener implements ChangeListener, VarTrace,
         interp.resetResult();
     }
 
+    /**
+     *
+     * @return
+     */
     public String getVarName() {
         return (varName);
     }
 
+    /**
+     *
+     * @param name
+     */
     public void setCommand(String name) {
         command = name;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getCommand() {
         return (command);
     }
 
+    /**
+     *
+     * @param editor
+     * @param e
+     */
     public void keyReleased(JTextComponent editor, KeyEvent e) {
         String s1 = editor.getText();
 
@@ -194,6 +234,9 @@ public class SwkJSpinnerListener implements ChangeListener, VarTrace,
         interp.getNotifier().queueEvent(bEvent, TCL.QUEUE_TAIL);
     }
 
+    /**
+     *
+     */
     public void setVarValue() {
         TclObject tobj = null;
 
@@ -220,6 +263,10 @@ public class SwkJSpinnerListener implements ChangeListener, VarTrace,
         }
     }
 
+    /**
+     *
+     * @param s1
+     */
     public void setVarValue(String s1) {
         TclObject tobj = null;
 
@@ -245,6 +292,12 @@ public class SwkJSpinnerListener implements ChangeListener, VarTrace,
         }
     }
 
+    /**
+     *
+     * @param eventObject
+     * @param obj
+     * @param subtype
+     */
     public void processEvent(EventObject eventObject, Object obj, int subtype) {
         //   System.out.println("Process Event" + this);
         if (EventQueue.isDispatchThread()) {

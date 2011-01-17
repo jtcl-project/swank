@@ -27,11 +27,27 @@ package com.onemoonscientific.swank;
 import java.util.regex.*;
 import javax.swing.text.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class SwkDocumentSearch {
 
+    /**
+     *
+     */
     public static final int SEARCH_BACKWARDS = 1;
+    /**
+     *
+     */
     public static final int SEARCH_REGEXP = 2;
+    /**
+     *
+     */
     public static final int SEARCH_NOCASE = 4;
+    /**
+     *
+     */
     public static final int SEARCH_ELIDE = 8;
     private SwkDefaultStyledDocument doc = null;
     Pattern pattern = null;
@@ -44,6 +60,12 @@ public class SwkDocumentSearch {
     int endLine = -1;
     Result result = new Result();
 
+    /**
+     *
+     * @param searchDoc
+     * @param string
+     * @param flags
+     */
     public SwkDocumentSearch(SwkDefaultStyledDocument searchDoc, String string,
             int flags) {
         doc = searchDoc;
@@ -51,6 +73,12 @@ public class SwkDocumentSearch {
         this.flags = flags;
     }
 
+    /**
+     *
+     * @param searchStart
+     * @param searchEnd
+     * @return
+     */
     public Result search(int searchStart, int searchEnd) {
         result.i = -1;
         doc.indexParagraphs();
@@ -90,6 +118,12 @@ public class SwkDocumentSearch {
         }
     }
 
+    /**
+     *
+     * @param searchStart
+     * @param searchEnd
+     * @return
+     */
     public Result searchForwards(int searchStart, int searchEnd) {
         boolean lastLine = false;
         Element elem = null;
@@ -173,6 +207,12 @@ public class SwkDocumentSearch {
         return result;
     }
 
+    /**
+     *
+     * @param searchStart
+     * @param searchEnd
+     * @return
+     */
     public Result searchBackwards(int searchStart, int searchEnd) {
         Element elem = null;
 

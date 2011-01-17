@@ -37,6 +37,10 @@ import tcl.lang.*;
  * extension contains one Tcl command "nvcmd".  See the API documentation of
  * the tcl.lang.Extension class for details.
  */
+/**
+ *
+ * @author brucejohnson
+ */
 public class WidgetExt extends Extension {
     /*
      * Create all the commands in the Simple package.
@@ -52,6 +56,10 @@ public class WidgetExt extends Extension {
         "scrollbar", "text", "filedialog", "spinbox", "jtoolbar"
     };
 
+    /**
+     * 
+     * @param interp
+     */
     public void init(Interp interp) {
         Extension.loadOnDemand(interp, "button",
                 "com.onemoonscientific.swank.SwkJButtonCmd");

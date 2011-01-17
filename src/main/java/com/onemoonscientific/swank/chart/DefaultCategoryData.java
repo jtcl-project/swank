@@ -63,6 +63,10 @@ public class DefaultCategoryData extends DefaultCategoryDataset {
     public static DefaultCategoryData get(String name) {
         return (DefaultCategoryData) datasetMap.get(name);
     }
+    /**
+     *
+     * @return
+     */
     public String getName() {
          return name;
     }

@@ -37,6 +37,10 @@ import tcl.lang.*;
 import java.util.*;
 import java.awt.EventQueue;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class BoxAndWhiskerTableData extends BoxAndWhiskerData {
 
     int xColumn = -1;
@@ -78,6 +82,7 @@ public class BoxAndWhiskerTableData extends BoxAndWhiskerData {
             execOnThread();
         }
 
+        @Override
         public void run() {
             setTableModelOnEventThread(model);
         }
@@ -117,6 +122,9 @@ public class BoxAndWhiskerTableData extends BoxAndWhiskerData {
         yColumns = columns;
     }
 
+    /**
+     *
+     */
     public void getSeries() {
         int nRows = tableModel.getNRows();
         String yColumnName = "Data";

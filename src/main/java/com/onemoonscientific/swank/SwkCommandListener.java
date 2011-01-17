@@ -29,6 +29,10 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class SwkCommandListener implements ActionListener, SwkListener {
 
     Interp interp;
@@ -38,10 +42,18 @@ public class SwkCommandListener implements ActionListener, SwkListener {
         this.interp = interp;
     }
 
+    /**
+     *
+     * @param name
+     */
     public void setCommand(String name) {
         command = name;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getCommand() {
         return (command);
     }
@@ -52,6 +64,12 @@ public class SwkCommandListener implements ActionListener, SwkListener {
         bEvent.invokeLater();
     }
 
+    /**
+     *
+     * @param eventObject
+     * @param obj
+     * @param subtype
+     */
     public void processEvent(EventObject eventObject, Object obj, int subtype) {
         if ((command != null) && (command.length() != 0)) {
             try {

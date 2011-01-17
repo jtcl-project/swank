@@ -52,9 +52,8 @@ class SwkJComboBoxWidgetCmd implements Command {
                     "bad window path name \"" + argv[0].toString() + "\"");
         }
 
-        final SwkJComboBox swkjcombobox = (SwkJComboBox) ReflectObject.get(interp,
+        swkjcombobox = (SwkJComboBox) ReflectObject.get(interp,
                 tObj);
-        this.swkjcombobox = swkjcombobox;
 
         switch (opt) {
             case OPT_CGET:
@@ -192,6 +191,7 @@ class SwkJComboBoxWidgetCmd implements Command {
             interp.setResult(index);
         }
 
+        @Override
         public void run() {
             for (int i = 0; i < swkjcombobox.getItemCount(); i++) {
                 if (swkjcombobox.getItemAt(i).toString().equals(item)) {
@@ -212,6 +212,7 @@ class SwkJComboBoxWidgetCmd implements Command {
             execOnThread();
         }
 
+        @Override
         public void run() {
             swkjcombobox.setCreated(false);
 
@@ -234,6 +235,7 @@ class SwkJComboBoxWidgetCmd implements Command {
             interp.setResult(intResult);
         }
 
+        @Override
         public void run() {
             intResult = swkjcombobox.getItemCount();
         }
@@ -251,6 +253,7 @@ class SwkJComboBoxWidgetCmd implements Command {
             return result;
         }
 
+        @Override
         public void run() {
             result = swkjcombobox.getItemAt(index).toString();
         }
@@ -301,6 +304,7 @@ class SwkJComboBoxWidgetCmd implements Command {
             }
         }
 
+        @Override
         public void run() {
             swkjcombobox.setCreated(false);
 

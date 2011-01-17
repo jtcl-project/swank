@@ -30,6 +30,10 @@ import java.awt.*;
 import javax.swing.*;
 import java.lang.reflect.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class WmCmd implements Command {
 
     private static final String[] validCmds = {"alwaysontop",
@@ -68,6 +72,12 @@ public class WmCmd implements Command {
     private static final int OPT_TRANSIENT = 26;
     private static final int OPT_WITHDRAW = 27;
 
+    /**
+     * 
+     * @param interp
+     * @param argv
+     * @throws TclException
+     */
     public void cmdProc(final Interp interp, final TclObject[] argv)
             throws TclException {
         if (argv.length < 3) {

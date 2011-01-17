@@ -30,7 +30,12 @@ public class SwkShapeItemGet implements Runnable {
     SwkShape swkShape = null;
     Interp interp = null;
 
-    /** Creates a new instance of SwkShapeRunnable */
+    /** Creates a new instance of SwkShapeRunnable
+     * @param interp
+     * @param swkCanvas
+     * @param parString
+     * @param tag
+     */
     public SwkShapeItemGet(final Interp interp, final SwkImageCanvas swkCanvas,
             final String tag, final String parString) {
         this.interp = interp;
@@ -39,6 +44,12 @@ public class SwkShapeItemGet implements Runnable {
         this.parString = parString;
     }
 
+    /**
+     *
+     * @param configStyle
+     * @return
+     * @throws TclException
+     */
     public TclObject exec(boolean configStyle) throws TclException {
         try {
             SwingUtilities.invokeAndWait(this);

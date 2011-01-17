@@ -31,6 +31,10 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class SwkPopupListener extends MouseAdapter implements SwkListener {
 
     Interp interp;
@@ -75,12 +79,23 @@ public class SwkPopupListener extends MouseAdapter implements SwkListener {
         //maybeShowPopup(e,2);
     }
 
+    /**
+     * 
+     * @param e
+     * @param show
+     */
     public void maybeShowPopup(MouseEvent e, int show) {
         BindEvent bEvent = new BindEvent(interp, (SwkListener) this,
                 (EventObject) e, show);
         interp.getNotifier().queueEvent(bEvent, TCL.QUEUE_TAIL);
     }
 
+    /**
+     *
+     * @param eventObject
+     * @param obj
+     * @param show
+     */
     public void processEvent(EventObject eventObject, Object obj, int show) {
         if (!(eventObject instanceof MouseEvent)) {
             return;

@@ -52,6 +52,9 @@ public class XYTableGroupData extends XYData implements TableXYDataset{
     Map seriesMap = new TreeMap();
     List seriesNames = new ArrayList();
     List seriesLists = new ArrayList();
+    /**
+     *
+     */
     public XYTableGroupData() {
          name  = "xyData"+id;
          datasetMap.put(name,this);
@@ -246,6 +249,12 @@ public class XYTableGroupData extends XYData implements TableXYDataset{
         return x;
     }
 
+    /**
+     *
+     * @param series
+     * @param item
+     * @return
+     */
     public Number getX(int series, int item) {
         Number x = null;
         int rowIndex = getTableRow(series,item);
@@ -293,6 +302,12 @@ public class XYTableGroupData extends XYData implements TableXYDataset{
         return y;
 
     }
+    /**
+     *
+     * @param series
+     * @param item
+     * @return
+     */
     public double getEndYValue(int series, int item) {
         double yValue =  getYValue(series,item);
         return yValue+deltaY/2;
@@ -302,6 +317,12 @@ public class XYTableGroupData extends XYData implements TableXYDataset{
         double yValue = getEndYValue(series,item);
         return new Double(yValue);
     }
+    /**
+     *
+     * @param series
+     * @param item
+     * @return
+     */
     public double getStartYValue(int series, int item) {
         double yValue =  getYValue(series,item);
         return yValue-deltaY/2;

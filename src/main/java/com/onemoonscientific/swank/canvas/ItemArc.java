@@ -33,6 +33,10 @@ import com.onemoonscientific.swank.*;
 import java.awt.*;
 import java.awt.geom.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class ItemArc extends SwkShape {
 
     static CanvasParameter[] parameters = {
@@ -56,6 +60,12 @@ public class ItemArc extends SwkShape {
         arc2D.setAngleExtent(90);
     }
 
+    /**
+     *
+     * @param canvas
+     * @param coords
+     * @throws SwkException
+     */
     @Override
     public void coords(SwkImageCanvas canvas, double[] coords)
             throws SwkException {
@@ -68,12 +78,19 @@ public class ItemArc extends SwkShape {
         applyCoordinates();
     }
 
+    /**
+     *
+     * @return
+     */
     public String getType() {
         return "arc";
     }
 
+    /**
+     *
+     */
     @Override
-    public void applyCoordinates() {
+    protected void applyCoordinates() {
         checkCoordinates(storeCoords);
 
         AffineTransform aT = new AffineTransform();

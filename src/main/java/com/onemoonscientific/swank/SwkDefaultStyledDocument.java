@@ -30,6 +30,10 @@ import java.util.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class SwkDefaultStyledDocument extends DefaultStyledDocument
         implements DocumentListener {
 
@@ -65,6 +69,9 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
 
     // We listen to ourself. Also, we add the first paragraph to our style
     // hashtable since we won't get notified that it was added.
+    /**
+     *
+     */
     protected void init() {
         addDocumentListener(this);
 
@@ -75,6 +82,12 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
     // goes through each of the Elements that use the style and fires an event
     // indicating that the attributes for the Element have changed. This causes the
     // View to re-check the attributes and redraw.
+    /**
+     *
+     * @param swkjtextpane
+     * @param style
+     * @param remove
+     */
     public void styleUpdated(SwkJTextPane swkjtextpane, Style style,
             boolean remove) {
         // Find the set of Elements that use this style . . .
@@ -232,6 +245,10 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
     // Internal Methods
     // Called to see if there are any added or removed Elements. If there are any,
     // we need to update our hash.
+    /**
+     *
+     * @param ev
+     */
     protected void updateStyleHash(DocumentEvent ev) {
         int offset = ev.getOffset();
 
@@ -256,6 +273,10 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
     }
 
     // Called to add an Element to our hash.
+    /**
+     *
+     * @param elem
+     */
     protected void addToStyleHash(Element elem) {
         AttributeSet attrs = elem.getAttributes();
         String[] tagList = null;
@@ -303,6 +324,10 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
     }
 
     // Called to remove an Element from our hash
+    /**
+     *
+     * @param elem
+     */
     protected void removeFromStyleHash(Element elem) {
         //System.out.println("remove from stylehash "+elem.toString());
         AttributeSet attrs = elem.getAttributes();
@@ -332,6 +357,9 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
         }
     }
 
+    /**
+     *
+     */
     public void indexParagraphs() {
         ElementIterator elIter = new ElementIterator(this);
         Element elem;
@@ -525,7 +553,7 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
                 //System.out.println("new eq old");
             } else {
                 //System.out.println("new "+tagName+" neq old "+oldName);
-                if (oldName != "") {
+                if (oldName == null ? "" != null : !oldName.equals("")) {
                     newName = oldName + " " + tagName;
                 } else {
                     newName = tagName;
@@ -559,6 +587,13 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
         }
     }
 
+    /**
+     *
+     * @param swkjtextpane
+     * @param markName
+     * @param direction
+     * @throws IllegalArgumentException
+     */
     public void setMarkGravity(SwkJTextPane swkjtextpane, String markName,
             String direction) throws IllegalArgumentException {
         int offset = 0;
@@ -624,6 +659,13 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
         }
     }
 
+    /**
+     *
+     * @param swkjtextpane
+     * @param markName
+     * @param index
+     * @throws IllegalArgumentException
+     */
     public void setMark(SwkJTextPane swkjtextpane, String markName, String index)
             throws IllegalArgumentException {
         if (markName.toString().equals("end")) {
@@ -654,12 +696,20 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
         }
     }
 
+    /**
+     *
+     * @param markStrings
+     */
     public void unsetMarks(String[] markStrings) {
         for (int i = 0; i < markStrings.length; i++) {
             marks.remove(markStrings[i]);
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public ArrayList getMarks() {
         ArrayList list = new ArrayList();
         Enumeration e = marks.keys();
@@ -675,6 +725,10 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
         return list;
     }
 
+    /**
+     *
+     * @return
+     */
     public ArrayList getTags() {
         ArrayList list = new ArrayList();
         Enumeration e = styleHash.keys();
@@ -687,6 +741,14 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
         return list;
     }
 
+    /**
+     *
+     * @param swkjtextpane
+     * @param indexArg1
+     * @param op
+     * @param indexArg2
+     * @return
+     */
     public Result compareIndices(SwkJTextPane swkjtextpane, String indexArg1,
             String op, String indexArg2) {
         Result result = new Result();
@@ -733,6 +795,13 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
         return result;
     }
 
+    /**
+     *
+     * @param swkjtextpane
+     * @param indexArg
+     * @return
+     * @throws IllegalArgumentException
+     */
     public int getIndexLC(SwkJTextPane swkjtextpane, String indexArg)
             throws IllegalArgumentException {
         String[] indexVals = indexArg.split("\\s", -1);
@@ -1045,12 +1114,25 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
     }
 
     // should replace much of this with call to regexp
+    /**
+     *
+     * @param swkjtextpane
+     * @param indexArg
+     * @return
+     */
     public String getIndex(SwkJTextPane swkjtextpane, String indexArg) {
         int offset = getIndexLC(swkjtextpane, indexArg);
 
         return getIndexFromOffset(offset, null);
     }
 
+    /**
+     *
+     * @param offset
+     * @param dLine
+     * @param mode
+     * @return
+     */
     public int indexMath(int offset, int dLine, int mode) {
         indexParagraphs();
 
@@ -1100,6 +1182,12 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
         return offset;
     }
 
+    /**
+     *
+     * @param offset
+     * @param indexVals
+     * @return
+     */
     public String getIndexFromOffset(int offset, TclObject[] indexVals) {
         indexParagraphs();
 
@@ -1135,6 +1223,11 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
         return ("1.0");
     }
 
+    /**
+     *
+     * @param offset
+     * @return
+     */
     public int getParagraph(int offset) {
         int endOffset = endPosition.getOffset();
 
@@ -1160,18 +1253,35 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
         return -1;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getName() {
         return (name);
     }
 
+    /**
+     * 
+     * @param width
+     */
     public void setSwkWidth(int width) {
         this.swkwidth = width;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getSwkWidth() {
         return (swkwidth);
     }
 
+    /**
+     *
+     * @param swkjtextpane
+     * @param tagName
+     */
     public void removeStyle(SwkJTextPane swkjtextpane, String tagName) {
         //System.out.println("remove "+tagName);
         Style style = swkjtextpane.getStyle(tagName);
@@ -1211,6 +1321,13 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
         }
     }
 
+    /**
+     *
+     * @param from
+     * @param to
+     * @param low
+     * @param high
+     */
     public void shuttlesort(int[] from, int[] to, int low, int high) {
         if ((high - low) < 2) {
             return;
@@ -1242,10 +1359,22 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
         }
     }
 
+    /**
+     *
+     * @param tagName
+     * @param mode
+     * @return
+     */
     public String getRanges(String tagName, int mode) {
         return getRangeString(tagName, mode);
     }
 
+    /**
+     *
+     * @param tagName
+     * @param mode
+     * @return
+     */
     public String getRangeString(String tagName, int mode) {
         int[] rangeIndexes = getRangeArray(tagName);
 
@@ -1260,6 +1389,12 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
         }
     }
 
+    /**
+     *
+     * @param tagName
+     * @param mode
+     * @return
+     */
     public int getRangeOffset(String tagName, int mode) {
         int[] rangeIndexes = getRangeArray(tagName);
 
@@ -1270,6 +1405,11 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
         return (getRangeOffset(rangeIndexes, mode));
     }
 
+    /**
+     *
+     * @param tagName
+     * @return
+     */
     public int[] getRangeArray(String tagName) {
         Hashtable ht = (Hashtable) styleHash.get(tagName);
         String[] styleList = null;
@@ -1335,6 +1475,11 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
         return indexes;
     }
 
+    /**
+     *
+     * @param indexes
+     * @return
+     */
     public String getRangeString(int[] indexes) {
         int level = 0;
         StringBuffer sbuf = new StringBuffer();
@@ -1368,6 +1513,12 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
         return (sbuf.toString());
     }
 
+    /**
+     *
+     * @param indexes
+     * @param mode
+     * @return
+     */
     public String getRangeString(int[] indexes, int mode) {
         if (mode == 1) {
             if (indexes.length == 0) {
@@ -1390,6 +1541,12 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
         }
     }
 
+    /**
+     *
+     * @param indexes
+     * @param mode
+     * @return
+     */
     public int getRangeOffset(int[] indexes, int mode) {
         if (mode == 1) {
             if (indexes.length == 0) {

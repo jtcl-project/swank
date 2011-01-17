@@ -2,6 +2,10 @@ package com.onemoonscientific.swank;
 
 import tcl.lang.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public abstract class SetVarEvent extends TclEvent {
 
     Interp interp = null;
@@ -14,6 +18,11 @@ public abstract class SetVarEvent extends TclEvent {
     void setObject() {
     }
 
+    /**
+     *
+     * @param flags
+     * @return
+     */
     public int processEvent(int flags) {
         setObject();
 
@@ -42,6 +51,9 @@ public abstract class SetVarEvent extends TclEvent {
         return 1;
     }
 
+    /**
+     *
+     */
     public void invokeLater() {
         interp.getNotifier().queueEvent(this, TCL.QUEUE_TAIL);
     }

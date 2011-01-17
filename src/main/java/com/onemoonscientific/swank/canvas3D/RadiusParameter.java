@@ -16,6 +16,11 @@ public class RadiusParameter extends CanvasParameter {
         return defValue + "";
     }
 
+    /**
+     *
+     * @param s
+     * @return
+     */
     public boolean isParameterLabel(String s) {
         if ((s.length() > 3) && "-radius".startsWith(s)) {
             return true;

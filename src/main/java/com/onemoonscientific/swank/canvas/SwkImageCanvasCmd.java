@@ -40,6 +40,12 @@ public class SwkImageCanvasCmd implements Command {
         }
     }
 
+    /**
+     *
+     * @param interp
+     * @param argv
+     * @throws TclException
+     */
     public void cmdProcET(Interp interp, TclObject[] argv)
             throws TclException {
         int i;

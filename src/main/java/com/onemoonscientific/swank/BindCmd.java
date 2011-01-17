@@ -227,42 +227,77 @@ public class BindCmd implements Command {
         }
     }
 
+    /**
+     *
+     * @param tag
+     * @return
+     */
     protected static ArrayList<SwkBinding> getMouseBindings(String tag) {
         ArrayList<SwkBinding> bindingVector = (ArrayList<SwkBinding>) mouseTable.get(tag);
 
         return bindingVector;
     }
 
+    /**
+     *
+     * @param tag
+     * @return
+     */
     protected static ArrayList<SwkBinding> getMouseMotionBindings(String tag) {
         ArrayList<SwkBinding> bindingVector = (ArrayList<SwkBinding>) mouseMotionTable.get(tag);
 
         return bindingVector;
     }
 
+    /**
+     * 
+     * @param tag
+     * @return
+     */
     protected static ArrayList<SwkBinding> getKeyBindings(String tag) {
         ArrayList<SwkBinding> bindingVector = (ArrayList<SwkBinding>) keyTable.get(tag);
 
         return bindingVector;
     }
 
+    /**
+     *
+     * @param tag
+     * @return
+     */
     protected static ArrayList<SwkBinding> getFocusBindings(String tag) {
         ArrayList<SwkBinding> bindingVector = (ArrayList<SwkBinding>) focusTable.get(tag);
 
         return bindingVector;
     }
 
+    /**
+     *
+     * @param tag
+     * @return
+     */
     protected static ArrayList<SwkBinding> getActivationBindings(String tag) {
         ArrayList<SwkBinding> bindingVector = (ArrayList<SwkBinding>) activationTable.get(tag);
 
         return bindingVector;
     }
 
+    /**
+     *
+     * @param tag
+     * @return
+     */
     protected static ArrayList<SwkBinding> getVirtualBindings(String tag) {
         ArrayList<SwkBinding> bindingVector = (ArrayList<SwkBinding>) virtualTable.get(tag);
 
         return bindingVector;
     }
 
+    /**
+     *
+     * @param interp
+     * @param swkWidget
+     */
     public static void addDefaultListeners(Interp interp, SwkWidget swkWidget) {
         if (swkWidget.getFocusListener() == null) {
             SwkFocusListener focusListener = new SwkFocusListener(interp,
@@ -768,6 +803,14 @@ public class BindCmd implements Command {
         doCmd(interp, binding, component, (ActionEvent) null);
     }
 
+    /**
+     *
+     * @param interp
+     * @param binding
+     * @param component
+     * @param e
+     * @throws TclException
+     */
     public static void doCmd(Interp interp, SwkBinding binding,
             Component component, ActionEvent e) throws TclException {
         int i;
@@ -847,6 +890,7 @@ public class BindCmd implements Command {
      * @param interp The interpreter in which command is executing.
      * @param command String containing the command to evaluate.
      * @param e The Input Event that occured to trigger this binding response.
+     * @param hitShape
      * @throws TclException if exception is thrown when evaluating the command.
      */
     public static void doCmd(Interp interp, String command, InputEvent e, HitShape hitShape)

@@ -28,6 +28,10 @@ import tcl.lang.*;
 import java.awt.*;
 import javax.swing.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class SwkCmdET implements Command {
 
     int interpResult = 0;
@@ -86,6 +90,7 @@ public class SwkCmdET implements Command {
         Interp interp;
         TclObject[] argv = null;
 
+        @SuppressWarnings("empty-statement")
         WidgetCmd(Interp interp, TclObject[] argv) {
             this.interp = interp;
             this.argv = new TclObject[argv.length];

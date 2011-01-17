@@ -6,6 +6,10 @@ import tcl.lang.*;
 
 import java.awt.image.BufferedImage;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class ImageParameter extends CanvasParameter {
 
     private static final String name = "image";
@@ -13,14 +17,29 @@ public class ImageParameter extends CanvasParameter {
     private BufferedImage newImage = null;
     private String newName = null;
 
+    /**
+     *
+     * @return
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getDefault() {
         return defValue;
     }
 
+    /**
+     * 
+     * @param interp
+     * @param swkShape
+     * @return
+     * @throws TclException
+     */
     public TclObject getValue(Interp interp, SwkShape swkShape)
             throws TclException {
         if (swkShape == null) {
@@ -34,6 +53,13 @@ public class ImageParameter extends CanvasParameter {
         }
     }
 
+    /**
+     *
+     * @param interp
+     * @param swkCanvas
+     * @param arg
+     * @throws TclException
+     */
     @Override
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
             throws TclException {
@@ -41,6 +67,11 @@ public class ImageParameter extends CanvasParameter {
         newName = arg.toString();
     }
 
+    /**
+     *
+     * @param swkCanvas
+     * @param swkShape
+     */
     public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
         if ((swkShape != null) && (swkShape instanceof ItemImage)) {
             swkShape.imageName = newName;

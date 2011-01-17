@@ -2,6 +2,10 @@ package com.onemoonscientific.swank.canvas;
 
 import tcl.lang.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class JustifyParameter extends CanvasParameter {
 
     private static final String name = "justify";

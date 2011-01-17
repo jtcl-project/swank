@@ -5,6 +5,10 @@ import tcl.lang.*;
 import java.awt.*;
 import java.awt.geom.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class GradientParameter extends CanvasParameter {
 
     private static String name = "gradient";
@@ -13,14 +17,29 @@ public class GradientParameter extends CanvasParameter {
     private Point2D p1 = new Point2D.Double(0, 0);
     private Point2D p2 = new Point2D.Double(0, 0);
 
+    /**
+     *
+     * @return
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getDefault() {
         return "";
     }
 
+    /**
+     *
+     * @param interp
+     * @param swkShape
+     * @return
+     * @throws TclException
+     */
     public TclObject getValue(Interp interp, SwkShape swkShape)
             throws TclException {
         if (swkShape == null) {
@@ -66,6 +85,13 @@ public class GradientParameter extends CanvasParameter {
         return (TclString.newInstance(result));
     }
 
+    /**
+     *
+     * @param interp
+     * @param swkCanvas
+     * @param arg
+     * @throws TclException
+     */
     @Override
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
             throws TclException {
@@ -76,6 +102,11 @@ public class GradientParameter extends CanvasParameter {
         }
     }
 
+    /**
+     *
+     * @param swkCanvas
+     * @param swkShape
+     */
     public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
         if (swkShape.shape == null) {
             return;

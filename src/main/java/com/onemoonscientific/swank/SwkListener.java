@@ -27,7 +27,17 @@ package com.onemoonscientific.swank;
 import java.util.*;
 
 
+/**
+ *
+ * @author brucejohnson
+ */
 public interface SwkListener {
 
+    /**
+     *
+     * @param eventObject
+     * @param obj
+     * @param subtype
+     */
     public void processEvent(EventObject eventObject, Object obj, int subtype);
 }

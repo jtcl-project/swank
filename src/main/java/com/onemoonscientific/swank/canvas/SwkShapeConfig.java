@@ -27,10 +27,10 @@ package com.onemoonscientific.swank.canvas;
 import com.onemoonscientific.swank.*;
 
 
-public interface SwkShapeConfig {
+interface SwkShapeConfig {
 
-    public void coords(SwkImageCanvas canvas, double[] coords)
+    void coords(SwkImageCanvas canvas, double[] coords)
             throws SwkException;
 
-    public String getType();
+    String getType();
 }

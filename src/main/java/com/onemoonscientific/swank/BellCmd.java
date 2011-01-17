@@ -28,8 +28,18 @@ import tcl.lang.*;
 import tcl.pkg.java.ReflectObject;
 import java.awt.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class BellCmd implements Command {
 
+    /**
+     * 
+     * @param interp
+     * @param argv
+     * @throws TclException
+     */
     public void cmdProc(Interp interp, TclObject[] argv)
             throws TclException {
         int i;
@@ -61,12 +71,17 @@ public class BellCmd implements Command {
 
         (new UpdateOnEventThread() {
 
+            @Override
             public void run() {
                 beep(object);
             }
         }).execOnThread();
     }
 
+    /**
+     *
+     * @param object
+     */
     protected static void beep(Object object) {
         if ((object == null) || !(object instanceof Component)) {
             Toolkit.getDefaultToolkit().beep();

@@ -29,11 +29,21 @@ import java.io.*;
 import java.util.*;
 
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class OptionCmd implements Command {
 
     static Vector uniqueOptions = new Vector();
     static Hashtable classHash = new Hashtable();
 
+    /**
+     *
+     * @param interp
+     * @param argv
+     * @throws TclException
+     */
     public void cmdProc(Interp interp, TclObject[] argv)
             throws TclException {
         int i;

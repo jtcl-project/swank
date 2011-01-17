@@ -87,12 +87,20 @@ public class CategoryPlotShapeComplete extends SwkShape implements DatasetShape,
         setRenderer("render");
         setShape(rect2D);
     }
-        public String getType() {
+    /**
+     *
+     * @return
+     */
+    public String getType() {
             return plotType;
         }
     public CategoryPlot getPlot() {
         return plot;
     } 
+    /**
+     *
+     * @param renderName
+     */
     public  void setRenderer(String renderName) {
         renderer = new BarRenderer();
         plot.setRenderer(renderer);
@@ -102,6 +110,11 @@ public class CategoryPlotShapeComplete extends SwkShape implements DatasetShape,
         //HighLowData categoryData = HighLowData.get(name);
         plot.setDataset(categoryData);
     }
+    /**
+     *
+     * @param index
+     * @param name
+     */
     public void setDataset(int index, String name) {
         DefaultCategoryData categoryData = DefaultCategoryData.get(name);
         //HighLowData categoryData = HighLowData.get(name);
@@ -140,6 +153,10 @@ public class CategoryPlotShapeComplete extends SwkShape implements DatasetShape,
     public boolean getLegendState() {
         return legendState;
     }
+    /**
+     *
+     * @param state
+     */
     public void setLegendState(boolean state) {
         legendState = state;
     }
@@ -207,6 +224,8 @@ public class CategoryPlotShapeComplete extends SwkShape implements DatasetShape,
     }
 
 
+    @Override
+    @SuppressWarnings("empty-statement")
     public void paintShape(Graphics2D g2) {
         Point2D anchor = new Point2D.Double();
         applyCoordinates();
@@ -240,6 +259,12 @@ public class CategoryPlotShapeComplete extends SwkShape implements DatasetShape,
 
     public void addSymbol(float x1, float y1, float radius) {
     }
+    /**
+     *
+     * @param interp
+     * @return
+     * @throws TclException
+     */
     public TclObject getDatasets(Interp interp) throws TclException {
                 int nDatasets = plot.getDatasetCount();
                 TclObject list = TclList.newInstance();
@@ -268,7 +293,11 @@ public void updateDatasets(String[] datasetNames) {
       public void updateColors(Color[] colors) {
        }
 
-   public CategoryAxis getDomainAxis () {
+      /**
+       *
+       * @return
+       */
+      public CategoryAxis getDomainAxis() {
 	    return (CategoryAxis) plot.getDomainAxis();
     }
   public NumberAxis getRangeAxis () {

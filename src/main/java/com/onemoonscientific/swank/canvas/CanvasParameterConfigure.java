@@ -13,8 +13,20 @@ import tcl.lang.*;
  */
 public interface CanvasParameterConfigure {
 
+    /**
+     *
+     * @param swkCanvas
+     * @param swkShape
+     */
     public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape);
 
+    /**
+     *
+     * @param interp
+     * @param swkCanvas
+     * @param arg
+     * @throws TclException
+     */
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
             throws TclException;
 }

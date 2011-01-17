@@ -31,6 +31,10 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class SwkTableModel extends AbstractTableModel
         implements TableModelListener {
 
@@ -44,9 +48,21 @@ public class SwkTableModel extends AbstractTableModel
     static private final int SET = 4;
     String[] modes = {"rows", "columns", "header", "get", "set"};
     Interp interp = null;
+    /**
+     * 
+     */
     public String command = null;
+    /**
+     *
+     */
     public String variable = null;
+    /**
+     *
+     */
     public boolean useCommand = false;
+    /**
+     *
+     */
     public boolean tableEditable = true;
     Hashtable colTable = new Hashtable();
     SimpleDateFormat dateFormat = null;
@@ -56,13 +72,23 @@ public class SwkTableModel extends AbstractTableModel
     boolean ascending = true;
     int compares;
     private int sortMode;
+    /**
+     *
+     */
     protected SwkTableModel model;
     ArrayList columnArrays = new ArrayList();
     ArrayList headers = new ArrayList();
 
+    /**
+     *
+     */
     public SwkTableModel() {
     }
 
+    /**
+     *
+     * @param interp
+     */
     public SwkTableModel(Interp interp) {
         this.interp = interp;
         this.command = "";
@@ -77,38 +103,74 @@ public class SwkTableModel extends AbstractTableModel
         //addTableModelListener(this);
     }
 
+    /**
+     *
+     * @return
+     */
     synchronized public int getNRows() {
         return nRows;
     }
 
+    /**
+     *
+     * @param nRows
+     */
     synchronized public void setNRows(int nRows) {
         this.nRows = nRows;
     }
 
+    /**
+     *
+     * @return
+     */
     synchronized public int getNCols() {
         return nCols;
     }
 
+    /**
+     *
+     * @param nCols
+     */
     synchronized public void setNCols(int nCols) {
         this.nCols = nCols;
     }
 
+    /**
+     *
+     * @param interp
+     */
     public void setInterp(Interp interp) {
         this.interp = interp;
     }
 
+    /**
+     *
+     * @return
+     */
     public Interp getInterp() {
         return interp;
     }
 
+    /**
+     *
+     * @return
+     */
     public SwkTableModel getModel() {
         return model;
     }
 
+    /**
+     *
+     * @param model
+     */
     public void setModel(SwkTableModel model) {
         this.model = model;
     }
 
+    /**
+     *
+     * @param command
+     */
     public void setCommand(String command) {
         this.command = command.intern();
         useCommand = true;
@@ -144,11 +206,18 @@ public class SwkTableModel extends AbstractTableModel
         return (tableEditable);
     }
 
+    /**
+     *
+     * @param interp
+     * @param c
+     * @param colClass
+     */
     public void setColumnClass(Interp interp, int c, Class colClass) {
         colTable.put(Integer.valueOf(c), colClass);
         tableChanged(new TableModelEvent(this));
     }
 
+    @Override
     public Class getColumnClass(int c) {
         Class colClass = (Class) colTable.get(Integer.valueOf(c));
 
@@ -306,6 +375,15 @@ public class SwkTableModel extends AbstractTableModel
         }
     }
 
+    /**
+     *
+     * @param interp
+     * @param command
+     * @param mode
+     * @param row
+     * @param col
+     * @param value
+     */
     public void doCommand(Interp interp, String command, int mode, int row,
             int col, Object value) {
         int i;

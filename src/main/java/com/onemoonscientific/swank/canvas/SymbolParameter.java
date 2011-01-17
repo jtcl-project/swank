@@ -2,12 +2,20 @@ package com.onemoonscientific.swank.canvas;
 
 import tcl.lang.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class SymbolParameter extends CanvasParameter {
 
     private static final String name = "symbol";
     private static int defValue = 3;
     private int newValue = defValue;
 
+    /**
+     *
+     * @return
+     */
     public String getName() {
         return name;
     }
@@ -17,6 +25,11 @@ public class SymbolParameter extends CanvasParameter {
     }
 
 
+    /**
+     *
+     * @param symbolName
+     * @return
+     */
     public int parseSymbolType(String symbolName) {
         int symbolType = -1;
 
@@ -39,6 +52,11 @@ public class SymbolParameter extends CanvasParameter {
         return symbolType;
     }
 
+    /**
+     *
+     * @param symbolType
+     * @return
+     */
     public static String getSymbolType(int symbolType) {
         switch (symbolType) {
             case -1:

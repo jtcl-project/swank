@@ -38,6 +38,10 @@ import tcl.lang.*;
  * extension contains one Tcl command "nvcmd".  See the API documentation of
  * the tcl.lang.Extension class for details.
  */
+/**
+ *
+ * @author brucejohnson
+ */
 public class CanvasExt extends Extension {
     /*
      * Create all the commands in the Simple package.

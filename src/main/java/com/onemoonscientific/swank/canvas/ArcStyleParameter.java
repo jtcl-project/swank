@@ -4,21 +4,40 @@ import tcl.lang.*;
 
 import java.awt.geom.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class ArcStyleParameter extends CanvasParameter {
 
     private static String name = "style";
     private static String defValue = "arc";
     private int newValue = Arc2D.OPEN;
 
+    /**
+     *
+     * @return
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getDefault() {
         return defValue;
     }
 
 
+    /**
+     *
+     * @param interp
+     * @param swkShape
+     * @return
+     * @throws TclException
+     */
     public TclObject getValue(Interp interp, SwkShape swkShape)
             throws TclException {
         if (swkShape == null) {
@@ -53,6 +72,13 @@ public class ArcStyleParameter extends CanvasParameter {
         }
     }
 
+    /**
+     *
+     * @param interp
+     * @param swkCanvas
+     * @param arg
+     * @throws TclException
+     */
     @Override
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
             throws TclException {
@@ -65,6 +91,11 @@ public class ArcStyleParameter extends CanvasParameter {
         }
     }
 
+    /**
+     *
+     * @param swkCanvas
+     * @param swkShape
+     */
     public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
         if (swkShape == null) {
             return;

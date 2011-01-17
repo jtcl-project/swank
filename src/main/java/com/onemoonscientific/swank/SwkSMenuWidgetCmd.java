@@ -14,7 +14,6 @@ import java.awt.*;
 
 import java.io.*;
 
-import java.lang.*;
 
 import java.net.*;
 
@@ -170,6 +169,7 @@ class SwkSMenuWidgetCmd implements Command {
             execOnThread();
         }
 
+        @Override
         public void run() {
             if (sIndex != null) {
                 try {

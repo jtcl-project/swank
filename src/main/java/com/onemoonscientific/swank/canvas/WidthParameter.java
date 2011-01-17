@@ -4,6 +4,10 @@ import com.onemoonscientific.swank.*;
 
 import tcl.lang.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class WidthParameter extends CanvasParameter {
 
     private static String name = "width";
@@ -14,6 +18,10 @@ public class WidthParameter extends CanvasParameter {
         return name;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getDefault() {
         return defValue + "";
     }

@@ -36,14 +36,29 @@ import java.util.*;
 public class BindTagsCmd implements Command {
     // This Hashtable stores class level focus bindings.
 
+    /**
+     *
+     */
     public static Hashtable focusTable = new Hashtable();
     // This Hashtable stores class level configure bindings.
+    /**
+     *
+     */
     public static Hashtable configureTable = new Hashtable();
     // This Hashtable stores class level key bindings.
+    /**
+     *
+     */
     public static Hashtable keyTable = new Hashtable();
     // This Hashtable stores class level mouse bindings.
+    /**
+     *
+     */
     public static Hashtable mouseTable = new Hashtable();
     // This Hashtable stores class level mousemotion bindings.
+    /**
+     *
+     */
     public static Hashtable mouseMotionTable = new Hashtable();
 
     /** Method called to process the bind command.

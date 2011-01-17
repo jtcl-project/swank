@@ -24,7 +24,15 @@
  */
 package com.onemoonscientific.swank;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public interface TraceLock {
 
+    /**
+     *
+     * @param newValue
+     */
     public void setTraceLock(boolean newValue);
 }

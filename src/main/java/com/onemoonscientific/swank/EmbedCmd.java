@@ -28,8 +28,18 @@ import tcl.lang.*;
 import tcl.pkg.java.ReflectObject;
 import java.awt.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class EmbedCmd implements Command {
 
+    /**
+     *
+     * @param interp
+     * @param argv
+     * @throws TclException
+     */
     public void cmdProc(Interp interp, TclObject[] argv)
             throws TclException {
         if (argv.length != 3) {

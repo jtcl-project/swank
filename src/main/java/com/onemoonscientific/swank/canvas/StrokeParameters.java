@@ -51,7 +51,9 @@ public class StrokeParameters {
     }
 
     /**
-     * @param cap the cap to set
+     * @param strokePar
+     * @param newValue
+     * @return
      */
     public static StrokeParameters setCap(StrokeParameters strokePar, int newValue) {
         if (newValue != strokePar.cap) {
@@ -71,6 +73,12 @@ public class StrokeParameters {
         return join;
     }
 
+    /**
+     *
+     * @param strokePar
+     * @param newValue
+     * @return
+     */
     public static StrokeParameters setJoin(StrokeParameters strokePar, int newValue) {
         if (newValue != strokePar.join) {
             if (strokePar == defaultPar) {
@@ -90,7 +98,9 @@ public class StrokeParameters {
     }
 
     /**
-     * @param miterLimit the miterLimit to set
+     * @param strokePar
+     * @param newValue
+     * @return
      */
     public static StrokeParameters setMiterLimit(StrokeParameters strokePar, float newValue) {
         if (newValue != strokePar.miterLimit) {
@@ -111,7 +121,9 @@ public class StrokeParameters {
     }
 
     /**
-     * @param dashString the dashString to set
+     * @param strokePar
+     * @param newValue
+     * @return
      */
     public static StrokeParameters setDashString(StrokeParameters strokePar, String newValue) {
         if (!newValue.equals(strokePar.dashString)) {
@@ -132,7 +144,9 @@ public class StrokeParameters {
     }
 
     /**
-     * @param dash the dash to set
+     * @param strokePar
+     * @param newValue
+     * @return
      */
     public static StrokeParameters setDash(StrokeParameters strokePar, float[] newValue) {
         boolean change = false;
@@ -164,7 +178,9 @@ public class StrokeParameters {
     }
 
     /**
-     * @param dashPhase the dashPhase to set
+     * @param strokePar
+     * @param newValue
+     * @return
      */
     public static StrokeParameters setDashPhase(StrokeParameters strokePar, float newValue) {
         if (newValue != strokePar.dashPhase) {
@@ -185,7 +201,9 @@ public class StrokeParameters {
     }
 
     /**
-     * @param dashIntPattern the dashIntPattern to set
+     * @param strokePar 
+     * @param newValue
+     * @return
      */
     public static StrokeParameters setDashIntPattern(StrokeParameters strokePar, boolean newValue) {
         if (newValue != strokePar.dashIntPattern) {

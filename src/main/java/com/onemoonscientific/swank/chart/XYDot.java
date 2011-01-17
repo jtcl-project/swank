@@ -50,6 +50,10 @@ import java.lang.*;
 import java.util.*;
 
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class XYDot extends XYPlotShape {
     String plotType = "dot";
 

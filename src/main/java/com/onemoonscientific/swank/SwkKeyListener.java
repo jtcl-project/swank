@@ -29,7 +29,6 @@ import tcl.lang.*;
 import java.awt.*;
 import java.awt.event.*;
 
-import java.lang.*;
 
 import java.util.*;
 
@@ -37,6 +36,10 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class SwkKeyListener implements KeyListener, SwkListener {
 
     Interp interp;
@@ -51,18 +54,34 @@ public class SwkKeyListener implements KeyListener, SwkListener {
         bindings = new ArrayList<SwkBinding>();
     }
 
+    /**
+     *
+     * @return
+     */
     public ArrayList<SwkBinding> getBindings() {
         return bindings;
     }
 
+    /**
+     *
+     * @param name
+     */
     public void setCommand(String name) {
         command = new String(name);
     }
 
+    /**
+     * 
+     * @param newBinding
+     */
     public void setBinding(SwkBinding newBinding) {
         SwkBind.setBinding(bindings, newBinding);
     }
 
+    /**
+     *
+     * @return
+     */
     public String getCommand() {
         return (command);
     }
@@ -83,6 +102,11 @@ public class SwkKeyListener implements KeyListener, SwkListener {
         processKey(e, SwkBinding.TYPE);
     }
 
+    /**
+     *
+     * @param e
+     * @param subtype
+     */
     public void processKey(KeyEvent e, int subtype) {
         // should do first pass of processEvent to see if any bindings will fire, if so consume event, otherwise don't
         // then actually processEvent.
@@ -103,6 +127,12 @@ public class SwkKeyListener implements KeyListener, SwkListener {
         //processEvent(e,subtype);
     }
 
+    /**
+     *
+     * @param eventObject
+     * @param obj
+     * @param subtype
+     */
     public void processEvent(EventObject eventObject, Object obj, int subtype) {
         if (!(eventObject instanceof KeyEvent)) {
             return;
@@ -140,7 +170,7 @@ public class SwkKeyListener implements KeyListener, SwkListener {
         }
 
         KeyStroke keyStroke = KeyStroke.getKeyStrokeForEvent(e);
-        ArrayList<SwkBinding> bindings = null;
+        ArrayList<SwkBinding> listenerBindings = null;
         Vector tagList = ((SwkWidget) component).getTagList();
         boolean nativeProcessEvent = true;
         boolean breakOut = false;
@@ -152,24 +182,24 @@ public class SwkKeyListener implements KeyListener, SwkListener {
         //System.out.println("taglist "+tagList.size()); 
         for (int j = 0; j < tagList.size(); j++) {
             String tag = (String) tagList.elementAt(j);
-            bindings = null;
+            listenerBindings = null;
 
             //System.out.println("tag "+tag); 
             if (tag.equals(((SwkWidget) component).getName())) {
-                bindings = this.bindings;
+                listenerBindings = this.bindings;
             } else if (tag.startsWith(".")) {
                 try {
                     SwkWidget tagWidget = (SwkWidget) Widgets.get(interp, tag);
                     SwkKeyListener keyListener = tagWidget.getKeyListener();
-                    bindings = keyListener.getBindings();
+                    listenerBindings = keyListener.getBindings();
                 } catch (Exception exc) {
                     System.out.println(exc.toString());
                 }
             } else {
-                bindings = BindCmd.getKeyBindings(tag);
+                listenerBindings = BindCmd.getKeyBindings(tag);
             }
 
-            if (bindings == null) {
+            if (listenerBindings == null) {
                 continue;
             }
 

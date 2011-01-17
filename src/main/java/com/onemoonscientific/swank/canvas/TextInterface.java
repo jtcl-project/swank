@@ -17,9 +17,9 @@ interface TextInterface {
 
     Color getTextColor();
 
-    public float[] getAnchor();
+    float[] getAnchor();
 
-    public void setAnchor(final float[] anchor);
+    void setAnchor(final float[] anchor);
 }
 
 

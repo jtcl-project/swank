@@ -2,20 +2,39 @@ package com.onemoonscientific.swank.canvas;
 
 import tcl.lang.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class ArrowParameter extends CanvasParameter {
 
     private static String name = "arrow";
     private static String defValue = "none";
     private int newValue = 0;
 
+    /**
+     *
+     * @return
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getDefault() {
         return defValue;
     }
 
+    /**
+     *
+     * @param interp
+     * @param swkShape
+     * @return
+     * @throws TclException
+     */
     public TclObject getValue(Interp interp, SwkShape swkShape)
             throws TclException {
         if (swkShape == null) {
@@ -36,6 +55,13 @@ public class ArrowParameter extends CanvasParameter {
         return TclString.newInstance(arrow);
     }
 
+    /**
+     *
+     * @param interp
+     * @param swkCanvas
+     * @param arg
+     * @throws TclException
+     */
     @Override
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
             throws TclException {
@@ -50,6 +76,11 @@ public class ArrowParameter extends CanvasParameter {
         }
     }
 
+    /**
+     *
+     * @param swkCanvas
+     * @param swkShape
+     */
     public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
         if ((swkShape != null) && (swkShape instanceof ItemLine)) {
             ItemLine swkLine = (ItemLine) swkShape;

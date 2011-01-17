@@ -32,6 +32,10 @@ package com.onemoonscientific.swank.chart;
 import org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset;
 import java.util.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class BoxAndWhiskerData extends DefaultBoxAndWhiskerCategoryDataset {
 
     static HashMap datasetMap = new HashMap();
@@ -60,6 +64,10 @@ public class BoxAndWhiskerData extends DefaultBoxAndWhiskerCategoryDataset {
         return (BoxAndWhiskerTableData) datasetMap.get(name);
     }
 
+    /**
+     *
+     * @return
+     */
     public String getName() {
         return name;
     }

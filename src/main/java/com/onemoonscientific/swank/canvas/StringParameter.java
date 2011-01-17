@@ -16,8 +16,17 @@ public abstract class StringParameter extends CanvasParameter {
     String newValue = "";
 
 
+    /**
+     *
+     * @param swkShape
+     * @return
+     */
     public abstract String getValue(SwkShape swkShape);
 
+    /**
+     *
+     * @return
+     */
     public String getNewValue() {
         return newValue;
     }

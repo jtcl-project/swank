@@ -30,6 +30,10 @@ import java.io.*;
 import java.util.*;
 import javax.swing.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class SwkBind {
 
     /** Processes a list of arguments to set up a binding.
@@ -277,6 +281,13 @@ public class SwkBind {
         return swkBinding;
     }
 
+    /**
+     * 
+     * @param interp
+     * @param swkBinding
+     * @param argv
+     * @param firstArg
+     */
     public static void updateBindingCommand(Interp interp,
             SwkBinding swkBinding, TclObject[] argv, int firstArg) {
         if (argv.length == (firstArg + 1)) {
@@ -293,6 +304,11 @@ public class SwkBind {
         }
     }
 
+    /**
+     *
+     * @param bindings
+     * @param newBinding
+     */
     public static void setBinding(ArrayList<SwkBinding> bindings, SwkBinding newBinding) {
         int index = -1;
         for (int i = 0; i < bindings.size(); i++) {

@@ -3,6 +3,10 @@ package com.onemoonscientific.swank.canvas;
 import tcl.lang.*;
 
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class ShearParameter extends CanvasParameter {
 
     private static final String name = "shear";

@@ -10,6 +10,10 @@ import java.awt.image.*;
 
 import javax.swing.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class TextureParameter extends CanvasParameter {
 
     private static String name = "texture";
@@ -25,6 +29,13 @@ public class TextureParameter extends CanvasParameter {
         return "";
     }
 
+    /**
+     *
+     * @param interp
+     * @param arg
+     * @return
+     * @throws TclException
+     */
     public static TexturePaint getFromImage(Interp interp, TclObject arg)
             throws TclException {
         ImageIcon image = SwankUtil.getImageIcon(interp, arg);
@@ -48,6 +59,13 @@ public class TextureParameter extends CanvasParameter {
         return (new TexturePaint(bufferedImage, tR));
     }
 
+    /**
+     *
+     * @param interp
+     * @param swkShape
+     * @return
+     * @throws TclException
+     */
     public TclObject getValue(Interp interp, SwkShape swkShape)
             throws TclException {
         if (swkShape == null) {

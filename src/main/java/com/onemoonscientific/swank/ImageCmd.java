@@ -32,6 +32,10 @@ import java.net.*;
 import java.util.*;
 import javax.swing.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class ImageCmd implements Command {
 
     private final static Hashtable images = new Hashtable();
@@ -69,6 +73,12 @@ public class ImageCmd implements Command {
         }
     }
 
+    /**
+     *
+     * @param interp
+     * @param argv
+     * @throws TclException
+     */
     public void cmdProc(Interp interp, TclObject[] argv)
             throws TclException {
         int i;
@@ -360,12 +370,29 @@ public class ImageCmd implements Command {
             }
         }
     }
+    /**
+     *
+     * @param interp
+     * @param imageName
+     * @param image
+     */
     public static void addImage(final Interp interp, final String imageName,final BufferedImage image) {
         images.put(imageName, image);
     }
+    /**
+     *
+     * @param interp
+     * @param imageName
+     * @param image
+     */
     public static void addImage(final Interp interp, final String imageName,final ImageIcon image) {
         images.put(imageName, image);
     }
+    /**
+     *
+     * @param imageName
+     * @return
+     */
     public static Object getImage(String imageName) {
         Object imageObject = builtinImages.get(imageName);
 
@@ -376,6 +403,11 @@ public class ImageCmd implements Command {
         return imageObject;
     }
 
+    /**
+     * 
+     * @param imageIcon
+     * @return
+     */
     public static BufferedImage makeBufferedImage(ImageIcon imageIcon) {
         BufferedImage bufferedImage = new BufferedImage(imageIcon.getIconWidth(),
                 imageIcon.getIconHeight(), BufferedImage.TYPE_INT_RGB);

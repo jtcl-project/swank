@@ -437,6 +437,10 @@ public class SwkCanvas extends javax.swing.JPanel implements SwkWidget, Printabl
         return (jhelptarget);
     }
 
+    /**
+     *
+     * @param insertBackground
+     */
     public void setInsertBackground(Color insertBackground) {
         this.insertBackground = insertBackground;
     }
@@ -445,6 +449,10 @@ public class SwkCanvas extends javax.swing.JPanel implements SwkWidget, Printabl
         return (insertBackground);
     }
 
+    /**
+     *
+     * @param insertWidth
+     */
     public void setInsertWidth(int insertWidth) {
         this.insertWidth = insertWidth;
     }
@@ -469,6 +477,10 @@ public class SwkCanvas extends javax.swing.JPanel implements SwkWidget, Printabl
         return (insertOffTime);
     }
 
+    /**
+     *
+     * @param insertOnTime
+     */
     public void setInsertOnTime(int insertOnTime) {
         this.insertOnTime = insertOnTime;
     }
@@ -497,6 +509,10 @@ public class SwkCanvas extends javax.swing.JPanel implements SwkWidget, Printabl
         return (anchor);
     }
 
+    /**
+     *
+     * @param borderWidth
+     */
     public void setBorderWidth(double borderWidth) {
         this.borderWidth = (int) borderWidth;
         if (!(getBorder() instanceof SwkBorder)) {
@@ -524,6 +540,10 @@ public class SwkCanvas extends javax.swing.JPanel implements SwkWidget, Printabl
         return (highlightColor);
     }
 
+    /**
+     *
+     * @param highlightThickness
+     */
     public void setHighlightThickness(int highlightThickness) {
         this.highlightThickness = highlightThickness;
     }
@@ -539,10 +559,18 @@ public class SwkCanvas extends javax.swing.JPanel implements SwkWidget, Printabl
         minimumSize = null;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getPadx() {
         return (padx);
     }
 
+    /**
+     *
+     * @param pady
+     */
     public void setPady(int pady) {
         this.pady = (int) pady;
         emptyBorderInsets.top = this.pady;
@@ -568,6 +596,10 @@ public class SwkCanvas extends javax.swing.JPanel implements SwkWidget, Printabl
         return (relief);
     }
 
+    /**
+     *
+     * @param xScrollCommand
+     */
     public void setXScrollCommand(String xScrollCommand) {
         this.xScrollCommand = xScrollCommand.intern();
     }
@@ -584,6 +616,7 @@ public class SwkCanvas extends javax.swing.JPanel implements SwkWidget, Printabl
         return (yScrollCommand);
     }
 
+    @Override
     public void paintComponent(Graphics g) {
         swkImageCanvas.setSize(getSize());
         swkImageCanvas.paintComponent(g);
@@ -597,6 +630,10 @@ public class SwkCanvas extends javax.swing.JPanel implements SwkWidget, Printabl
         zoom = newZoom;
     }
 
+    /**
+     *
+     * @return
+     */
     public double getZoom() {
         return zoom;
     }
@@ -741,6 +778,12 @@ public class SwkCanvas extends javax.swing.JPanel implements SwkWidget, Printabl
         }
     }
 
+    /**
+     *
+     * @param e
+     * @param type
+     * @param subtype
+     */
     public void processMouse(MouseEvent e, int type, int subtype) {
         /* fixme  BindEvent bEvent = new BindEvent(interp, this, (EventObject) e, type,
         subtype, currentTag, previousTag, currentShape);
@@ -1029,6 +1072,10 @@ public class SwkCanvas extends javax.swing.JPanel implements SwkWidget, Printabl
         return (size.height);
     }
 
+    /**
+     *
+     * @param width
+     */
     public void setSwkWidth(int width) {
         this.swkwidth = width;
     }
@@ -1114,6 +1161,10 @@ public class SwkCanvas extends javax.swing.JPanel implements SwkWidget, Printabl
         this.mouseMotionListener = mouseMotionListener;
     }
 
+    /**
+     *
+     * @param className
+     */
     public void setClassName(String className) {
         this.className = className.intern();
     }

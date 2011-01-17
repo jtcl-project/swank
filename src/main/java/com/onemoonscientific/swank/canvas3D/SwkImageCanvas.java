@@ -223,6 +223,12 @@ public class SwkImageCanvas implements SwkCanvasType {
         return (tagList);
     }
 
+    /**
+     *
+     * @param interp
+     * @param tagListObj
+     * @throws TclException
+     */
     public void setTagList(Interp interp, TclObject tagListObj)
             throws TclException {
         TclObject[] tagObjs = TclList.getElements(interp, tagListObj);
@@ -245,6 +251,10 @@ public class SwkImageCanvas implements SwkCanvasType {
         return (emptyBorderInsets);
     }
 
+    /**
+     *
+     * @return
+     */
     public LinkedList getChildrenList() {
         return (children);
     }
@@ -369,6 +379,11 @@ public class SwkImageCanvas implements SwkCanvasType {
     
     return (offscreen);
     }
+     */
+    /**
+     *
+     * @param shape
+     * @throws SwkException
      */
     public void addShape(SwkShape shape) throws SwkException {
         shape.previous = lastShape;
@@ -682,11 +697,24 @@ public class SwkImageCanvas implements SwkCanvasType {
         setTags(tagList, true, shape);
     }
 
+    /**
+     *
+     * @param tagList
+     * @param shape
+     * @throws SwkException
+     */
     public void addTags(String[] tagList, SwkShape shape)
             throws SwkException {
         setTags(tagList, false, shape);
     }
 
+    /**
+     *
+     * @param tagList
+     * @param clearFirst
+     * @param shape
+     * @throws SwkException
+     */
     public void setTags(String[] tagList, boolean clearFirst, SwkShape shape)
             throws SwkException {
         Tag tag = null;
@@ -1091,6 +1119,9 @@ public class SwkImageCanvas implements SwkCanvasType {
         }
     }
 
+    /**
+     *
+     */
     public void repaint() {
         final Component component2 = component;
 
@@ -1104,6 +1135,10 @@ public class SwkImageCanvas implements SwkCanvasType {
         });
     }
 
+    /**
+     *
+     * @param delay
+     */
     public void repaint(int delay) {
         final Component component2 = component;
         final int delay2 = delay;
@@ -1143,9 +1178,17 @@ public class SwkImageCanvas implements SwkCanvasType {
         }
     }
 
+    /**
+     *
+     * @param g
+     */
     public void paintComponent(Graphics g) {
     }
 
+    /**
+     *
+     * @param className
+     */
     public void setClassName(String className) {
         this.className = className.intern();
     }
@@ -1154,6 +1197,10 @@ public class SwkImageCanvas implements SwkCanvasType {
         return (className);
     }
 
+    /**
+     *
+     * @throws TclException
+     */
     public void close() throws TclException {
     }
 

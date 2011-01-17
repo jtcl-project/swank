@@ -4,6 +4,10 @@ import com.onemoonscientific.swank.*;
 import tcl.lang.*;
 import java.awt.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class TextcolorParameter extends CanvasParameter {
 
     private static String name = "textcolor";
@@ -14,6 +18,10 @@ public class TextcolorParameter extends CanvasParameter {
         return name;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getDefault() {
         return "";
     }
@@ -35,6 +43,13 @@ public class TextcolorParameter extends CanvasParameter {
         return (TclString.newInstance(SwankUtil.parseColor(colorVal)));
     }
 
+    /**
+     *
+     * @param interp
+     * @param swkCanvas
+     * @param arg
+     * @throws TclException
+     */
     @Override
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
             throws TclException {

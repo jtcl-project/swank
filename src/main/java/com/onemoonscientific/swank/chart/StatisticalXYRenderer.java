@@ -263,6 +263,7 @@ public class StatisticalXYRenderer extends AbstractXYItemRenderer
      * 
      * @throws CloneNotSupportedException  if the renderer cannot be cloned.
      */
+    @Override
     public Object clone() throws CloneNotSupportedException {
         return super.clone();
     }
@@ -274,6 +275,7 @@ public class StatisticalXYRenderer extends AbstractXYItemRenderer
      * 
      * @return A boolean.
      */
+    @Override
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;

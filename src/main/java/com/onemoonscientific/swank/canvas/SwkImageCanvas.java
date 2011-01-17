@@ -93,7 +93,7 @@ public class SwkImageCanvas implements SwkCanvasType {
     private static final int OPT_XSCROLLCOMMAND = 47;
     private static final int OPT_YSCROLLCOMMAND = 48;
     String name = null;
-    String className = null;
+    String className = "SwkImageCanvas";
     LinkedList children = null;
     Vector virtualBindings = null;
     final Interp interp;
@@ -131,7 +131,12 @@ public class SwkImageCanvas implements SwkCanvasType {
     Component component = null;
     BufferedImage bufOffscreen = null;
 
-    public SwkImageCanvas(final Interp interp, String name, String className) {
+    /**
+     *
+     * @param interp
+     * @param name
+     */
+    public SwkImageCanvas(final Interp interp, String name) {
         this.name = name.intern();
         this.interp = interp;
         isCreated = true;
@@ -183,30 +188,60 @@ public class SwkImageCanvas implements SwkCanvasType {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public Component getComponent() {
         return component;
     }
 
+    /**
+     *
+     * @param component
+     */
     public void setComponent(Component component) {
         this.component = component;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean isCreated() {
         return isCreated;
     }
 
+    /**
+     *
+     * @param state
+     */
     public void setCreated(boolean state) {
         isCreated = state;
     }
 
+    /**
+     *
+     * @return
+     */
     public BufferedImage getBuffer() {
         return bufOffscreen;
     }
 
+    /**
+     *
+     * @return
+     */
     public Vector getTagList() {
         return (tagList);
     }
 
+    /**
+     *
+     * @param interp
+     * @param tagListObj
+     * @throws TclException
+     */
     public void setTagList(Interp interp, TclObject tagListObj)
             throws TclException {
         TclObject[] tagObjs = TclList.getElements(interp, tagListObj);
@@ -217,90 +252,179 @@ public class SwkImageCanvas implements SwkCanvasType {
         }
     }
 
+    /**
+     *
+     * @param bindings
+     */
     public void setVirtualBindings(Vector bindings) {
         virtualBindings = bindings;
     }
 
+    /**
+     *
+     * @return
+     */
     public Vector getVirtualBindings() {
         return (virtualBindings);
     }
 
+    /**
+     *
+     * @return
+     */
     public Insets getEmptyBorderInsets() {
         return (emptyBorderInsets);
     }
 
+    /**
+     *
+     * @return
+     */
     public LinkedList getChildrenList() {
         return (children);
     }
 
+    /**
+     *
+     */
     public void initChildrenList() {
         children = new LinkedList();
     }
 
+    /**
+     *
+     * @return
+     */
     public String getName() {
         return (name);
     }
 
+    /**
+     *
+     * @param insertBackground
+     */
     public void setInsertBackground(Color insertBackground) {
         this.insertBackground = insertBackground;
     }
 
+    /**
+     *
+     * @return
+     */
     public Color getInsertBackground() {
         return (insertBackground);
     }
 
+    /**
+     *
+     * @param insertWidth
+     */
     public void setInsertWidth(int insertWidth) {
         this.insertWidth = insertWidth;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getInsertWidth() {
         return (insertWidth);
     }
 
+    /**
+     *
+     * @param insertBorderWidth
+     */
     public void setInsertBorderWidth(int insertBorderWidth) {
         this.insertBorderWidth = insertBorderWidth;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getInsertBorderWidth() {
         return (insertBorderWidth);
     }
 
+    /**
+     *
+     * @param insertOffTime
+     */
     public void setInsertOffTime(int insertOffTime) {
         this.insertOffTime = insertOffTime;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getInsertOffTime() {
         return (insertOffTime);
     }
 
+    /**
+     *
+     * @param insertOnTime
+     */
     public void setInsertOnTime(int insertOnTime) {
         this.insertOnTime = insertOnTime;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getInsertOnTime() {
         return (insertOnTime);
     }
 
+    /**
+     *
+     * @param anchor
+     */
     public void setAnchor(float[] anchor) {
         this.anchor = anchor.clone();
     }
 
+    /**
+     *
+     * @return
+     */
     public float[] getAnchor() {
         return (anchor.clone());
     }
 
+    /**
+     *
+     * @param shape
+     */
     public void setEventCurrentShape(HitShape shape) {
         eventCurrentShape = shape;
     }
 
+    /**
+     *
+     * @return
+     */
     public SwkShape getLastShapeScanned() {
         return lastShapeScanned;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getHandle() {
         return handle;
     }
 
+    /**
+     *
+     * @param transformerName
+     * @param shape
+     * @return
+     */
     public Transformer setTransformer(String transformerName, SwkShape shape) {
         Transformer transformer = null;
         transformer = (Transformer) transformerHash.get(transformerName);
@@ -317,6 +441,11 @@ public class SwkImageCanvas implements SwkCanvasType {
         return transformer;
     }
 
+    /**
+     *
+     * @param name
+     * @return
+     */
     public Transformer getTransformer(String name) {
         return (Transformer) transformerHash.get(name);
     }
@@ -326,10 +455,18 @@ public class SwkImageCanvas implements SwkCanvasType {
         shape.transformer = null;
     }
 
+    /**
+     *
+     * @param newZoom
+     */
     public void setZoom(double newZoom) {
         zoom = newZoom;
     }
 
+    /**
+     *
+     * @return
+     */
     public double getZoom() {
         return zoom;
     }
@@ -358,10 +495,19 @@ public class SwkImageCanvas implements SwkCanvasType {
     return (offscreen);
     }
      */
+    /**
+     *
+     * @return
+     */
     public int getLastShapeId() {
         return lastShapeId;
     }
 
+    /**
+     *
+     * @param shape
+     * @throws SwkException
+     */
     public void addShape(SwkShape shape) throws SwkException {
         swkShapes.put(Integer.valueOf(shape.id), shape);
 
@@ -379,6 +525,12 @@ public class SwkImageCanvas implements SwkCanvasType {
         //treeModel.nodeStructureChanged(rootNode);
     }
 
+    /**
+     *
+     * @param arg
+     * @return
+     * @throws SwkException
+     */
     public SwkShape getShape(String arg) throws SwkException {
         int iElem;
         SwkShape swkShape = null;
@@ -658,16 +810,35 @@ public class SwkImageCanvas implements SwkCanvasType {
         return (shapeList);
     }
 
+    /**
+     *
+     * @param tagList
+     * @param shape
+     * @throws SwkException
+     */
     public void setTags(String[] tagList, SwkShape shape)
             throws SwkException {
         setTags(tagList, true, shape);
     }
 
+    /**
+     *
+     * @param tagList
+     * @param shape
+     * @throws SwkException
+     */
     public void addTags(String[] tagList, SwkShape shape)
             throws SwkException {
         setTags(tagList, false, shape);
     }
 
+    /**
+     *
+     * @param tagList
+     * @param clearFirst
+     * @param shape
+     * @throws SwkException
+     */
     public void setTags(String[] tagList, boolean clearFirst, SwkShape shape)
             throws SwkException {
         Tag tag = null;
@@ -714,11 +885,24 @@ public class SwkImageCanvas implements SwkCanvasType {
         }
     }
 
+    /**
+     *
+     * @param interp
+     * @param argv
+     * @param swkshape
+     * @return
+     * @throws TclException
+     */
     public String itemGet(Interp interp, TclObject argv, SwkShape swkshape)
             throws TclException {
         return ("");
     }
 
+    /**
+     *
+     * @param shape
+     * @return
+     */
     public ArrayList getTags(SwkShape shape) {
         Tag tag;
         String tagString = null;
@@ -733,6 +917,10 @@ public class SwkImageCanvas implements SwkCanvasType {
         return list;
     }
 
+    /**
+     *
+     * @param mEvent
+     */
     public void transformMouse(MouseEvent mEvent) {
         double x = mEvent.getX();
         double y = mEvent.getY();
@@ -748,6 +936,12 @@ public class SwkImageCanvas implements SwkCanvasType {
                 (int) (transMouse.getY() - y));
     }
 
+    /**
+     *
+     * @param x
+     * @param y
+     * @return
+     */
     public Point transformPosition(double x, double y) {
         Point loc = getComponent().getLocationOnScreen();
         x -= loc.x;
@@ -762,6 +956,12 @@ public class SwkImageCanvas implements SwkCanvasType {
         return point;
     }
 
+    /**
+     *
+     * @param x1
+     * @param y1
+     * @return
+     */
     public TclObject[] scanCanvasForTags(double x1, double y1) {
 
 
@@ -838,6 +1038,10 @@ public class SwkImageCanvas implements SwkCanvasType {
         return fRC;
     }
 
+    /**
+     *
+     * @param newSize
+     */
     public void setSize(Dimension newSize) {
         swkwidth = newSize.width;
         swkheight = newSize.height;
@@ -855,6 +1059,9 @@ public class SwkImageCanvas implements SwkCanvasType {
         component.setBackground(background);
     }
 
+    /**
+     *
+     */
     public void repaint() {
         repaint(20);
         /*
@@ -873,6 +1080,10 @@ public class SwkImageCanvas implements SwkCanvasType {
          */
     }
 
+    /**
+     *
+     * @param delay
+     */
     public void repaint(final int delay) {
         final Component component2 = component;
         SwingUtilities.invokeLater(new Runnable() {
@@ -888,6 +1099,12 @@ public class SwkImageCanvas implements SwkCanvasType {
         });
     }
 
+    /**
+     *
+     * @param oWidth
+     * @param oHeight
+     * @param oStream
+     */
     public void save(int oWidth, int oHeight, OutputStream oStream) {
         Dimension size = getSize();
         if (oStream != null) {
@@ -911,6 +1128,11 @@ public class SwkImageCanvas implements SwkCanvasType {
         }
     }
 
+    /**
+     *
+     * @param rendImage
+     * @param oStream
+     */
     public void writeImage(BufferedImage rendImage, OutputStream oStream) {
         // Write generated image to a file
         try {
@@ -931,6 +1153,11 @@ public class SwkImageCanvas implements SwkCanvasType {
         }
     }
 
+    /**
+     *
+     * @param g
+     * @param bufOffscreen
+     */
     public void paintComponent(Graphics g, BufferedImage bufOffscreen) {
         g1 = g;
         this.bufOffscreen = bufOffscreen;
@@ -998,14 +1225,26 @@ public class SwkImageCanvas implements SwkCanvasType {
         g2.setTransform(storeAT);
     }
 
+    /**
+     *
+     * @param className
+     */
     public void setClassName(String className) {
         this.className = className.intern();
     }
 
+    /**
+     *
+     * @return
+     */
     public String getClassName() {
         return (className);
     }
 
+    /**
+     *
+     * @throws TclException
+     */
     public void close() throws TclException {
         try {
             deleteAll();

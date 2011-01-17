@@ -2,6 +2,10 @@ package com.onemoonscientific.swank.canvas;
 
 import tcl.lang.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class TransformerParameter extends CanvasParameter {
 
     private static String name = "transformer";
@@ -33,6 +37,13 @@ public class TransformerParameter extends CanvasParameter {
         return TclString.newInstance("");
     }
 
+    /**
+     *
+     * @param interp
+     * @param swkCanvas
+     * @param arg
+     * @throws TclException
+     */
     @Override
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
             throws TclException {

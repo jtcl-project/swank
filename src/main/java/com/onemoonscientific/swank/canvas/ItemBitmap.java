@@ -38,6 +38,10 @@ import com.onemoonscientific.swank.*;
 import java.awt.*;
 import javax.swing.*;
 
+/**
+ * 
+ * @author brucejohnson
+ */
 public class ItemBitmap extends SwkShape {
 
     static CanvasParameter[] parameters = {
@@ -54,14 +58,28 @@ public class ItemBitmap extends SwkShape {
         storeCoords = new double[2];
     }
 
-    public void setImageIcon(ImageIcon newImage) {
+    /**
+     *
+     * @param newImage
+     */
+    protected void setImageIcon(ImageIcon newImage) {
         image = newImage;
     }
 
-    public ImageIcon getImageIcon() {
+    /**
+     *
+     * @return
+     */
+    protected ImageIcon getImageIcon() {
         return image;
     }
 
+    /**
+     *
+     * @param canvas
+     * @param coords
+     * @throws SwkException
+     */
     @Override
     public void coords(SwkImageCanvas canvas, double[] coords)
             throws SwkException {
@@ -73,8 +91,12 @@ public class ItemBitmap extends SwkShape {
         System.arraycopy(coords, 0, storeCoords, 0, 2);
     }
 
+    /**
+     *
+     * @param g2
+     */
     @Override
-    public void paintShape(Graphics2D g2) {
+    protected void paintShape(Graphics2D g2) {
         if (image != null) {
             int imageWidth = image.getIconWidth();
             int imageHeight = image.getIconHeight();
@@ -85,6 +107,10 @@ public class ItemBitmap extends SwkShape {
 
     }
 
+    /**
+     *
+     * @return
+     */
     public String getType() {
         return "bitmap";
     }

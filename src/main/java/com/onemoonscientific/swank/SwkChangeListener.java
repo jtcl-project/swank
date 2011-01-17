@@ -30,6 +30,10 @@ import java.awt.event.*;
 import java.util.*;
 import javax.swing.event.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class SwkChangeListener implements ChangeListener, SwkListener {
 
     Interp interp;
@@ -43,18 +47,34 @@ public class SwkChangeListener implements ChangeListener, SwkListener {
         bindings = new ArrayList<SwkBinding>();
     }
 
+    /**
+     *
+     * @param name
+     */
     public void setCommand(String name) {
         command = name;
     }
 
+    /**
+     *
+     * @return
+     */
     public ArrayList<SwkBinding> getBindings() {
         return bindings;
     }
 
+    /**
+     *
+     * @param newBinding
+     */
     public void setBinding(SwkBinding newBinding) {
         SwkBind.setBinding(bindings, newBinding);
     }
 
+    /**
+     *
+     * @return
+     */
     public String getCommand() {
         return (command);
     }
@@ -63,6 +83,11 @@ public class SwkChangeListener implements ChangeListener, SwkListener {
         processChange(e, SwkBinding.STATECHANGED);
     }
 
+    /**
+     *
+     * @param e
+     * @param subtype
+     */
     public void processChange(ChangeEvent e, int subtype) {
         if (!EventQueue.isDispatchThread()) {
             System.out.println(
@@ -74,6 +99,12 @@ public class SwkChangeListener implements ChangeListener, SwkListener {
         interp.getNotifier().queueEvent(bEvent, TCL.QUEUE_TAIL);
     }
 
+    /**
+     *
+     * @param eventObject
+     * @param obj
+     * @param subtype
+     */
     public void processEvent(EventObject eventObject, Object obj, int subtype) {
         if (EventQueue.isDispatchThread()) {
             System.out.println(

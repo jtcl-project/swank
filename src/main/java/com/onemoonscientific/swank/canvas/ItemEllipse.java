@@ -39,6 +39,10 @@ import java.awt.*;
 import java.awt.geom.*;
 
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class ItemEllipse extends SwkShape implements TextInterface {
 
     static CanvasParameter[] parameters = {
@@ -60,38 +64,76 @@ public class ItemEllipse extends SwkShape implements TextInterface {
         ellipse2D = (Ellipse2D) shape;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getText() {
         return textPar.getText();
     }
 
+    /**
+     *
+     * @param newValue
+     */
     public void setText(String newValue) {
         textPar = TextParameters.setText(textPar, newValue);
     }
 
+    /**
+     *
+     * @return
+     */
     public float[] getAnchor() {
         return textPar.getAnchor();
     }
 
+    /**
+     *
+     * @param newValue
+     */
     public void setAnchor(float[] newValue) {
         textPar = TextParameters.setAnchor(textPar, newValue);
     }
 
+    /**
+     *
+     * @return
+     */
     public Font getFont() {
         return textPar.getFont();
     }
 
+    /**
+     *
+     * @param newValue
+     */
     public void setFont(Font newValue) {
         textPar = TextParameters.setFont(textPar, newValue);
     }
 
+    /**
+     *
+     * @return
+     */
     public Color getTextColor() {
         return textPar.getTextColor();
     }
 
+    /**
+     *
+     * @param newValue
+     */
     public void setTextColor(Color newValue) {
         textPar = TextParameters.setTextColor(textPar, newValue);
     }
 
+    /**
+     *
+     * @param canvas
+     * @param coords
+     * @throws SwkException
+     */
     @Override
     public void coords(SwkImageCanvas canvas, double[] coords)
             throws SwkException {
@@ -104,8 +146,12 @@ public class ItemEllipse extends SwkShape implements TextInterface {
         applyCoordinates();
     }
 
+    /**
+     *
+     * @param g2
+     */
     @Override
-    public void paintShape(Graphics2D g2) {
+    protected void paintShape(Graphics2D g2) {
         super.paintShape(g2);
         double x = (storeCoords[0] + storeCoords[2]) / 2.0;
         double y = (storeCoords[1] + storeCoords[3]) / 2.0;
@@ -113,12 +159,19 @@ public class ItemEllipse extends SwkShape implements TextInterface {
         textPar.paint(g2, getCanvas().getFontRenderContext(), this, x, y);
     }
 
+    /**
+     *
+     * @return
+     */
     public String getType() {
         return "oval";
     }
 
+    /**
+     *
+     */
     @Override
-    public void applyCoordinates() {
+    protected void applyCoordinates() {
         checkCoordinates(storeCoords);
 
         AffineTransform aT = new AffineTransform();

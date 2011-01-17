@@ -2,11 +2,19 @@ package com.onemoonscientific.swank.canvas;
 
 import tcl.lang.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class StartstyleParameter extends EndstyleParameter {
 
     private static final String name = "startstyle";
     private static String defValue = "none";
 
+    /**
+     *
+     * @return
+     */
     @Override
     public String getName() {
         return name;
@@ -17,6 +25,13 @@ public class StartstyleParameter extends EndstyleParameter {
         return defValue;
     }
 
+    /**
+     *
+     * @param interp
+     * @param swkShape
+     * @return
+     * @throws TclException
+     */
     @Override
     public TclObject getValue(Interp interp, SwkShape swkShape)
             throws TclException {

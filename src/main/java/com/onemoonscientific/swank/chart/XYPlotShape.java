@@ -84,6 +84,10 @@ public class XYPlotShape extends SwkShape implements DatasetShape, NumberDomain,
     public XYPlot getPlot() {
         return plot;
     }
+    /**
+     *
+     * @return
+     */
     public String getType() {
 	    return plotType;
     }
@@ -106,6 +110,11 @@ public class XYPlotShape extends SwkShape implements DatasetShape, NumberDomain,
         XYData xyData = XYData.get(name);
         plot.setDataset(xyData);
     }
+    /**
+     *
+     * @param index
+     * @param name
+     */
     public void setDataset(int index, String name) {
         XYData xyData = XYData.get(name);
         plot.setDataset(index,xyData);
@@ -117,10 +126,18 @@ public class XYPlotShape extends SwkShape implements DatasetShape, NumberDomain,
         drawLine = newValue;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean getDrawline() {
         return drawLine;
     }
 
+    /**
+     *
+     * @param newSymbolType
+     */
     public void setSymbolType(int newSymbolType) {
         symbolType = newSymbolType;
     }
@@ -129,10 +146,18 @@ public class XYPlotShape extends SwkShape implements DatasetShape, NumberDomain,
         return SymbolParameter.getSymbolType(symbolType);
     }
 
+    /**
+     *
+     * @param newRadius
+     */
     public void setRadius(double newRadius) {
         radius = (float) newRadius;
     }
 
+    /**
+     *
+     * @return
+     */
     public double getRadius() {
         return radius;
     }
@@ -142,6 +167,10 @@ public class XYPlotShape extends SwkShape implements DatasetShape, NumberDomain,
     public void setLegendLoc(String loc) {
         legendLoc = loc;
     }
+    /**
+     *
+     * @return
+     */
     public boolean getLegendState() {
         return legendState;
     }
@@ -238,6 +267,10 @@ public class XYPlotShape extends SwkShape implements DatasetShape, NumberDomain,
         return parameterMap;
     }
 
+    /**
+     *
+     * @param g2
+     */
     public void paintShape(Graphics2D g2) {
         Point2D anchor = new Point2D.Double();
         applyCoordinates();
@@ -291,6 +324,10 @@ public class XYPlotShape extends SwkShape implements DatasetShape, NumberDomain,
                 }
                 return list;
     }
+    /**
+     *
+     * @param datasetNames
+     */
     public void updateDatasets(String[] datasetNames) {
                 int nDatasets = plot.getDatasetCount();
                 for (int i = 0; i < datasetNames.length; i++) {

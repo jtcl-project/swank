@@ -28,6 +28,10 @@ import tcl.lang.*;
 import java.awt.*;
 import javax.swing.*;
 
+/**
+ * 
+ * @author brucejohnson
+ */
 public class SwkETRunner {
 
     int interpResult = 0;

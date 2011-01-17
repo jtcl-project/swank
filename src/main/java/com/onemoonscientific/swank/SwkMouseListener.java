@@ -29,6 +29,10 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class SwkMouseListener implements MouseListener, SwkListener {
 
     Interp interp;
@@ -42,19 +46,35 @@ public class SwkMouseListener implements MouseListener, SwkListener {
         bindings = new ArrayList<SwkBinding>();
     }
 
+    /**
+     *
+     * @param name
+     */
     public void setCommand(String name) {
         command = name.intern();
     }
 
+    /**
+     *
+     * @return
+     */
     public ArrayList<SwkBinding> getBindings() {
         return bindings;
     }
 
+    /**
+     *
+     * @param newBinding
+     */
     public void setBinding(SwkBinding newBinding) {
         SwkBind.setBinding(bindings, newBinding);
         Collections.sort(bindings);
     }
 
+    /**
+     *
+     * @return
+     */
     public String getCommand() {
         return (command);
     }
@@ -79,12 +99,23 @@ public class SwkMouseListener implements MouseListener, SwkListener {
         processMouse(e, SwkBinding.EXIT);
     }
 
+    /**
+     *
+     * @param e
+     * @param subtype
+     */
     public void processMouse(MouseEvent e, int subtype) {
         BindEvent bEvent = new BindEvent(interp, (SwkListener) this,
                 (EventObject) e, subtype);
         interp.getNotifier().queueEvent(bEvent, TCL.QUEUE_TAIL);
     }
 
+    /**
+     *
+     * @param eventObject
+     * @param obj
+     * @param subtype
+     */
     public void processEvent(EventObject eventObject, Object obj, int subtype) {
         if (!(eventObject instanceof MouseEvent)) {
             return;

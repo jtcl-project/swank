@@ -11,7 +11,9 @@ package com.onemoonscientific.swank;
  */
 public class SwkException extends Exception {
 
-    /** Creates a new instance of SwkException */
+    /** Creates a new instance of SwkException
+     * @param message
+     */
     public SwkException(String message) {
         super(message);
         System.out.println("new swkexcept " + message);

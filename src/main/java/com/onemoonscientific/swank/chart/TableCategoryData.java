@@ -67,6 +67,10 @@ public class TableCategoryData extends AbstractDataset
         datasetMap.put(name,this);
     }
 
+    /**
+     *
+     * @param model
+     */
     public void setTableModel(SwkTableModel model) {
         if (EventQueue.isDispatchThread()) {
              setTableModelOnEventThread(model);
@@ -141,6 +145,10 @@ public class TableCategoryData extends AbstractDataset
           }
     }
 
+    /**
+     *
+     * @param columns
+     */
     public void setYColumns(int[] columns) {
           yColumns = columns;
     }
@@ -194,6 +202,10 @@ public class TableCategoryData extends AbstractDataset
         }
         return nRows;
     }
+    /**
+     *
+     * @return
+     */
     public int getItemCount() {
         int nRows = 0;
         if (tableModel != null) {
@@ -261,6 +273,12 @@ public class TableCategoryData extends AbstractDataset
         return xValue+deltaX/2;
     }
 
+    /**
+     *
+     * @param row
+     * @param column
+     * @return
+     */
     public Number getEndValue(int row, int column) {
         double xValue = getEnd(row,column);
         return new Double(xValue);
@@ -268,6 +286,12 @@ public class TableCategoryData extends AbstractDataset
     public Number getEndValue(Comparable row, Comparable column) {
          return null;
     }
+    /**
+     *
+     * @param row
+     * @param column
+     * @return
+     */
     public double getStart(int row, int column) {
         double xValue = ((Double) getValue(row,column)).doubleValue();
         return xValue-deltaX/2.0;

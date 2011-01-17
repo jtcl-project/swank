@@ -31,6 +31,10 @@ import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class SwkRadioMenuListener implements ActionListener, VarTrace,
         SwkListener {
 
@@ -46,6 +50,14 @@ public class SwkRadioMenuListener implements ActionListener, VarTrace,
         this.component = (JMenuItem) component;
     }
 
+    /**
+     *
+     * @param interp
+     * @param string1
+     * @param string2
+     * @param flags
+     * @throws TclException
+     */
     public void traceProc(Interp interp, String string1, String string2,
             int flags) throws TclException {
         if (EventQueue.isDispatchThread()) {
@@ -56,6 +68,11 @@ public class SwkRadioMenuListener implements ActionListener, VarTrace,
         setFromVar(interp);
     }
 
+    /**
+     *
+     * @param interp
+     * @throws TclException
+     */
     public void setFromVar(Interp interp) throws TclException {
         if (EventQueue.isDispatchThread()) {
             System.out.println(
@@ -87,6 +104,12 @@ public class SwkRadioMenuListener implements ActionListener, VarTrace,
         traceLock = false;
     }
 
+    /**
+     *
+     * @param interp
+     * @param name
+     * @throws TclException
+     */
     public void setVarName(Interp interp, String name)
             throws TclException {
         // ButtonGroup bgroup;
@@ -132,22 +155,42 @@ public class SwkRadioMenuListener implements ActionListener, VarTrace,
         varName = name;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getVarName() {
         return (varName);
     }
 
+    /**
+     *
+     * @param name
+     */
     public void setValue(String name) {
         value = name;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getValue() {
         return (value);
     }
 
+    /**
+     *
+     * @param name
+     */
     public void setCommand(String name) {
         command = name.intern();
     }
 
+    /**
+     *
+     * @return
+     */
     public String getCommand() {
         return (command);
     }
@@ -179,6 +222,12 @@ public class SwkRadioMenuListener implements ActionListener, VarTrace,
         interp.getNotifier().queueEvent(bEvent, TCL.QUEUE_TAIL);
     }
 
+    /**
+     *
+     * @param eventObject
+     * @param obj
+     * @param subtype
+     */
     public void processEvent(EventObject eventObject, Object obj, int subtype) {
         if (EventQueue.isDispatchThread()) {
             System.out.println(

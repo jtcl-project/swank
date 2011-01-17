@@ -24,24 +24,58 @@
  */
 package com.onemoonscientific.swank;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class ResourceObject {
 
+    /**
+     *
+     */
     public String resource = null;
+    /**
+     *
+     */
     public String className = null;
+    /**
+     *
+     */
     public String defaultVal = null;
+    /**
+     *
+     */
     public int optNum = 0;
 
+    /**
+     *
+     * @param resource
+     * @param className
+     */
     public ResourceObject(String resource, String className) {
         this.resource = resource;
         this.className = className;
     }
 
+    /**
+     *
+     * @param resource
+     * @param className
+     * @param optNum
+     */
     public ResourceObject(String resource, String className, int optNum) {
         this.resource = resource;
         this.className = className;
         this.optNum = optNum;
     }
 
+    /**
+     *
+     * @param resource
+     * @param className
+     * @param optNum
+     * @param defaultVal
+     */
     public ResourceObject(String resource, String className, int optNum,
             String defaultVal) {
         this.resource = resource;

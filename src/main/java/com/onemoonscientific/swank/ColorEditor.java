@@ -16,15 +16,25 @@ import javax.swing.JDialog;
 import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class ColorEditor extends AbstractCellEditor implements TableCellEditor,
         ActionListener {
 
+    /**
+     *
+     */
     protected static final String EDIT = "edit";
     Color currentColor;
     JButton button;
     JColorChooser colorChooser;
     JDialog dialog;
 
+    /**
+     *
+     */
     public ColorEditor() {
         //Set up the editor (from the table's point of view),
         //which is a button.
@@ -45,6 +55,7 @@ public class ColorEditor extends AbstractCellEditor implements TableCellEditor,
     /**
      * Handles events from the editor button and from
      * the dialog's OK button.
+     * @param e
      */
     public void actionPerformed(ActionEvent e) {
         if (EDIT.equals(e.getActionCommand())) {

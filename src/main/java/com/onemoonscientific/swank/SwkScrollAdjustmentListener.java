@@ -30,6 +30,10 @@ import java.awt.event.*;
 import java.util.*;
 
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class SwkScrollAdjustmentListener implements AdjustmentListener,
         SwkListener {
 
@@ -42,10 +46,18 @@ public class SwkScrollAdjustmentListener implements AdjustmentListener,
         this.component = component;
     }
 
+    /**
+     * 
+     * @param name
+     */
     public void setCommand(String name) {
         command = name.intern();
     }
 
+    /**
+     *
+     * @return
+     */
     public String getCommand() {
         return (command);
     }

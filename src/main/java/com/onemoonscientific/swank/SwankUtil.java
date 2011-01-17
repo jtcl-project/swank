@@ -43,6 +43,10 @@ import java.util.regex.Pattern;
 
 import javax.swing.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class SwankUtil {
 
     static Hashtable colorTable = null;
@@ -52,6 +56,13 @@ public class SwankUtil {
     static Object helpobject = null;
     static Method helpmethod = null;
 
+    /**
+     *
+     * @param interp
+     * @param tclObject
+     * @return
+     * @throws TclException
+     */
     public static Color getColor(Interp interp, TclObject tclObject)
             throws TclException {
         if (colorTable == null) {
@@ -136,6 +147,11 @@ public class SwankUtil {
         }
     }
 
+    /**
+     *
+     * @param colorName
+     * @return
+     */
     public static Color getColor(String colorName) {
         if (colorTable == null) {
             initColorTable();
@@ -149,6 +165,15 @@ public class SwankUtil {
         return color;
     }
 
+    /**
+     *
+     * @param interp
+     * @param tclObject
+     * @param p1
+     * @param p2
+     * @return
+     * @throws TclException
+     */
     public static GradientPaint getGradient(Interp interp, TclObject tclObject,
             Point2D p1, Point2D p2) throws TclException {
         if (colorTable == null) {
@@ -187,6 +212,11 @@ public class SwankUtil {
         }
     }
 
+    /**
+     *
+     * @param gradientPaint
+     * @return
+     */
     public static String parseGradient(GradientPaint gradientPaint) {
         String result = "";
         if (gradientPaint != null) {
@@ -225,6 +255,11 @@ public class SwankUtil {
         return result;
     }
 
+    /**
+     *
+     * @param color
+     * @return
+     */
     public static String parseColor(Color color) {
         if (colorTable == null) {
             initColorTable();
@@ -259,13 +294,35 @@ public class SwankUtil {
         }
     }
 
+    /**
+     *
+     * @param interp
+     * @param tclObject
+     * @return
+     * @throws TclException
+     */
     public static String getDefault(Interp interp, TclObject tclObject) throws TclException {
         return getDefaultOrState(interp,tclObject,"default");
     }
 
+    /**
+     *
+     * @param interp
+     * @param tclObject
+     * @return
+     * @throws TclException
+     */
     public static String getState(Interp interp, TclObject tclObject) throws TclException {
         return getDefaultOrState(interp,tclObject,"state");
     }
+    /**
+     *
+     * @param interp
+     * @param tclObject
+     * @param mode
+     * @return
+     * @throws TclException
+     */
     public static String getDefaultOrState(Interp interp, TclObject tclObject,final String mode)
             throws TclException {
         String value = tclObject.toString();
@@ -285,6 +342,13 @@ public class SwankUtil {
 
         return state;
     }
+    /**
+     *
+     * @param interp
+     * @param tclObject
+     * @return
+     * @throws TclException
+     */
     public static String getTextState(Interp interp, TclObject tclObject)
             throws TclException {
         String value = tclObject.toString();
@@ -305,6 +369,15 @@ public class SwankUtil {
         return state;
     }
 
+    /**
+     *
+     * @param interp
+     * @param varTrace
+     * @param textVariable
+     * @param name
+     * @return
+     * @throws TclException
+     */
     public static String setupTrace(Interp interp, VarTrace varTrace,
             String textVariable, String name) throws TclException {
         if ((textVariable != null) && (!textVariable.equals(""))) {
@@ -332,6 +405,13 @@ public class SwankUtil {
         return s;
     }
 
+    /**
+     *
+     * @param interp
+     * @param tclObject
+     * @return
+     * @throws TclException
+     */
     public static String getWrap(Interp interp, TclObject tclObject)
             throws TclException {
         String value = tclObject.toString();
@@ -351,6 +431,13 @@ public class SwankUtil {
         return wrap;
     }
 
+    /**
+     *
+     * @param interp
+     * @param tclObject
+     * @return
+     * @throws TclException
+     */
     public static Object[] getOptions(Interp interp, TclObject tclObject)
             throws TclException {
         TclObject[] tOptions = TclList.getElements(interp, tclObject);
@@ -363,6 +450,13 @@ public class SwankUtil {
         return options;
     }
 
+    /**
+     *
+     * @param interp
+     * @param tclObject
+     * @return
+     * @throws TclException
+     */
     public static String getJustify(Interp interp, TclObject tclObject)
             throws TclException {
         String value = tclObject.toString();
@@ -383,6 +477,13 @@ public class SwankUtil {
         return justify;
     }
 
+    /**
+     *
+     * @param interp
+     * @param tclObject
+     * @return
+     * @throws TclException
+     */
     public static int getOrient(Interp interp, TclObject tclObject)
             throws TclException {
         String value = tclObject.toString();
@@ -401,6 +502,13 @@ public class SwankUtil {
         return orient;
     }
 
+    /**
+     *
+     * @param interp
+     * @param tclObject
+     * @return
+     * @throws TclException
+     */
     public static float[] getAnchor(Interp interp, TclObject tclObject)
             throws TclException {
         if (tclObject == null) {
@@ -414,6 +522,13 @@ public class SwankUtil {
         }
     }
 
+    /**
+     *
+     * @param interp
+     * @param string
+     * @return
+     * @throws TclException
+     */
     public static float[] getAnchor(Interp interp, String string)
             throws TclException {
         float[] a = new float[2];
@@ -459,6 +574,11 @@ public class SwankUtil {
         return (a);
     }
 
+    /**
+     *
+     * @param a
+     * @return
+     */
     public static String parseAnchor(float[] a) {
         char[] anchor = {' ', ' '};
 
@@ -481,6 +601,13 @@ public class SwankUtil {
         }
     }
 
+    /**
+     *
+     * @param interp
+     * @param string
+     * @return
+     * @throws TclException
+     */
     public static int[] getAnchorConstants(Interp interp, String string)
             throws TclException {
         int[] a = new int[2];
@@ -526,6 +653,11 @@ public class SwankUtil {
         return (a);
     }
 
+    /**
+     *
+     * @param a
+     * @return
+     */
     public static String parseAnchorConstants(int[] a) {
         char[] anchor = {' ', ' '};
 
@@ -548,6 +680,13 @@ public class SwankUtil {
         }
     }
 
+    /**
+     *
+     * @param interp
+     * @param tclObject
+     * @return
+     * @throws TclException
+     */
     public static Rectangle getRectangle(Interp interp, TclObject tclObject)
             throws TclException {
         TclObject[] argv = TclList.getElements(interp, tclObject);
@@ -559,6 +698,11 @@ public class SwankUtil {
         return (new Rectangle(x, y, width, height));
     }
 
+    /**
+     *
+     * @param rectangle
+     * @return
+     */
     public static String parseRectangle(Rectangle rectangle) {
         if (rectangle == null) {
             return 0 + " " + 0 + " " + 0 + " " + 0;
@@ -572,6 +716,14 @@ public class SwankUtil {
         return x + " " + y + " " + width + " " + height;
     }
 
+    /**
+     *
+     * @param interp
+     * @param comp
+     * @param tclObject
+     * @return
+     * @throws TclException
+     */
     public static Rectangle getTkRectangle(Interp interp, Component comp,
             TclObject tclObject) throws TclException {
         TclObject[] argv = TclList.getElements(interp, tclObject);
@@ -583,6 +735,11 @@ public class SwankUtil {
         return (new Rectangle(x, y, width, height));
     }
 
+    /**
+     *
+     * @param rectangle
+     * @return
+     */
     public static String parseTkRectangle(Rectangle rectangle) {
         int x = rectangle.x;
         int y = rectangle.y;
@@ -592,6 +749,14 @@ public class SwankUtil {
         return x + " " + y + " " + width + " " + height;
     }
 
+    /**
+     *
+     * @param interp
+     * @param comp
+     * @param tclObject
+     * @return
+     * @throws TclException
+     */
     public static int[][] getTkRectangleCorners(Interp interp, Component comp,
             TclObject tclObject) throws TclException {
         TclObject[] argv = TclList.getElements(interp, tclObject);
@@ -604,11 +769,23 @@ public class SwankUtil {
         return (corners);
     }
 
+    /**
+     *
+     * @param corners
+     * @return
+     */
     public static String parseTkRectangleCorners(int[][] corners) {
         return corners[0][0] + " " + corners[0][1] + " " + corners[1][0] + " "
                 + corners[1][1];
     }
 
+    /**
+     *
+     * @param interp
+     * @param tclObject
+     * @return
+     * @throws TclException
+     */
     public static URL getURL(Interp interp, TclObject tclObject)
             throws TclException {
         TclObject[] argv = TclList.getElements(interp, tclObject);
@@ -617,6 +794,13 @@ public class SwankUtil {
         return (url);
     }
 
+    /**
+     *
+     * @param interp
+     * @param urlString
+     * @return
+     * @throws TclException
+     */
     public static URL getURL(Interp interp, String urlString)
             throws TclException {
         try {
@@ -628,6 +812,11 @@ public class SwankUtil {
         }
     }
 
+    /**
+     *
+     * @param url
+     * @return
+     */
     public static String parseURL(URL url) {
         if (url == null) {
             return ("");
@@ -636,6 +825,13 @@ public class SwankUtil {
         }
     }
 
+    /**
+     *
+     * @param interp
+     * @param tObj
+     * @return
+     * @throws TclException
+     */
     public static File getFile(Interp interp, TclObject tObj)
             throws TclException {
         if (tObj == null) {
@@ -648,6 +844,11 @@ public class SwankUtil {
         return (file);
     }
 
+    /**
+     *
+     * @param file
+     * @return
+     */
     public static String parseFile(File file) {
         if (file == null) {
             return ("");
@@ -656,6 +857,13 @@ public class SwankUtil {
         }
     }
 
+    /**
+     *
+     * @param interp
+     * @param tclObject
+     * @return
+     * @throws TclException
+     */
     public static Insets getInsets(Interp interp, TclObject tclObject)
             throws TclException {
         TclObject[] argv = TclList.getElements(interp, tclObject);
@@ -670,6 +878,11 @@ public class SwankUtil {
         return (new Insets(top, left, bottom, right));
     }
 
+    /**
+     *
+     * @param inset
+     * @return
+     */
     public static String parseInsets(Insets inset) {
         int top = 0;
         int left = 0;
@@ -686,6 +899,13 @@ public class SwankUtil {
         return top + " " + left + " " + bottom + " " + right;
     }
 
+    /**
+     *
+     * @param interp
+     * @param tclObject
+     * @return
+     * @throws TclException
+     */
     public static Point getPoint(Interp interp, TclObject tclObject)
             throws TclException {
         TclObject[] argv = TclList.getElements(interp, tclObject);
@@ -698,6 +918,11 @@ public class SwankUtil {
         return (new Point(x, y));
     }
 
+    /**
+     *
+     * @param point
+     * @return
+     */
     public static String parsePoint(Point point) {
         int x = point.x;
         int y = point.y;
@@ -705,6 +930,13 @@ public class SwankUtil {
         return x + " " + y;
     }
 
+    /**
+     *
+     * @param interp
+     * @param tclObject
+     * @return
+     * @throws TclException
+     */
     public static Dimension getDimension(Interp interp, TclObject tclObject)
             throws TclException {
         TclObject[] argv = TclList.getElements(interp, tclObject);
@@ -717,6 +949,11 @@ public class SwankUtil {
         return (new Dimension(width, height));
     }
 
+    /**
+     *
+     * @param dimension
+     * @return
+     */
     public static String parseDimension(Dimension dimension) {
         int width = dimension.width;
         int height = dimension.height;
@@ -724,6 +961,13 @@ public class SwankUtil {
         return width + " " + height;
     }
 
+    /**
+     *
+     * @param interp
+     * @param tclObject
+     * @return
+     * @throws TclException
+     */
     public static Locale getLocale(Interp interp, TclObject tclObject)
             throws TclException {
         TclObject[] argv = TclList.getElements(interp, tclObject);
@@ -738,11 +982,21 @@ public class SwankUtil {
         }
     }
 
+    /**
+     *
+     * @param locale
+     * @return
+     */
     public static String parseLocale(Locale locale) {
         return locale.getLanguage() + " " + locale.getCountry() + " "
                 + locale.getVariant();
     }
 
+    /**
+     *
+     * @param imageIcon
+     * @return
+     */
     public static String parseImageIcon(ImageIcon imageIcon) {
         if (imageIcon == null) {
             return "";
@@ -757,6 +1011,11 @@ public class SwankUtil {
         }
     }
 
+    /**
+     *
+     * @param imageObject
+     * @return
+     */
     public static String parseImageIcon(Object imageObject) {
         if (imageObject == null) {
             return "";
@@ -767,15 +1026,37 @@ public class SwankUtil {
         }
     }
 
+    /**
+     *
+     * @param interp
+     * @param tclObject
+     * @return
+     * @throws TclException
+     */
     public static ImageIcon getBitmapImage(Interp interp, TclObject tclObject)
             throws TclException {
           return getImageIcon(interp,tclObject,true);
     }
+    /**
+     *
+     * @param interp
+     * @param tclObject
+     * @return
+     * @throws TclException
+     */
     public static ImageIcon getImageIcon(Interp interp, TclObject tclObject)
             throws TclException {
           return getImageIcon(interp,tclObject,false);
     }
   
+    /**
+     *
+     * @param interp
+     * @param tclObject
+     * @param bitmapMode
+     * @return
+     * @throws TclException
+     */
     public static ImageIcon getImageIcon(Interp interp, TclObject tclObject,final boolean bitmapMode)
             throws TclException {
         TclObject[] argv = TclList.getElements(interp, tclObject);
@@ -854,6 +1135,13 @@ public class SwankUtil {
         }
     }
 
+    /**
+     *
+     * @param interp
+     * @param tclObject
+     * @return
+     * @throws TclException
+     */
     public static BufferedImage getBufferedImage(Interp interp,
             TclObject tclObject) throws TclException {
         TclObject[] argv = TclList.getElements(interp, tclObject);
@@ -943,6 +1231,11 @@ public class SwankUtil {
         }
     }
 
+    /**
+     *
+     * @param imageIcon
+     * @return
+     */
     public static BufferedImage makeBufferedImage(ImageIcon imageIcon) {
         BufferedImage bufferedImage = new BufferedImage(imageIcon.getIconWidth(),
                 imageIcon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
@@ -952,6 +1245,13 @@ public class SwankUtil {
         return bufferedImage;
     }
 
+    /**
+     *
+     * @param interp
+     * @param tclObject
+     * @return
+     * @throws TclException
+     */
     public static Font getFont(Interp interp, TclObject tclObject)
             throws TclException {
         TclObject[] argv = TclList.getElements(interp, tclObject);
@@ -990,6 +1290,11 @@ public class SwankUtil {
         }
     }
 
+    /**
+     *
+     * @param font
+     * @return
+     */
     public static String parseFont(Font font) {
         if (font == null) {
             return ("");
@@ -1028,6 +1333,13 @@ public class SwankUtil {
         return (sBuf.toString());
     }
 
+    /**
+     *
+     * @param interp
+     * @param tclObject
+     * @return
+     * @throws TclException
+     */
     public static java.util.List getSpinlist(Interp interp, TclObject tclObject)
             throws TclException {
         TclObject[] argv = TclList.getElements(interp, tclObject);
@@ -1038,6 +1350,11 @@ public class SwankUtil {
         return spinValues;
     }
 
+    /**
+     *
+     * @param object
+     * @return
+     */
     public static String parseSpinlist(Object object) {
         java.util.List list = (java.util.List) object;
 // fixme  need to build proper Tcl list result
@@ -1054,6 +1371,13 @@ public class SwankUtil {
         return sbuf.toString();
     }
 
+    /**
+     *
+     * @param interp
+     * @param tclObject
+     * @return
+     * @throws TclException
+     */
     public static String getTkRelief(Interp interp, TclObject tclObject)
             throws TclException {
         String relief = tclObject.toString();
@@ -1068,10 +1392,23 @@ public class SwankUtil {
         return (relief);
     }
 
+    /**
+     *
+     * @param relief
+     * @return
+     */
     public static String parseTkRelief(String relief) {
         return (relief);
     }
 
+    /**
+     *
+     * @param interp
+     * @param comp
+     * @param tclObject
+     * @return
+     * @throws TclException
+     */
     public static int getTkSize(Interp interp, Component comp,
             TclObject tclObject) throws TclException {
         String value = tclObject.toString();
@@ -1080,6 +1417,14 @@ public class SwankUtil {
         return size;
     }
 
+    /**
+     *
+     * @param interp
+     * @param comp
+     * @param value
+     * @return
+     * @throws TclException
+     */
     public static int getTkSize(Interp interp, Component comp, String value)
             throws TclException {
         Double dValue = null;
@@ -1145,14 +1490,31 @@ public class SwankUtil {
         }
     }
 
+    /**
+     *
+     * @param size
+     * @return
+     */
     public static String parseTkSize(int size) {
         return (Integer.toString(size));
     }
 
+    /**
+     *
+     * @param size
+     * @return
+     */
     public static String parseTkSizeD(double size) {
         return (Double.toString(size));
     }
 
+    /**
+     *
+     * @param interp
+     * @param tclObject
+     * @return
+     * @throws TclException
+     */
     public static boolean isDashIntPattern(Interp interp, TclObject tclObject)
             throws TclException {
         if (tclObject == null) {
@@ -1170,6 +1532,13 @@ public class SwankUtil {
         return false;
     }
 
+    /**
+     *
+     * @param interp
+     * @param tclObject
+     * @return
+     * @throws TclException
+     */
     public static float[] getDash(Interp interp, TclObject tclObject)
             throws TclException {
         if (tclObject == null) {
@@ -1249,6 +1618,14 @@ public class SwankUtil {
         }
     }
 
+    /**
+     *
+     * @param interp
+     * @param comp
+     * @param tclObject
+     * @return
+     * @throws TclException
+     */
     public static double getTkSizeD(Interp interp, Component comp,
             TclObject tclObject) throws TclException {
         String value = tclObject.toString();
@@ -1312,6 +1689,13 @@ public class SwankUtil {
         }
     }
 
+    /**
+     *
+     * @param interp
+     * @param tclObject
+     * @return
+     * @throws TclException
+     */
     public static Cursor getCursor(Interp interp, TclObject tclObject)
             throws TclException {
         if (tclObject.toString().startsWith("defa")) {
@@ -1360,6 +1744,11 @@ public class SwankUtil {
         }
     }
 
+    /**
+     *
+     * @param cursor
+     * @return
+     */
     public static String parseCursor(Cursor cursor) {
         int type = cursor.getType();
 
@@ -1414,6 +1803,13 @@ public class SwankUtil {
         }
     }
 
+    /**
+     *
+     * @param interp
+     * @param tclObject
+     * @return
+     * @throws TclException
+     */
     public static int getTkSelectMode(Interp interp, TclObject tclObject)
             throws TclException {
         if (tclObject.toString().startsWith("single")) {
@@ -1430,6 +1826,11 @@ public class SwankUtil {
         }
     }
 
+    /**
+     *
+     * @param mode
+     * @return
+     */
     public static String parseTkSelectMode(int mode) {
         switch (mode) {
             case ListSelectionModel.SINGLE_SELECTION:
@@ -1446,10 +1847,23 @@ public class SwankUtil {
         }
     }
 
+    /**
+     *
+     * @param interp
+     * @param arg
+     * @return
+     */
     public static int getIndex(Interp interp, TclObject arg) {
         return (0);
     }
 
+    /**
+     *
+     * @param interp
+     * @param menuName
+     * @return
+     * @throws TclException
+     */
     public static Object getMenuBar(Interp interp, String menuName)
             throws TclException {
         TclObject tObj = (TclObject) Widgets.getWidget(interp, menuName);
@@ -1472,6 +1886,13 @@ public class SwankUtil {
         return object;
     }
 
+    /**
+     *
+     * @param interp
+     * @param menuName
+     * @return
+     * @throws TclException
+     */
     public static Object getMenu(Interp interp, String menuName)
             throws TclException {
         TclObject tObj = (TclObject) Widgets.getWidget(interp, menuName);
@@ -1494,6 +1915,13 @@ public class SwankUtil {
         return object;
     }
 
+    /**
+     *
+     * @param interp
+     * @param jcomp
+     * @param argv
+     * @throws TclException
+     */
     public static void addmenu(Interp interp, JComponent jcomp, TclObject[] argv)
             throws TclException {
         int i;
@@ -1588,6 +2016,9 @@ public class SwankUtil {
         return;
     }
 
+    /**
+     *
+     */
     public static void initColorTable() {
         colorTable = new Hashtable();
         iColorTable = new Hashtable();
@@ -2327,6 +2758,11 @@ public class SwankUtil {
         }
     }
 
+    /**
+     *
+     * @param comp
+     * @param tkRelief
+     */
     public static void updateRelief(JComponent comp, String tkRelief) {
         int width = 3;
         comp.setBorder(new SwkBorder());
@@ -2341,6 +2777,11 @@ public class SwankUtil {
          */
     }
 
+    /**
+     *
+     * @param c
+     * @return
+     */
     public static boolean disableDoubleBuffering(Component c) {
         if (c instanceof JComponent == false) {
             return false;
@@ -2353,16 +2794,32 @@ public class SwankUtil {
         return wasBuffered;
     }
 
+    /**
+     *
+     * @param c
+     * @param wasBuffered
+     */
     public static void restoreDoubleBuffering(Component c, boolean wasBuffered) {
         if (c instanceof JComponent) {
             ((JComponent) c).setDoubleBuffered(wasBuffered);
         }
     }
 
+    /**
+     *
+     * @param s
+     * @return
+     */
     static public boolean looksLikeInt(String s) {
         return intPattern.matcher(s).matches();
     }
 
+    /**
+     *
+     * @param argv
+     * @param start
+     * @return
+     */
     static public String[] argvToStrings(TclObject[] argv, int start) {
         String[] strings = new String[argv.length - start];
 
@@ -2373,6 +2830,13 @@ public class SwankUtil {
         return strings;
     }
 
+    /**
+     *
+     * @param interp
+     * @param aList
+     * @return
+     * @throws TclException
+     */
     static public TclObject arrayToList(Interp interp, ArrayList aList)
             throws TclException {
         TclObject list = TclList.newInstance();
@@ -2387,6 +2851,9 @@ public class SwankUtil {
         return list;
     }
 
+    /**
+     *
+     */
     public static void doWait() {
         try {
             SwingUtilities.invokeAndWait(new Runnable() {
@@ -2398,6 +2865,11 @@ public class SwankUtil {
         }
     }
 
+    /**
+     *
+     * @param comp
+     * @param target
+     */
     public static void setJHelpTarget(Component comp, String target) {
         if (hasJHelp == null) {
             try {

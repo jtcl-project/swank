@@ -76,9 +76,18 @@ public abstract class XYData implements XYDataset, IntervalXYDataset {
     public String getName() {
          return name;
     }
+    /**
+     *
+     * @param value
+     */
     public void setDeltaX(double value) {
 	    deltaX = value;
     }
+    /**
+     *
+     * @param xValues
+     * @param series
+     */
     public void setXValues(ArrayList<Double> xValues,int series) {
         for (int i=xSeries.size();i<=series;i++) {
              xSeries.add(null);

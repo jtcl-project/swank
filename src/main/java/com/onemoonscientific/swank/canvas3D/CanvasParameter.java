@@ -72,14 +72,23 @@ public abstract class CanvasParameter implements CanvasParameterConfigure,
             return  name.hashCode();
     }
      */
+    @Override
     public String toString() {
         return "CanvasParameter: " + name;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getDefault() {
         return defValue;
     }
@@ -113,6 +122,12 @@ public abstract class CanvasParameter implements CanvasParameterConfigure,
         return getPar(stdMap, arg);
     }
 
+    /**
+     *
+     * @param map
+     * @param arg
+     * @return
+     */
     public static CanvasParameter getPar(Map map, String arg) {
         String searchArg = null;
 

@@ -30,6 +30,10 @@ import java.awt.*;
 import java.util.*;
 import javax.swing.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class Widgets {
 
     private static Hashtable getWidgetMap(Interp interp) {
@@ -43,6 +47,12 @@ public class Widgets {
 
     }
 
+    /**
+     *
+     * @param interp
+     * @param widgetName
+     * @return
+     */
     public static boolean exists(Interp interp, String widgetName) {
 
         if (getWidgetMap(interp).get(widgetName) == null) {
@@ -52,6 +62,13 @@ public class Widgets {
         }
     }
 
+    /**
+     *
+     * @param interp
+     * @param widgetName
+     * @param widgetObject
+     * @throws TclException
+     */
     public static void addNewWidget(Interp interp, String widgetName,
             TclObject widgetObject) throws TclException {
         if (exists(interp, widgetName)) {
@@ -82,6 +99,12 @@ public class Widgets {
         getWidgetMap(interp).put(widgetName, widgetObject);
     }
 
+    /**
+     *
+     * @param interp
+     * @param widgetName
+     * @throws TclException
+     */
     public static void removeChild(Interp interp, String widgetName)
             throws TclException {
         TclObject tObj = (TclObject) getWidgetMap(interp).get(widgetName);
@@ -107,6 +130,13 @@ public class Widgets {
         children.remove(widgetName);
     }
 
+    /**
+     *
+     * @param interp
+     * @param parentName
+     * @return
+     * @throws TclException
+     */
     public static Vector children(Interp interp, String parentName)
             throws TclException {
         SwkWidget parent = (SwkWidget) get(interp, parentName);
@@ -127,10 +157,21 @@ public class Widgets {
         return childrenNames;
     }
 
+    /**
+     *
+     * @param interp
+     * @param widgetName
+     */
     public static void removeWidget(Interp interp, String widgetName) {
         getWidgetMap(interp).remove(widgetName);
     }
 
+    /**
+     *
+     * @param interp
+     * @param widgetName
+     * @throws TclException
+     */
     public static void remove(Interp interp, String widgetName)
             throws TclException {
         TclObject tObj = (TclObject) getWidgetMap(interp).get(widgetName);
@@ -156,6 +197,12 @@ public class Widgets {
         }
     }
 
+    /**
+     *
+     * @param comp
+     * @return
+     * @throws TclException
+     */
     public static JViewport getViewport(Component comp)
             throws TclException {
         Container container = comp.getParent();
@@ -179,6 +226,13 @@ public class Widgets {
         }
     }
 
+    /**
+     *
+     * @param interp
+     * @param widgetName
+     * @return
+     * @throws TclException
+     */
     public static String pathParent(Interp interp, String widgetName)
             throws TclException {
         String masterName = null;
@@ -196,6 +250,13 @@ public class Widgets {
         return (masterName);
     }
 
+    /**
+     *
+     * @param interp
+     * @param widgetName
+     * @return
+     * @throws TclException
+     */
     public static String parent(Interp interp, String widgetName)
             throws TclException {
         Object object = get(interp, widgetName);
@@ -208,6 +269,11 @@ public class Widgets {
         }
     }
 
+    /**
+     *
+     * @param object
+     * @return
+     */
     public static SwkWidget swankParent(Object object) {
         Container container = null;
 
@@ -226,11 +292,24 @@ public class Widgets {
         return (SwkWidget) container;
     }
 
+    /**
+     *
+     * @param interp
+     * @param widgetName
+     * @return
+     */
     public static Object getWidget(Interp interp, String widgetName) {
         return getWidgetMap(interp).get(widgetName);
     }
     // Map a widget name to the Swing widget it represents
 
+    /**
+     *
+     * @param interp
+     * @param widgetName
+     * @return
+     * @throws TclException
+     */
     public static Object get(Interp interp, String widgetName)
             throws TclException {
         TclObject tObj = null;
@@ -258,6 +337,13 @@ public class Widgets {
     }
 
     // Get the swing Container object for the given window name
+    /**
+     *
+     * @param interp
+     * @param widgetName
+     * @return
+     * @throws TclException
+     */
     public static Container getContainer(Interp interp, String widgetName)
             throws TclException {
         Object o = get(interp, widgetName);
@@ -265,6 +351,11 @@ public class Widgets {
         return (getContainer(o));
     }
 
+    /**
+     *
+     * @param o
+     * @return
+     */
     public static Container getContainer(Object o) {
         Container c;
 
@@ -281,6 +372,10 @@ public class Widgets {
         return c;
     }
 
+    /**
+     *
+     * @param c
+     */
     public static void relayoutContainer(Container c) {
         Component component = (Component) c;
 
@@ -313,6 +408,11 @@ public class Widgets {
         }
     }
 
+    /**
+     *
+     * @param c
+     * @return
+     */
     public static Component getFrameOrWindow(Container c) {
         Component component = (Component) c;
 
@@ -334,6 +434,11 @@ public class Widgets {
 
         return component;
     }
+    /**
+     *
+     * @param masterObj
+     * @return
+     */
     public static Container getMasterContainer(final Object masterObj) {
         Container master = null;
 
@@ -362,6 +467,12 @@ public class Widgets {
 
     }
 
+    /**
+     *
+     * @param component1
+     * @param useParent
+     * @return
+     */
     public static Container getMaster(final Component component1, final boolean useParent) {
         Container master = null;
         LayoutManager layout = null;
@@ -399,6 +510,13 @@ public class Widgets {
         return master;
     }
 
+    /**
+     *
+     * @param interp
+     * @param widgetName
+     * @return
+     * @throws TclException
+     */
     public static Component getComponent(final Interp interp, final String widgetName) throws TclException {
         if (!Widgets.exists(interp, widgetName)) {
             throw new TclException(interp,

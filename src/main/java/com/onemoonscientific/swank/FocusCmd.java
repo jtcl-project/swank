@@ -31,10 +31,20 @@ import java.awt.*;
 
 import javax.swing.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class FocusCmd implements Command {
 
     static String focusWindow = null;
 
+    /**
+     *
+     * @param interp
+     * @param argv
+     * @throws TclException
+     */
     public void cmdProc(Interp interp, TclObject[] argv)
             throws TclException {
         int i;
@@ -60,10 +70,18 @@ public class FocusCmd implements Command {
         }
     }
 
+    /**
+     *
+     * @param windowName
+     */
     static public void setFocusWindow(String windowName) {
         focusWindow = windowName;
     }
 
+    /**
+     *
+     * @return
+     */
     static public String getFocusWindow() {
         return focusWindow;
     }

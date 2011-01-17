@@ -6,6 +6,10 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import javax.swing.filechooser.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class SwkFileFilter extends FileFilter {
 
     private static String TYPE_UNKNOWN = "Type Unknown";
@@ -15,14 +19,26 @@ public class SwkFileFilter extends FileFilter {
     private String fullDescription = null;
     private boolean useExtensionsInDescription = true;
 
+    /**
+     *
+     */
     public SwkFileFilter() {
         this.filters = new Hashtable();
     }
 
+    /**
+     *
+     * @param extension
+     */
     public SwkFileFilter(String extension) {
         this(extension, null);
     }
 
+    /**
+     *
+     * @param extension
+     * @param description
+     */
     public SwkFileFilter(String extension, String description) {
         this();
 
@@ -35,6 +51,13 @@ public class SwkFileFilter extends FileFilter {
         }
     }
 
+    /**
+     *
+     * @param interp
+     * @param extensions
+     * @param description
+     * @throws TclException
+     */
     public SwkFileFilter(Interp interp, TclObject extensions, String description)
             throws TclException {
         this();
@@ -51,6 +74,7 @@ public class SwkFileFilter extends FileFilter {
         }
     }
 
+    @SuppressWarnings("empty-statement")
     public boolean accept(File f) {
         if (f != null) {
             if (f.isDirectory()) {
@@ -74,6 +98,11 @@ public class SwkFileFilter extends FileFilter {
         return false;
     }
 
+    /**
+     *
+     * @param f
+     * @return
+     */
     public String getExtension(File f) {
         if (f != null) {
             String filename = f.getName();
@@ -87,6 +116,10 @@ public class SwkFileFilter extends FileFilter {
         return null;
     }
 
+    /**
+     *
+     * @param extension
+     */
     public void addExtension(String extension) {
         if (filters == null) {
             filters = new Hashtable(5);
@@ -123,16 +156,28 @@ public class SwkFileFilter extends FileFilter {
         return fullDescription;
     }
 
+    /**
+     *
+     * @param description
+     */
     public void setDescription(String description) {
         this.description = description;
         fullDescription = null;
     }
 
+    /**
+     *
+     * @param b
+     */
     public void setExtensionListInDescription(boolean b) {
         useExtensionsInDescription = b;
         fullDescription = null;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean isExtensionListInDescription() {
         return useExtensionsInDescription;
     }

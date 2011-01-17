@@ -31,6 +31,10 @@ import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class SwkCheckButtonListener implements ActionListener, VarTrace,
         SwkListener {
 
@@ -44,6 +48,9 @@ public class SwkCheckButtonListener implements ActionListener, VarTrace,
     }
     ButtonSettings buttonSettings = new ButtonSettings();
 
+    /**
+     *
+     */
     public static class ButtonSettings extends CommandVarListenerSettings {
 
         final private String offValue;
@@ -58,10 +65,19 @@ public class SwkCheckButtonListener implements ActionListener, VarTrace,
             this.offValue = offValue;
         }
 
+        /**
+         *
+         * @return
+         */
         public String getOffValue() {
             return offValue;
         }
 
+        /**
+         *
+         * @param newOffValue
+         * @return
+         */
         public ButtonSettings getWithOffValue(final String newOffValue) {
             ButtonSettings newValue = new ButtonSettings(getValue(), newOffValue, getVarName(), getCommand());
             return newValue;
@@ -91,6 +107,14 @@ public class SwkCheckButtonListener implements ActionListener, VarTrace,
         this.component = (AbstractButton) component;
     }
 
+    /**
+     *
+     * @param interp
+     * @param string1
+     * @param string2
+     * @param flags
+     * @throws TclException
+     */
     public void traceProc(Interp interp, String string1, String string2,
             int flags) throws TclException {
         if (EventQueue.isDispatchThread()) {
@@ -101,6 +125,11 @@ public class SwkCheckButtonListener implements ActionListener, VarTrace,
         setFromVar(interp);
     }
 
+    /**
+     *
+     * @param interp
+     * @throws TclException
+     */
     public void setFromVar(Interp interp) throws TclException {
         if (EventQueue.isDispatchThread()) {
             System.out.println(
@@ -128,6 +157,12 @@ public class SwkCheckButtonListener implements ActionListener, VarTrace,
         }
     }
 
+    /**
+     *
+     * @param interp
+     * @param name
+     * @throws TclException
+     */
     public void setVarName2(Interp interp, String name)
             throws TclException {
         if (EventQueue.isDispatchThread()) {
@@ -183,6 +218,13 @@ public class SwkCheckButtonListener implements ActionListener, VarTrace,
         buttonSettings = buttonSettings.getWithVarName(name);
     }
 
+    /**
+     *
+     * @param interp
+     * @param name
+     * @return
+     * @throws TclException
+     */
     public boolean setVarName(Interp interp, String name)
             throws TclException {
         if (EventQueue.isDispatchThread()) {
@@ -230,10 +272,18 @@ public class SwkCheckButtonListener implements ActionListener, VarTrace,
         return state;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getVarName() {
         return buttonSettings.getVarName();
     }
 
+    /**
+     *
+     * @param value
+     */
     public void setOnValue(String value) {
         if (!EventQueue.isDispatchThread()) {
             System.out.println(
@@ -250,10 +300,18 @@ public class SwkCheckButtonListener implements ActionListener, VarTrace,
         buttonSettings = buttonSettings.getWithValue(value);
     }
 
+    /**
+     *
+     * @return
+     */
     public String getOffValue() {
         return buttonSettings.getOffValue();
     }
 
+    /**
+     *
+     * @param value
+     */
     public void setOffValue(String value) {
         if (!EventQueue.isDispatchThread()) {
             System.out.println(
@@ -268,14 +326,26 @@ public class SwkCheckButtonListener implements ActionListener, VarTrace,
         buttonSettings = buttonSettings.getWithOffValue(value);
     }
 
+    /**
+     *
+     * @return
+     */
     public String getOnValue() {
         return buttonSettings.getValue();
     }
 
+    /**
+     *
+     * @param name
+     */
     public void setCommand(String name) {
         buttonSettings = buttonSettings.getWithCommand(name);
     }
 
+    /**
+     *
+     * @return
+     */
     public String getCommand() {
         return buttonSettings.getCommand();
     }
@@ -304,6 +374,11 @@ public class SwkCheckButtonListener implements ActionListener, VarTrace,
         interp.getNotifier().queueEvent(bEvent, TCL.QUEUE_TAIL);
     }
 
+    /**
+     *
+     * @param buttonSettings
+     * @throws TclException
+     */
     public void tclActionVar(ButtonSettings buttonSettings) throws TclException {
         final TclObject tObj;
         final String value;
@@ -316,6 +391,11 @@ public class SwkCheckButtonListener implements ActionListener, VarTrace,
         interp.setVar(buttonSettings.getVarName(), tObj, TCL.GLOBAL_ONLY);
     }
 
+    /**
+     *
+     * @param buttonSettings
+     * @throws TclException
+     */
     public void tclAction(ButtonSettings buttonSettings) throws TclException {
         tclActionVar(buttonSettings);
         if (buttonSettings.getCommand().length() != 0) {
@@ -328,6 +408,12 @@ public class SwkCheckButtonListener implements ActionListener, VarTrace,
         }
     }
 
+    /**
+     *
+     * @param eventObject
+     * @param obj
+     * @param subtype
+     */
     public void processEvent(EventObject eventObject, Object obj, int subtype) {
         if (EventQueue.isDispatchThread()) {
             System.out.println(

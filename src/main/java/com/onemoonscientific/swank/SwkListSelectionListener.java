@@ -29,7 +29,6 @@ import tcl.lang.*;
 import java.awt.*;
 import java.awt.event.*;
 
-import java.lang.*;
 
 import java.util.*;
 
@@ -37,6 +36,10 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class SwkListSelectionListener implements ListSelectionListener,
         SwkListener {
 
@@ -52,18 +55,34 @@ public class SwkListSelectionListener implements ListSelectionListener,
         bindings = new ArrayList<SwkBinding>();
     }
 
+    /**
+     *
+     * @param name
+     */
     public void setCommand(String name) {
         command = name;
     }
 
+    /**
+     *
+     * @return
+     */
     public ArrayList<SwkBinding> getBindings() {
         return bindings;
     }
 
+    /**
+     *
+     * @param newBinding
+     */
     public void setBinding(SwkBinding newBinding) {
         SwkBind.setBinding(bindings, newBinding);
     }
 
+    /**
+     *
+     * @return
+     */
     public String getCommand() {
         return (command);
     }
@@ -72,6 +91,11 @@ public class SwkListSelectionListener implements ListSelectionListener,
         processChange(e, SwkBinding.SELECTIONCHANGED);
     }
 
+    /**
+     *
+     * @param e
+     * @param subtype
+     */
     public void processChange(ListSelectionEvent e, int subtype) {
         if (e.getValueIsAdjusting()) {
             return;
@@ -82,6 +106,12 @@ public class SwkListSelectionListener implements ListSelectionListener,
         interp.getNotifier().queueEvent(bEvent, TCL.QUEUE_TAIL);
     }
 
+    /**
+     *
+     * @param eventObject
+     * @param obj
+     * @param subtype
+     */
     public void processEvent(EventObject eventObject, Object obj, int subtype) {
         ListSelectionEvent e = (ListSelectionEvent) eventObject;
 

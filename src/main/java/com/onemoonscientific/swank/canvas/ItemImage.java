@@ -39,6 +39,10 @@ import java.awt.*;
 import java.awt.geom.*;
 import java.awt.image.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class ItemImage extends SwkShape {
 
     static CanvasParameter[] parameters = {
@@ -55,16 +59,24 @@ public class ItemImage extends SwkShape {
         storeCoords = new double[2];
     }
 
-    public void setImage(BufferedImage newImage) {
+    /**
+     *
+     * @param newImage
+     */
+    protected void setImage(BufferedImage newImage) {
         bufferedImage = newImage;
     }
 
-    public BufferedImage getImage() {
+    /**
+     *
+     * @return
+     */
+    protected BufferedImage getImage() {
         return bufferedImage;
     }
 
     @Override
-    public boolean hitShape(double x1, double y1) {
+    protected boolean hitShape(double x1, double y1) {
         boolean hit = false;
         if (bufferedImage != null) {
             AffineTransform aT = new AffineTransform();
@@ -88,6 +100,12 @@ public class ItemImage extends SwkShape {
         return hit;
     }
 
+    /**
+     *
+     * @param canvas
+     * @param coords
+     * @throws SwkException
+     */
     @Override
     public void coords(SwkImageCanvas canvas, double[] coords)
             throws SwkException {
@@ -99,8 +117,12 @@ public class ItemImage extends SwkShape {
         System.arraycopy(coords, 0, storeCoords, 0, 2);
     }
 
+    /**
+     *
+     * @param g2
+     */
     @Override
-    public void paintShape(Graphics2D g2) {
+    protected void paintShape(Graphics2D g2) {
         AffineTransform aT = new AffineTransform();
         aT.translate((int) storeCoords[0], storeCoords[1]);
 
@@ -111,6 +133,10 @@ public class ItemImage extends SwkShape {
 
     }
 
+    /**
+     *
+     * @return
+     */
     public String getType() {
         return "image";
     }

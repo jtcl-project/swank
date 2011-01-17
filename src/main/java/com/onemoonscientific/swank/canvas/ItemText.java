@@ -42,6 +42,10 @@ import java.awt.font.*;
 import java.awt.geom.*;
 import java.text.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class ItemText extends SwkShape implements TextInterface {
 
     static BreakIterator wordIterator = BreakIterator.getWordInstance();
@@ -63,6 +67,12 @@ public class ItemText extends SwkShape implements TextInterface {
         fill = Color.BLACK;
     }
 
+    /**
+     *
+     * @param canvas
+     * @param coords
+     * @throws SwkException
+     */
     @Override
     public void coords(SwkImageCanvas canvas, double[] coords)
             throws SwkException {
@@ -75,66 +85,122 @@ public class ItemText extends SwkShape implements TextInterface {
         setY(coords[1]);
     }
 
+    /**
+     *
+     * @param g2
+     */
     @Override
-    public void paintShape(Graphics2D g2) {
+    protected void paintShape(Graphics2D g2) {
         shape = textPar.paint(g2, getCanvas().getFontRenderContext(), this, storeCoords[0], storeCoords[1]);
     }
 
 
+    /**
+     *
+     * @return
+     */
     public String getType() {
         return "text";
     }
 
-    public double getX() {
+    /**
+     *
+     * @return
+     */
+    protected double getX() {
         return storeCoords[0];
     }
 
-    public void setX(final double x) {
+    /**
+     *
+     * @param x
+     */
+    protected void setX(final double x) {
         storeCoords[0] = x;
     }
 
-    public double getY() {
+    /**
+     *
+     * @return
+     */
+    protected double getY() {
         return storeCoords[1];
     }
 
-    public void setY(final double y) {
+    /**
+     *
+     * @param y
+     */
+    protected void setY(final double y) {
         storeCoords[1] = y;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getText() {
         return textPar.getText();
     }
 
+    /**
+     *
+     * @param newValue
+     */
     public void setText(String newValue) {
         textPar = TextParameters.setText(textPar, newValue);
     }
 
+    /**
+     *
+     * @return
+     */
     public float[] getAnchor() {
         return textPar.getAnchor();
     }
 
+    /**
+     *
+     * @param newValue
+     */
     public void setAnchor(float[] newValue) {
         textPar = TextParameters.setAnchor(textPar, newValue);
     }
 
+    /**
+     *
+     * @return
+     */
     public Font getFont() {
         return textPar.getFont();
     }
 
+    /**
+     *
+     * @param newValue
+     */
     public void setFont(Font newValue) {
         textPar = TextParameters.setFont(textPar, newValue);
     }
 
+    /**
+     *
+     * @return
+     */
     public Color getTextColor() {
         return textPar.getTextColor();
     }
 
+    /**
+     *
+     * @param newValue
+     */
     public void setTextColor(Color newValue) {
         textPar = TextParameters.setTextColor(textPar, newValue);
     }
 
     @Override
-    public boolean hitShape(double x1, double y1) {
+    protected boolean hitShape(double x1, double y1) {
         boolean result = false;
         if (shape != null) {
             result = shape.contains(x1, y1);
@@ -143,7 +209,11 @@ public class ItemText extends SwkShape implements TextInterface {
     }
 
     // FIXME getting bounds of multiline text not correct
-    public Rectangle2D getBounds() {
+    /**
+     *
+     * @return
+     */
+    protected Rectangle2D getBounds() {
         if (shape != null) {
             return shape.getBounds2D();
         } else {
@@ -176,7 +246,7 @@ public class ItemText extends SwkShape implements TextInterface {
     }
 
     @Override
-    public void drawHandles(Graphics2D g2) {
+    protected void drawHandles(Graphics2D g2) {
         if (shape != null) {
             Rectangle2D bounds = shape.getBounds2D();
             double y1 = bounds.getMinY();
@@ -190,8 +260,14 @@ public class ItemText extends SwkShape implements TextInterface {
         }
     }
 
+    /**
+     *
+     * @param testX
+     * @param testY
+     * @return
+     */
     @Override
-    public int hitHandles(double testX, double testY) {
+    protected int hitHandles(double testX, double testY) {
         int hitIndex = -1;
         if (shape != null) {
             Rectangle2D bounds = shape.getBounds2D();
@@ -211,8 +287,13 @@ public class ItemText extends SwkShape implements TextInterface {
         return hitIndex;
     }
 
+    /**
+     *
+     * @param handle
+     * @return
+     */
     @Override
-    public Cursor getHandleCursor(int handle) {
+    protected Cursor getHandleCursor(int handle) {
         final Cursor cursor;
         switch (handle) {
             case 0:

@@ -30,6 +30,10 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class SwkFileChooserListener implements ActionListener, SwkListener {
 
     Interp interp;
@@ -39,10 +43,18 @@ public class SwkFileChooserListener implements ActionListener, SwkListener {
         this.interp = interp;
     }
 
+    /**
+     *
+     * @param name
+     */
     public void setCommand(String name) {
         command = name;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getCommand() {
         return (command);
     }
@@ -53,6 +65,12 @@ public class SwkFileChooserListener implements ActionListener, SwkListener {
         interp.getNotifier().queueEvent(bEvent, TCL.QUEUE_TAIL);
     }
 
+    /**
+     *
+     * @param eventObject
+     * @param obj
+     * @param subtype
+     */
     public void processEvent(EventObject eventObject, Object obj, int subtype) {
         if ((command != null) && (command.length() != 0)) {
             try {

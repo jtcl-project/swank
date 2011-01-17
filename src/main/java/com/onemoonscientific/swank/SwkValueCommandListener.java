@@ -30,6 +30,10 @@ import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class SwkValueCommandListener implements ActionListener, VarTrace,
         SwkListener {
 
@@ -45,6 +49,14 @@ public class SwkValueCommandListener implements ActionListener, VarTrace,
         this.component = (JToggleButton) component;
     }
 
+    /**
+     *
+     * @param interp
+     * @param string1
+     * @param string2
+     * @param flags
+     * @throws TclException
+     */
     public void traceProc(Interp interp, String string1, String string2,
             int flags) throws TclException {
         if (EventQueue.isDispatchThread()) {
@@ -55,6 +67,11 @@ public class SwkValueCommandListener implements ActionListener, VarTrace,
         setFromVar(interp);
     }
 
+    /**
+     *
+     * @param interp
+     * @throws TclException
+     */
     public void setFromVar(Interp interp) throws TclException {
         if (EventQueue.isDispatchThread()) {
             System.out.println(
@@ -89,6 +106,11 @@ public class SwkValueCommandListener implements ActionListener, VarTrace,
         traceLock = false;
     }
 
+    /**
+     *
+     * @param name
+     * @throws TclException
+     */
     public void setVarName(String name) throws TclException {
         if ((varName != null) && (!varName.equals(""))) {
             interp.untraceVar(varName, this, TCL.TRACE_WRITES
@@ -102,22 +124,42 @@ public class SwkValueCommandListener implements ActionListener, VarTrace,
         varName = name.intern();
     }
 
+    /**
+     *
+     * @return
+     */
     public String getVarName() {
         return (varName);
     }
 
+    /**
+     *
+     * @param name
+     */
     public void setValue(String name) {
         value = name.intern();
     }
 
+    /**
+     *
+     * @return
+     */
     public String getValue() {
         return (value);
     }
 
+    /**
+     *
+     * @param name
+     */
     public void setCommand(String name) {
         command = name.intern();
     }
 
+    /**
+     *
+     * @return
+     */
     public String getCommand() {
         return (command);
     }

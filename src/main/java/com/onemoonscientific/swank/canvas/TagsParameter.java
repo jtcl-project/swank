@@ -4,6 +4,10 @@ import com.onemoonscientific.swank.*;
 import tcl.lang.*;
 import java.util.ArrayList;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class TagsParameter extends CanvasParameter {
 
     private static String name = "tags";

@@ -7,6 +7,10 @@ import java.awt.event.*;
 import java.util.*;
 import javax.swing.JPopupMenu;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class EventRecorder implements AWTEventListener {
 
      ArrayList eventList = new ArrayList();
@@ -14,7 +18,10 @@ public class EventRecorder implements AWTEventListener {
      Point lastLoc = null;
      String lastCompName = null;
 
-    public  void start() {
+     /**
+      *
+      */
+     public  void start() {
  
         startTime = -1;
         eventList.clear();
@@ -24,6 +31,9 @@ public class EventRecorder implements AWTEventListener {
         Toolkit.getDefaultToolkit().addAWTEventListener(this, flags);
     }
 
+    /**
+     *
+     */
     public  void stop() {
             Toolkit.getDefaultToolkit().removeAWTEventListener(this);
        
@@ -146,14 +156,28 @@ public class EventRecorder implements AWTEventListener {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public  int eventCount() {
         return eventList.size();
     }
 
+    /**
+     *
+     * @param i
+     * @return
+     */
     public  String get(int i) {
         return (String) eventList.get(i);
     }
 
+    /**
+     *
+     * @param interp
+     * @throws TclException
+     */
     public  void get(Interp interp) throws TclException {
         TclObject list = TclList.newInstance();
 

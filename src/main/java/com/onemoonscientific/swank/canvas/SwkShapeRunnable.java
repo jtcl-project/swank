@@ -22,7 +22,11 @@ public class SwkShapeRunnable implements Runnable {
     SwkImageCanvas swkCanvas = null;
     SwkShape swkShape = null;
 
-    /** Creates a new instance of SwkShapeRunnable */
+    /** Creates a new instance of SwkShapeRunnable
+     * @param swkCanvas
+     * @param tag
+     * @param parameters
+     */
     public SwkShapeRunnable(final SwkImageCanvas swkCanvas, final String tag,
             final CanvasParameter[] parameters) {
         this.swkCanvas = swkCanvas;
@@ -30,6 +34,12 @@ public class SwkShapeRunnable implements Runnable {
         this.parameters = parameters;
     }
 
+    /**
+     *
+     * @param swkCanvas
+     * @param swkShape
+     * @param parameters
+     */
     public SwkShapeRunnable(final SwkImageCanvas swkCanvas, SwkShape swkShape,
             final CanvasParameter[] parameters) {
         this.swkCanvas = swkCanvas;
@@ -38,6 +48,9 @@ public class SwkShapeRunnable implements Runnable {
         this.parameters = parameters;
     }
 
+    /**
+     *
+     */
     public void exec() {
         try {
             SwingUtilities.invokeAndWait(this);
@@ -71,6 +84,10 @@ public class SwkShapeRunnable implements Runnable {
         }
     }
 
+    /**
+     *
+     * @param swkShape
+     */
     public void configShape(SwkShape swkShape) {
         swkShape.newStroke = false;
         swkShape.newTransform = false;

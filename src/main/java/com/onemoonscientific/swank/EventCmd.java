@@ -34,6 +34,9 @@ import java.util.*;
  */
 public class EventCmd implements Command {
 
+    /**
+     *
+     */
     final public static Map virtualEvents = new LinkedHashMap();
     /** Method called to process the bind command.
      * @param interp The interpreter in which this command is active.
@@ -47,6 +50,12 @@ public class EventCmd implements Command {
     private static final int OPT_GENERATE = 2;
     private static final int OPT_INFO = 3;
 
+    /**
+     *
+     * @param interp
+     * @param argv
+     * @throws TclException
+     */
     public void cmdProc(Interp interp, TclObject[] argv)
             throws TclException {
         if (argv.length < 2) {
@@ -140,10 +149,20 @@ public class EventCmd implements Command {
         }
     }
 
+    /**
+     *
+     * @param virtual
+     * @return
+     */
     public static boolean checkVirtual(String virtual) {
         return virtual.matches("^<<[^<>]+>>$");
     }
 
+    /**
+     *
+     * @param name
+     * @return
+     */
     public static Vector getVirtualEvents(String name) {
         Vector sequenceVec = (Vector) virtualEvents.get(name);
 

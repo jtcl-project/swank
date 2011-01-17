@@ -30,6 +30,10 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class SwkComponentListener implements ComponentListener, SwkListener {
 
     Interp interp;
@@ -45,18 +49,34 @@ public class SwkComponentListener implements ComponentListener, SwkListener {
         bindings = new ArrayList<SwkBinding>();
     }
 
+    /**
+     *
+     * @param name
+     */
     public void setCommand(String name) {
         command = name;
     }
 
+    /**
+     *
+     * @return
+     */
     public ArrayList<SwkBinding> getBindings() {
         return bindings;
     }
 
+    /**
+     *
+     * @param newBinding
+     */
     public void setBinding(SwkBinding newBinding) {
         SwkBind.setBinding(bindings, newBinding);
     }
 
+    /**
+     *
+     * @return
+     */
     public String getCommand() {
         return (command);
     }
@@ -102,12 +122,23 @@ public class SwkComponentListener implements ComponentListener, SwkListener {
         processComponent(e, SwkBinding.RESIZE);
     }
 
+    /**
+     *
+     * @param e
+     * @param subtype
+     */
     public void processComponent(ComponentEvent e, int subtype) {
         BindEvent bEvent = new BindEvent(interp, (SwkListener) this,
                 (EventObject) e, subtype);
         interp.getNotifier().queueEvent(bEvent, TCL.QUEUE_TAIL);
     }
 
+    /**
+     *
+     * @param eventObject
+     * @param obj
+     * @param subtype
+     */
     public void processEvent(EventObject eventObject, Object obj, int subtype) {
         if (eventObject instanceof ComponentEvent) {
             ComponentEvent e = (ComponentEvent) eventObject;

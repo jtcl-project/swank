@@ -282,6 +282,7 @@ class SwkJTextPaneWidgetCmd implements Command {
         interp.setResult(index);
     }
 
+    @SuppressWarnings("static-access")
     void tag(Interp interp, SwkJTextPane swkjtextpane, TclObject[] argv)
             throws TclException {
         if (argv.length < 3) {
@@ -313,7 +314,7 @@ class SwkJTextPaneWidgetCmd implements Command {
                 Style style = (new StyleGet()).exec(swkjtextpane,
                         argv[3].toString(), true);
 
-                swkjtextpane.setStyleStuff(interp, style, argv, 4);
+                SwkJTextPane.setStyleStuff(interp, style, argv, 4);
                 (new StyleSet()).exec(swkjtextpane, style);
             }
         } else if (argv[2].toString().equals("cget")) {

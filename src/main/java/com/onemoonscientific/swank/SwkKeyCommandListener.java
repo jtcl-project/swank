@@ -29,7 +29,6 @@ import tcl.lang.*;
 import java.awt.*;
 import java.awt.event.*;
 
-import java.lang.*;
 
 import java.util.*;
 
@@ -37,6 +36,10 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class SwkKeyCommandListener implements ActionListener, SwkListener {
 
     Interp interp;
@@ -55,6 +58,12 @@ public class SwkKeyCommandListener implements ActionListener, SwkListener {
         interp.getNotifier().queueEvent(bEvent, TCL.QUEUE_TAIL);
     }
 
+    /**
+     *
+     * @param eventObject
+     * @param obj
+     * @param subtype
+     */
     public void processEvent(EventObject eventObject, Object obj, int subtype) {
         ActionEvent e = (ActionEvent) eventObject;
 

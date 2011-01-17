@@ -17,6 +17,10 @@ import java.io.*;
 import java.util.*;
 
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class SwkImageCanvasWidgetCmd implements Command {
 
     private static final String[] validCmds = {
@@ -55,6 +59,12 @@ public class SwkImageCanvasWidgetCmd implements Command {
     Map newTypes = new HashMap();
     Interp interp = null;
 
+    /**
+     *
+     * @param interp
+     * @param argv
+     * @throws TclException
+     */
     public void cmdProc(final Interp interp, final TclObject[] argv)
             throws TclException {
         int i;
@@ -79,8 +89,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
 
         //final SwkImageCanvas swkImageCanvas = (SwkImageCanvas) ReflectObject.get(interp, tObj);
         if (swkImageCanvas == null) {
-            swkImageCanvas = new SwkImageCanvas(interp, "swkimagecanvas",
-                    "SwkImageCanvas");
+            swkImageCanvas = new SwkImageCanvas(interp, "swkimagecanvas");
             swkImageCanvas.className = "SwkImageCanvas";
         }
 

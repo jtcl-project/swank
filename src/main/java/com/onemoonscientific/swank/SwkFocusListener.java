@@ -29,6 +29,10 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class SwkFocusListener implements FocusListener, SwkListener {
 
     Interp interp;
@@ -42,18 +46,34 @@ public class SwkFocusListener implements FocusListener, SwkListener {
         bindings = new ArrayList<SwkBinding>();
     }
 
+    /**
+     *
+     * @return
+     */
     public ArrayList<SwkBinding> getBindings() {
         return bindings;
     }
 
+    /**
+     *
+     * @param name
+     */
     public void setCommand(String name) {
         command = name;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getCommand() {
         return (command);
     }
 
+    /**
+     *
+     * @param newBinding
+     */
     public void setBinding(SwkBinding newBinding) {
         SwkBind.setBinding(bindings, newBinding);
     }
@@ -74,37 +94,43 @@ public class SwkFocusListener implements FocusListener, SwkListener {
         }
     }
 
+    /**
+     *
+     * @param eventObject
+     * @param obj
+     * @param subtype
+     */
     public void processEvent(EventObject eventObject, Object obj, int subtype) {
         if (!(eventObject instanceof FocusEvent)) {
             return;
         }
         FocusEvent e = (FocusEvent) eventObject;
 
-        ArrayList<SwkBinding> bindings = null;
+        ArrayList<SwkBinding> eventBindings = null;
         Vector tagList = ((SwkWidget) component).getTagList();
 
         SwkBinding binding;
         for (int j = 0; j < tagList.size(); j++) {
-            bindings = null;
+            eventBindings = null;
 
             String tag = (String) tagList.elementAt(j);
             if (tag.equals(((SwkWidget) component).getName())) {
-                bindings = this.bindings;
+                eventBindings = this.bindings;
             } else if (tag.startsWith(".")) {
                 try {
-                    bindings = ((SwkJFrame) Widgets.get(interp, tag)).getFocusListener().getBindings();
+                    eventBindings = ((SwkJFrame) Widgets.get(interp, tag)).getFocusListener().getBindings();
                 } catch (TclException tclE) {
                 }
             } else {
-                bindings = BindCmd.getFocusBindings(tag);
+                eventBindings = BindCmd.getFocusBindings(tag);
             }
 
-            if (bindings == null) {
+            if (eventBindings == null) {
                 continue;
             }
 
-            for (int i = 0; i < bindings.size(); i++) {
-                binding = (SwkBinding) bindings.get(i);
+            for (int i = 0; i < eventBindings.size(); i++) {
+                binding = (SwkBinding) eventBindings.get(i);
                 if (binding.subtype != subtype) {
                     continue;
                 }

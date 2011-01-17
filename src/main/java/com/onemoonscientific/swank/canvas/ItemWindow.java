@@ -38,6 +38,10 @@ import com.onemoonscientific.swank.*;
 import tcl.lang.*;
 import java.awt.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class ItemWindow extends SwkShape {
 
     static CanvasParameter[] parameters = {
@@ -59,6 +63,12 @@ public class ItemWindow extends SwkShape {
         storeCoords = new double[2];
     }
 
+    /**
+     *
+     * @param canvas
+     * @param coords
+     * @throws SwkException
+     */
     @Override
     public void coords(SwkImageCanvas canvas, double[] coords)
             throws SwkException {
@@ -71,8 +81,16 @@ public class ItemWindow extends SwkShape {
         storeCoords[1] = coords[1];
     }
 
+    /**
+     *
+     * @param interp
+     * @param swkCanvas
+     * @param argv
+     * @param start
+     * @throws TclException
+     */
     @Override
-    public void configShape(Interp interp, SwkImageCanvas swkCanvas,
+    protected void configShape(Interp interp, SwkImageCanvas swkCanvas,
             TclObject[] argv, int start) throws TclException {
         for (int i = start; i < argv.length; i += 2) {
             if (((i + 1) < argv.length)
@@ -87,8 +105,11 @@ public class ItemWindow extends SwkShape {
         super.configShape(interp, swkCanvas, argv, start);
     }
 
+    /**
+     *
+     */
     @Override
-    public void applyCoordinates() {
+    protected void applyCoordinates() {
         addWindow();
     }
 
@@ -157,6 +178,10 @@ public class ItemWindow extends SwkShape {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public String getType() {
         return "window";
     }

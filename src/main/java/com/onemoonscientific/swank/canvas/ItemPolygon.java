@@ -38,6 +38,10 @@ import com.onemoonscientific.swank.*;
 import java.awt.*;
 import java.awt.geom.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class ItemPolygon extends SwkShape {
 
     static CanvasParameter[] parameters = {
@@ -58,6 +62,12 @@ public class ItemPolygon extends SwkShape {
         fill = null;
     }
 
+    /**
+     *
+     * @param canvas
+     * @param coords
+     * @throws SwkException
+     */
     @Override
     public void coords(SwkImageCanvas canvas, double[] coords)
             throws SwkException {
@@ -81,8 +91,11 @@ public class ItemPolygon extends SwkShape {
         applyCoordinates();
     }
 
+    /**
+     *
+     */
     @Override
-    public void applyCoordinates() {
+    protected void applyCoordinates() {
         gPath.reset();
 
         for (int i = 0; i < storeCoords.length; i += 2) {
@@ -107,6 +120,10 @@ public class ItemPolygon extends SwkShape {
         shape = aT.createTransformedShape(gPath);
     }
 
+    /**
+     *
+     * @return
+     */
     public String getType() {
         return "polygon";
     }

@@ -29,13 +29,26 @@ import java.util.*;
 import javax.swing.event.*;
 import javax.swing.tree.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class SwkTreeModel implements TreeModel {
 
     private Vector treeModelListeners = new Vector();
     private SwkTreeObject rootObject;
+    /**
+     *
+     */
     protected String procBase = "";
     Interp interp = null;
 
+    /**
+     *
+     * @param interp
+     * @param procBase
+     * @param root
+     */
     public SwkTreeModel(Interp interp, String procBase, String root) {
         rootObject = new SwkTreeObject(interp, root);
         this.interp = interp;
@@ -45,6 +58,7 @@ public class SwkTreeModel implements TreeModel {
     /**
      * Used to toggle between show ancestors/show descendant and
      * to change the root of the tree.
+     * @param newRoot
      */
     public void showNewRoot(Object newRoot) {
         SwkTreeObject oldRoot = (SwkTreeObject) rootObject;
@@ -60,6 +74,7 @@ public class SwkTreeModel implements TreeModel {
     /**
      * The only event raised by this model is TreeStructureChanged with the
      * root as path, i.e. the whole tree has changed.
+     * @param oldRoot
      */
     protected void fireTreeStructureChanged(Object oldRoot) {
         int len = treeModelListeners.size();
@@ -80,6 +95,7 @@ public class SwkTreeModel implements TreeModel {
 
     /**
      * Returns the child of parent at index index in the parent's child array.
+     * @param index
      */
     public Object getChild(Object parent, int index) {
         try {

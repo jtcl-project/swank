@@ -31,6 +31,10 @@ import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class SwkCheckMenuListener implements ActionListener, VarTrace,
         SwkListener {
 
@@ -47,6 +51,14 @@ public class SwkCheckMenuListener implements ActionListener, VarTrace,
         this.component = (JMenuItem) component;
     }
 
+    /**
+     *
+     * @param interp
+     * @param string1
+     * @param string2
+     * @param flags
+     * @throws TclException
+     */
     public void traceProc(Interp interp, String string1, String string2,
             int flags) throws TclException {
         if (EventQueue.isDispatchThread()) {
@@ -57,6 +69,11 @@ public class SwkCheckMenuListener implements ActionListener, VarTrace,
         setFromVar(interp);
     }
 
+    /**
+     *
+     * @param interp
+     * @throws TclException
+     */
     public void setFromVar(Interp interp) throws TclException {
         if (EventQueue.isDispatchThread()) {
             System.out.println(
@@ -86,6 +103,12 @@ public class SwkCheckMenuListener implements ActionListener, VarTrace,
         traceLock = false;
     }
 
+    /**
+     *
+     * @param interp
+     * @param name
+     * @throws TclException
+     */
     public void setVarName(Interp interp, String name)
             throws TclException {
         if (EventQueue.isDispatchThread()) {
@@ -133,10 +156,18 @@ public class SwkCheckMenuListener implements ActionListener, VarTrace,
         varName = name;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getVarName() {
         return (varName);
     }
 
+    /**
+     *
+     * @param value
+     */
     public void setOnValue(String value) {
         if (!EventQueue.isDispatchThread()) {
             System.out.println(
@@ -153,10 +184,18 @@ public class SwkCheckMenuListener implements ActionListener, VarTrace,
         onValue = value;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getOffValue() {
         return (offValue);
     }
 
+    /**
+     *
+     * @param value
+     */
     public void setOffValue(String value) {
         if (!EventQueue.isDispatchThread()) {
             System.out.println(
@@ -171,14 +210,26 @@ public class SwkCheckMenuListener implements ActionListener, VarTrace,
         offValue = value;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getOnValue() {
         return (onValue);
     }
 
+    /**
+     *
+     * @param name
+     */
     public void setCommand(String name) {
         command = name;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getCommand() {
         return (command);
     }
@@ -210,6 +261,12 @@ public class SwkCheckMenuListener implements ActionListener, VarTrace,
         interp.getNotifier().queueEvent(bEvent, TCL.QUEUE_TAIL);
     }
 
+    /**
+     *
+     * @param eventObject
+     * @param obj
+     * @param subtype
+     */
     public void processEvent(EventObject eventObject, Object obj, int subtype) {
         if (EventQueue.isDispatchThread()) {
             System.out.println(

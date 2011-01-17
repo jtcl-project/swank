@@ -48,6 +48,10 @@ import org.jfree.ui.RectangleInsets;
 import org.jfree.ui.Size2D;
 import org.jfree.ui.VerticalAlignment;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class LegendShape extends SwkShape {
 
     static CanvasParameter[] parameters = {
@@ -97,6 +101,7 @@ public class LegendShape extends SwkShape {
         }
     }
 
+    @Override
     public void coords(SwkImageCanvas canvas, double[] coords)
             throws SwkException {
 
@@ -195,6 +200,7 @@ public class LegendShape extends SwkShape {
                 x, y, dimensions.width, dimensions.height);
     }
 
+    @Override
     public void paintShape(Graphics2D g2) {
         initLegend();
         if (legend != null) {

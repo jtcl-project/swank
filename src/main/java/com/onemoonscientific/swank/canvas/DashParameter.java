@@ -4,6 +4,10 @@ import com.onemoonscientific.swank.*;
 
 import tcl.lang.*;
 
+/**
+ * 
+ * @author brucejohnson
+ */
 public class DashParameter extends CanvasParameter {
 
     private static String name = "dash";
@@ -15,6 +19,10 @@ public class DashParameter extends CanvasParameter {
         return name;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getDefault() {
         return "";
     }

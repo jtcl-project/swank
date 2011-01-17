@@ -2,6 +2,10 @@ package com.onemoonscientific.swank.canvas;
 
 import tcl.lang.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class SmoothParameter extends CanvasParameter {
 
     private static String name = "smooth";

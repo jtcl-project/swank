@@ -42,6 +42,10 @@ import java.awt.geom.*;
 
 import javax.swing.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class ItemHTML extends SwkShape implements TextInterface {
 
     static CanvasParameter[] parameters = {
@@ -66,6 +70,12 @@ public class ItemHTML extends SwkShape implements TextInterface {
         jLabel.setVerticalAlignment(SwingConstants.TOP);
     }
 
+    /**
+     *
+     * @param canvas
+     * @param coords
+     * @throws SwkException
+     */
     @Override
     public void coords(SwkImageCanvas canvas, double[] coords)
             throws SwkException {
@@ -82,8 +92,11 @@ public class ItemHTML extends SwkShape implements TextInterface {
         applyCoordinates();
     }
 
+    /**
+     *
+     */
     @Override
-    public void applyCoordinates() {
+    protected void applyCoordinates() {
         checkCoordinates(storeCoords);
         AffineTransform aT = new AffineTransform();
         /*
@@ -99,8 +112,12 @@ public class ItemHTML extends SwkShape implements TextInterface {
                 storeCoords[2] - storeCoords[0], storeCoords[3] - storeCoords[1]);
     }
 
+    /**
+     *
+     * @param coords
+     */
     @Override
-    public void checkCoordinates(double[] coords) {
+    protected void checkCoordinates(double[] coords) {
         double hold;
 
         if ((coords == null) || (coords.length != 4)) {
@@ -120,65 +137,121 @@ public class ItemHTML extends SwkShape implements TextInterface {
         }
     }
 
+    /**
+     *
+     * @param g2
+     */
     @Override
-    public void paintShape(Graphics2D g2) {
+    protected void paintShape(Graphics2D g2) {
         paint(g2, getCanvas().getFontRenderContext());
     }
 
+    /**
+     *
+     * @return
+     */
     public String getType() {
         return "htext";
     }
 
-    public double getX() {
+    /**
+     *
+     * @return
+     */
+    protected double getX() {
         return storeCoords[0];
     }
 
-    public void setX(final double x) {
+    /**
+     *
+     * @param x
+     */
+    protected void setX(final double x) {
         storeCoords[0] = x;
     }
 
-    public double getY() {
+    /**
+     *
+     * @return
+     */
+    protected double getY() {
         return storeCoords[1];
     }
 
-    public void setY(final double y) {
+    /**
+     *
+     * @param y
+     */
+    protected void setY(final double y) {
         storeCoords[1] = y;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getText() {
         return jLabel.getText();
     }
 
+    /**
+     *
+     * @param text
+     */
     public void setText(final String text) {
         jLabel.setText(text);
     }
 
+    /**
+     *
+     * @return
+     */
     public float[] getAnchor() {
         return textPar.getAnchor();
     }
 
+    /**
+     *
+     * @param newValue
+     */
     public void setAnchor(float[] newValue) {
         textPar = TextParameters.setAnchor(textPar, newValue);
     }
 
+    /**
+     *
+     * @return
+     */
     public Font getFont() {
         return textPar.getFont();
     }
 
+    /**
+     *
+     * @param newValue
+     */
     public void setFont(Font newValue) {
         textPar = TextParameters.setFont(textPar, newValue);
     }
 
+    /**
+     *
+     * @return
+     */
     public Color getTextColor() {
         return textPar.getTextColor();
     }
 
+    /**
+     *
+     * @param newValue
+     */
     public void setTextColor(Color newValue) {
         textPar = TextParameters.setTextColor(textPar, newValue);
     }
 
     @Override
-    public boolean hitShape(double x1, double y1) {
+    protected boolean hitShape(double x1, double y1) {
         boolean result = false;
         if (shape != null) {
             Shape shape2 = shape;
@@ -191,7 +264,12 @@ public class ItemHTML extends SwkShape implements TextInterface {
         return result;
     }
 
-    public void paint(Graphics2D g2, FontRenderContext fRC) {
+    /**
+     *
+     * @param g2
+     * @param fRC
+     */
+    protected void paint(Graphics2D g2, FontRenderContext fRC) {
         if (this.getFont() != null) {
             g2.setFont(this.getFont());
         }

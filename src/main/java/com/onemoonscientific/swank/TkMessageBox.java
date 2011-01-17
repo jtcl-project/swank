@@ -26,6 +26,12 @@ public class TkMessageBox implements Command {
     static String[] optionsYNC = {"yes", "no", "cancel"};
     Interp interp = null;
 
+    /**
+     *
+     * @param interp
+     * @param argv
+     * @throws TclException
+     */
     public void cmdProc(final Interp interp, final TclObject[] argv)
             throws TclException {
         int i;

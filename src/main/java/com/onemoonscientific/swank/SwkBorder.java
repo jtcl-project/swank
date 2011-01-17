@@ -28,6 +28,10 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class SwkBorder extends AbstractBorder {
 
     private int width = 6;

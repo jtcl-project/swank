@@ -39,6 +39,10 @@ import java.awt.*;
 import java.awt.geom.*;
 
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class ItemSymbols extends SwkShape implements SymbolInterface {
 
     static CanvasParameter[] parameters = {
@@ -53,28 +57,55 @@ public class ItemSymbols extends SwkShape implements SymbolInterface {
     int symbolType = 3;
     GeneralPath gPath = null;
 
+    /**
+     *
+     * @param shape
+     * @param canvas
+     */
     public ItemSymbols(Shape shape, SwkImageCanvas canvas) {
         super(shape, canvas);
         gPath = (GeneralPath) shape;
         fill = null;
     }
 
+    /**
+     *
+     * @param newSymbolType
+     */
     public void setSymbolType(int newSymbolType) {
         symbolType = newSymbolType;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getSymbolType() {
         return SymbolParameter.getSymbolType(symbolType);
     }
 
+    /**
+     *
+     * @param newRadius
+     */
     public void setRadius(double newRadius) {
         radius = (float) newRadius;
     }
 
+    /**
+     *
+     * @return
+     */
     public double getRadius() {
         return radius;
     }
 
+    /**
+     *
+     * @param canvas
+     * @param coords
+     * @throws SwkException
+     */
     @Override
     public void coords(SwkImageCanvas canvas, double[] coords)
             throws SwkException {
@@ -100,8 +131,11 @@ public class ItemSymbols extends SwkShape implements SymbolInterface {
         applyCoordinates();
     }
 
+    /**
+     *
+     */
     @Override
-    public void applyCoordinates() {
+    protected void applyCoordinates() {
         for (int i = 0; i < storeCoords.length; i += 2) {
             addSymbol((float) storeCoords[i], (float) storeCoords[i + 1], radius);
         }
@@ -115,7 +149,13 @@ public class ItemSymbols extends SwkShape implements SymbolInterface {
         shape = aT.createTransformedShape(gPath);
     }
 
-    public void addSymbol(float x1, float y1, float radius) {
+    /**
+     *
+     * @param x1
+     * @param y1
+     * @param radius
+     */
+    protected void addSymbol(float x1, float y1, float radius) {
         float x2;
         float y2;
 
@@ -186,6 +226,10 @@ public class ItemSymbols extends SwkShape implements SymbolInterface {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public String getType() {
         return "symbols";
     }

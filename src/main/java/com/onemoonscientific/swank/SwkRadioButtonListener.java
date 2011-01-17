@@ -30,6 +30,10 @@ import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class SwkRadioButtonListener implements ActionListener, VarTrace,
         SwkListener {
 
@@ -48,6 +52,14 @@ public class SwkRadioButtonListener implements ActionListener, VarTrace,
         this.component = (AbstractButton) component;
     }
 
+    /**
+     *
+     * @param interp
+     * @param string1
+     * @param string2
+     * @param flags
+     * @throws TclException
+     */
     public void traceProc(Interp interp, String string1, String string2,
             int flags) throws TclException {
         if (EventQueue.isDispatchThread()) {
@@ -58,7 +70,12 @@ public class SwkRadioButtonListener implements ActionListener, VarTrace,
         setFromVar(interp);
     }
 
-   public void setFromVar(Interp interp) throws TclException {
+    /**
+     *
+     * @param interp
+     * @throws TclException
+     */
+    public void setFromVar(Interp interp) throws TclException {
         if (EventQueue.isDispatchThread()) {
             System.out.println(
                     "SwkRadioButtonListener: setFromVar on event thread");
@@ -85,7 +102,14 @@ public class SwkRadioButtonListener implements ActionListener, VarTrace,
 
     }
 
-    public boolean setVarName(Interp interp, String name)
+   /**
+    *
+    * @param interp
+    * @param name
+    * @return
+    * @throws TclException
+    */
+   public boolean setVarName(Interp interp, String name)
             throws TclException {
         //  ButtonGroup bgroup;
         // FIXME  some of this should be on event thread
@@ -133,10 +157,18 @@ public class SwkRadioButtonListener implements ActionListener, VarTrace,
         return state;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getVarName() {
         return (buttonSettings.getVarName());
     }
 
+    /**
+     *
+     * @param newValue
+     */
     public void setValue(String newValue) {
        if (!EventQueue.isDispatchThread()) {
             System.out.println(
@@ -153,13 +185,25 @@ public class SwkRadioButtonListener implements ActionListener, VarTrace,
         buttonSettings = buttonSettings.getWithValue(newValue);
     }
 
+    /**
+     *
+     * @return
+     */
     public String getValue() {
         return (buttonSettings.getValue());
     }
 
+    /**
+     *
+     * @return
+     */
     public String getCommand() {
         return (buttonSettings.getCommand());
     }
+    /**
+     *
+     * @param name
+     */
     public void setCommand(String name) {
         buttonSettings = buttonSettings.getWithCommand(name);
     }
@@ -182,6 +226,11 @@ public class SwkRadioButtonListener implements ActionListener, VarTrace,
                 (EventObject) e, 0);
         interp.getNotifier().queueEvent(bEvent, TCL.QUEUE_TAIL);
     }
+    /**
+     *
+     * @param buttonSettings
+     * @throws TclException
+     */
     public void tclActionVar(CommandVarListenerSettings buttonSettings) throws TclException {
         final TclObject tObj;
         final String value;
@@ -193,6 +242,11 @@ public class SwkRadioButtonListener implements ActionListener, VarTrace,
             tObj = TclString.newInstance(value);
             interp.setVar(buttonSettings.getVarName(), tObj, TCL.GLOBAL_ONLY);
     }
+    /**
+     *
+     * @param buttonSettings
+     * @throws TclException
+     */
     public void tclAction(CommandVarListenerSettings buttonSettings) throws TclException {
         tclActionVar(buttonSettings);
         if (buttonSettings.getCommand().length() != 0) {
@@ -205,6 +259,12 @@ public class SwkRadioButtonListener implements ActionListener, VarTrace,
         }
     }
 
+    /**
+     *
+     * @param eventObject
+     * @param obj
+     * @param subtype
+     */
     public void processEvent(EventObject eventObject, Object obj, int subtype) {
         if (EventQueue.isDispatchThread()) {
             System.out.println(

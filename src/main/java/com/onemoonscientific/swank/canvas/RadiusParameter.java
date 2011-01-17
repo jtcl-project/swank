@@ -2,6 +2,10 @@ package com.onemoonscientific.swank.canvas;
 
 import tcl.lang.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class RadiusParameter extends CanvasParameter {
 
     private static final String name = "radius";
@@ -12,6 +16,10 @@ public class RadiusParameter extends CanvasParameter {
         return name;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getDefault() {
         return String.valueOf(defValue);
     }
@@ -27,6 +35,13 @@ public class RadiusParameter extends CanvasParameter {
         return TclDouble.newInstance(radius);
     }
 
+    /**
+     *
+     * @param interp
+     * @param swkCanvas
+     * @param arg
+     * @throws TclException
+     */
     @Override
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
             throws TclException {

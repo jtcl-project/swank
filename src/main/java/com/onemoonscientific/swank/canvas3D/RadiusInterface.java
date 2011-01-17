@@ -29,7 +29,15 @@ import com.onemoonscientific.swank.*;
 import tcl.lang.*;
 
 
+/**
+ *
+ * @author brucejohnson
+ */
 public interface RadiusInterface {
+    /**
+     *
+     * @return
+     */
     double getRadius();
     void setRadius(double radius);
 }

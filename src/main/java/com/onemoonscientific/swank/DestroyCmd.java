@@ -30,8 +30,18 @@ import java.awt.*;
 import java.util.*;
 import javax.swing.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class DestroyCmd implements Command {
 
+    /**
+     *
+     * @param interp
+     * @param argv
+     * @throws TclException
+     */
     public void cmdProc(final Interp interp, final TclObject[] argv)
             throws TclException {
         String name;
@@ -74,6 +84,12 @@ public class DestroyCmd implements Command {
         }
     }
 
+    /**
+     *
+     * @param interp
+     * @param name
+     * @throws TclException
+     */
     public static void destroyWidget(final Interp interp, final String name)
             throws TclException {
         destroyWidget(interp, name, null);

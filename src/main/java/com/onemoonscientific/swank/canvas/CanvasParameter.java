@@ -3,6 +3,10 @@ package com.onemoonscientific.swank.canvas;
 import tcl.lang.*;
 import java.util.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public abstract class CanvasParameter implements CanvasParameterConfigure,
         Cloneable {
 
@@ -83,10 +87,23 @@ public abstract class CanvasParameter implements CanvasParameterConfigure,
         return "CanvasParameter: " + getName();
     }
 
+    /**
+     *
+     * @return
+     */
     abstract public String getName();
 
+    /**
+     *
+     * @return
+     */
     abstract public String getDefault();
 
+    /**
+     *
+     * @param s
+     * @return
+     */
     public boolean isParameterLabel(String s) {
         boolean value = false;
         if (s.length() > 3) {
@@ -103,13 +120,31 @@ public abstract class CanvasParameter implements CanvasParameterConfigure,
         return value;
     }
 
+    /**
+     *
+     * @param interp
+     * @param swkCanvas
+     * @param arg
+     * @throws TclException
+     */
     public void setValue(Interp interp, SwkImageCanvas swkCanvas, TclObject arg)
             throws TclException {
     }
 
+    /**
+     *
+     * @param interp
+     * @param swkShape
+     * @return
+     * @throws TclException
+     */
     public abstract TclObject getValue(Interp interp, SwkShape swkShape)
             throws TclException;
 
+    /**
+     *
+     * @param par
+     */
     public static void addParameter(CanvasParameter par) {
         if (stdMap == null) {
             stdMap = new TreeMap();
@@ -119,6 +154,11 @@ public abstract class CanvasParameter implements CanvasParameterConfigure,
         stdMap.put(par.getName(), par);
     }
 
+    /**
+     * 
+     * @param arg
+     * @return
+     */
     public static CanvasParameter getStdPar(String arg) {
         if (stdMap == null) {
             stdMap = new TreeMap();
@@ -128,6 +168,12 @@ public abstract class CanvasParameter implements CanvasParameterConfigure,
         return getPar(stdMap, arg);
     }
 
+    /**
+     *
+     * @param map
+     * @param arg
+     * @return
+     */
     public static CanvasParameter getPar(TreeMap map, String arg) {
         String searchArg = null;
 

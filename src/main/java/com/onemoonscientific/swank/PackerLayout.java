@@ -28,6 +28,10 @@ import java.awt.*;
 import java.util.*;
 import javax.swing.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class PackerLayout implements LayoutManager2 {
     //this hashtable will do the mapping between
     //options and the actual option object
@@ -222,6 +226,7 @@ public class PackerLayout implements LayoutManager2 {
 
     /**
      * Constructs a new Packer Layout.
+     * @param interp
      */
     public PackerLayout(Interp interp) {
         this.interp = interp;
@@ -295,9 +300,10 @@ public class PackerLayout implements LayoutManager2 {
 
     /**
      * Adds the specified component to the layout.
-     * @param name information about attachments
+     * @param spec
      * @param comp the the component to be added
      */
+    @SuppressWarnings("empty-statement")
     public void addLayoutComponent(String spec, Component comp) {
         int i;
         int max;
@@ -555,6 +561,13 @@ public class PackerLayout implements LayoutManager2 {
         }
     }
 
+    /**
+     *
+     * @param interp
+     * @param spec
+     * @param comp
+     * @throws TclException
+     */
     public static void checkPackArgs(Interp interp, String spec, Component comp)
             throws TclException {
         int i;
@@ -820,6 +833,7 @@ public class PackerLayout implements LayoutManager2 {
      * Returns the preferred dimensions for this layout given the
      * components in the specified target container.
      * @param target the component which needs to be laid out
+     * @return
      * @see Container
      * @see #minimumSize
      */
@@ -841,6 +855,11 @@ public class PackerLayout implements LayoutManager2 {
         return cdim;
     }
 
+    /**
+     *
+     * @param target
+     * @return
+     */
     public Dimension getTargetContainerSize(Container target) {
         int i;
         Container target2 = target;
@@ -860,6 +879,7 @@ public class PackerLayout implements LayoutManager2 {
      * Returns the minimum dimensions needed to layout the
      * components contained in the specified target container.
      * @param target the component which needs to be laid out
+     * @return
      * @see #preferredSize
      */
     public Dimension minimumLayoutSize(Container target) {
@@ -1230,6 +1250,11 @@ public class PackerLayout implements LayoutManager2 {
     // This method will return the current packing properties
     // of a specific widget like the following format
     // -anchor center -expand 0 -fill none -ipadx 0 -ipady 0 -padx 0 -pady 0 -side top
+    /**
+     *
+     * @param comp
+     * @param sb
+     */
     public void getComponentSettings(final Component comp, final ArrayList<String> sb) {
 
         PackRecord pr = (PackRecord) component_table.get(comp);
@@ -1348,6 +1373,10 @@ public class PackerLayout implements LayoutManager2 {
     }
 
     // "update" functionality workaround
+    /**
+     *
+     * @param bool
+     */
     public void setIgnoreNextRemove(boolean bool) {
         ignore_next_remove = bool;
     }

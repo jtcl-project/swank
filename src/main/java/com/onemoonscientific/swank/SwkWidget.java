@@ -29,75 +29,225 @@ import java.awt.*;
 import java.util.*;
 
 
+/**
+ *
+ * @author brucejohnson
+ */
 public interface SwkWidget {
 
+    /**
+     *
+     */
     public static final String NORMAL = "normal";
+    /**
+     *
+     */
     public static final String READONLY = "readonly";
+    /**
+     *
+     */
     public static final String DISABLED = "disabled";
+    /**
+     *
+     */
     public static final String ACTIVE = "active";
+    /**
+     *
+     */
     public static final String LEFT = "left";
+    /**
+     *
+     */
     public static final String RIGHT = "right";
+    /**
+     *
+     */
     public static final String CENTER = "center";
 
+    /**
+     *
+     * @return
+     */
     public LinkedList getChildrenList();
 
+    /**
+     *
+     */
     public void initChildrenList();
 
+    /**
+     *
+     * @return
+     */
     public String getClassName();
 
+    /**
+     *
+     * @return
+     */
     public String getName();
 
+    /**
+     *
+     * @return
+     */
     public String getRelief();
 
+    /**
+     *
+     * @return
+     */
     public int getMouseX();
 
+    /**
+     *
+     * @return
+     */
     public int getMouseY();
 
+    /**
+     *
+     * @return
+     */
     public boolean isCreated();
 
+    /**
+     *
+     * @param state
+     */
     public void setCreated(boolean state);
 
+    /**
+     *
+     * @return
+     */
     public int getBorderWidth();
 
+    /**
+     *
+     * @return
+     */
     public Insets getEmptyBorderInsets();
 
+    /**
+     *
+     * @return
+     */
     public Vector getTagList();
 
+    /**
+     *
+     * @param interp
+     * @param tagListObj
+     * @throws TclException
+     */
     public void setTagList(Interp interp, TclObject tagListObj)
             throws TclException;
 
+    /**
+     *
+     * @return
+     */
     public SwkMouseListener getMouseListener();
 
+    /**
+     *
+     * @param mouseListener
+     */
     public void setMouseListener(SwkMouseListener mouseListener);
 
+    /**
+     *
+     * @return
+     */
     public SwkFocusListener getFocusListener();
 
+    /**
+     *
+     * @param focusListener
+     */
     public void setFocusListener(SwkFocusListener focusListener);
 
+    /**
+     *
+     * @return
+     */
     public SwkComponentListener getComponentListener();
 
+    /**
+     *
+     * @param componentListener
+     */
     public void setComponentListener(SwkComponentListener componentListener);
 
+    /**
+     *
+     * @return
+     */
     public SwkChangeListener getChangeListener();
 
+    /**
+     *
+     * @param changeListener
+     */
     public void setChangeListener(SwkChangeListener changeListener);
 
+    /**
+     *
+     * @return
+     */
     public SwkKeyListener getKeyListener();
 
+    /**
+     *
+     * @param keyListener
+     */
     public void setKeyListener(SwkKeyListener keyListener);
 
+    /**
+     *
+     * @return
+     */
     public SwkMouseMotionListener getMouseMotionListener();
 
+    /**
+     *
+     * @param mouseMotionListener
+     */
     public void setMouseListener(SwkMouseMotionListener mouseMotionListener);
 
+    /**
+     *
+     * @throws TclException
+     */
     public void close() throws TclException;
 
+    /**
+     *
+     * @return
+     */
     public ArrayList<SwkBinding> getVirtualBindings();
 
+    /**
+     *
+     * @param bindings
+     */
     public void setVirtualBindings(ArrayList<SwkBinding> bindings);
 
+    /**
+     *
+     * @param setter
+     * @param iOpt
+     */
     public void setValues(Setter setter, int iOpt);
 
+    /**
+     *
+     * @param interp
+     * @param argv
+     * @param start
+     * @throws TclException
+     */
     public void configure(Interp interp, TclObject[] argv, int start)
             throws TclException;
 }

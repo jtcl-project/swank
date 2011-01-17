@@ -33,6 +33,11 @@ public class LayoutHandler extends IdleHandler {
         }
     }
 
+    /**
+     *
+     * @param interp
+     * @param container
+     */
     public static void addLayoutRequest(Interp interp, Container container) {
         if (container != null) {
             layoutContainers.add(container);

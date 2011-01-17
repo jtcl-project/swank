@@ -95,9 +95,18 @@ public class XYTableCategoryData extends AbstractDataset
           return yColumns.length;
     }
 
+    /**
+     *
+     * @return
+     */
     public List getColumnKeys() {
           return null;
     }
+    /**
+     *
+     * @param key
+     * @return
+     */
     public int getColumnIndex(Comparable key) {
           return 0;
     }
@@ -116,6 +125,11 @@ public class XYTableCategoryData extends AbstractDataset
     public List getRowKeys() {
           return null;
     }
+    /**
+     *
+     * @param key
+     * @return
+     */
     public int getRowIndex(Comparable key) {
           return 0;
     }
@@ -140,6 +154,10 @@ public class XYTableCategoryData extends AbstractDataset
           }
     }
 
+    /**
+     *
+     * @param columns
+     */
     public void setYColumns(int[] columns) {
           yColumns = columns;
     }
@@ -260,6 +278,12 @@ public class XYTableCategoryData extends AbstractDataset
         return xValue+deltaX/2;
     }
 
+    /**
+     *
+     * @param row
+     * @param column
+     * @return
+     */
     public Number getEndValue(int row, int column) {
         double xValue = getEnd(row,column);
         return new Double(xValue);

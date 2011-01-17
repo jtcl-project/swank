@@ -3,6 +3,10 @@ package com.onemoonscientific.swank.canvas;
 import tcl.lang.*;
 
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class StartconParameter extends CanvasParameter {
 
     private static String name = "startcon";
@@ -13,6 +17,10 @@ public class StartconParameter extends CanvasParameter {
         return name;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getDefault() {
         return defValue;
     }

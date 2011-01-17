@@ -28,6 +28,10 @@ import tcl.lang.*;
 import java.util.*;
 
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class WidgetsMap implements AssocData {
 
     Hashtable theWidgets = new Hashtable();
@@ -36,6 +40,10 @@ public class WidgetsMap implements AssocData {
         return theWidgets;
     }
 
+    /**
+     * 
+     * @param interp
+     */
     public void disposeAssocData(Interp interp) {
     }
 }

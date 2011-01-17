@@ -40,16 +40,23 @@ import com.onemoonscientific.swank.*;
 import java.awt.*;
 import java.awt.geom.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class ItemConnector extends ItemLine implements TextInterface {
 
     TextParameters textPar = TextParameters.getDefault();
-    static CanvasParameter[] parameters = {
+    static CanvasParameter[] parametersLine = {
         new FillParameter(), new SmoothParameter(), new DashParameter(),
         new DashPhaseParameter(), new WidthParameter(),
         new TagsParameter(), new StateParameter(), new NodeParameter(),
         new TransformerParameter(), new CapstyleParameter(),
         new JoinstyleParameter(), new ArrowParameter(), new ArrowShapeParameter(), new EndstyleParameter(), new StartstyleParameter(),
         new TextParameter(), new FontParameter(), new AnchorParameter(), new TextcolorParameter(),};
+   static {
+        initializeParameters(parametersLine, parameterMap);
+    }
     String startCon = "";
     String endCon = "";
     double textX = 0.0;
@@ -60,40 +67,76 @@ public class ItemConnector extends ItemLine implements TextInterface {
         storeCoords = new double[4];
     }
 
+    /**
+     *
+     * @return
+     */
     public String getText() {
         return textPar.getText();
     }
 
+    /**
+     *
+     * @param newValue
+     */
     public void setText(String newValue) {
         textPar = TextParameters.setText(textPar, newValue);
     }
 
+    /**
+     *
+     * @return
+     */
     public float[] getAnchor() {
         return textPar.getAnchor();
     }
 
+    /**
+     *
+     * @param newValue
+     */
     public void setAnchor(float[] newValue) {
         textPar = TextParameters.setAnchor(textPar, newValue);
     }
 
+    /**
+     *
+     * @return
+     */
     public Font getFont() {
         return textPar.getFont();
     }
 
+    /**
+     *
+     * @param newValue
+     */
     public void setFont(Font newValue) {
         textPar = TextParameters.setFont(textPar, newValue);
     }
 
+    /**
+     *
+     * @return
+     */
     public Color getTextColor() {
         return textPar.getTextColor();
     }
 
+    /**
+     *
+     * @param newValue
+     */
     public void setTextColor(Color newValue) {
         textPar = TextParameters.setTextColor(textPar, newValue);
     }
 
+    /**
+     *
+     * @param g2
+     */
     @Override
-    public void paintShape(Graphics2D g2) {
+    protected void paintShape(Graphics2D g2) {
         if (stroke != null) {
             g2.setStroke(stroke);
         } else {
@@ -152,6 +195,12 @@ public class ItemConnector extends ItemLine implements TextInterface {
         textPar.paint(g2, getCanvas().getFontRenderContext(), this, textX, textY);
     }
 
+    /**
+     *
+     * @param canvas
+     * @param coords
+     * @throws SwkException
+     */
     @Override
     public void coords(SwkImageCanvas canvas, double[] coords)
             throws SwkException {
@@ -165,8 +214,11 @@ public class ItemConnector extends ItemLine implements TextInterface {
         applyCoordinates();
     }
 
+    /**
+     *
+     */
     @Override
-    public void applyCoordinates() {
+    protected void applyCoordinates() {
         double[] shapePars = {arrowShapeA, arrowShapeB, arrowShapeC, width};
         AffineTransform aT = new AffineTransform();
         SwkShape shape1 = null;

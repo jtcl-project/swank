@@ -185,6 +185,7 @@ class SwkJRadioButtonWidgetCmd implements Command {
         final private String varName;
         final private String varValue;
         final private boolean selected;
+        @SuppressWarnings("empty-statement")
         ButtonState (final boolean enabled, final String varName, final String varValue, final boolean selected) {
             this.enabled = enabled;
             this.varName = varName;;

@@ -2,12 +2,20 @@ package com.onemoonscientific.swank.canvas;
 
 import tcl.lang.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class WindowParameter extends CanvasParameter {
 
     private static final String name = "window";
     private static String defValue = "";
     private String newValue = defValue;
 
+    /**
+     *
+     * @return
+     */
     public String getName() {
         return name;
     }
@@ -35,6 +43,11 @@ public class WindowParameter extends CanvasParameter {
         }
     }
 
+    /**
+     *
+     * @param swkCanvas
+     * @param swkShape
+     */
     public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
         if ((swkShape != null) && (swkShape instanceof ItemWindow)) {
             ((ItemWindow) swkShape).windowName = newValue;

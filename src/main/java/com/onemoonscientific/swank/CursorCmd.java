@@ -32,6 +32,10 @@ import java.net.*;
 import java.util.*;
 import javax.swing.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class CursorCmd implements Command {
 
     static HashMap cursors = new HashMap();
@@ -56,6 +60,12 @@ public class CursorCmd implements Command {
     }
     }
     }
+     */
+    /**
+     *
+     * @param interp
+     * @param argv
+     * @throws TclException
      */
     public void cmdProc(Interp interp, TclObject[] argv)
             throws TclException {
@@ -190,6 +200,11 @@ public class CursorCmd implements Command {
         cursors.put(cursorName, cursor);
     }
 
+    /**
+     *
+     * @param name
+     * @return
+     */
     public static Cursor getCursor(String name) {
         return (Cursor) cursors.get(name);
     }

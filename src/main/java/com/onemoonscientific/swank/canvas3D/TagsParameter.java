@@ -16,10 +16,19 @@ public class TagsParameter extends CanvasParameter {
         return name;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getDefault() {
         return defValue;
     }
 
+    /**
+     *
+     * @param s
+     * @return
+     */
     public boolean isParameterLabel(String s) {
         if ((s.length() > 3) && "-tags".startsWith(s)) {
             return true;
@@ -28,6 +37,13 @@ public class TagsParameter extends CanvasParameter {
         }
     }
 
+    /**
+     *
+     * @param interp
+     * @param swkShape
+     * @return
+     * @throws TclException
+     */
     public TclObject getValue(Interp interp, SwkShape swkShape)
         throws TclException {
         if (swkShape == null) {

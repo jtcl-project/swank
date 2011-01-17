@@ -2,6 +2,10 @@ package com.onemoonscientific.swank.canvas;
 
 import tcl.lang.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class RotateParameter extends CanvasParameter {
 
     private static final String name = "rotate";
@@ -12,6 +16,10 @@ public class RotateParameter extends CanvasParameter {
         return name;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getDefault() {
         return defValue + "";
     }

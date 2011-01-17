@@ -30,6 +30,10 @@ import java.awt.*;
 import java.util.*;
 import javax.swing.*;
 
+/**
+ * 
+ * @author brucejohnson
+ */
 public class GridCmd implements Command {
 
     /**
@@ -62,6 +66,12 @@ public class GridCmd implements Command {
     private static final int OPT_SLAVES = 10;
     //  Interp interp = null;
 
+    /**
+     *
+     * @param interp
+     * @param argv
+     * @throws TclException
+     */
     public void cmdProc(final Interp interp, final TclObject[] argv)
             throws TclException {
         int i;

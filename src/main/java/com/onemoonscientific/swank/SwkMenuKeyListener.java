@@ -28,6 +28,10 @@ import tcl.lang.*;
 import java.awt.*;
 import javax.swing.event.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class SwkMenuKeyListener implements MenuKeyListener {
 
     String menu = null;
@@ -37,10 +41,18 @@ public class SwkMenuKeyListener implements MenuKeyListener {
         this.menu = menu;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getMenu() {
         return (menu);
     }
 
+    /**
+     *
+     * @param name
+     */
     public void setMenu(String name) {
         menu = name;
     }

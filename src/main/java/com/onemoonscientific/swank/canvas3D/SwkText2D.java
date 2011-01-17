@@ -6,7 +6,6 @@ import com.sun.j3d.utils.geometry.*;
 import tcl.lang.*;
 
 
-import java.lang.*;
 
 import javax.media.j3d.*;
 

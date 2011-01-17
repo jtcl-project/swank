@@ -39,6 +39,10 @@ import java.awt.*;
 import java.awt.geom.*;
 
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class ItemNode extends SwkShape {
 
     static CanvasParameter[] parameters = {
@@ -57,6 +61,12 @@ public class ItemNode extends SwkShape {
         rect2D = (Rectangle2D) shape;
     }
 
+    /**
+     *
+     * @param canvas
+     * @param coords
+     * @throws SwkException
+     */
     @Override
     public void coords(SwkImageCanvas canvas, double[] coords)
             throws SwkException {
@@ -74,18 +84,29 @@ public class ItemNode extends SwkShape {
         applyCoordinates();
     }
 
+    /**
+     *
+     */
     @Override
-    public void applyCoordinates() {
+    protected void applyCoordinates() {
         AffineTransform aT = new AffineTransform();
         genGradient(aT);
         //shape = aT.createTransformedShape(rect2D);
     }
 
+    /**
+     *
+     * @param g2
+     */
     @Override
-    public void paintShape(Graphics2D g2) {
+    protected void paintShape(Graphics2D g2) {
         super.paintShape(g2);
     }
 
+    /**
+     *
+     * @return
+     */
     public String getType() {
         return "node";
     }

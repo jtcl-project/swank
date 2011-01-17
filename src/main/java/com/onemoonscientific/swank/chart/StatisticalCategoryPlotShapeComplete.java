@@ -88,7 +88,11 @@ public class StatisticalCategoryPlotShapeComplete extends SwkShape implements Da
 		return plot;
 	}
 
-	public void setRenderer(String renderName) {
+    /**
+     *
+     * @param renderName
+     */
+    public void setRenderer(String renderName) {
 		plot.setRenderer(new StatisticalBarRenderer());
 	}
 
@@ -112,7 +116,11 @@ public class StatisticalCategoryPlotShapeComplete extends SwkShape implements Da
 		return drawLine;
 	}
 
-	public void setSymbolType(int newSymbolType) {
+    /**
+     *
+     * @param newSymbolType
+     */
+    public void setSymbolType(int newSymbolType) {
 		symbolType = newSymbolType;
 	}
 
@@ -124,11 +132,19 @@ public class StatisticalCategoryPlotShapeComplete extends SwkShape implements Da
 		radius = (float) newRadius;
 	}
 
-	public double getRadius() {
+    /**
+     *
+     * @return
+     */
+    public double getRadius() {
 		return radius;
 	}
 
-	public String getLegendLoc() {
+    /**
+     *
+     * @return
+     */
+    public String getLegendLoc() {
 		return legendLoc;
 	}
 
@@ -144,7 +160,13 @@ public class StatisticalCategoryPlotShapeComplete extends SwkShape implements Da
 		legendState = state;
 	}
 
-	public void coords(SwkImageCanvas canvas, double[] coords)
+    /**
+     *
+     * @param canvas
+     * @param coords
+     * @throws SwkException
+     */
+    public void coords(SwkImageCanvas canvas, double[] coords)
 	    throws SwkException {
 		if (coords.length != 4) {
 			throw new SwkException("wrong # coordinates: expected 8, got "

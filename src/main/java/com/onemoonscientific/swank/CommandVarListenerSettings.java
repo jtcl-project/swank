@@ -1,5 +1,9 @@
 package com.onemoonscientific.swank;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class CommandVarListenerSettings {
 
     private final Object value;
@@ -31,10 +35,18 @@ public class CommandVarListenerSettings {
         this.command = command;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getValue() {
         return value.toString();
     }
 
+    /**
+     *
+     * @return
+     */
     public double getDValue() {
         if (value instanceof Double) {
             return ((Double) value).doubleValue();
@@ -43,36 +55,72 @@ public class CommandVarListenerSettings {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public String getVarName() {
         return varName;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getCommand() {
         return command;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean isEnabled() {
         return enabled;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean isSelected() {
         return selected;
     }
 
+    /**
+     *
+     * @param newVarName
+     * @return
+     */
     public CommandVarListenerSettings getWithVarName(final String newVarName) {
         CommandVarListenerSettings newValue = new CommandVarListenerSettings(getValue(), newVarName, getCommand());
         return newValue;
     }
 
+    /**
+     *
+     * @param newValue
+     * @return
+     */
     public CommandVarListenerSettings getWithValue(final String newValue) {
         CommandVarListenerSettings newSettings = new CommandVarListenerSettings(newValue, getVarName(), getCommand());
         return newSettings;
     }
+    /**
+     *
+     * @param newValue
+     * @return
+     */
     public CommandVarListenerSettings getWithValue(final double newValue) {
         CommandVarListenerSettings newSettings = new CommandVarListenerSettings(newValue, getVarName(), getCommand());
         return newSettings;
     }
 
+    /**
+     *
+     * @param newCommand
+     * @return
+     */
     public CommandVarListenerSettings getWithCommand(final String newCommand) {
         CommandVarListenerSettings newSettings = new CommandVarListenerSettings(getValue(), getVarName(), newCommand);
         return newSettings;

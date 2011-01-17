@@ -26,11 +26,27 @@ package com.onemoonscientific.swank;
 
 import javax.swing.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public interface SwkListListener {
 
+    /**
+     *
+     * @return
+     */
     public SwkListSelectionListener getListSelectionListener();
 
+    /**
+     * 
+     * @return
+     */
     public ListSelectionModel getSelectionModel();
 
+    /**
+     *
+     * @param selectionListener
+     */
     public void setListSelectionListener(SwkListSelectionListener selectionListener);
 }

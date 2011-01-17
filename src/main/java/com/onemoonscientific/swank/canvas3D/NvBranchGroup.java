@@ -5,12 +5,22 @@ import javax.media.j3d.*;
 
 
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class NvBranchGroup extends BranchGroup {
     public static Hashtable tagTable = new Hashtable();
+    /**
+     *
+     */
     public static Hashtable groupTable = new Hashtable();
     public static int nextId = 1;
     public Vector tags = new Vector();
     public int id;
+    /**
+     *
+     */
     public int iChild;
 
     NvBranchGroup() {

@@ -30,7 +30,9 @@ public class SwkShapeItemGet implements Runnable {
     SwkShape swkShape = null;
     Interp interp = null;
 
-    /** Creates a new instance of SwkShapeRunnable */
+    /** Creates a new instance of SwkShapeRunnable
+     * @param swkCanvas
+     */
     public SwkShapeItemGet(final Interp interp, final SwkImageCanvas swkCanvas,
         final String tag, final String parString) {
         this.interp = interp;

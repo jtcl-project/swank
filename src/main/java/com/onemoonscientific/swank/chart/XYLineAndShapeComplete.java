@@ -71,10 +71,12 @@ public class XYLineAndShapeComplete extends XYPlotShape {
     public TreeMap getParameterMap() {
         return parameterMap;
     }
+    @Override
         public String getType() {
             return plotType;
         }
 
+    @Override
     public void setRenderer() {
         renderer = new XYLineAndShapeRenderer();
         plot.setRenderer(renderer);

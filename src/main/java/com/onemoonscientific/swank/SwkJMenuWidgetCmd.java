@@ -516,6 +516,7 @@ class SwkJMenuWidgetCmd implements Command {
             execOnThread();
         }
 
+        @Override
         public void run() {
             if (sIndex != null) {
                 first = swkjmenu.getIndex(sIndex, -1);

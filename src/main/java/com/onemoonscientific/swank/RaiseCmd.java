@@ -29,8 +29,18 @@ import tcl.pkg.java.ReflectObject;
 import java.awt.*;
 import javax.swing.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class RaiseCmd implements Command {
 
+    /**
+     *
+     * @param interp
+     * @param argv
+     * @throws TclException
+     */
     public void cmdProc(Interp interp, TclObject[] argv)
             throws TclException {
         if ((argv.length < 2) || (argv.length > 3)) {

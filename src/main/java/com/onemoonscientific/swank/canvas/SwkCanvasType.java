@@ -24,5 +24,9 @@
  */
 package com.onemoonscientific.swank.canvas;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public interface SwkCanvasType {
 }

@@ -18,6 +18,7 @@ class RAutoParameter extends BooleanParameter {
 		return name;
 	}
 
+    @Override
 	public boolean getValue(SwkShape swkShape) {
 		NumberAxis axis = (NumberAxis) ((NumberRange) swkShape).getRangeAxis();
 		return axis.isAutoRange();

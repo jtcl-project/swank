@@ -78,6 +78,7 @@ public class SwkSphere extends SwkShape implements RadiusInterface {
 
 
 
+    @Override
    public void coords(SwkImageCanvas canvas, double[] coords)
             throws SwkException {
         a.x = coords[0];

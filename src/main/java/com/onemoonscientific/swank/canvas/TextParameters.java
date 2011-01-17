@@ -39,7 +39,9 @@ public class TextParameters {
     }
 
     /**
-     * @param cap the cap to set
+     * @param strokePar
+     * @param newValue
+     * @return
      */
     public static TextParameters setText(TextParameters strokePar, String newValue) {
         if (!newValue.equals(strokePar.text)) {
@@ -59,6 +61,12 @@ public class TextParameters {
         return font;
     }
 
+    /**
+     *
+     * @param strokePar
+     * @param newValue
+     * @return
+     */
     public static TextParameters setFont(TextParameters strokePar, Font newValue) {
         if (!newValue.equals(strokePar.font)) {
             if (strokePar == defaultPar) {
@@ -82,7 +90,9 @@ public class TextParameters {
     }
 
     /**
-     * @param miterLimit the miterLimit to set
+     * @param strokePar
+     * @param newValue
+     * @return
      */
     public static TextParameters setTextColor(TextParameters strokePar, Color newValue) {
         if (!newValue.equals(strokePar.textColor)) {
@@ -103,7 +113,9 @@ public class TextParameters {
     }
 
     /**
-     * @param dash the dash to set
+     * @param strokePar
+     * @param newValue
+     * @return
      */
     public static TextParameters setAnchor(TextParameters strokePar, float[] newValue) {
         boolean change = false;
@@ -196,6 +208,15 @@ public class TextParameters {
         return iEnd;
     }
 
+    /**
+     *
+     * @param g2
+     * @param fRC
+     * @param swkShape
+     * @param x
+     * @param y
+     * @return
+     */
     public Rectangle2D paint(Graphics2D g2, FontRenderContext fRC, SwkShape swkShape, double x, double y) {
         Font paintFont = g2.getFont();
         if (getFont() != null) {

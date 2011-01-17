@@ -17,6 +17,10 @@ package tcl.lang;
 
 import java.util.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class TclIndex implements InternalRep {
 
     /**
@@ -63,6 +67,7 @@ public class TclIndex implements InternalRep {
      *
      * @return the string representation of the Tcl object.
      */
+    @Override
     public String toString() {
         return table[index];
     }
@@ -76,6 +81,8 @@ public class TclIndex implements InternalRep {
      *
      * @param interp the interperter or null
      * @param tobj the object to operate on.
+     * @param table
+     * @param msg
      * @paran table the list of commands
      * @paran msg used as part of any error messages
      * @paran flags may be TCL.EXACT.

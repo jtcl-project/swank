@@ -14,17 +14,30 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.table.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class SwkCell implements TableCellRenderer {
 
     static Hashtable resourceDB = null;
     String command = null;
     Interp interp;
 
+    /**
+     *
+     * @param interp
+     */
     public SwkCell(Interp interp) {
         this.command = null;
         this.interp = interp;
     }
 
+    /**
+     *
+     * @param interp
+     * @param command
+     */
     public SwkCell(Interp interp, String command) {
         this.command = command;
         this.interp = interp;

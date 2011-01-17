@@ -30,6 +30,10 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class SwkDocumentListener implements DocumentListener, VarTrace,
         TraceLock {
 
@@ -45,20 +49,40 @@ public class SwkDocumentListener implements DocumentListener, VarTrace,
         this.jtext = jtext;
     }
 
+    /**
+     *
+     * @param newValue
+     */
     public void setInsertLock(boolean newValue) {
         //System.out.println("set insert lock "+newValue);
         insertLock = newValue;
     }
 
+    /**
+     *
+     * @param newValue
+     */
     public void setRemoveLock(boolean newValue) {
         //System.out.println("set remove lock "+newValue);
         removeLock = newValue;
     }
 
+    /**
+     *
+     * @param newValue
+     */
     public void setTraceLock(boolean newValue) {
         traceLock = newValue;
     }
 
+    /**
+     *
+     * @param interp
+     * @param string1
+     * @param string2
+     * @param flags
+     * @throws TclException
+     */
     public void traceProc(Interp interp, String string1, String string2,
             int flags) throws TclException {
         if (traceLock) {
@@ -74,6 +98,11 @@ public class SwkDocumentListener implements DocumentListener, VarTrace,
         setFromVar(interp);
     }
 
+    /**
+     *
+     * @param interp
+     * @throws TclException
+     */
     public void setFromVar(Interp interp) throws TclException {
         if (EventQueue.isDispatchThread()) {
             System.out.println(
@@ -111,6 +140,11 @@ public class SwkDocumentListener implements DocumentListener, VarTrace,
         }
     }
 
+    /**
+     *
+     * @param name
+     * @throws TclException
+     */
     public void setVarName(String name) throws TclException {
         if (EventQueue.isDispatchThread()) {
             System.out.println(
@@ -154,10 +188,18 @@ public class SwkDocumentListener implements DocumentListener, VarTrace,
         varName = name;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getVarName() {
         return (varName);
     }
 
+    /**
+     *
+     * @param docEvent
+     */
     public void updateVar(DocumentEvent docEvent) {
         if (!EventQueue.isDispatchThread()) {
             return;

@@ -26,49 +26,192 @@ package com.onemoonscientific.swank;
 
 import javax.swing.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class SwkBinding implements Comparable {
 
+    /**
+     *
+     */
     public static final int FOCUS = 1;
+    /**
+     *
+     */
     public static final int MOUSE = 2;
+    /**
+     *
+     */
     public static final int KEY = 3;
+    /**
+     *
+     */
     public static final int MOUSEMOTION = 4;
+    /**
+     *
+     */
     public static final int COMPONENT = 5;
+
+    /**
+     *
+     */
     public static final int CONTAINER = 6;
+    /**
+     *
+     */
     public static final int WINDOW = 7;
+    /**
+     *
+     */
     public static final int APP = 8;
+    /**
+     *
+     */
     public static final int PRESS = 0;
+    /**
+     *
+     */
     public static final int RELEASE = 1;
+    /**
+     *
+     */
     public static final int CLICK = 2;
+    /**
+     *
+     */
     public static final int ENTER = 3;
+    /**
+     *
+     */
     public static final int EXIT = 4;
+    /**
+     *
+     */
     public static final int IN = 5;
+    /**
+     *
+     */
     public static final int OUT = 6;
+    /**
+     *
+     */
     public static final int EXPOSE = 7;
+    /**
+     *
+     */
     public static final int DESTROY = 8;
+    /**
+     *
+     */
     public static final int MOTION = 9;
+    /**
+     *
+     */
     public static final int SHOWN = 10;
+    /**
+     *
+     */
     public static final int TYPE = 11;
+    /**
+     *
+     */
     public static final int RESIZE = 12;
+    /**
+     *
+     */
     public static final int HIDDEN = 13;
+    /**
+     *
+     */
     public static final int MOVED = 14;
+    /**
+     *
+     */
     public static final int STATECHANGED = 15;
+    /**
+     *
+     */
     public static final int SELECTIONCHANGED = 16;
+    /**
+     *
+     */
     public static final int ACTIVATION = 17;
+    /**
+     *
+     */
     public static final int ACTIVATED = 18;
+    /**
+     *
+     */
     public static final int DEACTIVATED = 19;
+    /**
+     *
+     */
     public boolean virtual = false;
+    /**
+     *
+     */
     public int type = 0;
+    /**
+     *
+     */
     public int subtype = 0;
+    /**
+     *
+     */
     public int mod = 0;
+    /**
+     *
+     */
     public int count = 1;
+    /**
+     *
+     */
     public int detail = 0;
+    /**
+     *
+     */
     public boolean add = false;
+    /**
+     *
+     */
     public boolean remove = false;
+    /**
+     *
+     */
     public KeyStroke keyStroke = null;
+    /**
+     *
+     */
     public String name = null;
+    /**
+     *
+     */
     public String command = null;
+    /**
+     *
+     */
     public String string = null;
 
+  @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 97 * hash + (this.virtual ? 1 : 0);
+        hash = 97 * hash + this.type;
+        hash = 97 * hash + this.subtype;
+        hash = 97 * hash + this.mod;
+        hash = 97 * hash + this.count;
+        hash = 97 * hash + this.detail;
+        hash = 97 * hash + (this.keyStroke != null ? this.keyStroke.hashCode() : 0);
+        hash = 97 * hash + (this.name != null ? this.name.hashCode() : 0);
+        return hash;
+    }
+
+    /**
+     *
+     * @return
+     */
     public String getEvent() {
         return SwkEventType.getStringRep(type, subtype, count, mod, detail, keyStroke);
     }
@@ -78,6 +221,10 @@ public class SwkBinding implements Comparable {
         return SwkEventType.getStringRep(type, subtype, count, mod, detail, keyStroke) + " " + command;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getCommand() {
         String result = "";
         if (command != null) {
@@ -86,6 +233,7 @@ public class SwkBinding implements Comparable {
         return result;
     }
 
+    @Override
     public boolean equals(Object object) {
         if (!(object instanceof SwkBinding)) {
             return false;
@@ -108,6 +256,11 @@ public class SwkBinding implements Comparable {
         }
     }
 
+    /**
+     *
+     * @param testBinding
+     * @return
+     */
     public boolean sameButClick(SwkBinding testBinding) {
         if (testBinding == null) {
             return false;

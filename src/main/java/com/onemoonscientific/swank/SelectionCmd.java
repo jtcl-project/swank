@@ -28,10 +28,20 @@ import tcl.lang.*;
 import java.util.*;
 import javax.swing.text.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class SelectionCmd implements Command {
 
     private static final Hashtable hasSelection = new Hashtable();
     static private JTextComponent selectionComponent = null;
+    /**
+     *
+     * @param interp
+     * @param argv
+     * @throws TclException
+     */
     public void cmdProc(Interp interp, TclObject[] argv)
             throws TclException {
         int i;

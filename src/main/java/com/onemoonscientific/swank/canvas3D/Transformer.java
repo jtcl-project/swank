@@ -23,6 +23,10 @@ public class Transformer {
         valid = true;
     }
 
+    /**
+     *
+     * @return
+     */
     public AffineTransform getTransform() {
         return aT;
     }

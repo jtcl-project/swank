@@ -63,10 +63,20 @@ public class SwkCanvasWidgetCmd implements Command {
     Map newTypes = new HashMap();
     Interp interp = null;
 
+    /**
+     *
+     * @return
+     */
     public static String[] getValidCmds() {
         return validCmds;
     }
 
+    /**
+     *
+     * @param interp
+     * @param argv
+     * @throws TclException
+     */
     public void cmdProc(final Interp interp, final TclObject[] argv)
             throws TclException {
         int i;
@@ -827,6 +837,7 @@ public class SwkCanvasWidgetCmd implements Command {
             interp.setResult(result);
         }
 
+        @Override
         public void run() {
             try {
                 SwkShape swkShape = (SwkShape) swkcanvas.getShape(tagName);
@@ -1011,6 +1022,7 @@ public class SwkCanvasWidgetCmd implements Command {
             swkcanvas.repaint();
         }
 
+        @Override
         public void run() {
             try {
                 Vector shapeList = swkcanvas.getShapesWithTags(tagName);

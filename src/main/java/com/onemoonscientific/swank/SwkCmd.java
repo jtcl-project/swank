@@ -28,6 +28,10 @@ import tcl.lang.*;
 import java.awt.*;
 import javax.swing.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class SwkCmd implements Command {
 
     int interpResult = 0;

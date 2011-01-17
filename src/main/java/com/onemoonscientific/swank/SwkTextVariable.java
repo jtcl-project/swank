@@ -26,10 +26,24 @@ package com.onemoonscientific.swank;
 
 import tcl.lang.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public interface SwkTextVariable {
 
+    /**
+     *
+     * @param interp
+     * @param name
+     * @throws TclException
+     */
     public void setTextVariable(Interp interp, String name)
             throws TclException;
 
+    /**
+     *
+     * @return
+     */
     public String getTextVariable();
 }

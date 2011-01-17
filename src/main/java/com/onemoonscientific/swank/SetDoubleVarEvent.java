@@ -2,10 +2,21 @@ package com.onemoonscientific.swank;
 
 import tcl.lang.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class SetDoubleVarEvent extends SetVarEvent {
 
     double value = 0;
 
+    /**
+     *
+     * @param interp
+     * @param var1
+     * @param var2
+     * @param value
+     */
     public SetDoubleVarEvent(Interp interp, String var1, String var2,
             double value) {
         this.interp = interp;

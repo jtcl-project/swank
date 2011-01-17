@@ -38,12 +38,25 @@ import com.onemoonscientific.swank.*;
 import java.awt.*;
 import java.awt.geom.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class ItemLine extends SwkShape {
 
-    public enum EndPointStyle {
+    /**
+     *
+     */
+    protected enum EndPointStyle {
 
+        /**
+         *
+         */
         NONE("none") {
         },
+        /**
+         *
+         */
         SQUARE("square") {
 
             @Override
@@ -57,6 +70,9 @@ public class ItemLine extends SwkShape {
                 return thetaTrig;
             }
         },
+        /**
+         *
+         */
         CIRCLE("circle") {
 
             @Override
@@ -70,6 +86,9 @@ public class ItemLine extends SwkShape {
                 return thetaTrig;
             }
         },
+        /**
+         *
+         */
         DIAMOND("diamond") {
 
             @Override
@@ -83,6 +102,9 @@ public class ItemLine extends SwkShape {
                 return thetaTrig;
             }
         },
+        /**
+         *
+         */
         ARROW("arrow") {
 
             @Override
@@ -102,7 +124,11 @@ public class ItemLine extends SwkShape {
             this.description = description;
         }
 
-        public String getDescription() {
+        /**
+         *
+         * @return
+         */
+        protected String getDescription() {
             return description;
         }
 
@@ -188,8 +214,12 @@ public class ItemLine extends SwkShape {
         fill = null;
     }
 
+    /**
+     *
+     * @param g2
+     */
     @Override
-    public void paintShape(Graphics2D g2) {
+    protected void paintShape(Graphics2D g2) {
         if (stroke != null) {
             g2.setStroke(stroke);
         } else {
@@ -246,6 +276,12 @@ public class ItemLine extends SwkShape {
         }
     }
 
+    /**
+     *
+     * @param canvas
+     * @param coords
+     * @throws SwkException
+     */
     @Override
     public void coords(SwkImageCanvas canvas, double[] coords)
             throws SwkException {
@@ -259,8 +295,11 @@ public class ItemLine extends SwkShape {
         applyCoordinates();
     }
 
+    /**
+     *
+     */
     @Override
-    public void applyCoordinates() {
+    protected void applyCoordinates() {
         double[] shapePars = {arrowShapeA, arrowShapeB, arrowShapeC, width};
         AffineTransform aT = new AffineTransform();
         aT.translate(storeCoords[0], storeCoords[1]);
@@ -507,7 +546,11 @@ public class ItemLine extends SwkShape {
         return thetaTrig;
     }
 
-    public void genPath(double[] coords) {
+    /**
+     *
+     * @param coords
+     */
+    protected void genPath(double[] coords) {
         float x1;
         float y1;
         gPath.reset();
@@ -528,7 +571,12 @@ public class ItemLine extends SwkShape {
         }
     }
 
-    public void addArrowPathCircle(GeneralPath arrowPath, double[] arrowCoords) {
+    /**
+     *
+     * @param arrowPath
+     * @param arrowCoords
+     */
+    protected void addArrowPathCircle(GeneralPath arrowPath, double[] arrowCoords) {
         arrowPath.reset();
         float x1 = (float) arrowCoords[0];
         float y1 = (float) arrowCoords[1];
@@ -537,7 +585,12 @@ public class ItemLine extends SwkShape {
         arrowPath.append(arc, false);
     }
 
-    public void addArrowPath(GeneralPath arrowPath, double[] arrowCoords) {
+    /**
+     *
+     * @param arrowPath
+     * @param arrowCoords
+     */
+    protected void addArrowPath(GeneralPath arrowPath, double[] arrowCoords) {
         arrowPath.reset();
         float x1;
         float y1;
@@ -555,7 +608,11 @@ public class ItemLine extends SwkShape {
         arrowPath.closePath();
     }
 
-    public void genSmoothPath(double[] coords) {
+    /**
+     *
+     * @param coords
+     */
+    protected void genSmoothPath(double[] coords) {
         gPath.reset();
         BezierPath.makeBezierCurve(coords, 1, gPath, smoothValue);
 
@@ -564,12 +621,16 @@ public class ItemLine extends SwkShape {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public String getType() {
         return "line";
     }
 
     @Override
-    public void drawHandles(Graphics2D g2) {
+    protected void drawHandles(Graphics2D g2) {
         if (shape != null) {
             double[] xy = {storeCoords[0], storeCoords[1], storeCoords[2], storeCoords[3]};
             AffineTransform shapeTransform = getTransform();
@@ -581,8 +642,14 @@ public class ItemLine extends SwkShape {
         }
     }
 
+    /**
+     *
+     * @param testX
+     * @param testY
+     * @return
+     */
     @Override
-    public int hitHandles(double testX, double testY) {
+    protected int hitHandles(double testX, double testY) {
         int hitIndex = -1;
         if (shape != null) {
             double[] xy = {storeCoords[0], storeCoords[1], storeCoords[2], storeCoords[3]};
@@ -599,8 +666,13 @@ public class ItemLine extends SwkShape {
         return hitIndex;
     }
 
+    /**
+     *
+     * @param handle
+     * @return
+     */
     @Override
-    public Cursor getHandleCursor(int handle) {
+    protected Cursor getHandleCursor(int handle) {
         final Cursor cursor;
         switch (handle) {
             case 0:

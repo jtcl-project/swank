@@ -43,6 +43,10 @@ import com.onemoonscientific.swank.SwkException;
 
 
 
+/**
+ *
+ * @author brucejohnson
+ */
 public abstract class SwkShape implements SwkShape3DConfig {
     Shape3D shape = null;
     Node objectNode = null;
@@ -78,6 +82,10 @@ public abstract class SwkShape implements SwkShape3DConfig {
         return tags;
     }
 
+    /**
+     *
+     * @param tags
+     */
     public void setTags(String[] tags) {
         tagNames = tags;
     }
@@ -112,6 +120,10 @@ public abstract class SwkShape implements SwkShape3DConfig {
         return TclString.newInstance("");
     }
 
+    /**
+     *
+     * @param tObj
+     */
     public void select(TclObject tObj) {
     }
 
@@ -148,6 +160,13 @@ public abstract class SwkShape implements SwkShape3DConfig {
         return 0;
     }
 
+    /**
+     *
+     * @param xOrigin
+     * @param yOrigin
+     * @param xScale
+     * @param yScale
+     */
     public void scale(double xOrigin, double yOrigin, double xScale,
         double yScale) {
         /* FIXME
@@ -280,7 +299,11 @@ System.out.println("config2");
             (new SwkShapeRunnable(swkCanvas, argv[start - 1].toString(), setPars)).exec();
         }
     }
-    public  CanvasParameter[] getParameters() {
+   /**
+    *
+    * @return
+    */
+   public  CanvasParameter[] getParameters() {
         // fixme 
         return null;
     }

@@ -31,17 +31,36 @@ import java.awt.geom.*;
 
 import java.util.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public abstract class SwkShape implements SwkShapeConfig {
 
+    /**
+     *
+     */
     static public final byte ACTIVE = 0;
+    /**
+     *
+     */
     static public final byte DISABLED = 1;
+    /**
+     *
+     */
     static public final byte HIDDEN = 2;
     static BasicStroke bstroke = new BasicStroke();
+    /**
+     *
+     */
     public static final int handleSize = 6;
     StrokeParameters strokePar = StrokeParameters.getDefault();
     Shape shape = null;
     ItemTreeNode node = null;
     int id;
+    /**
+     *
+     */
     public double[] storeCoords = null;
     //SwkShape previous = null;
     //SwkShape next = null;
@@ -68,39 +87,75 @@ public abstract class SwkShape implements SwkShapeConfig {
     String imageName="";
     boolean newTransform = false;
 
+    /**
+     *
+     */
     public SwkShape() {
     }
 
+    /**
+     *
+     * @param shape
+     * @param canvas
+     */
     public SwkShape(Shape shape, SwkImageCanvas canvas) {
         this.shape = shape;
         this.canvas = canvas;
     }
 
+    /**
+     *
+     * @return
+     */
     public TreeMap<String,CanvasParameter> getParameterMap() {
         return parameterMap;
     }
 
-    public int getState() {
+    /**
+     *
+     * @return
+     */
+    protected int getState() {
         return state;
     }
 
-    public void setSelected(final boolean selected) {
+    /**
+     *
+     * @param selected
+     */
+    protected void setSelected(final boolean selected) {
         this.selected = selected;
     }
 
-    public boolean isSelected() {
+    /**
+     *
+     * @return
+     */
+    protected boolean isSelected() {
         return selected;
     }
 
-    public float getXShear() {
+    /**
+     *
+     * @return
+     */
+    protected float getXShear() {
         return xShear;
     }
 
-    public float getYShear() {
+    /**
+     *
+     * @return
+     */
+    protected float getYShear() {
         return yShear;
     }
 
-    public void setNode(String nodeName) {
+    /**
+     *
+     * @param nodeName
+     */
+    protected void setNode(String nodeName) {
         try {
             SwkShape shapeNode = (SwkShape) canvas.getShape(nodeName);
             ItemTreeNode newParent = shapeNode.node;
@@ -111,11 +166,19 @@ public abstract class SwkShape implements SwkShapeConfig {
         }
     }
 
-    public String getNode() {
+    /**
+     *
+     * @return
+     */
+    protected String getNode() {
         return "";
     }
 
-    public String getStateString() {
+    /**
+     *
+     * @return
+     */
+    protected String getStateString() {
         if (state == ACTIVE) {
             return "normal";
         } else if (state == DISABLED) {
@@ -127,15 +190,27 @@ public abstract class SwkShape implements SwkShapeConfig {
         }
     }
 
-    public void setState(byte newState) {
+    /**
+     *
+     * @param newState
+     */
+    protected void setState(byte newState) {
         state = newState;
     }
 
-    public double[] getStoreCoords() {
+    /**
+     *
+     * @return
+     */
+    protected double[] getStoreCoords() {
         return storeCoords.clone();
     }
 
-    public AffineTransform getTransform() {
+    /**
+     *
+     * @return
+     */
+    protected AffineTransform getTransform() {
         if (transformer != null) {
             if (transformer.isValid()) {
                 return transformer.getTransform();
@@ -147,11 +222,19 @@ public abstract class SwkShape implements SwkShapeConfig {
         return null;
     }
 
-    public Shape getShape() {
+    /**
+     *
+     * @return
+     */
+    protected Shape getShape() {
         return shape;
     }
 
-    public SwkImageCanvas getCanvas() {
+    /**
+     *
+     * @return
+     */
+    protected SwkImageCanvas getCanvas() {
         return canvas;
     }
 
@@ -159,123 +242,240 @@ public abstract class SwkShape implements SwkShapeConfig {
     return previous;
     }
 
-    public SwkShape getNext() {
+    protected SwkShape getNext() {
     return next;
     }
+     */
+    /**
+     *
+     * @return
      */
     public int getId() {
         return id;
     }
 
-    public Color getFill() {
+    /**
+     *
+     * @return
+     */
+    protected Color getFill() {
         return fill;
     }
 
-    public void setFill(Color color) {
+    /**
+     *
+     * @param color
+     */
+    protected void setFill(Color color) {
         fill = color;
     }
 
-    public GradientPaint getFillGradient() {
+    /**
+     *
+     * @return
+     */
+    protected GradientPaint getFillGradient() {
         return fillGradient;
     }
 
-    public TexturePaint getTexturePaint() {
+    /**
+     *
+     * @return
+     */
+    protected TexturePaint getTexturePaint() {
         return texturePaint;
     }
 
-    public Color getOutline() {
+    /**
+     *
+     * @return
+     */
+    protected Color getOutline() {
         return outline;
     }
 
-    public void setOutline(Color color) {
+    /**
+     *
+     * @param color
+     */
+    protected void setOutline(Color color) {
         outline = color;
     }
 
-    public BasicStroke getStroke() {
+    /**
+     *
+     * @return
+     */
+    protected BasicStroke getStroke() {
         return stroke;
     }
 
-    public float getWidth() {
+    /**
+     *
+     * @return
+     */
+    protected float getWidth() {
         return width;
     }
 
-    public void setWidth(double value) {
+    /**
+     *
+     * @param value
+     */
+    protected void setWidth(double value) {
         width = (float) value;
     }
 
-    public int getCap() {
+    /**
+     *
+     * @return
+     */
+    protected int getCap() {
         return strokePar.getCap();
     }
 
-    public void setCap(int newValue) {
+    /**
+     *
+     * @param newValue
+     */
+    protected void setCap(int newValue) {
         strokePar = StrokeParameters.setCap(strokePar, newValue);
     }
 
-    public int getJoin() {
+    /**
+     *
+     * @return
+     */
+    protected int getJoin() {
         return strokePar.getJoin();
     }
 
-    public void setJoin(int newValue) {
+    /**
+     *
+     * @param newValue
+     */
+    protected void setJoin(int newValue) {
         strokePar = StrokeParameters.setJoin(strokePar, newValue);
     }
 
-    public float getMiterLimit() {
+    /**
+     *
+     * @return
+     */
+    protected float getMiterLimit() {
         return strokePar.getMiterLimit();
     }
 
-    public float[] getDash() {
+    /**
+     *
+     * @return
+     */
+    protected float[] getDash() {
         return strokePar.getDash();
     }
 
-    public void setDash(float[] newDash) {
+    /**
+     *
+     * @param newDash
+     */
+    protected void setDash(float[] newDash) {
         strokePar = StrokeParameters.setDash(strokePar, newDash);
     }
 
-    public float getDashPhase() {
+    /**
+     *
+     * @return
+     */
+    protected float getDashPhase() {
         return strokePar.getDashPhase();
     }
 
-    public void setDashPhase(float newPhase) {
+    /**
+     *
+     * @param newPhase
+     */
+    protected void setDashPhase(float newPhase) {
         strokePar = StrokeParameters.setDashPhase(strokePar, newPhase);
     }
 
-    public boolean getDashIntPattern() {
+    /**
+     *
+     * @return
+     */
+    protected boolean getDashIntPattern() {
         return strokePar.isDashIntPattern();
     }
 
-    public void setDashIntPattern(boolean newPar) {
+    /**
+     *
+     * @param newPar
+     */
+    protected void setDashIntPattern(boolean newPar) {
         strokePar = StrokeParameters.setDashIntPattern(strokePar, newPar);
     }
 
-    public String getDashString() {
+    /**
+     *
+     * @return
+     */
+    protected String getDashString() {
         return strokePar.getDashString();
     }
 
-    public void setDashString(String newString) {
+    /**
+     *
+     * @param newString
+     */
+    protected void setDashString(String newString) {
         strokePar = StrokeParameters.setDashString(strokePar, newString);
     }
 
-    public float getRotate() {
+    /**
+     *
+     * @return
+     */
+    protected float getRotate() {
         return rotate;
     }
 
-    public Map getTags() {
+    /**
+     *
+     * @return
+     */
+    protected Map getTags() {
         return tags;
     }
 
-    public void setTags(String[] tags) {
+    /**
+     *
+     * @param tags
+     */
+    protected void setTags(String[] tags) {
         tagNames = tags;
     }
 
-    public void setCanvas(SwkImageCanvas canvas) {
+    /**
+     *
+     * @param canvas
+     */
+    protected void setCanvas(SwkImageCanvas canvas) {
         this.canvas = canvas;
     }
 
-    public void setShape(Shape shape) {
+    /**
+     *
+     * @param shape
+     */
+    protected void setShape(Shape shape) {
         this.shape = shape;
     }
 
-    public Cursor getHandleCursor(int handle) {
+    /**
+     *
+     * @param handle
+     * @return
+     */
+    protected Cursor getHandleCursor(int handle) {
         final Cursor cursor;
         switch (handle) {
             case 0:
@@ -308,7 +508,15 @@ public abstract class SwkShape implements SwkShapeConfig {
         return cursor;
     }
 
-    public boolean hitHandle(int x, int y, double xTest, double yTest) {
+    /**
+     *
+     * @param x
+     * @param y
+     * @param xTest
+     * @param yTest
+     * @return
+     */
+    protected boolean hitHandle(int x, int y, double xTest, double yTest) {
         int fuzz = 2;
         return (new Rectangle(x - fuzz, y - fuzz, handleSize + 2 * fuzz, handleSize + 2 * fuzz)).contains(xTest, yTest);
     }
@@ -321,7 +529,11 @@ public abstract class SwkShape implements SwkShapeConfig {
         g2.drawRect(x - handleSize / 2, y - handleSize / 2, handleSize, handleSize);
     }
 
-    public void drawHandles(Graphics2D g2) {
+    /**
+     *
+     * @param g2
+     */
+    protected void drawHandles(Graphics2D g2) {
         if (shape != null) {
             Rectangle2D bounds = shape.getBounds2D();
             double x1 = bounds.getMinX();
@@ -341,7 +553,13 @@ public abstract class SwkShape implements SwkShapeConfig {
         }
     }
 
-    public int hitHandles(double testX, double testY) {
+    /**
+     *
+     * @param testX
+     * @param testY
+     * @return
+     */
+    protected int hitHandles(double testX, double testY) {
         int hitIndex = -1;
         if (shape != null) {
             Rectangle2D bounds = shape.getBounds2D();
@@ -367,7 +585,11 @@ public abstract class SwkShape implements SwkShapeConfig {
         return hitIndex;
     }
 
-    public void paintShape(Graphics2D g2) {
+    /**
+     *
+     * @param g2
+     */
+    protected void paintShape(Graphics2D g2) {
         if (shape != null) {
             if (stroke != null) {
                 g2.setStroke(stroke);
@@ -401,7 +623,14 @@ public abstract class SwkShape implements SwkShapeConfig {
     }
 
 
-    public void configOld(Interp interp, TclObject[] argv, int start)
+    /**
+     *
+     * @param interp
+     * @param argv
+     * @param start
+     * @throws TclException
+     */
+    protected void configOld(Interp interp, TclObject[] argv, int start)
             throws TclException {
         if (((argv.length - start) % 2) != 0) {
             throw new TclNumArgsException(interp, 0, argv,
@@ -409,7 +638,15 @@ public abstract class SwkShape implements SwkShapeConfig {
         }
     }
 
-    public void configShape(Interp interp, SwkImageCanvas swkCanvas,
+    /**
+     *
+     * @param interp
+     * @param swkCanvas
+     * @param argv
+     * @param start
+     * @throws TclException
+     */
+    protected void configShape(Interp interp, SwkImageCanvas swkCanvas,
             TclObject[] argv, int start) throws TclException {
         CanvasParameter[] setPars = new CanvasParameter[(argv.length - start) / 2];
 
@@ -457,7 +694,15 @@ public abstract class SwkShape implements SwkShapeConfig {
         }
     }
 
-    public static void config(Interp interp, SwkImageCanvas swkCanvas,
+    /**
+     *
+     * @param interp
+     * @param swkCanvas
+     * @param argv
+     * @param start
+     * @throws TclException
+     */
+    protected static void config(Interp interp, SwkImageCanvas swkCanvas,
             TclObject[] argv, int start) throws TclException {
         // Map parameterMap = getParameterMap();
         CanvasParameter[] setPars = new CanvasParameter[(argv.length - start) / 2];
@@ -510,7 +755,14 @@ public abstract class SwkShape implements SwkShapeConfig {
         }
     }
 
-    public void itemConfigure(Interp interp, TclObject[] argv, int start)
+    /**
+     *
+     * @param interp
+     * @param argv
+     * @param start
+     * @throws TclException
+     */
+    protected void itemConfigure(Interp interp, TclObject[] argv, int start)
             throws TclException {
         TclObject list = TclList.newInstance();
         interp.resetResult();
@@ -531,18 +783,39 @@ public abstract class SwkShape implements SwkShapeConfig {
         }
     }
 
-    public void dispose() {
+    /**
+     *
+     */
+    protected void dispose() {
     }
 
+    /**
+     *
+     * @param canvas
+     * @param coordArray
+     * @throws SwkException
+     */
     public void coords(SwkImageCanvas canvas, double[] coordArray)
             throws SwkException {
     }
 
-    public double[] coords() {
+    /**
+     *
+     * @return
+     */
+    protected double[] coords() {
         return storeCoords.clone();
     }
 
-    public TclObject itemGet(Interp interp, String argString,
+    /**
+     *
+     * @param interp
+     * @param argString
+     * @param configStyle
+     * @return
+     * @throws TclException
+     */
+    protected TclObject itemGet(Interp interp, String argString,
             boolean configStyle) throws TclException {
         CanvasParameter par = getPar(argString);
 
@@ -573,7 +846,12 @@ public abstract class SwkShape implements SwkShapeConfig {
         return (String.valueOf(id));
     }
 
-    public void move(double x, double y) {
+    /**
+     *
+     * @param x
+     * @param y
+     */
+    protected void move(double x, double y) {
         for (int i = 0; i < storeCoords.length; i += 2) {
             storeCoords[i] += x;
             storeCoords[i + 1] += y;
@@ -602,26 +880,51 @@ public abstract class SwkShape implements SwkShapeConfig {
         }
     }
 
-    public void applyCoordinates() {
+    /**
+     *
+     */
+    protected void applyCoordinates() {
     }
 
-    public Point2D getGradPt1() {
+    /**
+     *
+     * @return
+     */
+    protected Point2D getGradPt1() {
         return gradPt1;
     }
 
-    public Point2D getGradPt2() {
+    /**
+     *
+     * @return
+     */
+    protected Point2D getGradPt2() {
         return gradPt2;
     }
 
-    public void setGradPt1(Point2D p1) {
+    /**
+     *
+     * @param p1
+     */
+    protected void setGradPt1(Point2D p1) {
         gradPt1 = p1;
     }
 
-    public void setGradPt2(Point2D p2) {
+    /**
+     *
+     * @param p2
+     */
+    protected void setGradPt2(Point2D p2) {
         gradPt2 = p2;
     }
 
-    public boolean hitShape(double x1, double y1) {
+    /**
+     *
+     * @param x1
+     * @param y1
+     * @return
+     */
+    protected boolean hitShape(double x1, double y1) {
         boolean hit = false;
         if (shape != null) {
             Shape checkShape = shape;
@@ -675,18 +978,41 @@ public abstract class SwkShape implements SwkShapeConfig {
         return hit;
     }
 
-    public String hit(double x, double y) {
+    /**
+     *
+     * @param x
+     * @param y
+     * @return
+     */
+    protected String hit(double x, double y) {
         return "";
     }
 
-    public void select(TclObject tObj) {
+    /**
+     *
+     * @param tObj
+     */
+    protected void select(TclObject tObj) {
     }
 
-    public int getIndexAtXY(double x, double y) {
+    /**
+     *
+     * @param x
+     * @param y
+     * @return
+     */
+    protected int getIndexAtXY(double x, double y) {
         return 0;
     }
 
-    public int getIndex(Interp interp, TclObject indexArg)
+    /**
+     *
+     * @param interp
+     * @param indexArg
+     * @return
+     * @throws TclException
+     */
+    protected int getIndex(Interp interp, TclObject indexArg)
             throws TclException {
         String indexString = indexArg.toString();
 
@@ -715,7 +1041,14 @@ public abstract class SwkShape implements SwkShapeConfig {
         return 0;
     }
 
-    public void scale(double xOrigin, double yOrigin, double xScale,
+    /**
+     *
+     * @param xOrigin
+     * @param yOrigin
+     * @param xScale
+     * @param yScale
+     */
+    protected void scale(double xOrigin, double yOrigin, double xScale,
             double yScale) {
         for (int i = 0; i < storeCoords.length; i += 2) {
             storeCoords[i] = ((storeCoords[i] - xOrigin) * xScale) + xOrigin;
@@ -732,7 +1065,11 @@ public abstract class SwkShape implements SwkShapeConfig {
         }
     }
 
-    public void genGradient(AffineTransform aT) {
+    /**
+     *
+     * @param aT
+     */
+    protected void genGradient(AffineTransform aT) {
         if ((fillGradient != null) && (gradPt1 != null) && (gradPt2 != null)) {
             Color c1 = fillGradient.getColor1();
             Color c2 = fillGradient.getColor2();
@@ -756,7 +1093,12 @@ public abstract class SwkShape implements SwkShapeConfig {
         }
     }
 
-    public static void initializeParameters(CanvasParameter[] params, Map map) {
+    /**
+     *
+     * @param params
+     * @param map
+     */
+    protected static void initializeParameters(CanvasParameter[] params, Map map) {
         for (int i = 0; i < params.length; i++) {
             map.put(((CanvasParameter) params[i]).getName(), params[i]);
             CanvasParameter cPar = CanvasParameter.getStdPar(params[i].getName());
@@ -766,7 +1108,12 @@ public abstract class SwkShape implements SwkShapeConfig {
         }
     }
 
-    public CanvasParameter getPar(String argString) {
+    /**
+     *
+     * @param argString
+     * @return
+     */
+    protected CanvasParameter getPar(String argString) {
         TreeMap<String,CanvasParameter> map = getParameterMap();
 
         if (map == null) {

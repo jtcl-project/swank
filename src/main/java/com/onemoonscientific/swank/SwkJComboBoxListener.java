@@ -38,6 +38,10 @@ import tcl.lang.TclObject;
 import tcl.lang.TclString;
 import tcl.lang.VarTrace;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class SwkJComboBoxListener implements ActionListener, VarTrace,
         SwkListener {
 
@@ -54,6 +58,14 @@ public class SwkJComboBoxListener implements ActionListener, VarTrace,
         this.component = (JComboBox) component;
     }
 
+    /**
+     *
+     * @param interp
+     * @param string1
+     * @param string2
+     * @param flags
+     * @throws TclException
+     */
     public void traceProc(Interp interp, String string1, String string2,
             int flags) throws TclException {
         if (EventQueue.isDispatchThread()) {
@@ -64,6 +76,11 @@ public class SwkJComboBoxListener implements ActionListener, VarTrace,
         setFromVar(interp);
     }
 
+    /**
+     *
+     * @param interp
+     * @throws TclException
+     */
     public void setFromVar(Interp interp) throws TclException {
         if (EventQueue.isDispatchThread()) {
             System.out.println(
@@ -102,6 +119,12 @@ public class SwkJComboBoxListener implements ActionListener, VarTrace,
         traceLock = false;
     }
 
+    /**
+     *
+     * @param interp
+     * @param name
+     * @throws TclException
+     */
     public void setVarName(Interp interp, String name)
             throws TclException {
         if (EventQueue.isDispatchThread()) {
@@ -114,7 +137,7 @@ public class SwkJComboBoxListener implements ActionListener, VarTrace,
                     | TCL.GLOBAL_ONLY);
         }
 
-        if ((name != null) && (name != "")) {
+        if ((name != null) && (name == null ? "" != null : !name.equals(""))) {
             try {
                 TclObject tobj = interp.getVar(name, TCL.GLOBAL_ONLY).duplicate();
 
@@ -155,26 +178,51 @@ public class SwkJComboBoxListener implements ActionListener, VarTrace,
         interp.resetResult();
     }
 
+    /**
+     *
+     * @return
+     */
     public String getVarName() {
         return (varName);
     }
 
+    /**
+     *
+     * @param name
+     */
     public void setValue(String name) {
         value = name;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getValue() {
         return (value);
     }
 
+    /**
+     *
+     * @param name
+     */
     public void setCommand(String name) {
         command = name;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getCommand() {
         return (command);
     }
 
+    /**
+     *
+     * @param editor
+     * @param e
+     */
     public void keyReleased(JTextComponent editor, KeyEvent e) {
         String s1 = editor.getText();
 
@@ -209,6 +257,9 @@ public class SwkJComboBoxListener implements ActionListener, VarTrace,
         interp.getNotifier().queueEvent(bEvent, TCL.QUEUE_TAIL);
     }
 
+    /**
+     *
+     */
     public void setVarValue() {
         TclObject tobj = null;
 
@@ -235,6 +286,10 @@ public class SwkJComboBoxListener implements ActionListener, VarTrace,
         }
     }
 
+    /**
+     *
+     * @param s1
+     */
     public void setVarValue(String s1) {
         TclObject tobj = null;
 
@@ -260,6 +315,12 @@ public class SwkJComboBoxListener implements ActionListener, VarTrace,
         }
     }
 
+    /**
+     *
+     * @param eventObject
+     * @param obj
+     * @param subtype
+     */
     public void processEvent(EventObject eventObject, Object obj, int subtype) {
          //   System.out.println("Process Event" + this);
         if (EventQueue.isDispatchThread()) {

@@ -18,27 +18,51 @@ public class Transformer {
     private boolean valid = false;
     private String name = null;
 
+    /**
+     *
+     * @param name
+     */
     public Transformer(String name) {
         this.name = name.intern();
         valid = true;
     }
 
+    /**
+     *
+     * @return
+     */
     public AffineTransform getTransform() {
         return aT;
     }
 
+    /**
+     *
+     * @param newTrans
+     */
     public void setTransform(AffineTransform newTrans) {
         aT.setTransform(newTrans);
     }
 
+    /**
+     *
+     * @param newTrans
+     */
     public void setToTransform(AffineTransform newTrans) {
         aT = newTrans;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean isValid() {
         return valid;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getName() {
         if (name == null) {
             return "";

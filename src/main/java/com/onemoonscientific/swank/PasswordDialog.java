@@ -4,14 +4,39 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class PasswordDialog extends JDialog implements ActionListener, KeyListener {
 
+    /**
+     *
+     */
     protected JTextField nameField;
+    /**
+     *
+     */
     protected JPasswordField passwordField;
+    /**
+     *
+     */
     protected JButton okButton;
+    /**
+     *
+     */
     protected JButton cancelButton;
+    /**
+     *
+     */
     protected JLabel nameLabel;
+    /**
+     *
+     */
     protected JLabel passwordLabel;
+    /**
+     *
+     */
     protected JPanel buttonPanel;
 
     @Override
@@ -24,19 +49,36 @@ public class PasswordDialog extends JDialog implements ActionListener, KeyListen
         return nameField.getText();
     }
 
+    /**
+     *
+     * @param pass
+     */
     public void setPassword(String pass) {
         this.passwordField.setText(pass);
     }
 
+    /**
+     *
+     * @return
+     */
     public char[] getPassword() {
         return passwordField.getPassword();
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean okPressed() {
         return okButtonPressed;
     }
     private boolean okButtonPressed = false;
 
+    /**
+     *
+     * @param parent
+     * @param title
+     */
     public PasswordDialog(Frame parent, String title) {
         super(parent, title, true);
     }
@@ -134,11 +176,19 @@ public class PasswordDialog extends JDialog implements ActionListener, KeyListen
         layoutPanel(buttonPanel);
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean showDialog() {
         setVisible(true);
         return okPressed();
     }
 
+    /**
+     *
+     * @param args
+     */
     public static void main(String args[]) {
         PasswordDialog p = new PasswordDialog(null, "Test");
         if (p.showDialog()) {

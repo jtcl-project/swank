@@ -31,6 +31,10 @@ import java.net.*;
 import java.util.*;
 import javax.swing.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class ImageTestCmd implements Command {
 
     static Hashtable images = new Hashtable();
@@ -38,6 +42,12 @@ public class ImageTestCmd implements Command {
     private static final String[] validCmds = {"changed"};
     private static final int OPT_CHANGED = 0;
 
+    /**
+     *
+     * @param interp
+     * @param argv
+     * @throws TclException
+     */
     public void cmdProc(Interp interp, TclObject[] argv)
             throws TclException {
         int i;
@@ -64,6 +74,13 @@ public class ImageTestCmd implements Command {
         }
     }
 
+    /**
+     *
+     * @param interp
+     * @param sourceImage
+     * @param destImage
+     * @return
+     */
     public static BufferedImage edge(Interp interp, BufferedImage sourceImage,
             BufferedImage destImage) {
         float[] edge = {0f, -1f, 0f, -1f, 4f, -1f, 0f, -1f, 0f};
@@ -73,6 +90,14 @@ public class ImageTestCmd implements Command {
         return (op.filter(sourceImage, destImage));
     }
 
+    /**
+     *
+     * @param interp
+     * @param sourceImage
+     * @param scaleValue
+     * @param offsetValue
+     * @return
+     */
     public static BufferedImage scale(Interp interp, BufferedImage sourceImage,
             double scaleValue, double offsetValue) {
         RescaleOp op = new RescaleOp((float) scaleValue, (float) offsetValue,
@@ -81,6 +106,14 @@ public class ImageTestCmd implements Command {
         return (op.filter(sourceImage, null));
     }
 
+    /**
+     *
+     * @param interp
+     * @param image
+     * @param argv
+     * @param start
+     * @throws TclException
+     */
     public static void configure(Interp interp, ImageIcon image,
             TclObject[] argv, int start) throws TclException {
         int i;

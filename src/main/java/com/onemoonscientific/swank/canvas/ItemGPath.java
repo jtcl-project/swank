@@ -39,6 +39,10 @@ import java.awt.*;
 import java.awt.geom.*;
 
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class ItemGPath extends SwkShape {
 
     static CanvasParameter[] parameters = {
@@ -59,6 +63,13 @@ public class ItemGPath extends SwkShape {
         fill = null;
     }
 
+    /**
+     *
+     * @param canvas
+     * @param coords
+     * @throws SwkException
+     */
+    @Override
     public void coords(SwkImageCanvas canvas, double[] coords)
             throws SwkException {
         if ((storeCoords == null) || (storeCoords.length != coords.length)) {
@@ -69,7 +80,11 @@ public class ItemGPath extends SwkShape {
         applyCoordinates();
     }
 
-    public void applyCoordinates() {
+    /**
+     *
+     */
+    @Override
+    protected void applyCoordinates() {
         AffineTransform aT = new AffineTransform();
         aT.translate(storeCoords[0], storeCoords[1]);
         aT.shear(xShear, yShear);
@@ -94,6 +109,10 @@ public class ItemGPath extends SwkShape {
         shape = aT.createTransformedShape(gPath);
     }
 
+    /**
+     *
+     * @return
+     */
     public String getType() {
         return "line";
     }

@@ -2,6 +2,10 @@ package com.onemoonscientific.swank.canvas;
 
 import tcl.lang.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class StateParameter extends CanvasParameter {
 
     private static final String name = "state";
@@ -43,6 +47,11 @@ public class StateParameter extends CanvasParameter {
         }
     }
 
+    /**
+     *
+     * @param swkCanvas
+     * @param swkShape
+     */
     public void exec(SwkImageCanvas swkCanvas, SwkShape swkShape) {
         if (swkShape != null) {
             swkShape.setState(newValue);

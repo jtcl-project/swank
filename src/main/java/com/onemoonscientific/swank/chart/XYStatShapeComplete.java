@@ -92,6 +92,9 @@ public class XYStatShapeComplete extends XYPlotShape {
         super.paintShape(g2);
     }
 
+    /**
+     *
+     */
     public void setRenderer() {
         renderer = new StatisticalXYBarRenderer();
         plot.setRenderer(renderer);
@@ -109,6 +112,10 @@ public class XYStatShapeComplete extends XYPlotShape {
         return parameters;
     }
 
+    /**
+     *
+     * @return
+     */
     public TreeMap getParameterMap() {
         return parameterMap;
     }

@@ -44,6 +44,10 @@ import java.util.*;
 import java.awt.EventQueue;
 
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class XYTableStatsData extends XYData {
     int xColumn = -1;
     int meanColumn = -1;
@@ -82,6 +86,10 @@ public class XYTableStatsData extends XYData {
         }
     }
 
+    /**
+     *
+     * @param column
+     */
     public void setXColumn(int column) {
           xColumn = column;
     }
@@ -145,6 +153,7 @@ public class XYTableStatsData extends XYData {
      *
      * @return the number of items within the series.
      */
+    @Override
     public int getItemCount(int series) {
         int nRows = 0;
         if (tableModel != null) {
@@ -223,6 +232,12 @@ public class XYTableStatsData extends XYData {
         return x;
     }
 
+    /**
+     *
+     * @param series
+     * @param item
+     * @return
+     */
     public Number getX(int series, int item) {
         Number x = null;
         if ((xColumn < 0) || (xColumn >= tableModel.getNCols()))  {

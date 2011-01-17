@@ -19,6 +19,10 @@ import tcl.lang.*;
 
 import java.util.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class SwkIndex implements InternalRep {
 
     /**
@@ -46,7 +50,7 @@ public class SwkIndex implements InternalRep {
 
     /**
      * Returns a dupilcate of the current object.
-     * @param obj the TclObject that contains this internalRep.
+     * @return
      */
     public InternalRep duplicate() {
         return new SwkIndex(index, table);
@@ -65,6 +69,7 @@ public class SwkIndex implements InternalRep {
      *
      * @return the string representation of the Tcl object.
      */
+    @Override
     public String toString() {
         return table[index];
     }
@@ -78,6 +83,11 @@ public class SwkIndex implements InternalRep {
      *
      * @param interp the interperter or null
      * @param tobj the object to operate on.
+     * @param table 
+     * @param flags
+     * @param msg
+     * @return
+     * @throws TclException
      * @paran table the list of commands
      * @paran msg used as part of any error messages
      * @paran flags may be TCL.EXACT.
@@ -154,6 +164,16 @@ public class SwkIndex implements InternalRep {
         return index;
     }
 
+    /**
+     *
+     * @param interp
+     * @param tobj
+     * @param TM
+     * @param msg
+     * @param flags
+     * @return
+     * @throws TclException
+     */
     public static int get(Interp interp, TclObject tobj, TreeMap TM,
             String msg, int flags) throws TclException {
 

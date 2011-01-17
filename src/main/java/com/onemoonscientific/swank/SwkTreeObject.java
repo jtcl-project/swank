@@ -26,11 +26,23 @@ package com.onemoonscientific.swank;
 
 import tcl.lang.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class SwkTreeObject {
 
     private Interp interp = null;
+    /**
+     *
+     */
     protected String string = null;
 
+    /**
+     *
+     * @param interp
+     * @param string
+     */
     public SwkTreeObject(Interp interp, String string) {
         this.interp = interp;
         this.string = string;

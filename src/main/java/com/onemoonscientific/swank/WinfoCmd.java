@@ -30,6 +30,10 @@ import java.awt.*;
 import java.util.*;
 import javax.swing.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class WinfoCmd implements Command {
 
     private static final String[] validCmds = {
@@ -71,6 +75,12 @@ public class WinfoCmd implements Command {
     private static final int OPT_Y = 31;
     Interp interp;
 
+    /**
+     *
+     * @param interp
+     * @param argv
+     * @throws TclException
+     */
     public void cmdProc(Interp interp, TclObject[] argv)
             throws TclException {
         int i;
@@ -602,6 +612,13 @@ public class WinfoCmd implements Command {
         }
     }
 
+    /**
+     *
+     * @param interp
+     * @param object
+     * @param widgetName
+     * @return
+     */
     public Rectangle getGeometry(Interp interp, Object object, String widgetName) {
         Point wLocation = null;
         Point pLocation = null;

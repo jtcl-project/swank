@@ -4,6 +4,10 @@ package com.onemoonscientific.swank.canvas;
 import tcl.lang.*;
 
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class NodeParameter extends CanvasParameter {
 
     private static final String name = "node";
@@ -14,6 +18,10 @@ public class NodeParameter extends CanvasParameter {
         return name;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getDefault() {
         return defValue;
     }

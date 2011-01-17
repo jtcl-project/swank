@@ -29,6 +29,10 @@ import java.awt.*;
 
 
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class FontCmd implements Command {
 
     private static final String[] validCmds = {
@@ -43,6 +47,12 @@ public class FontCmd implements Command {
     private static final int OPT_METRICS = 6;
     private static final int OPT_NAMES = 7;
 
+    /**
+     *
+     * @param interp
+     * @param argv
+     * @throws TclException
+     */
     public void cmdProc(Interp interp, TclObject[] argv)
             throws TclException {
         if (argv.length < 2) {

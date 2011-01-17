@@ -42,10 +42,17 @@ import tcl.lang.*;
 import java.util.*;
 
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class XYArrayData extends XYData   {
     static int id=0;
     String name = "";
     DatasetGroup dGroup = new DatasetGroup();
+    /**
+     *
+     */
     public XYArrayData() {
          name  = "xyData"+id;
          datasetMap.put(name,this);
@@ -131,6 +138,7 @@ public class XYArrayData extends XYData   {
      *
      * @return the number of items within the series.
      */
+    @Override
     public int getItemCount(int series) {
         int count = 0;
         if ((series >= 0) && (series < ySeries.size())) {
@@ -141,6 +149,11 @@ public class XYArrayData extends XYData   {
         }
         return count;
     }
+    /**
+     *
+     * @return
+     */
+    @Override
     public int getItemCount() {
         int count = 0;
         if (ySeries.size() > 0) {
@@ -158,6 +171,7 @@ public class XYArrayData extends XYData   {
       *
       * @return The key for the series.
       */
+    @Override
     public Comparable getSeriesKey(int series) {
         return getSeriesName(series);
     }
@@ -219,6 +233,12 @@ public class XYArrayData extends XYData   {
         }
     }
 
+    /**
+     *
+     * @param series
+     * @param item
+     * @return
+     */
     public Number getY(int series, int item) {
         ArrayList<Double> yData = (ArrayList<Double>) ySeries.get(series);
         if (yData != null)  {

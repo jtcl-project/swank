@@ -67,6 +67,13 @@ public class SwkCylinder extends SwkShape implements RadiusInterface {
         super(canvas);
     }
 
+    /**
+     *
+     * @param canvas
+     * @param coords
+     * @throws SwkException
+     */
+    @Override
    public void coords(SwkImageCanvas canvas, double[] coords)
             throws SwkException {
         a.x = coords[0];
@@ -86,6 +93,10 @@ public class SwkCylinder extends SwkShape implements RadiusInterface {
     public double getRadius() {
         return radius;
     }
+    /**
+     *
+     * @param radius
+     */
     public void setRadius(double radius) {
         this.radius = (float) radius;
     }

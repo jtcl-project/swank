@@ -30,6 +30,10 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class SwkMouseMotionListener implements MouseMotionListener, SwkListener {
 
     Interp interp;
@@ -44,18 +48,34 @@ public class SwkMouseMotionListener implements MouseMotionListener, SwkListener 
         bindings = new ArrayList<SwkBinding>();
     }
 
+    /**
+     *
+     * @param name
+     */
     public void setCommand(String name) {
         command = name.intern();
     }
 
+    /**
+     *
+     * @return
+     */
     public ArrayList<SwkBinding> getBindings() {
         return bindings;
     }
 
+    /**
+     *
+     * @param newBinding
+     */
     public void setBinding(SwkBinding newBinding) {
         SwkBind.setBinding(bindings, newBinding);
     }
 
+    /**
+     *
+     * @return
+     */
     public String getCommand() {
         return (command);
     }
@@ -84,6 +104,12 @@ public class SwkMouseMotionListener implements MouseMotionListener, SwkListener 
         }
     }
 
+    /**
+     *
+     * @param eventObject
+     * @param obj
+     * @param subtype
+     */
     public void processEvent(EventObject eventObject, Object obj, int subtype) {
         if (!(eventObject instanceof MouseEvent)) {
             return;
@@ -160,6 +186,12 @@ public class SwkMouseMotionListener implements MouseMotionListener, SwkListener 
         }
     }
 
+    /**
+     *
+     * @param bmod
+     * @param emod
+     * @return
+     */
     public static boolean checkMods(int bmod, int emod) {
         //   System.out.println("buttonstate "+bmod+" "+emod);
         int buttonsOn = InputEvent.BUTTON1_DOWN_MASK
@@ -170,6 +202,13 @@ public class SwkMouseMotionListener implements MouseMotionListener, SwkListener 
         return (bmod == (emod & bmod));
     }
 
+    /**
+     *
+     * @param e
+     * @param bmod
+     * @param emod
+     * @return
+     */
     public static boolean checkButtonState(InputEvent e, int bmod, int emod) {
         //  System.out.println("buttonstate "+bmod+" "+emod);
         boolean result = true;
@@ -185,6 +224,12 @@ public class SwkMouseMotionListener implements MouseMotionListener, SwkListener 
         return (bmod == emod);
     }
 
+    /**
+     *
+     * @param detail
+     * @param button
+     * @return
+     */
     public static boolean checkButtons(int detail, int button) {
         boolean result = true;
 

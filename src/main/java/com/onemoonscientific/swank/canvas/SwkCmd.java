@@ -31,6 +31,10 @@ import java.awt.*;
 
 import javax.swing.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class SwkCmd implements Command {
 
     String errorString = null;

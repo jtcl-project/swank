@@ -49,9 +49,16 @@ import java.awt.geom.*;
 import java.util.*;
 import java.text.DecimalFormat;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class XYStepShapeComplete extends XYLineAndShapeComplete {
     String plotType = "xystepplot";
 
+    /**
+     *
+     */
     public XYStepShapeComplete() {
         setRenderer();
         setShape(null);

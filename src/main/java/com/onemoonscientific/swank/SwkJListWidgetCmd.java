@@ -763,6 +763,7 @@ class SwkJListWidgetCmd implements Command {
             return selected;
         }
 
+        @Override
         public void run() {
             selected = swkjlist.getSelectedIndices();
         }
@@ -1032,8 +1033,8 @@ class SwkJListWidgetCmd implements Command {
             return index;
         }
 
+        @Override
         public void run() {
-            int index = 0;
 
             Result result = new Result();
 
@@ -1072,6 +1073,7 @@ class SwkJListWidgetCmd implements Command {
             return index;
         }
 
+        @Override
         public void run() {
             Point p = new Point(2, 0);
             p.y = y;
@@ -1128,6 +1130,7 @@ class SwkJListWidgetCmd implements Command {
             return size;
         }
 
+        @Override
         public void run() {
             int index = 0;
 
@@ -1306,6 +1309,7 @@ class SwkJListWidgetCmd implements Command {
             swkjlist.selectionModel.addSelectionInterval(index, index2);
         }
 
+        @Override
         public void run() {
             if (mode == SET) {
                 set();
@@ -1337,6 +1341,7 @@ class SwkJListWidgetCmd implements Command {
             return includes;
         }
 
+        @Override
         public void run() {
             int index = 0;
 

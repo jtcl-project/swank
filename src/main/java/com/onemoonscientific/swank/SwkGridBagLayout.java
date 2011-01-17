@@ -25,6 +25,10 @@ import java.util.Hashtable;
 import java.util.Iterator;
 
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class SwkGridBagLayout extends GridBagLayout {
 
     boolean propagate = true;
@@ -248,6 +252,11 @@ public class SwkGridBagLayout extends GridBagLayout {
         super.addLayoutComponent(comp, constraints);
     }
 
+    /**
+     *
+     * @param comp
+     * @param constraints
+     */
     public void addLayoutComponent(Component comp, String constraints) {
         super.addLayoutComponent(comp, constraints);
     }

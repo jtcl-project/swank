@@ -82,14 +82,26 @@ public class BoxPlotShapeComplete extends SwkShape implements NumberRange, PlotI
 		setFill(Color.gray);
 		setShape(null);
 	}
-        public String getType() {
+    /**
+     *
+     * @return
+     */
+    public String getType() {
             return plotType;
         }
-	public CategoryPlot getPlot() {
+        /**
+         *
+         * @return
+         */
+        public CategoryPlot getPlot() {
 		return plot;
 	}
 
-	public void setRenderer(String renderName) {
+    /**
+     *
+     * @param renderName
+     */
+    public void setRenderer(String renderName) {
 		renderer = new BoxAndWhiskerRenderer();
 		plot.setRenderer(renderer);
 	}
@@ -120,11 +132,19 @@ public class BoxPlotShapeComplete extends SwkShape implements NumberRange, PlotI
 		radius = (float) newRadius;
 	}
 
-	public double getRadius() {
+    /**
+     *
+     * @return
+     */
+    public double getRadius() {
 		return radius;
 	}
 
-	public String getLegendLoc() {
+    /**
+     *
+     * @return
+     */
+    public String getLegendLoc() {
 		return legendLoc;
 	}
 
@@ -175,6 +195,11 @@ public class BoxPlotShapeComplete extends SwkShape implements NumberRange, PlotI
 		return parameters;
 	}
 
+    /**
+     *
+     * @return
+     */
+    @Override
 	public TreeMap getParameterMap() {
 		return parameterMap;
 	}
@@ -231,7 +256,13 @@ public class BoxPlotShapeComplete extends SwkShape implements NumberRange, PlotI
 			setDataset(datasetNames[0]);
 		}
 	}
-        public TclObject getColors(Interp interp) throws TclException {
+    /**
+     *
+     * @param interp
+     * @return
+     * @throws TclException
+     */
+    public TclObject getColors(Interp interp) throws TclException {
                 BoxAndWhiskerData boxData = (BoxAndWhiskerData) plot.getDataset();
                 int nRows = boxData.getRowCount();
                 TclObject list = TclList.newInstance();

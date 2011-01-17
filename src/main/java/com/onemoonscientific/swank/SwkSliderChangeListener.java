@@ -29,6 +29,10 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class SwkSliderChangeListener implements ChangeListener, VarTrace {
 
     Interp interp;
@@ -46,14 +50,30 @@ public class SwkSliderChangeListener implements ChangeListener, VarTrace {
         this.component = component;
     }
 
+    /**
+     *
+     * @param name
+     */
     public void setCommand(String name) {
         buttonSettings = buttonSettings.getWithCommand(name);
     }
 
+    /**
+     *
+     * @return
+     */
     public String getCommand() {
         return buttonSettings.getCommand();
     }
 
+    /**
+     *
+     * @param interp
+     * @param string1
+     * @param string2
+     * @param flags
+     * @throws TclException
+     */
     public void traceProc(Interp interp, String string1, String string2,
             int flags) throws TclException {
         if (EventQueue.isDispatchThread()) {
@@ -73,6 +93,12 @@ public class SwkSliderChangeListener implements ChangeListener, VarTrace {
         }
     }
 
+    /**
+     *
+     * @param interp
+     * @param override
+     * @throws TclException
+     */
     public void setFromVar(Interp interp, boolean override)
             throws TclException {
         TclObject tobj = null;
@@ -117,6 +143,13 @@ public class SwkSliderChangeListener implements ChangeListener, VarTrace {
         }
     }
 
+    /**
+     * 
+     * @param interp
+     * @param name
+     * @return
+     * @throws TclException
+     */
     public Double setVarName(Interp interp, String name)
             throws TclException {
         actionLock = true;
@@ -162,10 +195,17 @@ public class SwkSliderChangeListener implements ChangeListener, VarTrace {
         return dValue;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getVarName() {
         return buttonSettings.getVarName();
     }
 
+    /**
+     *
+     */
     public void setVarValueET() {
         if (!EventQueue.isDispatchThread()) {
             System.out.println(
@@ -223,10 +263,18 @@ public class SwkSliderChangeListener implements ChangeListener, VarTrace {
         }
     }
 
+    /**
+     *
+     */
     public void updateSettingsValue() {
         buttonSettings = buttonSettings.getWithValue(((SwkJSlider) component).getDValue());
     }
 
+    /**
+     *
+     * @param buttonSettings
+     * @throws TclException
+     */
     public void tclActionVar(CommandVarListenerSettings buttonSettings) throws TclException {
         final TclObject tObj;
         final double value;

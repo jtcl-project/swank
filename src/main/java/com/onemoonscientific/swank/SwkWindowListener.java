@@ -29,6 +29,10 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class SwkWindowListener extends WindowAdapter implements SwkListener {
 
     Interp interp;
@@ -42,14 +46,26 @@ public class SwkWindowListener extends WindowAdapter implements SwkListener {
         bindings = new ArrayList<SwkBinding>();
     }
 
+    /**
+     *
+     * @return
+     */
     public ArrayList<SwkBinding> getBindings() {
         return bindings;
     }
 
+    /**
+     *
+     * @param name
+     */
     public void setCommand(String name) {
         command = name;
     }
 
+    /**
+     *
+     * @param newBinding
+     */
     public void setBinding(SwkBinding newBinding) {
         SwkBinding binding = null;
 
@@ -68,18 +84,29 @@ public class SwkWindowListener extends WindowAdapter implements SwkListener {
         bindings.add(newBinding);
     }
 
+    /**
+     *
+     * @return
+     */
     public String getCommand() {
         return (command);
     }
 
+    @Override
     public void windowActivated(WindowEvent e) {
         processWindow(e, SwkBinding.ACTIVATED);
     }
 
+    @Override
     public void windowDeactivated(WindowEvent e) {
         processWindow(e, SwkBinding.DEACTIVATED);
     }
 
+    /**
+     *
+     * @param e
+     * @param subtype
+     */
     public void processWindow(WindowEvent e, int subtype) {
         BindEvent bEvent = new BindEvent(interp, (SwkListener) this,
                 (EventObject) e, subtype);

@@ -2,10 +2,21 @@ package com.onemoonscientific.swank;
 
 import tcl.lang.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class SetBooleanVarEvent extends SetVarEvent {
 
     boolean value = false;
 
+    /**
+     * 
+     * @param interp
+     * @param var1
+     * @param var2
+     * @param value
+     */
     public SetBooleanVarEvent(Interp interp, String var1, String var2,
             boolean value) {
         this.interp = interp;

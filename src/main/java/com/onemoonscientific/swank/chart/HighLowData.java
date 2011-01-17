@@ -56,6 +56,10 @@ public class HighLowData implements OHLCDataset {
          id++;
     }
 
+    /**
+     *
+     * @param name
+     */
     public HighLowData(String name) {
         this.name = name;
         datasetMap.put(name,this);
@@ -85,6 +89,10 @@ public class HighLowData implements OHLCDataset {
         this.lowValues = lowValues;
     }
 
+    /**
+     *
+     * @param highValues
+     */
     public void setHighValues(ArrayList<Double> highValues) {
         this.highValues = highValues;
     }
@@ -217,6 +225,12 @@ public class HighLowData implements OHLCDataset {
            return x;
     }
 
+    /**
+     *
+     * @param series
+     * @param item
+     * @return
+     */
     public Number getX(int series, int item) {
             double x = 0.0;
             if (xValues == null) {
@@ -279,9 +293,21 @@ public class HighLowData implements OHLCDataset {
             return 0;
         }
     }
+    /**
+     *
+     * @param series
+     * @param item
+     * @return
+     */
     public double getVolumeValue(int series, int item) {
           return 0.0;
     }
+    /**
+     *
+     * @param series
+     * @param item
+     * @return
+     */
     public Number getVolume(int series, int item) {
             return new Double(0.0);
     }

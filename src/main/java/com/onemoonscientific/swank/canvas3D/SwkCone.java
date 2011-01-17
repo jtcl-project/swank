@@ -39,7 +39,6 @@ import tcl.lang.*;
 import java.awt.*;
 import java.awt.geom.*;
 
-import java.lang.*;
 
 import java.util.*;
 
@@ -67,7 +66,13 @@ public class SwkCone extends SwkShape implements RadiusInterface {
         super(canvas);
     }
 
-   public void coords(SwkImageCanvas canvas, double[] coords)
+    /**
+     *
+     * @param canvas
+     * @param coords
+     * @throws SwkException
+     */
+    public void coords(SwkImageCanvas canvas, double[] coords)
             throws SwkException {
         a.x = coords[0];
         a.y = coords[1];

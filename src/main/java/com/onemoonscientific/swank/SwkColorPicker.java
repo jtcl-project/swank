@@ -23,6 +23,12 @@ public class SwkColorPicker implements Command {
 
     Interp interp = null;
 
+    /**
+     *
+     * @param interp
+     * @param argv
+     * @throws TclException
+     */
     public void cmdProc(final Interp interp, final TclObject[] argv)
             throws TclException {
         int i;
@@ -115,6 +121,7 @@ public class SwkColorPicker implements Command {
             }
         }
 
+        @Override
         public void run() {
 
             Class cl = null;

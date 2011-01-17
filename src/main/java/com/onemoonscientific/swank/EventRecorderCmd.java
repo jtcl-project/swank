@@ -26,6 +26,10 @@ package com.onemoonscientific.swank;
 
 import tcl.lang.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class EventRecorderCmd implements Command {
 
     static private EventRecorder eventRecorder = new EventRecorder();
@@ -39,6 +43,12 @@ public class EventRecorderCmd implements Command {
         "count", "get", "list", "start", "stop"
     };
 
+    /**
+     *
+     * @param interp
+     * @param argv
+     * @throws TclException
+     */
     public void cmdProc(Interp interp, TclObject[] argv)
             throws TclException {
         int i;

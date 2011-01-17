@@ -44,6 +44,10 @@ import tcl.lang.*;
 import java.util.*;
 
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class XYTableData extends XYData  implements TableXYDataset {
     int xColumn = -1;
     int[] yColumns = new int[0];;
@@ -77,6 +81,7 @@ public class XYTableData extends XYData  implements TableXYDataset {
             this.model = model;
             execOnThread();
         }
+        @Override
         public void run() {
              setTableModelOnEventThread(model);
         }

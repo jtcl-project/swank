@@ -32,6 +32,10 @@ import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class SwkActionListener implements ActionListener, SwkListener {
 
     Interp interp;
@@ -43,10 +47,18 @@ public class SwkActionListener implements ActionListener, SwkListener {
         this.component = component;
     }
 
+    /**
+     *
+     * @param name
+     */
     public void setMenu(String name) {
         menu = name;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getMenu() {
         return (menu);
     }
@@ -62,6 +74,12 @@ public class SwkActionListener implements ActionListener, SwkListener {
         bEvent.invokeLater();
     }
 
+    /**
+     *
+     * @param eventObject
+     * @param obj
+     * @param subtype
+     */
     public void processEvent(EventObject eventObject, Object obj, int subtype) {
         if (EventQueue.isDispatchThread()) {
             System.out.println(

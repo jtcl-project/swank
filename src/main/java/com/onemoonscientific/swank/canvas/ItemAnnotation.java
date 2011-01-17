@@ -39,9 +39,13 @@ import java.awt.*;
 import java.awt.geom.*;
 
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class ItemAnnotation extends ItemLine implements TextInterface {
 
-    static CanvasParameter[] parameters = {
+    static CanvasParameter[] parametersAnno = {
         new FillParameter(), new SmoothParameter(), new DashParameter(),
         new DashPhaseParameter(), new WidthParameter(), new RotateParameter(),
         new ShearParameter(), new TagsParameter(), new StateParameter(), new NodeParameter(),
@@ -50,7 +54,7 @@ public class ItemAnnotation extends ItemLine implements TextInterface {
         new TextParameter(), new FontParameter(), new TextcolorParameter(),};
 
     static {
-        initializeParameters(parameters, parameterMap);
+        initializeParameters(parametersAnno, parameterMap);
     }
     TextParameters textPar = TextParameters.getDefault();
 
@@ -62,40 +66,76 @@ public class ItemAnnotation extends ItemLine implements TextInterface {
         endPointStyle2 = EndPointStyle.ARROW;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getText() {
         return textPar.getText();
     }
 
+    /**
+     *
+     * @param newValue
+     */
     public void setText(String newValue) {
         textPar = TextParameters.setText(textPar, newValue);
     }
 
+    /**
+     *
+     * @return
+     */
     public float[] getAnchor() {
         return textPar.getAnchor();
     }
 
+    /**
+     *
+     * @param newValue
+     */
     public void setAnchor(float[] newValue) {
         textPar = TextParameters.setAnchor(textPar, newValue);
     }
 
+    /**
+     *
+     * @return
+     */
     public Font getFont() {
         return textPar.getFont();
     }
 
+    /**
+     *
+     * @param newValue
+     */
     public void setFont(Font newValue) {
         textPar = TextParameters.setFont(textPar, newValue);
     }
 
+    /**
+     *
+     * @return
+     */
     public Color getTextColor() {
         return textPar.getTextColor();
     }
 
+    /**
+     *
+     * @param newValue
+     */
     public void setTextColor(Color newValue) {
         textPar = TextParameters.setTextColor(textPar, newValue);
     }
 
+    /**
+     *
+     * @param g2
+     */
     @Override
-    public void paintShape(Graphics2D g2) {
+    protected void paintShape(Graphics2D g2) {
         if (stroke != null) {
             g2.setStroke(stroke);
         } else {
@@ -150,6 +190,12 @@ public class ItemAnnotation extends ItemLine implements TextInterface {
 
     }
 
+    /**
+     *
+     * @param canvas
+     * @param coords
+     * @throws SwkException
+     */
     @Override
     public void coords(SwkImageCanvas canvas, double[] coords)
             throws SwkException {
@@ -169,7 +215,7 @@ public class ItemAnnotation extends ItemLine implements TextInterface {
     }
 
     @Override
-    public void drawHandles(Graphics2D g2) {
+    protected void drawHandles(Graphics2D g2) {
         if (shape != null) {
             double[] xy = {storeCoords[0], storeCoords[1], storeCoords[2], storeCoords[3]};
             AffineTransform shapeTransform = getTransform();
@@ -181,8 +227,14 @@ public class ItemAnnotation extends ItemLine implements TextInterface {
         }
     }
 
+    /**
+     *
+     * @param testX
+     * @param testY
+     * @return
+     */
     @Override
-    public int hitHandles(double testX, double testY) {
+    protected int hitHandles(double testX, double testY) {
         int hitIndex = -1;
         if (shape != null) {
             double[] xy = {storeCoords[0], storeCoords[1], storeCoords[2], storeCoords[3]};
@@ -199,8 +251,13 @@ public class ItemAnnotation extends ItemLine implements TextInterface {
         return hitIndex;
     }
 
+    /**
+     *
+     * @param handle
+     * @return
+     */
     @Override
-    public Cursor getHandleCursor(int handle) {
+    protected Cursor getHandleCursor(int handle) {
         final Cursor cursor;
         switch (handle) {
             case 0:

@@ -29,6 +29,10 @@ import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
 
+/**
+ *
+ * @author brucejohnson
+ */
 public class SwkEventType {
 
     static Hashtable eventTable = null;
@@ -504,6 +508,16 @@ public class SwkEventType {
         }
     }
 
+    /**
+     *
+     * @param type
+     * @param subtype
+     * @param count
+     * @param mod
+     * @param detail
+     * @param keyStroke
+     * @return
+     */
     static public String getStringRep(int type, int subtype, int count, int mod, int detail, KeyStroke keyStroke) {
         String detailString = "";
         SwkEventType eventType = null;
