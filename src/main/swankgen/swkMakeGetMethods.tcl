@@ -61,6 +61,8 @@ set excludes "-locale -page -styleddocument -color -class -actioncommand -armed 
 -focustraversalkeysenabled
 "
 set excludeTypes "java.util.Locale java.lang.String {} int"
+set skipTypes(-page) java.lang.String
+
 set fInc [open [file join swankgen includes.txt]]
 set includes [read $fInc]
 close $fInc
@@ -72,7 +74,6 @@ foreach method $getMethods  {
      } else {
                  set widgetVarLocal this
      }
-
 
 				set option [lindex $method 0]
 				set argType [lindex $method 1]
@@ -88,10 +89,16 @@ foreach method $getMethods  {
 				    continue
 				}
 				
+                               if {[info exists skipTypes($dashOption)] && ($argType eq $skipTypes($dashOption))} {
+                                     continue
+                                }
+
 				
 				if {[lsearch $dashOptions $dashOption] >=  0} {
 					continue
 				}
+
+puts "$widgetType $method"
 				lappend dashOptions $dashOption
 				set getMethod get[string range $option 3 end]
 				lappend doneMethods $getMethod
