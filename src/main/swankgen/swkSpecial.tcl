@@ -448,10 +448,14 @@ proc swkMakeSpecial {widget widgetVar} {
         public int[][] getScrollRegion() {
             return(swkImageCanvas.scrollRegion);
         }
+        public void setClassName(String className) {
+            this.className = className.intern();
+        }
         }
         set specialGets [concat  $specialGets {
             {setScrollRegion tkRectangleCorners ScrollRegion}
         }]
+        set specialGets [concat  $specialGets {{setClassName java.lang.String ClassName -class}}]
     }
     
     # -state
@@ -839,7 +843,7 @@ proc swkMakeSpecial {widget widgetVar} {
                }
             }
         }
-            append specialMethods {
+        append specialMethods {
             public int getBorderWidth() {
                 return(borderWidth);
             }
@@ -2136,8 +2140,15 @@ Dimension dSize = new Dimension(scrollRegion[1][0]-scrollRegion[0][0],scrollRegi
         int swkwidth = 0;
         int swkheight = 0;
         "
+        set specialGets [concat  $specialGets {{setClassName java.lang.String ClassName -class}}]
         set specialGets [concat  $specialGets { {setSwkWidth tkSize Width -width} } ]
         set specialGets [concat  $specialGets { {setSwkHeight tkSize Height -height} } ]
+        append specialMethods {
+            public void setClassName(String className) {
+                this.className = className.intern();
+            }
+        }
+
         if {[lsearch "JPanel LabelFrame" $widget] >= 0} {
             append specialMethods {
                public Dimension getMinimumSize() {
