@@ -36,3 +36,5 @@
  -undecorated -unitincrement -usecommand -vscrollbar -verticaltextposition -visible
  -visibleamount -visiblerowcount
 -bd -bg -scrollregion -message -options -hidemargin -fg -nativekeys
+-verticalscrollbarpolicy -horizontalscrollbarpolicy -class -border -selected -editable -page
+-valueisadjusting
