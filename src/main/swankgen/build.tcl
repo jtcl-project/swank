@@ -71,6 +71,7 @@ proc checkStatus {swkHome widgets} {
        set files [glob [file join swankgen *.tcl]]
        set files [concat $files [glob [file join swankgen *.java]]]
        set files [concat $files [glob [file join swankgen widgets *.tcl]]]
+       set files [concat $files [file join swankgen includes.txt]]
        set scriptTime 0
        foreach file $files {
             set mtime [file mtime $file]
