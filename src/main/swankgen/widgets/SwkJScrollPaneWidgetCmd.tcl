@@ -83,7 +83,7 @@ append specialMethods {
 	if (getViewport().getView() instanceof Scrollable) {
 	    Scrollable scrollable = (Scrollable) getViewport().getView();
 	    if (scrollable != null) {
-		size = scrollable.getPreferredScrollableViewportSize();
+		size = new Dimension(scrollable.getPreferredScrollableViewportSize());
                 size.height += getHorizontalScrollBar().getSize().height;
                 size.width += getVerticalScrollBar().getSize().width;
 	    } else {
