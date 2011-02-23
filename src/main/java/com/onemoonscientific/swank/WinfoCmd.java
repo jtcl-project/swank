@@ -311,7 +311,7 @@ public class WinfoCmd implements Command {
                     throw new TclNumArgsException(interp, 2, argv, "window");
                 }
                 Component component = getWindow(interp, argv[2].toString());
-                interp.setResult(component.getToolkit().getScreenSize().width);
+                interp.setResult(component.getToolkit().getScreenSize().height);
 
                 break;
 
