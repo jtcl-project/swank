@@ -140,7 +140,6 @@ public class SwkKeyListener implements KeyListener, SwkListener {
         KeyEvent e = (KeyEvent) eventObject;
 
         //System.out.println("key event "+e.toString()); 
-        SwkBinding binding;
         int buttonMask;
         boolean debug = false;
         int mods = e.getModifiersEx();
@@ -151,7 +150,6 @@ public class SwkKeyListener implements KeyListener, SwkListener {
         }
 
         int keyCode = e.getKeyCode();
-        int i;
 
         if (debug) {
             if (keyChar == KeyEvent.CHAR_UNDEFINED) {
@@ -203,10 +201,8 @@ public class SwkKeyListener implements KeyListener, SwkListener {
                 continue;
             }
 
-            //System.out.println("bindings "+bindings.size()); 
-            for (i = 0; i < bindings.size(); i++) {
-                binding = (SwkBinding) bindings.get(i);
-
+            //System.out.println("bindings "+listenerBindings.size()); 
+            for (SwkBinding binding:listenerBindings) {
                 //System.out.println("binding is "+binding.toString()+" "+binding.subtype+" "+subtype);    
                 if (binding.subtype != subtype) {
                     continue;
