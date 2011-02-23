@@ -103,7 +103,13 @@ public class WmCmd implements Command {
 
         switch (opt) {
             case OPT_ALWAYSONTOP:
-                setAlwaysOnTop(interp, object, argv);
+                if (argv.length == 3) {
+                    interp.setResult(getAlwaysOnTop(interp, object,argv));
+                } else if (argv.length == 4) {
+                    setAlwaysOnTop(interp, object, argv);
+                } else {
+                    throw new TclNumArgsException(interp, 2, argv, "window ?0|1?");
+                }
                 break;
             case OPT_ASPECT:
                 break;
@@ -502,6 +508,34 @@ public class WmCmd implements Command {
                 jframe.setCloseCommand(command);
             }
         }
+    }
+   private static class GetAlwaysOnTop extends GetValueOnEventThread {
+
+        Object object = null;
+        boolean value = false;
+
+        boolean exec(final Object object) {
+            this.object = object;
+            execOnThread();
+            return value;
+        }
+
+        @Override
+        public void run() {
+            if (object instanceof JFrame) {
+                JFrame jframe = (JFrame) object;
+                value = jframe.isAlwaysOnTop();  
+            }
+        }
+    }
+
+    boolean getAlwaysOnTop(final Interp interp, final Object object,
+            final TclObject[] argv) throws TclException {
+        if (!(object instanceof JFrame) && !(object instanceof JWindow)) {
+            throw new TclException(interp,
+                    "invalid object type \"" + argv[2].toString() + "\"");
+        }
+        return (new GetAlwaysOnTop()).exec(object);
     }
 
     private static class AlwaysOnTop extends UpdateOnEventThread {
