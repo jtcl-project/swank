@@ -485,7 +485,7 @@ append specialInits {
            if (!componentsValid) {
                    updateComponents();
            }
-           Dimension dSize = jslider.getMinimumSize();
+           Dimension dSize = new Dimension(jslider.getMinimumSize());
            if (jslider.getOrientation() == JSlider.VERTICAL) {
                if (showValue) {
                     Dimension dSizeP = jPanel.getMinimumSize();
