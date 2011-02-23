@@ -37,12 +37,14 @@ package com.onemoonscientific.swank.canvas;
 import com.onemoonscientific.swank.*;
 import java.awt.*;
 import java.awt.geom.*;
+import java.util.TreeMap;
 
 /**
  *
  * @author brucejohnson
  */
 public class ItemPolygon extends SwkShape {
+    static TreeMap<String,CanvasParameter> parameterMap = new TreeMap<String,CanvasParameter>();
 
     static CanvasParameter[] parameters = {
         new DashParameter(), new DashPhaseParameter(), new WidthParameter(),
@@ -60,6 +62,14 @@ public class ItemPolygon extends SwkShape {
         super(shape, canvas);
         gPath = (GeneralPath) shape;
         fill = null;
+    }
+   
+    /**
+     *
+     * @return
+     */
+    public TreeMap<String,CanvasParameter> getParameterMap() {
+        return parameterMap;
     }
 
     /**

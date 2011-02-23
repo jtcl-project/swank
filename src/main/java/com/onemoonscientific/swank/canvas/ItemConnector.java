@@ -39,12 +39,14 @@ import com.onemoonscientific.swank.*;
 
 import java.awt.*;
 import java.awt.geom.*;
+import java.util.TreeMap;
 
 /**
  *
  * @author brucejohnson
  */
 public class ItemConnector extends ItemLine implements TextInterface {
+    static TreeMap<String,CanvasParameter> parameterMap = new TreeMap<String,CanvasParameter>();
 
     TextParameters textPar = TextParameters.getDefault();
     static CanvasParameter[] parametersLine = {
@@ -65,6 +67,14 @@ public class ItemConnector extends ItemLine implements TextInterface {
     ItemConnector(Shape shape, SwkImageCanvas canvas) {
         super(shape, canvas);
         storeCoords = new double[4];
+    }
+   
+    /**
+     *
+     * @return
+     */
+    public TreeMap<String,CanvasParameter> getParameterMap() {
+        return parameterMap;
     }
 
     /**

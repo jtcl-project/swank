@@ -222,6 +222,7 @@ public class SwkCanvas extends javax.swing.JPanel implements SwkWidget, Printabl
         addMouseListener(new MouseListener() {
 
             public void mousePressed(MouseEvent mEvent) {
+System.out.println("press");
                 swkImageCanvas.transformMouse(mEvent);
                 currentTags = getTagFromEvent(mEvent);
 
@@ -271,6 +272,8 @@ public class SwkCanvas extends javax.swing.JPanel implements SwkWidget, Printabl
             }
 
             public void mouseClicked(MouseEvent mEvent) {
+System.out.println("click");
+                String pickResult = swkImageCanvas.pickCanvas(mEvent);
                 swkImageCanvas.transformMouse(mEvent);
                 currentTags = getTagFromEvent(mEvent);
 
@@ -285,6 +288,7 @@ public class SwkCanvas extends javax.swing.JPanel implements SwkWidget, Printabl
             }
 
             public void mouseEntered(MouseEvent mEvent) {
+System.out.println("enter");
                 swkImageCanvas.transformMouse(mEvent);
             }
 

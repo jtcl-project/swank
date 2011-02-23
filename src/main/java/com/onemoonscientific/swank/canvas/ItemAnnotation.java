@@ -37,6 +37,7 @@ package com.onemoonscientific.swank.canvas;
 import com.onemoonscientific.swank.*;
 import java.awt.*;
 import java.awt.geom.*;
+import java.util.TreeMap;
 
 
 /**
@@ -44,6 +45,7 @@ import java.awt.geom.*;
  * @author brucejohnson
  */
 public class ItemAnnotation extends ItemLine implements TextInterface {
+    static TreeMap<String,CanvasParameter> parameterMap = new TreeMap<String,CanvasParameter>();
 
     static CanvasParameter[] parametersAnno = {
         new FillParameter(), new SmoothParameter(), new DashParameter(),
@@ -64,6 +66,13 @@ public class ItemAnnotation extends ItemLine implements TextInterface {
         fill = null;
         endPointStyle1 = EndPointStyle.SQUARE;
         endPointStyle2 = EndPointStyle.ARROW;
+    }
+   /**
+     *
+     * @return
+     */
+    public TreeMap<String,CanvasParameter> getParameterMap() {
+        return parameterMap;
     }
 
     /**

@@ -52,10 +52,10 @@ import java.text.DecimalFormat;
 
 
 public class XYBarShapeComplete extends XYPlotShape {
+    static TreeMap<String,CanvasParameter> parameterMap = new TreeMap<String,CanvasParameter>();
     static CanvasParameter[] parameters = { new LegendStateParameter(), new LegendLocParameter(),
         new DatasetParameter(), new FillParameter(),
         new TransformerParameter() };
-    static Map parameterMap = new TreeMap();
 
     static {
         initializeParameters(parameters, parameterMap);
@@ -69,6 +69,13 @@ public class XYBarShapeComplete extends XYPlotShape {
         plot.setRangeAxis(new NumberAxis());
         plot.setDomainAxis(new NumberAxis());
         setShape(rect2D);
+    }
+   /**
+     *
+     * @return
+     */
+    public TreeMap<String,CanvasParameter> getParameterMap() {
+        return parameterMap;
     }
         public String getType() {
             return plotType;

@@ -37,6 +37,7 @@ package com.onemoonscientific.swank.canvas;
 import com.onemoonscientific.swank.*;
 import java.awt.*;
 import java.awt.geom.*;
+import java.util.TreeMap;
 
 
 /**
@@ -44,6 +45,7 @@ import java.awt.geom.*;
  * @author brucejohnson
  */
 public class ItemNode extends SwkShape {
+    static TreeMap<String,CanvasParameter> parameterMap = new TreeMap<String,CanvasParameter>();
 
     static CanvasParameter[] parameters = {
         new WidthParameter(), new TextureParameter(), new GradientParameter(),
@@ -59,6 +61,14 @@ public class ItemNode extends SwkShape {
     ItemNode(Shape shape, SwkImageCanvas canvas) {
         super(shape, canvas);
         rect2D = (Rectangle2D) shape;
+    }
+   
+    /**
+     *
+     * @return
+     */
+    public TreeMap<String,CanvasParameter> getParameterMap() {
+        return parameterMap;
     }
 
     /**

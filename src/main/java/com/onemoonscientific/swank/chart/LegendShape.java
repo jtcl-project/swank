@@ -53,11 +53,11 @@ import org.jfree.ui.VerticalAlignment;
  * @author brucejohnson
  */
 public class LegendShape extends SwkShape {
+    static TreeMap<String,CanvasParameter> parameterMap = new TreeMap<String,CanvasParameter>();
 
     static CanvasParameter[] parameters = {
         new TagsParameter(), new EdgeParameter(), new PlotParameter()
     };
-    static Map parameterMap = new TreeMap();
 
     static {
         initializeParameters(parameters, parameterMap);
@@ -73,6 +73,13 @@ public class LegendShape extends SwkShape {
     public LegendShape() {
         setShape(null);
         initLegend();
+    }
+   /**
+     *
+     * @return
+     */
+    public TreeMap<String,CanvasParameter> getParameterMap() {
+        return parameterMap;
     }
 
     void initLegend() {
@@ -130,10 +137,6 @@ public class LegendShape extends SwkShape {
         plotArea.setFrameFromDiagonal(storeCoords[0], storeCoords[1],
                 storeCoords[2], storeCoords[3]);
 
-    }
-
-    public CanvasParameter[] getParameters() {
-        return parameters;
     }
 
     public String getType() {

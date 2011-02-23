@@ -22,8 +22,13 @@ public class NvBranchGroup extends BranchGroup {
      *
      */
     public int iChild;
-
+    final SwkShape swkShape;
     NvBranchGroup() {
+         this.swkShape = null;
+         setCapability(ALLOW_CHILDREN_READ);
+         setCapability(ALLOW_CHILDREN_WRITE);
+    }
+    NvBranchGroup(SwkShape swkShape) {
         /*
             id = nextId;
             System.out.println("add "+id);
@@ -31,10 +36,13 @@ public class NvBranchGroup extends BranchGroup {
             groupTable.put(Integer.toString(id),this);
             tags.addElement(Integer.toString(id));
          */
+         this.swkShape = swkShape;
          setCapability(ALLOW_CHILDREN_READ);
          setCapability(ALLOW_CHILDREN_WRITE);
     }
-
+    public SwkShape getShape() {
+        return swkShape;
+    }
     /*
     public void remove() {
             System.out.println("remove "+id);

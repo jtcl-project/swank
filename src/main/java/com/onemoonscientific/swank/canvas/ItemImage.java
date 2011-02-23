@@ -38,12 +38,14 @@ import com.onemoonscientific.swank.*;
 import java.awt.*;
 import java.awt.geom.*;
 import java.awt.image.*;
+import java.util.TreeMap;
 
 /**
  *
  * @author brucejohnson
  */
 public class ItemImage extends SwkShape {
+    static TreeMap<String,CanvasParameter> parameterMap = new TreeMap<String,CanvasParameter>();
 
     static CanvasParameter[] parameters = {
         new ImageParameter(), new TagsParameter(), new StateParameter(),
@@ -57,6 +59,14 @@ public class ItemImage extends SwkShape {
     ItemImage(Shape shape, SwkImageCanvas canvas) {
         super(shape, canvas);
         storeCoords = new double[2];
+    }
+   
+    /**
+     *
+     * @return
+     */
+    public TreeMap<String,CanvasParameter> getParameterMap() {
+        return parameterMap;
     }
 
     /**

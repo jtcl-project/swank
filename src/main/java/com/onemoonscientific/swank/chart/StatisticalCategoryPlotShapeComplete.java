@@ -48,12 +48,12 @@ import java.awt.geom.*;
 import java.util.*;
 
 public class StatisticalCategoryPlotShapeComplete extends SwkShape implements DatasetShape, NumberRange, PlotInterface {
+    static TreeMap<String,CanvasParameter> parameterMap = new TreeMap<String,CanvasParameter>();
 
 	static CanvasParameter[] parameters = {
 		new TagsParameter(), new DatasetParameter(), new FillParameter(), new LegendStateParameter(), new LegendLocParameter(),
 		new RLabelParameter(), new RMinParameter(), new RMaxParameter(), new RAutoParameter(),
 		new TransformerParameter()};
-	static TreeMap parameterMap = new TreeMap();
 
 	static {
 		initializeParameters(parameters, parameterMap);
@@ -80,6 +80,13 @@ public class StatisticalCategoryPlotShapeComplete extends SwkShape implements Da
 		setRenderer("render");
 		setShape(rect2D);
 	}
+   /**
+     *
+     * @return
+     */
+    public TreeMap<String,CanvasParameter> getParameterMap() {
+        return parameterMap;
+    }
 
         public String getType() {
             return plotType;
@@ -199,15 +206,6 @@ public class StatisticalCategoryPlotShapeComplete extends SwkShape implements Da
 
 		//shape = aT.createTransformedShape(gPath);
 	}
-
-	public CanvasParameter[] getParameters() {
-		return parameters;
-	}
-
-	public TreeMap getParameterMap() {
-		return parameterMap;
-	}
-
 
 	public void paintShape(Graphics2D g2) {
 		Point2D anchor = new Point2D.Double();

@@ -52,6 +52,7 @@ import java.util.*;
 import java.text.DecimalFormat;
 
 public class XYStatShapeComplete extends XYPlotShape {
+    static TreeMap<String,CanvasParameter> parameterMap = new TreeMap<String,CanvasParameter>();
 
     static CanvasParameter[] parameters = {
         new TagsParameter(), new DatasetParameter(), new LegendStateParameter(), new LegendLocParameter(),
@@ -60,7 +61,6 @@ public class XYStatShapeComplete extends XYPlotShape {
         new RLabelParameter(), new RMinParameter(), new RMaxParameter(), new RAutoParameter(),
         new TransformerParameter(), new WidthParameter(), new FillParameter(), new GradientParameter()
     };
-    static TreeMap parameterMap = new TreeMap();
 
     static {
         initializeParameters(parameters, parameterMap);
@@ -75,6 +75,13 @@ public class XYStatShapeComplete extends XYPlotShape {
         setShape(rect2D);
         setFill(Color.gray);
         setWidth(0.95);
+    }
+   /**
+     *
+     * @return
+     */
+    public TreeMap<String,CanvasParameter> getParameterMap() {
+        return parameterMap;
     }
 
     public String getType() {
@@ -108,16 +115,5 @@ public class XYStatShapeComplete extends XYPlotShape {
         }
     }
 
-    public CanvasParameter[] getParameters() {
-        return parameters;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public TreeMap getParameterMap() {
-        return parameterMap;
-    }
 }
 

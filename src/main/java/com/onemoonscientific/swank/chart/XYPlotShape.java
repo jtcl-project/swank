@@ -53,10 +53,10 @@ import java.util.*;
 
 
 public class XYPlotShape extends SwkShape implements DatasetShape, NumberDomain,NumberRange,PlotInterface {
+    static TreeMap<String,CanvasParameter> parameterMap = new TreeMap<String,CanvasParameter>();
     static CanvasParameter[] parameters = {
        new TagsParameter(), new DatasetParameter(), new FillParameter()
     };
-    static TreeMap parameterMap = new TreeMap();
 
     static {
         initializeParameters(parameters, parameterMap);
@@ -76,6 +76,8 @@ public class XYPlotShape extends SwkShape implements DatasetShape, NumberDomain,
     Rectangle2D rect2D = null;
     String legendLoc = "s.n";
     boolean legendState = false;
+    Transformer plotTransformer = null;
+    Transformer fracTransformer = null;
     public XYPlotShape() {
         rect2D = new Rectangle2D.Double();
         setRenderer();
@@ -83,6 +85,13 @@ public class XYPlotShape extends SwkShape implements DatasetShape, NumberDomain,
     }
     public XYPlot getPlot() {
         return plot;
+    }
+   /**
+     *
+     * @return
+     */
+    public TreeMap<String,CanvasParameter> getParameterMap() {
+        return parameterMap;
     }
     /**
      *
@@ -259,14 +268,6 @@ public class XYPlotShape extends SwkShape implements DatasetShape, NumberDomain,
         }
     }
 
-    public CanvasParameter[] getParameters() {
-        return parameters;
-    }
-
-    public TreeMap getParameterMap() {
-        return parameterMap;
-    }
-
     /**
      *
      * @param g2
@@ -302,13 +303,20 @@ public class XYPlotShape extends SwkShape implements DatasetShape, NumberDomain,
         double scaleX = (x2-x1) /(upperBoundX-lowerBoundX);
         double scaleY = (y2-y1) /(lowerBoundY-upperBoundY);
         SwkImageCanvas canvas = getCanvas();
-        Transformer plotTransformer =canvas.setTransformer("xyplot"+getId(), null);
+        if (plotTransformer == null) {
+            plotTransformer = canvas.setTransformer("xyplot"+getId(), null);
+            fracTransformer = canvas.setTransformer("frac" + getId(), null);
+        }
+
         AffineTransform aT = plotTransformer.getTransform();
         aT.setToIdentity();
         aT.translate(x1,y1);
         aT.scale(scaleX, scaleY);
         aT.translate(-lowerBoundX,-upperBoundY);
-  
+        aT = fracTransformer.getTransform();
+        aT.setToIdentity();
+        aT.translate(plotAreaNow.getX(),plotAreaNow.getY());
+        aT.scale(plotAreaNow.getWidth(),plotAreaNow.getHeight());
     }
 
     public void addSymbol(float x1, float y1, float radius) {

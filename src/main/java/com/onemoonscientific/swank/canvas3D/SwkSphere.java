@@ -95,15 +95,16 @@ public class SwkSphere extends SwkShape implements RadiusInterface {
     void makeObjectNode() {
         objectNode = new Sphere(radius, Primitive.GENERATE_NORMALS, nDivisions,appearance);
     }
-    TransformGroup makeTransform() {
+    NvTransformGroup makeTransform() {
         Transform3D t3D = new Transform3D();
         t3D.setTranslation(new Vector3d(a.x, a.y, a.z));
-        TransformGroup tG = new TransformGroup(t3D);
+        NvTransformGroup tG = new NvTransformGroup(t3D);
         return tG;
     }
 
     public void config(Interp interp, TclObject[] argv, int start)
         throws TclException {
+System.out.println("configxxx");
         if (((argv.length - start) % 2) != 0) {
             throw new TclNumArgsException(interp, 0, argv,
                 "-option value ? -option value? ...");

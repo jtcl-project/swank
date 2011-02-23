@@ -37,6 +37,7 @@ package com.onemoonscientific.swank.canvas;
 import com.onemoonscientific.swank.*;
 import java.awt.*;
 import java.awt.geom.*;
+import java.util.TreeMap;
 
 
 /**
@@ -44,6 +45,7 @@ import java.awt.geom.*;
  * @author brucejohnson
  */
 public class ItemEllipse extends SwkShape implements TextInterface {
+    static TreeMap<String,CanvasParameter> parameterMap = new TreeMap<String,CanvasParameter>();
 
     static CanvasParameter[] parameters = {
         new FillParameter(), new OutlineParameter(), new TextureParameter(),
@@ -62,6 +64,14 @@ public class ItemEllipse extends SwkShape implements TextInterface {
         super(shape, canvas);
         storeCoords = new double[4];
         ellipse2D = (Ellipse2D) shape;
+    }
+   
+    /**
+     *
+     * @return
+     */
+    public TreeMap<String,CanvasParameter> getParameterMap() {
+        return parameterMap;
     }
 
     /**

@@ -37,13 +37,13 @@ package com.onemoonscientific.swank.canvas;
 import com.onemoonscientific.swank.*;
 import java.awt.*;
 import java.awt.geom.*;
-
+import java.util.TreeMap;
 /**
  *
  * @author brucejohnson
  */
 public class ItemRectangle extends SwkShape implements TextInterface {
-
+    static TreeMap<String,CanvasParameter> parameterMap = new TreeMap<String,CanvasParameter>();
     static CanvasParameter[] parameters = {
         new WidthParameter(), new TextureParameter(), new GradientParameter(),
         new FillParameter(), new OutlineParameter(), new TagsParameter(),
@@ -60,6 +60,14 @@ public class ItemRectangle extends SwkShape implements TextInterface {
     ItemRectangle(Shape shape, SwkImageCanvas canvas) {
         super(shape, canvas);
         rect2D = (Rectangle2D) shape;
+    }
+   
+   /**
+     *
+     * @return
+     */
+    public TreeMap<String,CanvasParameter> getParameterMap() {
+        return parameterMap;
     }
 
     /**

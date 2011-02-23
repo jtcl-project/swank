@@ -49,13 +49,14 @@ import java.util.*;
 import org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset;
 
 public class BoxPlotShapeComplete extends SwkShape implements NumberRange, PlotInterface, DatasetShape {
+    static TreeMap<String,CanvasParameter> parameterMap = new TreeMap<String,CanvasParameter>();
+
 
 	static CanvasParameter[] parameters = {
 		new TagsParameter(), new DatasetParameter(), new LegendStateParameter(), new LegendLocParameter(),
                 new PaintParameter(),
 		new RLabelParameter(), new RMinParameter(), new RMaxParameter(), new RAutoParameter(),
                 new TransformerParameter()};
-	static TreeMap parameterMap = new TreeMap();
 
 	static {
 		initializeParameters(parameters, parameterMap);
@@ -82,6 +83,14 @@ public class BoxPlotShapeComplete extends SwkShape implements NumberRange, PlotI
 		setFill(Color.gray);
 		setShape(null);
 	}
+   /**
+     *
+     * @return
+     */
+    public TreeMap<String,CanvasParameter> getParameterMap() {
+        return parameterMap;
+    }
+
     /**
      *
      * @return
@@ -189,19 +198,6 @@ public class BoxPlotShapeComplete extends SwkShape implements NumberRange, PlotI
 		    storeCoords[2], storeCoords[3]);
 
 		//shape = aT.createTransformedShape(gPath);
-	}
-
-	public CanvasParameter[] getParameters() {
-		return parameters;
-	}
-
-    /**
-     *
-     * @return
-     */
-    @Override
-	public TreeMap getParameterMap() {
-		return parameterMap;
 	}
 
 

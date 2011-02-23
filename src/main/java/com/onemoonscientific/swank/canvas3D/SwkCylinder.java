@@ -89,6 +89,7 @@ public class SwkCylinder extends SwkShape implements RadiusInterface {
     void makeObjectNode() {
         float length = (float) a.distance(b);
         objectNode = new Cylinder(radius, length, Primitive.GENERATE_NORMALS, xDivisions, 1, appearance);
+        
    }
     public double getRadius() {
         return radius;
@@ -166,7 +167,7 @@ public class SwkCylinder extends SwkShape implements RadiusInterface {
 //        Scott Teresi, www.teresi.us
 
 
-    TransformGroup makeTransform() {
+    NvTransformGroup makeTransform() {
         Vector3d base = new Vector3d();
         base.x = b.x;
         base.y = b.y;
@@ -250,7 +251,7 @@ public class SwkCylinder extends SwkShape implements RadiusInterface {
         transMatrix.setTranslation(center);
 
         // create the transform group
-        TransformGroup tg = new TransformGroup(transMatrix);
+        NvTransformGroup tg = new NvTransformGroup(transMatrix);
 
         return tg;
     }

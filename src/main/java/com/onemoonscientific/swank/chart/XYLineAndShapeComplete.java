@@ -40,6 +40,7 @@ import java.util.*;
 import java.text.DecimalFormat;
 
 public class XYLineAndShapeComplete extends XYPlotShape {
+    static TreeMap<String,CanvasParameter> parameterMap = new TreeMap<String,CanvasParameter>();
 
     static XYToolTipGenerator generator = new DCXYToolTipGenerator("{0} {1} {2} {3}", new DecimalFormat("0.000"), new DecimalFormat("0.000"));
     static CanvasParameter[] parameters = {
@@ -48,7 +49,6 @@ public class XYLineAndShapeComplete extends XYPlotShape {
         new DLabelParameter(), new DMinParameter(), new DMaxParameter(), new DAutoParameter(),
         new RLabelParameter(), new RMinParameter(), new RMaxParameter(), new RAutoParameter(),
         new TransformerParameter()};
-    static TreeMap parameterMap = new TreeMap();
 
     static {
         initializeParameters(parameters, parameterMap);
@@ -63,14 +63,14 @@ public class XYLineAndShapeComplete extends XYPlotShape {
         plot.setDomainAxis(new NumberAxis());
         setShape(rect2D);
     }
-
-    public CanvasParameter[] getParameters() {
-        return parameters;
-    }
-
-    public TreeMap getParameterMap() {
+   /**
+     *
+     * @return
+     */
+    public TreeMap<String,CanvasParameter> getParameterMap() {
         return parameterMap;
     }
+
     @Override
         public String getType() {
             return plotType;

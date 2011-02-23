@@ -13,6 +13,8 @@ import com.sun.j3d.utils.behaviors.mouse.MouseRotate;
 import com.sun.j3d.utils.behaviors.mouse.MouseTranslate;
 import com.sun.j3d.utils.behaviors.mouse.MouseZoom;
 import com.sun.j3d.utils.geometry.Sphere;
+import com.sun.j3d.utils.geometry.Primitive;
+import com.sun.j3d.utils.picking.*;
 import com.sun.j3d.utils.universe.SimpleUniverse;
 import tcl.lang.*;
 
@@ -40,9 +42,12 @@ import javax.media.j3d.ColoringAttributes;
 import javax.media.j3d.Group;
 import javax.media.j3d.LineArray;
 import javax.media.j3d.Material;
+import javax.media.j3d.Node;
 import javax.media.j3d.PointLight;
 import javax.media.j3d.RotationInterpolator;
 import javax.media.j3d.Shape3D;
+import javax.media.j3d.GeometryArray;
+import javax.media.j3d.Geometry;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 import javax.media.j3d.View;
@@ -54,7 +59,7 @@ import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 
 /** Class for objects which represent a Swank swkcanvas widget. */
-public class SwkImageCanvas implements SwkCanvasType {
+public class SwkImageCanvas extends MouseAdapter implements SwkCanvasType {
 
     static Hashtable resourceDB = null;
     static String[] validCmds = {
@@ -162,6 +167,7 @@ public class SwkImageCanvas implements SwkCanvasType {
     Background bg = null;
     Color3f color3f = new Color3f();
     Canvas3D c3D;
+    private PickCanvas pickCanvas;
 
     public SwkImageCanvas(final Interp interp, String name, String className) {
         this.name = name.intern();
@@ -190,7 +196,13 @@ public class SwkImageCanvas implements SwkCanvasType {
         universe.getViewer().getView().setFrontClipDistance(3.0);
         setEyePosition(0.0f, 0.0f, 100.0f);
 
-        addBranchGraph(createSceneGraph2());
+        BranchGroup branchGroup = createSceneGraph2();
+        addBranchGraph(branchGroup);
+        //enablePicking(branchGroup);
+        pickCanvas = new PickCanvas(c3D,branchGroup);
+        pickCanvas.setTolerance(10.0f);
+        pickCanvas.setMode(PickCanvas.GEOMETRY);
+        c3D.addMouseListener(this);
 
 
         isCreated = true;
@@ -201,6 +213,9 @@ public class SwkImageCanvas implements SwkCanvasType {
 
     public Canvas3D getCanvas3D() {
         return c3D;
+    }
+    public PickCanvas getPickCanvas() {
+        return pickCanvas;
     }
 
     public Component getComponent() {
@@ -1177,6 +1192,101 @@ public class SwkImageCanvas implements SwkCanvasType {
         } catch (IOException e) {
         }
     }
+           public void mouseClicked(MouseEvent mEvent) {
+System.out.println("click");
+                String pickResult = pickCanvas(mEvent);
+            }
+
+
+    String pickCanvas(MouseEvent e) {
+        String pickResult = "";
+        pickCanvas.setShapeLocation(e); 
+        PickResult result = pickCanvas.pickClosest(); 
+        if (result == null) { 
+           System.out.println("Nothing picked"); 
+        } else { 
+          TransformGroup tg = (TransformGroup) result.getNode( PickResult.TRANSFORM_GROUP );
+System.out.println(tg);
+          if (tg instanceof NvTransformGroup) {
+              SwkShape swkShape = ((NvTransformGroup) tg).getShape();
+              int index = ((NvTransformGroup) tg).getIndex();
+              System.out.println("swksh " + swkShape.getType() + " " + swkShape.getId() + " " + index);
+          }
+
+           Primitive p = (Primitive)result.getNode(PickResult.PRIMITIVE); 
+           Shape3D s = (Shape3D)result.getNode(PickResult.SHAPE3D); 
+           GeometryArray geomArray = result.getGeometryArray();
+           if (geomArray != null) {
+               System.out.println(" geom count " + geomArray.getVertexCount());
+           }
+           System.out.println("ni " + result.numIntersections());
+           int nInter = result.numIntersections();
+           for (int i=0;i<nInter;i++) {
+System.out.println("i " + i);
+           PickIntersection pickIntersection = result.getIntersection(i);
+           if (pickIntersection != null) { 
+               System.out.println("pv " + pickIntersection.getClosestVertexIndex());
+               System.out.println("pv " + pickIntersection.getClosestVertexCoordinates());
+               System.out.println("pv " + pickIntersection.getClosestVertexCoordinatesVW());
+               System.out.println("ga " + pickIntersection.getGeometryArrayIndex());
+               for (int pickIndex:pickIntersection.getPrimitiveCoordinateIndices()) {
+                     System.out.println(pickIndex);
+               }
+               for (int pickIndex:pickIntersection.getPrimitiveVertexIndices()) {
+                     System.out.println(pickIndex);
+               }
+           }
+           }
+           
+           if (p != null) { 
+              System.out.println(p.getClass().getName()); 
+               pickResult = p.getClass().getName();
+           } else if (s != null) { 
+                 System.out.println(s.getClass().getName()); 
+                 pickResult = s.getClass().getName();
+           } else{ 
+              System.out.println("null"); 
+              pickResult = "null pick";
+           } 
+        } 
+        return pickResult;
+    }
+
+   public static void enablePicking(Node node) {
+    if (node == null) {
+         return;
+    }
+    try {
+    node.setCapability(Node.ALLOW_PICKABLE_WRITE);
+    node.setPickable(true);
+    node.setCapability(Node.ENABLE_PICK_REPORTING);
+
+    if (node instanceof Group) {
+       Group group = (Group) node;
+       for (Enumeration e = group.getAllChildren(); e.hasMoreElements();) {
+          enablePicking((Node)e.nextElement());
+       }
+
+    }
+    if (node instanceof Shape3D) {
+          Shape3D shape = (Shape3D) node;
+
+          PickTool.setCapabilities(node, PickTool.INTERSECT_FULL);
+
+          for (Enumeration e = shape.getAllGeometries(); e.hasMoreElements();) {
+
+             Geometry g = (Geometry)e.nextElement();
+
+             g.setCapability(g.ALLOW_INTERSECT);
+
+          }
+
+    }
+    } catch (Exception e) {
+        System.out.println("enable picking shape error " +e.getMessage());
+    }
+
+}
 
     /**
      *

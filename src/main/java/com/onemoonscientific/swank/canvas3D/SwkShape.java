@@ -58,18 +58,22 @@ public abstract class SwkShape implements SwkShape3DConfig {
     Hashtable tags = new Hashtable();
     String[] tagNames = null;
     Transformer transformer = null;
+    double rotate = 0.0;
+    float width = 0.0f;
     int id;
 
     public SwkShape() {
-        bG = new NvBranchGroup();
+        bG = new NvBranchGroup(this);
     }
 
     public SwkShape(SwkImageCanvas canvas) {
         this.canvas = canvas;
         appearance = canvas.defaultAppearance;
-        bG = new NvBranchGroup();
+        bG = new NvBranchGroup(this);
     }
-
+    public int getId() {
+         return id;
+    }
     public void setCanvas(SwkImageCanvas canvas) {
         this.canvas = canvas;
         appearance = this.canvas.defaultAppearance;
@@ -333,38 +337,46 @@ System.out.println("config2");
         return par;
     }
     abstract void makeObjectNode() ;
-    abstract TransformGroup  makeTransform();
+    abstract NvTransformGroup  makeTransform();
     void genShape() {
-        TransformGroup tG = makeTransform();
+System.out.println("genShape");
+        NvTransformGroup tG = makeTransform();
+        tG.setShape(this);
         makeObjectNode();
         tG.addChild(objectNode);
         try {
             bG.removeAllChildren();
         } catch (Exception bgE) {
         }
-        BranchGroup bG2 = new BranchGroup();
+        NvBranchGroup2 bG2 = new NvBranchGroup2(bG);
         bG.addChild(bG2);
         bG2.addChild(tG);
         bG.setCapability(NvBranchGroup.ALLOW_DETACH);
         bG2.setCapability(NvBranchGroup.ALLOW_DETACH);
         bG.setCapability(NvBranchGroup.ALLOW_CHILDREN_EXTEND);
         bG2.setCapability(NvBranchGroup.ALLOW_CHILDREN_EXTEND);
-
+        SwkImageCanvas.enablePicking(bG);
         bG.compile();
+System.out.println("genShaped");
     }
     void updateShape() {
         try {
-            TransformGroup tG = makeTransform();
+System.out.println("updateShape");
+            bG.removeAllChildren();
+            NvTransformGroup tG = makeTransform();
+            tG.setShape(this);
             makeObjectNode();
             tG.addChild(objectNode);
-            BranchGroup bG2 = new BranchGroup();
+            NvBranchGroup2 bG2 = new NvBranchGroup2(bG);
             bG2.addChild(tG);
             bG2.setCapability(NvBranchGroup.ALLOW_DETACH);
             bG2.setCapability(NvBranchGroup.ALLOW_CHILDREN_EXTEND);
-            bG.removeAllChildren();
             bG.addChild(bG2);
+System.out.println("enablePick");
+            SwkImageCanvas.enablePicking(bG2);
+System.out.println("updateShaped");
         } catch (Exception bgE) {
-            System.out.println(bgE.getMessage());
+            System.out.println("update shape error " +bgE.getMessage());
         }
     }
 

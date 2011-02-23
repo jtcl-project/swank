@@ -32,12 +32,14 @@ package com.onemoonscientific.swank.canvas;
 import com.onemoonscientific.swank.*;
 import java.awt.*;
 import java.awt.geom.*;
+import java.util.TreeMap;
 
 /**
  *
  * @author brucejohnson
  */
 public class ItemArc extends SwkShape {
+    static TreeMap<String,CanvasParameter> parameterMap = new TreeMap<String,CanvasParameter>();
 
     static CanvasParameter[] parameters = {
         new ExtentParameter(), new AngleStartParameter(),
@@ -76,6 +78,14 @@ public class ItemArc extends SwkShape {
 
         System.arraycopy(coords, 0, storeCoords, 0, 4);
         applyCoordinates();
+    }
+   
+    /**
+     *
+     * @return
+     */
+    public TreeMap<String,CanvasParameter> getParameterMap() {
+        return parameterMap;
     }
 
     /**

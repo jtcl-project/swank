@@ -41,12 +41,14 @@ import java.awt.*;
 import java.awt.font.*;
 import java.awt.geom.*;
 import java.text.*;
+import java.util.TreeMap;
 
 /**
  *
  * @author brucejohnson
  */
 public class ItemText extends SwkShape implements TextInterface {
+    static TreeMap<String,CanvasParameter> parameterMap = new TreeMap<String,CanvasParameter>();
 
     static BreakIterator wordIterator = BreakIterator.getWordInstance();
     static CanvasParameter[] parameters = {
@@ -65,6 +67,14 @@ public class ItemText extends SwkShape implements TextInterface {
         storeCoords = new double[2];
         setFont(new Font("Courier", Font.PLAIN, 12));
         fill = Color.BLACK;
+    }
+   
+    /**
+     *
+     * @return
+     */
+    public TreeMap<String,CanvasParameter> getParameterMap() {
+        return parameterMap;
     }
 
     /**

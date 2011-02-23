@@ -107,9 +107,7 @@ public abstract class SwkShape implements SwkShapeConfig {
      *
      * @return
      */
-    public TreeMap<String,CanvasParameter> getParameterMap() {
-        return parameterMap;
-    }
+    public abstract TreeMap<String,CanvasParameter> getParameterMap(); 
 
     /**
      *
@@ -1101,6 +1099,20 @@ public abstract class SwkShape implements SwkShapeConfig {
     protected static void initializeParameters(CanvasParameter[] params, Map map) {
         for (int i = 0; i < params.length; i++) {
             map.put(((CanvasParameter) params[i]).getName(), params[i]);
+            CanvasParameter cPar = CanvasParameter.getStdPar(params[i].getName());
+            if (cPar == null) {
+                CanvasParameter.addParameter(params[i]);
+            }
+        }
+    }
+
+    /**
+     *
+     * @param params
+     */
+    protected static void initializeParameters(CanvasParameter[] params) {
+        for (int i = 0; i < params.length; i++) {
+            parameterMap.put(((CanvasParameter) params[i]).getName(), params[i]);
             CanvasParameter cPar = CanvasParameter.getStdPar(params[i].getName());
             if (cPar == null) {
                 CanvasParameter.addParameter(params[i]);

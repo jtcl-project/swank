@@ -160,7 +160,7 @@ public class SwkCone extends SwkShape implements RadiusInterface {
 //        Scott Teresi, www.teresi.us
 
 
-    TransformGroup makeTransform() {
+    NvTransformGroup makeTransform() {
         Vector3d base = new Vector3d();
         base.x = b.x;
         base.y = b.y;
@@ -244,7 +244,7 @@ public class SwkCone extends SwkShape implements RadiusInterface {
         transMatrix.setTranslation(center);
 
         // create the transform group
-        TransformGroup tg = new TransformGroup(transMatrix);
+        NvTransformGroup tg = new NvTransformGroup(transMatrix);
 
         return tg;
     }

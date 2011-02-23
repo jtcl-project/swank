@@ -37,6 +37,7 @@ package com.onemoonscientific.swank.canvas;
 import com.onemoonscientific.swank.*;
 import java.awt.*;
 import java.awt.geom.*;
+import java.util.TreeMap;
 
 
 /**
@@ -44,6 +45,7 @@ import java.awt.geom.*;
  * @author brucejohnson
  */
 public class ItemSymbols extends SwkShape implements SymbolInterface {
+    static TreeMap<String,CanvasParameter> parameterMap = new TreeMap<String,CanvasParameter>();
 
     static CanvasParameter[] parameters = {
         new SymbolParameter(), new RadiusParameter(), new RotateParameter(),
@@ -66,6 +68,14 @@ public class ItemSymbols extends SwkShape implements SymbolInterface {
         super(shape, canvas);
         gPath = (GeneralPath) shape;
         fill = null;
+    }
+   
+    /**
+     *
+     * @return
+     */
+    public TreeMap<String,CanvasParameter> getParameterMap() {
+        return parameterMap;
     }
 
     /**

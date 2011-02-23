@@ -37,12 +37,14 @@ package com.onemoonscientific.swank.canvas;
 import com.onemoonscientific.swank.*;
 import java.awt.*;
 import javax.swing.*;
+import java.util.TreeMap;
 
 /**
  * 
  * @author brucejohnson
  */
 public class ItemBitmap extends SwkShape {
+    static TreeMap<String,CanvasParameter> parameterMap = new TreeMap<String,CanvasParameter>();
 
     static CanvasParameter[] parameters = {
         new BitmapParameter(), new TagsParameter(), new StateParameter(), new NodeParameter(),
@@ -64,6 +66,14 @@ public class ItemBitmap extends SwkShape {
      */
     protected void setImageIcon(ImageIcon newImage) {
         image = newImage;
+    }
+   
+    /**
+     *
+     * @return
+     */
+    public TreeMap<String,CanvasParameter> getParameterMap() {
+        return parameterMap;
     }
 
     /**

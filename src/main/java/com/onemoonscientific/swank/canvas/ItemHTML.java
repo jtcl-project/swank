@@ -38,6 +38,7 @@ import com.onemoonscientific.swank.*;
 import java.awt.*;
 import java.awt.font.*;
 import java.awt.geom.*;
+import java.util.TreeMap;
 
 
 import javax.swing.*;
@@ -47,6 +48,7 @@ import javax.swing.*;
  * @author brucejohnson
  */
 public class ItemHTML extends SwkShape implements TextInterface {
+    static TreeMap<String,CanvasParameter> parameterMap = new TreeMap<String,CanvasParameter>();
 
     static CanvasParameter[] parameters = {
         new TextParameter(), new AnchorParameter(), new FontParameter(), new StateParameter(),
@@ -68,6 +70,14 @@ public class ItemHTML extends SwkShape implements TextInterface {
         setFont(new Font("Courier", Font.PLAIN, 12));
         fill = Color.WHITE;
         jLabel.setVerticalAlignment(SwingConstants.TOP);
+    }
+   
+    /**
+     *
+     * @return
+     */
+    public TreeMap<String,CanvasParameter> getParameterMap() {
+        return parameterMap;
     }
 
     /**

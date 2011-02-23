@@ -41,9 +41,12 @@ public class AnchorParameter extends CanvasParameter {
         if (swkShape == null) {
             throw new TclException(interp, "shape doesn't exist");
         }
+        String anchorString="";
+                if (swkShape instanceof TextInterface) {
+                    anchorString = SwankUtil.parseAnchor(((TextInterface) swkShape).getAnchor());
+                }
 
-        return TclString.newInstance(SwankUtil.parseAnchor(
-                ((TextInterface) swkShape).getAnchor()));
+        return TclString.newInstance(anchorString);
     }
 
     /**

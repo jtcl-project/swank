@@ -52,12 +52,13 @@ import java.util.*;
 
 
 public class CategoryPlotShapeComplete extends SwkShape implements DatasetShape, NumberRange, PlotInterface  {
+    static TreeMap<String,CanvasParameter> parameterMap = new TreeMap<String,CanvasParameter>();
+
     static CanvasParameter[] parameters = {
        new TagsParameter(), new DatasetParameter(), new FillParameter(), new LegendStateParameter(), new LegendLocParameter(),
        new RLabelParameter(), new RMinParameter(), new RMaxParameter(), new RAutoParameter(),
        new TransformerParameter()
     };
-    static TreeMap parameterMap = new TreeMap();
 
     static {
         initializeParameters(parameters, parameterMap);
@@ -86,6 +87,13 @@ public class CategoryPlotShapeComplete extends SwkShape implements DatasetShape,
         plot.setRangeAxis(new NumberAxis());
         setRenderer("render");
         setShape(rect2D);
+    }
+   /**
+     *
+     * @return
+     */
+    public TreeMap<String,CanvasParameter> getParameterMap() {
+        return parameterMap;
     }
     /**
      *
@@ -213,14 +221,6 @@ public class CategoryPlotShapeComplete extends SwkShape implements DatasetShape,
             coords[1] = coords[3];
             coords[3] = hold;
         }
-    }
-
-    public CanvasParameter[] getParameters() {
-        return parameters;
-    }
-
-    public TreeMap getParameterMap() {
-        return parameterMap;
     }
 
 
