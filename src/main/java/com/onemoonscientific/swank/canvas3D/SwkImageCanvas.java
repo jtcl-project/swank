@@ -1193,7 +1193,6 @@ public class SwkImageCanvas extends MouseAdapter implements SwkCanvasType {
         }
     }
            public void mouseClicked(MouseEvent mEvent) {
-System.out.println("click");
                 String pickResult = pickCanvas(mEvent);
             }
 
@@ -1203,49 +1202,49 @@ System.out.println("click");
         pickCanvas.setShapeLocation(e); 
         PickResult result = pickCanvas.pickClosest(); 
         if (result == null) { 
-           System.out.println("Nothing picked"); 
+          // System.out.println("Nothing picked");
         } else { 
           TransformGroup tg = (TransformGroup) result.getNode( PickResult.TRANSFORM_GROUP );
-System.out.println(tg);
+//System.out.println(tg);
           if (tg instanceof NvTransformGroup) {
               SwkShape swkShape = ((NvTransformGroup) tg).getShape();
               int index = ((NvTransformGroup) tg).getIndex();
-              System.out.println("swksh " + swkShape.getType() + " " + swkShape.getId() + " " + index);
+             // System.out.println("swksh " + swkShape.getType() + " " + swkShape.getId() + " " + index);
           }
 
            Primitive p = (Primitive)result.getNode(PickResult.PRIMITIVE); 
            Shape3D s = (Shape3D)result.getNode(PickResult.SHAPE3D); 
            GeometryArray geomArray = result.getGeometryArray();
            if (geomArray != null) {
-               System.out.println(" geom count " + geomArray.getVertexCount());
+              // System.out.println(" geom count " + geomArray.getVertexCount());
            }
-           System.out.println("ni " + result.numIntersections());
+          // System.out.println("ni " + result.numIntersections());
            int nInter = result.numIntersections();
            for (int i=0;i<nInter;i++) {
-System.out.println("i " + i);
+//System.out.println("i " + i);
            PickIntersection pickIntersection = result.getIntersection(i);
            if (pickIntersection != null) { 
-               System.out.println("pv " + pickIntersection.getClosestVertexIndex());
-               System.out.println("pv " + pickIntersection.getClosestVertexCoordinates());
-               System.out.println("pv " + pickIntersection.getClosestVertexCoordinatesVW());
-               System.out.println("ga " + pickIntersection.getGeometryArrayIndex());
+         //      System.out.println("pv " + pickIntersection.getClosestVertexIndex());
+         //      System.out.println("pv " + pickIntersection.getClosestVertexCoordinates());
+          //     System.out.println("pv " + pickIntersection.getClosestVertexCoordinatesVW());
+          //     System.out.println("ga " + pickIntersection.getGeometryArrayIndex());
                for (int pickIndex:pickIntersection.getPrimitiveCoordinateIndices()) {
-                     System.out.println(pickIndex);
+                   //  System.out.println(pickIndex);
                }
                for (int pickIndex:pickIntersection.getPrimitiveVertexIndices()) {
-                     System.out.println(pickIndex);
+                   //  System.out.println(pickIndex);
                }
            }
            }
            
            if (p != null) { 
-              System.out.println(p.getClass().getName()); 
+            //  System.out.println(p.getClass().getName());
                pickResult = p.getClass().getName();
            } else if (s != null) { 
-                 System.out.println(s.getClass().getName()); 
+               //  System.out.println(s.getClass().getName());
                  pickResult = s.getClass().getName();
            } else{ 
-              System.out.println("null"); 
+            //  System.out.println("null");
               pickResult = "null pick";
            } 
         } 
