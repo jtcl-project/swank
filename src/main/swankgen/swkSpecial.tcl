@@ -2532,6 +2532,9 @@ Dimension dSize = new Dimension(scrollRegion[1][0]-scrollRegion[0][0],scrollRegi
             public Dimension getPreferredScrollableViewportSize() {
                 Dimension size = new Dimension();
                 FontMetrics fontMetrics =  this.getFontMetrics(this.getFont());
+		if(minimumSize == null) {
+                    minimumSize = getMinimumSize();
+                }
                 size.height = minimumSize.height+2;
                 size.width = getColumns()*fontMetrics.charWidth('O');
                 return size;

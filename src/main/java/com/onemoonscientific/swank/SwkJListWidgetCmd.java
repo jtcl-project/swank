@@ -16,26 +16,43 @@ import javax.swing.*;
 class SwkJListWidgetCmd implements Command {
 
     private static final String[] validCmds = {
-        "cget", "configure", "activate", "bbox",
-        "curselection", "delete", "get", "size", "see", "index", "nearest",
-        "insert", "scan", "selection", "xview", "yview"
+"activate",
+"bbox",
+"cget",
+"configure",
+"curselection",
+"delete",
+"get",
+"index",
+"insert",
+"itemcget",
+"itemconfigure",
+"nearest",
+"scan",
+"see",
+"selection",
+"size",
+"xview",
+"yview"
     };
-    private static final int OPT_CGET = 0;
-    private static final int OPT_CONFIGURE = 1;
-    private static final int OPT_ACTIVATE = 2;
-    private static final int OPT_BBOX = 3;
+    private static final int OPT_ACTIVATE = 0;
+    private static final int OPT_BBOX = 1;
+    private static final int OPT_CGET = 2;
+    private static final int OPT_CONFIGURE = 3;
     private static final int OPT_CURSELECTION = 4;
     private static final int OPT_DELETE = 5;
     private static final int OPT_GET = 6;
-    private static final int OPT_SIZE = 7;
-    private static final int OPT_SEE = 8;
-    private static final int OPT_INDEX = 9;
-    private static final int OPT_NEAREST = 10;
-    private static final int OPT_INSERT = 11;
+    private static final int OPT_INDEX = 7;
+    private static final int OPT_INSERT = 8;
+    private static final int OPT_ITEMCGET = 9;
+    private static final int OPT_ITEMCONFIGURE = 10;
+    private static final int OPT_NEAREST = 11;
     private static final int OPT_SCAN = 12;
-    private static final int OPT_SELECTION = 13;
-    private static final int OPT_XVIEW = 14;
-    private static final int OPT_YVIEW = 15;
+    private static final int OPT_SEE = 13;
+    private static final int OPT_SELECTION = 14;
+    private static final int OPT_SIZE = 15;
+    private static final int OPT_XVIEW = 16;
+    private static final int OPT_YVIEW = 17;
     static boolean gotDefaults = false;
     Interp interp = null;
 
@@ -140,6 +157,13 @@ class SwkJListWidgetCmd implements Command {
                 getIndex(interp, swkjlist, argv);
 
                 break;
+            case OPT_ITEMCGET:
+                itemCGet(interp, swkjlist, argv);
+                break;
+            case OPT_ITEMCONFIGURE:
+                itemConfigure(interp, swkjlist, argv);
+                break;
+
 
             case OPT_ACTIVATE:
                 activate(interp, swkjlist, argv);
@@ -271,6 +295,105 @@ class SwkJListWidgetCmd implements Command {
 
         int index = (new Activate()).exec(swkjlist, argv[2].toString());
         interp.setResult(index);
+    }
+    void itemCGet(final Interp interp, final SwkJList swkjlist,
+            final TclObject[] argv) throws TclException {
+        if (argv.length != 4) {
+            throw new TclNumArgsException(interp, 2, argv, "index option");
+        }
+
+        ListItem listItem = (new ItemGet()).exec(swkjlist, argv[2].toString());
+        String result = "";
+        if (listItem != null) {
+            String option = argv[3].toString();
+            if ("-background".startsWith(option) || option.equals("-bg")) {
+                  if (listItem.background != null) {
+                      result = SwankUtil.parseColor(listItem.background);
+                  }
+            } else if ("-foreground".startsWith(option) || option.equals("-fg")) {
+                  if (listItem.foreground != null) {
+                      result = SwankUtil.parseColor(listItem.foreground);
+                  }
+            } else if ("-selectbackground".startsWith(option)) {
+                  if (listItem.selectBackground != null) {
+                      result = SwankUtil.parseColor(listItem.selectBackground);
+                  }
+            } else if ("-selectforeground".startsWith(option)) {
+                  if (listItem.selectForeground != null) {
+                      result = SwankUtil.parseColor(listItem.selectForeground);
+                  }
+            } else {
+                  throw new TclException(interp,"unknown option \"" + option + "\"");
+            }
+        }
+        interp.setResult(result);
+    }
+    void itemConfigure(final Interp interp, final SwkJList swkjlist,
+            final TclObject[] argv) throws TclException {
+        if (argv.length < 3) {
+            throw new TclNumArgsException(interp, 2, argv, "index ?option? ?value? ?option value ...?");
+        }
+        if ((argv.length == 3) || (argv.length == 4)){
+            ListItem listItem = (new ItemGet()).exec(swkjlist, argv[2].toString());
+            TclObject resultList = TclList.newInstance();
+            if ((argv.length == 3) || "-background".startsWith(argv[3].toString())) {
+                TclObject itemList = TclList.newInstance();
+                TclList.append(interp,itemList,TclString.newInstance("-background"));
+                TclList.append(interp,itemList,TclString.newInstance("background"));
+                TclList.append(interp,itemList,TclString.newInstance("Background"));
+                TclList.append(interp,itemList,TclString.newInstance(SwankUtil.parseColor(listItem.getBackground())));
+                TclList.append(interp,resultList,itemList);
+            }
+            if ((argv.length == 3) || "-foreground".startsWith(argv[3].toString())) {
+                TclObject itemList = TclList.newInstance();
+                TclList.append(interp,itemList,TclString.newInstance("-foreground"));
+                TclList.append(interp,itemList,TclString.newInstance("foreground"));
+                TclList.append(interp,itemList,TclString.newInstance("Foreground"));
+                TclList.append(interp,itemList,TclString.newInstance(SwankUtil.parseColor(listItem.getForeground())));
+                TclList.append(interp,resultList,itemList);
+            }
+            if ((argv.length == 3) || "-selectforeground".startsWith(argv[3].toString())) {
+                TclObject itemList = TclList.newInstance();
+                TclList.append(interp,itemList,TclString.newInstance("-selectforeground"));
+                TclList.append(interp,itemList,TclString.newInstance("selectforeground"));
+                TclList.append(interp,itemList,TclString.newInstance("Foreground"));
+                TclList.append(interp,itemList,TclString.newInstance(SwankUtil.parseColor(listItem.getSelectForeground())));
+                TclList.append(interp,resultList,itemList);
+            }
+            if ((argv.length == 3) || "-selectbackground".startsWith(argv[3].toString())) {
+                TclObject itemList = TclList.newInstance();
+                TclList.append(interp,itemList,TclString.newInstance("-selectbackground"));
+                TclList.append(interp,itemList,TclString.newInstance("selectbackground"));
+                TclList.append(interp,itemList,TclString.newInstance("Background"));
+                TclList.append(interp,itemList,TclString.newInstance(SwankUtil.parseColor(listItem.getSelectBackground())));
+                TclList.append(interp,resultList,itemList);
+            }
+            interp.setResult(resultList);
+        } else {
+            if ((argv.length % 2) != 1) {
+                  throw new TclException(interp,"value for \"" + argv[argv.length-1].toString() + "\" missing ");
+            }
+            ListItem listItem = (new ItemGet()).exec(swkjlist, argv[2].toString());
+            String listItemText = listItem.toString();
+            Color background = listItem.getBackground();
+            Color foreground = listItem.getForeground();
+            Color selectBackground = listItem.getSelectBackground();
+            Color selectForeground = listItem.getSelectForeground();
+            for (int i=3;i<argv.length;i += 2) {
+                String option = argv[i].toString();
+                if ("-background".startsWith(option) || option.equals("-bg")) {
+                    background = SwankUtil.getColor(interp,argv[i+1]);
+                } else if ("-foreground".startsWith(option) || option.equals("-fg")) {
+                    foreground = SwankUtil.getColor(interp,argv[i+1]);
+                } else if ("-selectbackground".startsWith(option)) {
+                    selectBackground = SwankUtil.getColor(interp,argv[i+1]);
+                } else if ("-selectforeground".startsWith(option)) {
+                    selectForeground = SwankUtil.getColor(interp,argv[i+1]);
+                }
+            }
+            ListItem newValues = new ListItem(listItemText,background,foreground,selectBackground,selectForeground);
+            (new ItemConfigure()).exec(swkjlist, argv[2].toString(),newValues);
+        }
     }
 
     void nearest(final Interp interp, final SwkJList swkjlist,
@@ -838,7 +961,7 @@ class SwkJListWidgetCmd implements Command {
         String firstArg = null;
         String lastArg = null;
         String errMessage = null;
-        ArrayList resultItems = new ArrayList();
+        ArrayList<ListItem> resultItems = new ArrayList<ListItem>();
 
         void exec(final SwkJList swkjlist, final String firstArg,
                 final String lastArg) throws TclException {
@@ -856,13 +979,13 @@ class SwkJListWidgetCmd implements Command {
             int n = resultItems.size();
 
             if (n == 1) {
-                interp.setResult((String) resultItems.get(0));
+                interp.setResult(resultItems.get(0).toString());
             } else if (n > 1) {
                 TclObject list = TclList.newInstance();
 
                 for (int i = 0; i < n; i++) {
                     TclList.append(interp, list,
-                            TclString.newInstance((String) resultItems.get(i)));
+                            TclString.newInstance(resultItems.get(i).toString()));
                 }
 
                 interp.setResult(list);
@@ -902,12 +1025,26 @@ class SwkJListWidgetCmd implements Command {
                 int i = first;
 
                 if ((i >= 0) && (i < swkjlist.model.getSize())) {
-                    resultItems.add(swkjlist.model.elementAt(i).toString());
+                    Object modelObject = swkjlist.model.elementAt(i);
+                    ListItem modelItem = null;
+                    if (modelObject instanceof ListItem) {
+                        modelItem = (ListItem) modelObject;
+                    } else {
+                        modelItem = new ListItem(modelObject.toString());
+                    }
+                    resultItems.add(modelItem);
                 }
             } else {
                 for (int i = first; i <= last; i++) {
                     if ((i >= 0) && (i < swkjlist.model.getSize())) {
-                        resultItems.add(swkjlist.model.elementAt(i).toString());
+                        Object modelObject = swkjlist.model.elementAt(i);
+                        ListItem modelItem = null;
+                        if (modelObject instanceof ListItem) {
+                            modelItem = (ListItem) modelObject;
+                        } else {
+                            modelItem = new ListItem(modelObject.toString());
+                        }
+                        resultItems.add(modelItem);
                     }
                 }
             }
@@ -1059,6 +1196,54 @@ class SwkJListWidgetCmd implements Command {
             swkjlist.active = index;
         }
     }
+   private class ItemGet extends GetValueOnEventThread {
+
+        SwkJList swkjlist = null;
+        String item = null;
+        ListItem listItem = null;
+        String errMessage = null;
+
+        ListItem exec(final SwkJList swkjlist, final String item)
+                throws TclException {
+            this.item = item;
+            this.swkjlist = swkjlist;
+            execOnThread();
+
+            if (errMessage != null) {
+                throw new TclException(interp, errMessage);
+            }
+
+            return listItem;
+        }
+
+        @Override
+        public void run() {
+
+            Result result = new Result();
+
+            swkjlist.getIndex(item, -1, result);
+
+            if (result.hasError()) {
+                errMessage = result.getErrorMsg();
+
+                return;
+            }
+
+            int index = result.i;
+
+            if (index < 0) {
+                index = 0;
+            }
+
+            if (index >= swkjlist.model.getSize()) {
+                index = swkjlist.model.getSize() - 1;
+            }
+            Object listObject  = swkjlist.model.get(index);
+            if (listObject instanceof ListItem) {
+                 listItem = (ListItem) listObject;
+            }
+        }
+    }
 
     private static class Nearest extends GetValueOnEventThread {
 
@@ -1156,9 +1341,9 @@ class SwkJListWidgetCmd implements Command {
 
             for (int i = 0; i < items.length; i++) {
                 if (atEnd) {
-                    swkjlist.model.addElement(items[i]);
+                    swkjlist.model.addElement(new ListItem(items[i]));
                 } else {
-                    swkjlist.model.insertElementAt(items[i], index);
+                    swkjlist.model.insertElementAt(new ListItem(items[i]), index);
                     index++;
                 }
             }
@@ -1362,6 +1547,90 @@ class SwkJListWidgetCmd implements Command {
             } else {
                 includes = swkjlist.selectionModel.isSelectedIndex(index);
             }
+        }
+    }
+    private class ItemConfigure extends GetValueOnEventThread {
+
+        SwkJList swkjlist = null;
+        ListItem newItem = null;
+        String item = null;
+        int index = 0;
+        String errMessage = null;
+
+        int exec(final SwkJList swkjlist, final String item,final ListItem newItem)
+                throws TclException {
+            this.item = item;
+            this.newItem = newItem;
+            this.swkjlist = swkjlist;
+            execOnThread();
+
+            if (errMessage != null) {
+                throw new TclException(interp, errMessage);
+            }
+
+            return index;
+        }
+
+        @Override
+        public void run() {
+
+            Result result = new Result();
+
+            swkjlist.getIndex(item, -1, result);
+
+            if (result.hasError()) {
+                errMessage = result.getErrorMsg();
+
+                return;
+            }
+
+            index = result.i;
+
+            if (index < 0) {
+                index = 0;
+            }
+
+            if (index >= swkjlist.model.getSize()) {
+                index = swkjlist.model.getSize() - 1;
+            }
+            swkjlist.model.set(index,newItem);
+        }
+    }
+
+    public class ListItem {
+        private final String text;
+        private final Color background;
+        private final Color foreground;
+        private final Color selectBackground;
+        private final Color selectForeground;
+        ListItem (final String text) {
+             this(text,null,null,null,null);
+        }
+        ListItem (final String text, final Color background, final Color foreground, final Color selectBackground, final Color selectForeground) {
+              if (text == null) {
+                  this.text = "";
+              } else {
+                  this.text = text;
+              }
+              this.foreground = foreground;
+              this.background = background;
+              this.selectForeground = selectForeground;
+              this.selectBackground = selectBackground;
+        }
+        public Color getBackground() {
+            return background;
+        }
+        public Color getForeground() {
+            return foreground;
+        }
+        public Color getSelectForeground() {
+            return selectForeground;
+        }
+        public Color getSelectBackground() {
+            return selectBackground;
+        }
+        public String toString() {
+            return text;
         }
     }
 }

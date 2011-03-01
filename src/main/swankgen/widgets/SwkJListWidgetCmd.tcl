@@ -52,6 +52,7 @@ append specialInits {
     setModel(model);
     selectionModel.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
     setSelectionModel(selectionModel);
+    setCellRenderer(new SwkJListCellRenderer());
 }
   
 # -listvar
