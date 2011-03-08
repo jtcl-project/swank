@@ -459,7 +459,7 @@ proc swkMakeSpecial {widget widgetVar} {
     }
     
     # -state
-    set vWidgets "JMenu JMenuItem SMenuButton JButton JRadioButton JRadioButtonMenuItem JCheckBox SMenuButton JLabel"
+    set vWidgets "JMenu JMenuItem SMenuButton JButton JRadioButton JRadioButtonMenuItem JCheckBox SMenuButton JLabel JComboBox JSpinner"
     if {[lsearch $vWidgets $widget ] >= 0} {
         set specialGets [concat  $specialGets {
             {setState state State -state}
