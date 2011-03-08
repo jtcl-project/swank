@@ -652,7 +652,10 @@ public class SwkImageCanvas implements SwkCanvasType {
                 if (parent == beforeParent) {
                     parent.remove(swkShape.node);
                     int index = parent.getIndex(beforeShape.node);
-                    parent.insert(swkShape.node, 0);
+                    if (index < 0) {
+                        index = 0;
+                    }
+                    parent.insert(swkShape.node, index);
                 }
             }
         }
