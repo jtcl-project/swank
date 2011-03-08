@@ -54,6 +54,7 @@ public class ItemConnector extends ItemLine implements TextInterface {
         new DashPhaseParameter(), new WidthParameter(),
         new TagsParameter(), new StateParameter(), new NodeParameter(),
         new TransformerParameter(), new CapstyleParameter(),
+        new StartconParameter(), new EndconParameter(),
         new JoinstyleParameter(), new ArrowParameter(), new ArrowShapeParameter(), new EndstyleParameter(), new StartstyleParameter(),
         new TextParameter(), new FontParameter(), new AnchorParameter(), new TextcolorParameter(),};
    static {
