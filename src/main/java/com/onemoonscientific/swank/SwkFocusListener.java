@@ -118,7 +118,7 @@ public class SwkFocusListener implements FocusListener, SwkListener {
                 eventBindings = this.bindings;
             } else if (tag.startsWith(".")) {
                 try {
-                    eventBindings = ((SwkJFrame) Widgets.get(interp, tag)).getFocusListener().getBindings();
+                    eventBindings = ((SwkWidget) Widgets.get(interp, tag)).getFocusListener().getBindings();
                 } catch (TclException tclE) {
                 }
             } else {
