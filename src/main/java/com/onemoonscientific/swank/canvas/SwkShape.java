@@ -49,6 +49,13 @@ public abstract class SwkShape implements SwkShapeConfig {
      *
      */
     static public final byte HIDDEN = 2;
+    /**
+     *
+     */
+    static public final byte LOCKED = 3;
+    /**
+     *
+     */
     static BasicStroke bstroke = new BasicStroke();
     /**
      *
@@ -183,6 +190,8 @@ public abstract class SwkShape implements SwkShapeConfig {
             return "disabled";
         } else if (state == HIDDEN) {
             return "hidden";
+        } else if (state == LOCKED) {
+            return "locked";
         } else {
             throw new RuntimeException("invalid state value");
         }
@@ -525,6 +534,10 @@ public abstract class SwkShape implements SwkShapeConfig {
         g2.setColor(Color.BLACK);
         g2.setStroke(bstroke);
         g2.drawRect(x - handleSize / 2, y - handleSize / 2, handleSize, handleSize);
+        if (state == LOCKED) {
+            g2.drawLine(x - handleSize / 2, y - handleSize / 2, x+handleSize/2, y+handleSize/2);
+            g2.drawLine(x - handleSize / 2, y + handleSize / 2, x+handleSize/2, y-handleSize/2);
+        }
     }
 
     /**

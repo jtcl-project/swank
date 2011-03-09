@@ -41,6 +41,8 @@ public class StateParameter extends CanvasParameter {
             newValue = SwkShape.HIDDEN;
         } else if ("disabled".startsWith(stateString)) {
             newValue = SwkShape.DISABLED;
+        } else if ("locked".startsWith(stateString)) {
+            newValue = SwkShape.LOCKED;
         } else {
             throw new TclException(interp,
                     "invalid state argument \"" + stateString + "\"");

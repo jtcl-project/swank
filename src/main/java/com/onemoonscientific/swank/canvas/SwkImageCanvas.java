@@ -978,7 +978,7 @@ public class SwkImageCanvas implements SwkCanvasType {
             for (Enumeration e = rootNode.reverseDepthFirstEnumeration(); e.hasMoreElements();) {
                 ItemTreeNode node = (ItemTreeNode) e.nextElement();
                 SwkShape swkShape = (SwkShape) node.getUserObject();
-                if ((swkShape == null) || (swkShape.getState() != SwkShape.ACTIVE)) {
+                if ((swkShape == null) || ((swkShape.getState() != SwkShape.ACTIVE) && (swkShape.getState() != SwkShape.LOCKED))) {
                     continue;
                 }
                 if (swkShape instanceof ItemNode) {
