@@ -1048,9 +1048,6 @@ proc swkMakeSpecial {widget widgetVar} {
     
     # -orient
     if {[lsearch "JScrollBar" $widget ] >= 0} {
-        append specialVars {
-            String orient=null;
-        }
         append specialMethods "
         public void setOrient(String orient) \{
             if (orient.startsWith(\"v\")) \{
@@ -1061,7 +1058,7 @@ proc swkMakeSpecial {widget widgetVar} {
             
         \}
         public String getOrient() \{
-            if (orientation == JScrollBar.VERTICAL) \{
+            if (getOrientation() == JScrollBar.VERTICAL) \{
                 return(\"vertical\");
                 \} else \{
                 return(\"horizontal\");
@@ -1072,6 +1069,32 @@ proc swkMakeSpecial {widget widgetVar} {
             {setOrient java.lang.String Orient}
         }]
     }
+
+    # -orient
+    if {[lsearch "JSplitPane" $widget ] >= 0} {
+        append specialMethods "
+        public void setOrient(String orient) \{
+            if (orient.startsWith(\"v\")) \{
+                setOrientation(JSplitPane.VERTICAL_SPLIT);
+                \} else \{
+                setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+            \}
+
+        \}
+        public String getOrient() \{
+            if (getOrientation() == JSplitPane.VERTICAL_SPLIT) \{
+                return(\"vertical\");
+                \} else \{
+                return(\"horizontal\");
+            \}
+        \}
+        "
+        set specialGets [concat  $specialGets {
+            {setOrient java.lang.String Orient}
+        }]
+    }
+
+
     # -padx
     if {[lsearch "JPanel LabelFrame JList JScrollBar JTextArea JTextField JLabel JButton  JRadioButton JRadioButtonMenuItem JCheckBox JCheckBoxMenuItem  SLabel JMenu SMenu SMenuButton Canvas JTextPane" $widget ] >= 0} {
         append specialVars {
