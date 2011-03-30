@@ -1619,17 +1619,11 @@ proc swkMakeSpecial {widget widgetVar} {
                     if (getName().equals(".")) {
                         System.exit(0);
                     }
-                    try {
-                    DestroyCmd.destroyWidget(interp,getName());
-                    }
-                    catch(TclException tclE) {
-                        interp.addErrorInfo("error destroying widget: "+tclE.getMessage());
-                        interp.backgroundError();
-                    } 
+                    BindEvent bEvent = new BindEvent(interp,"destroy "+getName());
+                    interp.getNotifier().queueEvent(bEvent,TCL.QUEUE_TAIL);
                 } else {
                      BindEvent bEvent = new BindEvent(interp,closeCommand);
                      interp.getNotifier().queueEvent(bEvent,TCL.QUEUE_TAIL);
-                    
                 }
     
 

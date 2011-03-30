@@ -59,61 +59,71 @@ public class DestroyCmd implements Command {
         for (int j = 1; j < argv.length; j++) {
             widgetNames[j - 1] = argv[j].toString().intern();
         }
+        destroyWidgets(interp,widgetNames);
 
-        (new GetValueOnEventThread() {
-
-            @Override
-            public void run() {
-                destroyWidgets(interp, widgetNames);
-            }
-        }).execOnThread();
     }
 
-    private static void destroyWidgets(final Interp interp,
-            final String[] widgetNames) {
-        HashSet<Container> topLevels = new HashSet<Container>();
+    private static void destroyWidgets(final Interp interp, final String[] widgetNames) throws TclException {
+        final HashSet<String> childrenSet = new HashSet<String>();
         for (int j = 0; j < widgetNames.length; j++) {
-            try {
-                destroyWidget(interp, widgetNames[j], topLevels);
-            } catch (TclException tclE) {
-                interp.backgroundError();
-            }
+                getAllChildren(interp, widgetNames[j], childrenSet);
         }
+        final HashSet objectSet = new HashSet();
+        for (String childName: childrenSet) {
+            TclObject tObj = (TclObject) Widgets.getWidget(interp, childName);
+            if (tObj == null) {
+                return;
+            }
+            Object object = ReflectObject.get(interp, tObj);
+            if (object != null) {
+                Widgets.removeChild(interp, childName);
+                Widgets.removeWidget(interp, childName);
+                interp.deleteCommand(childName);
+                objectSet.add(object);
+                if (object instanceof SwkWidget) {
+                    ((SwkWidget) object).close();
+                }
+            }
+            tObj.release();
+            tObj = null;
+        }
+        final HashSet<Container> topLevels = new HashSet<Container>();
+        (new GetValueOnEventThread() {
+            @Override
+            public void run() {
+                for (Object object: objectSet) {
+                    destroyObject(object,topLevels);
+                }
+            }
+        }).execOnThread();
+
+
         for (Container topLevel : topLevels) {
             Widgets.relayoutContainer(topLevel);
         }
     }
 
-    /**
-     *
-     * @param interp
-     * @param name
-     * @throws TclException
-     */
-    public static void destroyWidget(final Interp interp, final String name)
-            throws TclException {
-        destroyWidget(interp, name, null);
-    }
-
-    private static void destroyWidget(final Interp interp, final String name, final HashSet topLevels)
-            throws TclException {
+    private static void getAllChildren(final Interp interp, final String name, final HashSet childrenSet) {
         TclObject tObj = (TclObject) Widgets.getWidget(interp, name);
-
         if (tObj == null) {
             return;
         }
-
-        Vector childrenNames = Widgets.children(interp, name);
-
-        for (int k = 0; k < childrenNames.size(); k++) {
-            destroyWidget(interp, (String) childrenNames.elementAt(k), topLevels);
+        childrenSet.add(name);
+        Vector childrenNames = new Vector();
+        try {
+            childrenNames = Widgets.children(interp, name);
+        } catch (TclException tclE) {
         }
+        for (int k = 0; k < childrenNames.size(); k++) {
+            String childName =  (String) childrenNames.elementAt(k);
+            childrenSet.add(childName);
+            getAllChildren(interp, childName,childrenSet);
+        }
+    }
 
-        Widgets.removeChild(interp, name);
-        Widgets.removeWidget(interp, name);
-        interp.deleteCommand(name);
 
-        Object object = ReflectObject.get(interp, tObj);
+    private static void destroyObject(Object object, HashSet topLevels) {
+
 
         if (object == null) {
             return;
@@ -131,8 +141,6 @@ public class DestroyCmd implements Command {
                     }
 
                     if (container instanceof Window) {
-                        // ((Window) container).pack();
-                        //((Window) container).repaint();
                         if (topLevels != null) {
                             topLevels.add(container);
                         }
@@ -140,8 +148,6 @@ public class DestroyCmd implements Command {
                     }
 
                     if (container instanceof JFrame) {
-                        //((JFrame) container).pack();
-                        //((JFrame) container).repaint();
                         if (topLevels != null) {
                             topLevels.add(container);
                         }
@@ -159,12 +165,5 @@ public class DestroyCmd implements Command {
                 topLevels.remove((Container) object);
             }
         }
-
-        if (object instanceof SwkWidget) {
-            ((SwkWidget) object).close();
-        }
-
-        tObj.release();
-        tObj = null;
     }
 }
