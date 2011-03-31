@@ -260,26 +260,6 @@ append specialMethods {
 
     public Dimension getPreferredScrollableViewportSize() {
         Dimension dim = new Dimension(swkwidth, swkheight);
-        Dimension vdim;
-
-        try {
-            JViewport viewport = Widgets.getViewport(this);
-
-            if (viewport != null) {
-                vdim = viewport.getSize();
-
-                if (swkwidth < vdim.width) {
-                    dim.width = vdim.width;
-                }
-
-                if (swkheight < vdim.height) {
-                    dim.height = vdim.height;
-                }
-            } else {
-            }
-        } catch (TclException tclE) {
-        }
-
         return (dim);
     }
 
