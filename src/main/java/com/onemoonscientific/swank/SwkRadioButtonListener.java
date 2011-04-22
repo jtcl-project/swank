@@ -109,13 +109,14 @@ public class SwkRadioButtonListener implements ActionListener, VarTrace,
     * @return
     * @throws TclException
     */
-   public boolean setVarName(Interp interp, String name)
+   public boolean setVarName(Interp interp, String newName)
             throws TclException {
         //  ButtonGroup bgroup;
         // FIXME  some of this should be on event thread
-        if (!buttonSettings.getVarName().equals("")) {
-            ButtonGroup bgroup = (ButtonGroup) SwkJRadioButton.bgroupTable.get(buttonSettings.getVarName());
-            interp.untraceVar(buttonSettings.getVarName(), this, TCL.TRACE_WRITES
+       CommandVarListenerSettings currentSettings = buttonSettings;
+        if (!currentSettings.getVarName().equals("")) {
+            ButtonGroup bgroup = (ButtonGroup) SwkJRadioButton.bgroupTable.get(currentSettings.getVarName());
+            interp.untraceVar(currentSettings.getVarName(), this, TCL.TRACE_WRITES
                     | TCL.GLOBAL_ONLY);
 
             if (bgroup != null) {
@@ -125,13 +126,14 @@ public class SwkRadioButtonListener implements ActionListener, VarTrace,
 
         TclObject tObj = null;
         boolean state = false;
-        if (name == null) {
-            name = "";
+        if (newName == null) {
+            newName = "";
         }
+        final String name = newName;
         if (!name.equals("")) {
             try {
                 tObj = interp.getVar(name, TCL.GLOBAL_ONLY);
-                state = tObj.toString().equals(buttonSettings.getValue()); //If the value doesn't match the state then deselect
+                state = tObj.toString().equals(currentSettings.getValue()); //If the value doesn't match the state then deselect
             } catch (TclException tclException) {
                 interp.resetResult();
                 tObj = TclString.newInstance("");
@@ -153,7 +155,11 @@ public class SwkRadioButtonListener implements ActionListener, VarTrace,
                 }
             });
         }
-        buttonSettings = buttonSettings.getWithVarName(name);
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    buttonSettings = buttonSettings.getWithVarName(name);
+                }
+            });
         return state;
     }
 
