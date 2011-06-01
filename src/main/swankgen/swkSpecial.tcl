@@ -449,7 +449,10 @@ proc swkMakeSpecial {widget widgetVar} {
             return(swkImageCanvas.scrollRegion);
         }
         public void setClassName(String className) {
-            this.className = className.intern();
+            // fixme should check this at Tcl level and throw TclException if already created
+            if (!((SwkWidget) this).isCreated()) {
+                this.className = className;
+            }
         }
         }
         set specialGets [concat  $specialGets {
@@ -2161,8 +2164,11 @@ Dimension dSize = new Dimension(scrollRegion[1][0]-scrollRegion[0][0],scrollRegi
         set specialGets [concat  $specialGets { {setSwkWidth tkSize Width -width} } ]
         set specialGets [concat  $specialGets { {setSwkHeight tkSize Height -height} } ]
         append specialMethods {
+            // fixme should check this at Tcl level and throw TclException if already created
             public void setClassName(String className) {
-                this.className = className.intern();
+                if (!((SwkWidget) this).isCreated()) {
+                    this.className = className;
+                }
             }
         }
 
