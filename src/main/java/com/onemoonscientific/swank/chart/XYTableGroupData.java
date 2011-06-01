@@ -110,6 +110,9 @@ public class XYTableGroupData extends XYData implements TableXYDataset{
           int nSeries = 0;
           for (int i=0;i<nRows;i++) {
               Object gObject = tableModel.getValueAt(i, gColumn);
+              if ((gObject == null) || (gObject.toString().equals(""))) {
+                  continue;
+              }
               Integer seriesIndex = (Integer) seriesMap.get(gObject);
               ArrayList arrayList = null;
               if (seriesIndex == null) {
