@@ -31,7 +31,7 @@ public class ${widgetType} extends ${widget} implements SwkWidget, Printable$spe
     {
     static Hashtable resourceDB = null;
     String name = null;
-    static String className = "$widgetClass";
+    String className = "$widgetClass";
     LinkedList children = null;
     ArrayList<SwkBinding> virtualBindings = null;
     int active = 0;
