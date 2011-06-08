@@ -32,7 +32,9 @@
  * @author  JOHNBRUC
  * @version
  */
-package com.onemoonscientific.swank.canvas;
+package com.onemoonscientific.swank.canvas3D;
+
+import com.onemoonscientific.swank.canvas.HittableShape;
 
 /**
  *
@@ -68,7 +70,6 @@ public class HitShape implements HittableShape {
     public int getHandle() {
         return handle;
     }
-
     public boolean hasShape() {
         return swkShape != null;
     }

@@ -25,18 +25,17 @@
 package com.onemoonscientific.swank.canvas3D;
 
 
-import com.sun.j3d.utils.geometry.*;
 
 import tcl.lang.*;
 
 import java.awt.*;
 import java.awt.geom.*;
 
-import java.lang.*;
-
 import java.util.*;
-
+import com.sun.j3d.utils.picking.*;
+import com.sun.j3d.utils.geometry.Primitive;
 import javax.media.j3d.*;
+import javax.vecmath.Point3d;
 
 import com.onemoonscientific.swank.SwkException;
 
@@ -120,8 +119,8 @@ public abstract class SwkShape implements SwkShape3DConfig {
         return false;
     }
 
-    public TclObject hit(double x, double y) {
-        return TclString.newInstance("");
+    public String hit(double x, double y) {
+        return String.valueOf(pickShape(x,y));
     }
 
     /**
@@ -379,6 +378,43 @@ System.out.println("updateShaped");
             System.out.println("update shape error " +bgE.getMessage());
         }
     }
-
-
+    int pickShape(final double x, final double y) {
+        String pickResult = "";
+        PickCanvas pickCanvas = new PickCanvas(canvas.c3D,bG);
+        pickCanvas.setShapeLocation((int) x,(int) y);
+        PickResult result = pickCanvas.pickClosest();
+        SwkShape swkShape = null;
+        int pickIndex = -1;
+        int index = -1;
+        if (result == null) {
+            System.out.println("Nothing picked");
+        } else {
+            TransformGroup tg = (TransformGroup) result.getNode(PickResult.TRANSFORM_GROUP);
+            System.out.println(tg);
+            if (tg instanceof NvTransformGroup) {
+                swkShape = ((NvTransformGroup) tg).getShape();
+                pickIndex = ((NvTransformGroup) tg).getIndex();
+                System.out.println("swksh " + swkShape.getType() + " " + swkShape.getId() + " " + pickIndex);
+            }
+            if (pickIndex == -1) {
+                Primitive p = (Primitive) result.getNode(PickResult.PRIMITIVE);
+                Shape3D s = (Shape3D) result.getNode(PickResult.SHAPE3D);
+                GeometryArray geomArray = result.getGeometryArray();
+                if (geomArray != null) {
+                    // System.out.println(" geom count " + geomArray.getVertexCount());
+                }
+                Point3d eyePos = pickCanvas.getStartPosition();
+                PickIntersection pickIntersection = result.getClosestIntersection(eyePos);
+                if (pickIntersection != null) {
+                    System.out.println("closest vertex index " + pickIntersection.getClosestVertexIndex());
+                    System.out.println("closest vertext coord  " + pickIntersection.getClosestVertexCoordinates());
+                    System.out.println("closest vertext vword  " + pickIntersection.getClosestVertexCoordinatesVW());
+                    int gaIndex = pickIntersection.getGeometryArrayIndex();
+                    int[] pickIndices = pickIntersection.getPrimitiveVertexIndices();
+                    pickIndex = pickIndices[gaIndex];
+                }
+            }
+        }
+        return pickIndex;
+    }
 }

@@ -24,7 +24,7 @@
  */
 package com.onemoonscientific.swank;
 
-import com.onemoonscientific.swank.canvas.HitShape;
+import com.onemoonscientific.swank.canvas.HittableShape;
 import tcl.lang.*;
 import tcl.pkg.java.ReflectObject;
 
@@ -893,7 +893,7 @@ public class BindCmd implements Command {
      * @param hitShape
      * @throws TclException if exception is thrown when evaluating the command.
      */
-    public static void doCmd(Interp interp, String command, InputEvent e, HitShape hitShape)
+    public static void doCmd(Interp interp, String command, InputEvent e, HittableShape hitShape)
             throws TclException {
         int i;
         char type;
@@ -934,8 +934,8 @@ public class BindCmd implements Command {
                         }
                         break;
                     case 'd':
-                        if ((hitShape != null) && (hitShape.getShape() != null)) {
-                            sbuf.append(hitShape.getShape().getId());
+                        if ((hitShape != null) && (hitShape.hasShape())) {
+                            sbuf.append(hitShape.getId());
                             if (hitShape.getHandle() >= 0) {
                                 sbuf.append('.');
                                 sbuf.append(hitShape.getHandle());

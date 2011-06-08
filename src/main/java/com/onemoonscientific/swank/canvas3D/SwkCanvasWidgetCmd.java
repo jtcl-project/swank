@@ -843,7 +843,7 @@ public class SwkCanvasWidgetCmd implements Command {
                 SwkShape swkShape = (SwkShape) swkcanvas.getShape(tagName);
 
                 if (swkShape != null) {
-                    // fixme  result = swkShape.hit(x, y);
+                    result = swkShape.hit(x, y);
                 }
             } catch (SwkException swkE) {
             }

@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 import javax.imageio.ImageIO;
 
@@ -50,7 +51,7 @@ import javax.media.j3d.GeometryArray;
 import javax.media.j3d.Geometry;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
-import javax.media.j3d.View;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
@@ -148,9 +149,14 @@ public class SwkImageCanvas extends MouseAdapter implements SwkCanvasType {
     int lastShapeId = 0;
     SwkShape firstShape = null;
     SwkShape lastShape = null;
-    SwkShape eventCurrentShape = null;
+    HitShape eventCurrentShape = null;
     SwkShape lastShapeScanned = null;
+    String currentTag = null;
+    String previousTag = null;
+    TclObject currentTags[] = null;
+    TclObject previousTags[] = null;
     Hashtable tagHash = new Hashtable();
+    int handle = -1;
     Vector tagVec = new Vector();
     int swkwidth = 1;
     int swkheight = 1;
@@ -168,6 +174,12 @@ public class SwkImageCanvas extends MouseAdapter implements SwkCanvasType {
     Color3f color3f = new Color3f();
     Canvas3D c3D;
     private PickCanvas pickCanvas;
+    HitShape hitShape = null;
+    Cursor previousCursor = null;
+    LinkedHashMap focusHash = null;
+    LinkedHashMap mouseHash = null;
+    LinkedHashMap mouseMotionHash = null;
+    LinkedHashMap keyHash = null;
 
     public SwkImageCanvas(final Interp interp, String name, String className) {
         this.name = name.intern();
@@ -199,7 +211,7 @@ public class SwkImageCanvas extends MouseAdapter implements SwkCanvasType {
         BranchGroup branchGroup = createSceneGraph2();
         addBranchGraph(branchGroup);
         //enablePicking(branchGroup);
-        pickCanvas = new PickCanvas(c3D,branchGroup);
+        pickCanvas = new PickCanvas(c3D, branchGroup);
         pickCanvas.setTolerance(10.0f);
         pickCanvas.setMode(PickCanvas.GEOMETRY);
         c3D.addMouseListener(this);
@@ -214,6 +226,7 @@ public class SwkImageCanvas extends MouseAdapter implements SwkCanvasType {
     public Canvas3D getCanvas3D() {
         return c3D;
     }
+
     public PickCanvas getPickCanvas() {
         return pickCanvas;
     }
@@ -330,14 +343,27 @@ public class SwkImageCanvas extends MouseAdapter implements SwkCanvasType {
         return (anchor.clone());
     }
 
-    public void setEventCurrentShape(SwkShape shape) {
+    public void setEventCurrentShape(HitShape shape) {
         eventCurrentShape = shape;
     }
 
     public SwkShape getLastShapeScanned() {
         return lastShapeScanned;
     }
+    public void setHandleCursor(Cursor cursor) {
+         if (previousCursor == null) {
+             previousCursor = component.getCursor();
+         }
+         component.setCursor(cursor);
+    }
+    public void setCursor(Cursor cursor) {
+       previousCursor = cursor;
+       component.setCursor(cursor);
+    }
 
+    public int getHandle() {
+        return handle;
+    }
     public Transformer setTransformer(String transformerName, SwkShape shape) {
         Transformer transformer = null;
         transformer = (Transformer) transformerHash.get(transformerName);
@@ -369,16 +395,6 @@ public class SwkImageCanvas extends MouseAdapter implements SwkCanvasType {
 
     public double getZoom() {
         return zoom;
-    }
-
-    String getTagOrIDFromTagID(String tagID) {
-        int spacePos = tagID.indexOf(" ");
-
-        if (spacePos == -1) {
-            return tagID;
-        } else {
-            return tagID.substring(0, spacePos);
-        }
     }
 
     /*
@@ -427,7 +443,7 @@ public class SwkImageCanvas extends MouseAdapter implements SwkCanvasType {
 
         if (arg.equals("current")) {
             if (eventCurrentShape != null) {
-                swkShape = eventCurrentShape;
+                swkShape = eventCurrentShape.swkShape;
             } else {
                 throw new SwkException("tag doesn't exist");
             }
@@ -617,6 +633,81 @@ public class SwkImageCanvas extends MouseAdapter implements SwkCanvasType {
             return null;
         }
     }
+     public void setupBinding(Interp interp, SwkBinding newBinding,
+        String tagName) {
+        ArrayList<SwkBinding> bindVec = null;
+
+        if (newBinding.type == SwkBinding.FOCUS) {
+            if (focusHash == null) {
+                focusHash = new LinkedHashMap();
+                bindVec = new ArrayList<SwkBinding>(2);
+                focusHash.put(tagName, bindVec);
+            } else {
+                bindVec = (ArrayList<SwkBinding>) focusHash.get(tagName);
+
+                if (bindVec == null) {
+                    bindVec = new ArrayList<SwkBinding>(2);
+                    focusHash.put(tagName, bindVec);
+                }
+            }
+        } else if (newBinding.type == SwkBinding.MOUSE) {
+            if (mouseHash == null) {
+                mouseHash = new LinkedHashMap();
+                bindVec = new ArrayList<SwkBinding>(2);
+                mouseHash.put(tagName, bindVec);
+            } else {
+                bindVec = (ArrayList<SwkBinding>) mouseHash.get(tagName);
+
+                if (bindVec == null) {
+                    bindVec = new ArrayList<SwkBinding>(2);
+                    mouseHash.put(tagName, bindVec);
+                }
+            }
+        } else if (newBinding.type == SwkBinding.MOUSEMOTION) {
+            if (mouseMotionHash == null) {
+                mouseMotionHash = new LinkedHashMap();
+                bindVec = new ArrayList<SwkBinding>(2);
+                mouseMotionHash.put(tagName, bindVec);
+            } else {
+                bindVec = (ArrayList<SwkBinding>) mouseMotionHash.get(tagName);
+
+                if (bindVec == null) {
+                    bindVec = new ArrayList<SwkBinding>(2);
+                    mouseMotionHash.put(tagName, bindVec);
+                }
+            }
+        } else if (newBinding.type == SwkBinding.KEY) {
+            if (keyHash == null) {
+                keyHash = new LinkedHashMap();
+                bindVec = new ArrayList<SwkBinding>(2);
+                keyHash.put(tagName, bindVec);
+            } else {
+                bindVec = (ArrayList<SwkBinding>) keyHash.get(tagName);
+
+                if (bindVec == null) {
+                    bindVec = new ArrayList<SwkBinding>(2);
+                    keyHash.put(tagName, bindVec);
+                }
+            }
+        }
+
+        if (bindVec != null) {
+            if (!newBinding.add) {
+                for (int i = 0; i < bindVec.size(); i++) {
+                    SwkBinding binding =  bindVec.get(i);
+
+                    if (binding.equals(newBinding)) {
+                        bindVec.add(i,newBinding);
+
+                        return;
+                    }
+                }
+            }
+
+            bindVec.add(newBinding);
+        }
+    }
+
 
     Vector getShapesWithTags(String tag) throws SwkException {
         String[] tags = {tag};
@@ -811,8 +902,49 @@ public class SwkImageCanvas extends MouseAdapter implements SwkCanvasType {
                 (int) (transMouse.getY() - y));
     }
 
-    public TclObject[] scanCanvasForTags(double x1, double y1) {
-        return null;
+    public TclObject[] scanCanvasForTags(MouseEvent mEvent) {
+
+
+        LinkedHashSet shapeHash = new LinkedHashSet();
+        String tagOrId = null;
+        Enumeration tags = null;
+        lastShapeScanned = null;
+        SwkPickResult pickResult = pickCanvas(mEvent);
+        SwkShape swkShape = pickResult.swkShape;
+
+        if (swkShape != null) {
+            lastShapeScanned = swkShape;
+
+            tagOrId = String.valueOf(swkShape.id);
+            shapeHash.add(tagOrId);
+
+            for (Object o : swkShape.tags.entrySet()) {
+                Entry entry = (Entry) o;
+                Tag tag = (Tag) entry.getValue();
+
+                tagOrId = tag.name + " "
+                        + String.valueOf(swkShape.id);
+                shapeHash.add(tagOrId);
+            }
+
+            tagOrId = "all " + String.valueOf(swkShape.id);
+            shapeHash.add(tagOrId);
+
+        }
+
+        if (shapeHash.size() == 0) {
+            return null;
+        }
+
+        TclObject[] tagOrIds = new TclObject[shapeHash.size()];
+
+        int i = 0;
+
+        for (Object o : shapeHash) {
+            String shapeTagOrID = (String) o;
+            tagOrIds[i++] = TclString.newInstance(shapeTagOrID);
+        }
+        return tagOrIds;
     }
 
     FontRenderContext getFontRenderContext() {
@@ -1192,100 +1324,582 @@ public class SwkImageCanvas extends MouseAdapter implements SwkCanvasType {
         } catch (IOException e) {
         }
     }
-           public void mouseClicked(MouseEvent mEvent) {
-                String pickResult = pickCanvas(mEvent);
+
+    public void mousePressed(MouseEvent mEvent) {
+        currentTags = getTagFromEvent(mEvent);
+
+        if (currentTags == null) {
+            return;
+        }
+
+        for (int i = 0; i < currentTags.length; i++) {
+            currentTag = getTagOrIDFromTagID(currentTags[i].toString());
+            processMouse(mEvent, SwkBinding.MOUSE, SwkBinding.PRESS);
+        }
+    }
+
+    public void mouseReleased(MouseEvent mEvent) {
+        previousTags = currentTags;
+
+        /*
+        if (previousTags != null) {
+        for (int i=0;i<previousTags.length;i++) {
+        System.out.println("prev "+previousTags[i].toString());
+        }
+        }
+         **/
+        currentTags = getTagFromEvent(mEvent);
+
+        if (currentTags != null) {
+            // for (int i=0;i<currentTags.length;i++) {
+            //   System.out.println("current "+currentTags[i].toString());
+            //}
+        } else {
+            currentTag = null;
+            setEventCurrentShape(null);
+        }
+
+        checkForMouseExit(mEvent);
+
+        if (currentTags == null) {
+            return;
+        }
+
+        for (int i = 0; i < currentTags.length; i++) {
+            currentTag = getTagOrIDFromTagID(currentTags[i].toString());
+            processMouse(mEvent, SwkBinding.MOUSE,
+                    SwkBinding.RELEASE);
+        }
+    }
+
+    public void mouseClicked(MouseEvent mEvent) {
+        currentTags = getTagFromEvent(mEvent);
+
+        if (currentTags == null) {
+            return;
+        }
+
+        for (int i = 0; i < currentTags.length; i++) {
+            currentTag = getTagOrIDFromTagID(currentTags[i].toString());
+            processMouse(mEvent, SwkBinding.MOUSE, SwkBinding.CLICK);
+        }
+    }
+
+    public void mouseEntered(MouseEvent mEvent) {
+    }
+
+    public void mouseExited(MouseEvent mEvent) {
+    }
+
+    public void mouseDragged(MouseEvent mEvent) {
+        processMouseMotion(mEvent);
+    }
+
+    public void mouseMoved(MouseEvent mEvent) {
+        processMouseMotion(mEvent);
+    }
+
+//    public void mouseClicked(MouseEvent mEvent) {
+//        SwkPickResult pickResult = pickCanvas(mEvent);
+//        String currentTag = null;
+//        if (pickResult.swkShape != null) {
+//            currentTag = String.valueOf(pickResult.swkShape.getId());
+//        }
+//        BindEvent bEvent = new BindEvent(interp, (SwkCanvas) component, (EventObject) mEvent, SwkBinding.MOUSE, SwkBinding.CLICK, currentTag, null, pickResult);
+//        interp.getNotifier().queueEvent(bEvent, TCL.QUEUE_TAIL);
+//    }
+    public TclObject[] getTagFromEvent(MouseEvent mEvent) {
+        currentTag = null;
+
+        return (scanCanvasForTags(mEvent));
+    }
+
+    SwkPickResult pickCanvas(MouseEvent e) {
+        String pickResult = "";
+        pickCanvas.setShapeLocation(e);
+        PickResult result = pickCanvas.pickClosest();
+        SwkShape swkShape = null;
+        int index = -1;
+        if (result == null) {
+            System.out.println("Nothing picked");
+        } else {
+            TransformGroup tg = (TransformGroup) result.getNode(PickResult.TRANSFORM_GROUP);
+            System.out.println(tg);
+            if (tg instanceof NvTransformGroup) {
+                swkShape = ((NvTransformGroup) tg).getShape();
+                index = ((NvTransformGroup) tg).getIndex();
+                System.out.println("swksh " + swkShape.getType() + " " + swkShape.getId() + " " + index);
+            }
+
+            Primitive p = (Primitive) result.getNode(PickResult.PRIMITIVE);
+            Shape3D s = (Shape3D) result.getNode(PickResult.SHAPE3D);
+            GeometryArray geomArray = result.getGeometryArray();
+            if (geomArray != null) {
+                // System.out.println(" geom count " + geomArray.getVertexCount());
+            }
+            Point3d eyePos = pickCanvas.getStartPosition();
+            PickIntersection pickIntersection = result.getClosestIntersection(eyePos);
+            if (pickIntersection != null) {
+                System.out.println("closest vertex index " + pickIntersection.getClosestVertexIndex());
+                System.out.println("closest vertext coord  " + pickIntersection.getClosestVertexCoordinates());
+                System.out.println("closest vertext vword  " + pickIntersection.getClosestVertexCoordinatesVW());
+                System.out.println("ga " + pickIntersection.getGeometryArrayIndex());
+                for (int pickIndex : pickIntersection.getPrimitiveCoordinateIndices()) {
+                    System.out.println(pickIndex);
+                }
+                for (int pickIndex : pickIntersection.getPrimitiveVertexIndices()) {
+                    System.out.println(pickIndex);
+                }
+            }
+
+            if (p != null) {
+                System.out.println("prim " + p.getClass().getName());
+                pickResult = p.getClass().getName();
+            }
+            if (s != null) {
+                System.out.println("shape "+s.getClass().getName());
+                pickResult = s.getClass().getName();
+            }
+        }
+        SwkPickResult swkPickResult = new SwkPickResult(swkShape, index, 0);
+        return swkPickResult;
+    }
+
+    public static void enablePicking(Node node) {
+        if (node == null) {
+            return;
+        }
+        try {
+            node.setCapability(Node.ALLOW_PICKABLE_WRITE);
+            node.setPickable(true);
+            node.setCapability(Node.ENABLE_PICK_REPORTING);
+
+            if (node instanceof Group) {
+                Group group = (Group) node;
+                for (Enumeration e = group.getAllChildren(); e.hasMoreElements();) {
+                    enablePicking((Node) e.nextElement());
+                }
+
+            }
+            if (node instanceof Shape3D) {
+                Shape3D shape = (Shape3D) node;
+
+                PickTool.setCapabilities(node, PickTool.INTERSECT_FULL);
+
+                for (Enumeration e = shape.getAllGeometries(); e.hasMoreElements();) {
+
+                    Geometry g = (Geometry) e.nextElement();
+
+                    g.setCapability(g.ALLOW_INTERSECT);
+
+                }
+
+            }
+        } catch (Exception e) {
+            System.out.println("enable picking shape error " + e.getMessage());
+        }
+
+    }
+
+    void processMouseMotion(MouseEvent mEvent) {
+        previousTags = currentTags;
+
+        /*
+        if (previousTags != null) {
+        for (int i=0;i<previousTags.length;i++) {
+        System.out.println("prev "+previousTags[i].toString());
+        }
+        }
+         */
+        int buttonMask = (InputEvent.BUTTON1_MASK + InputEvent.BUTTON2_MASK
+                + InputEvent.BUTTON3_MASK);
+        int mods = mEvent.getModifiers();
+
+        if ((mods & buttonMask) == 0) {
+            currentTags = getTagFromEvent(mEvent);
+
+            /*
+            if (currentTags != null) {
+            for (int i=0;i<currentTags.length;i++) {
+            System.out.println("current "+currentTags[i].toString());
+            }
+            }
+             **/
+            checkForMouseExit(mEvent);
+            hitShape = new HitShape(getLastShapeScanned(), getHandle());
+            if ((hitShape != null) && (hitShape.handle >= 0) && (hitShape.swkShape != null)) {
+                // fixme setHandleCursor(hitShape.swkShape.getHandleCursor(hitShape.handle));
+            } else {
+                if (previousCursor != null) {
+                    setHandleCursor(previousCursor);
+                }
+            }
+            checkForMouseEnter(mEvent);
+        }
+
+        if (currentTags != null) {
+            for (int i = 0; i < currentTags.length; i++) {
+                currentTag = getTagOrIDFromTagID(currentTags[i].toString());
+                processMouse(mEvent, SwkBinding.MOUSEMOTION, SwkBinding.MOTION);
+            }
+        }
+    }
+
+    void checkForMouseExit(MouseEvent mEvent) {
+        boolean stillPresent = true;
+
+        if ((currentTags == null) && (previousTags != null)) {
+            for (int i = 0; i < previousTags.length; i++) {
+                previousTag = getTagOrIDFromTagID(previousTags[i].toString());
+                processMouse(mEvent, SwkBinding.MOUSE, SwkBinding.EXIT);
+            }
+        } else if ((currentTags != null) && (previousTags != null)) {
+            for (int i = 0; i < previousTags.length; i++) {
+                previousTag = previousTags[i].toString();
+                stillPresent = false;
+
+                for (int j = 0; j < currentTags.length; j++) {
+                    String thisTag = currentTags[j].toString();
+
+                    if (previousTags[i].toString().equals(thisTag)) {
+                        stillPresent = true;
+
+                        break;
+                    }
+                }
+
+                if (!stillPresent) {
+                    previousTag = getTagOrIDFromTagID(previousTag);
+                    processMouse(mEvent, SwkBinding.MOUSE, SwkBinding.EXIT);
+                }
+            }
+        }
+    }
+
+    void checkForMouseEnter(MouseEvent mEvent) {
+        boolean wasPresent = true;
+
+        if ((currentTags != null) && (previousTags == null)) {
+            for (int i = 0; i < currentTags.length; i++) {
+                currentTag = getTagOrIDFromTagID(currentTags[i].toString());
+                processMouse(mEvent, SwkBinding.MOUSE, SwkBinding.ENTER);
+            }
+        } else if ((currentTags != null) && (previousTags != null)) {
+            for (int i = 0; i < currentTags.length; i++) {
+                String thisTag = currentTags[i].toString();
+                wasPresent = false;
+
+                for (int j = 0; j < previousTags.length; j++) {
+                    if (previousTags[j].toString().equals(thisTag)) {
+                        wasPresent = true;
+
+                        break;
+                    }
+                }
+
+                if (!wasPresent) {
+                    currentTag = getTagOrIDFromTagID(thisTag);
+                    processMouse(mEvent, SwkBinding.MOUSE, SwkBinding.ENTER);
+                }
+            }
+        }
+    }
+
+    public void processKey(KeyEvent e, int subtype) {
+        BindEvent bEvent = new BindEvent(interp, this, (EventObject) e, SwkBinding.KEY,
+                subtype, currentTag, previousTag, hitShape);
+        interp.getNotifier().queueEvent(bEvent, TCL.QUEUE_TAIL);
+
+        //bEvent.sync();
+        //processEvent(e,subtype);
+    }
+
+    public void processMouse(MouseEvent e, int type, int subtype) {
+        BindEvent bEvent = new BindEvent(interp, this, (EventObject) e, type,
+                subtype, currentTag, previousTag, hitShape);
+        interp.getNotifier().queueEvent(bEvent, TCL.QUEUE_TAIL);
+    }
+
+    public void processEvent(EventObject eventObject, int type, int subtype,
+            String currentTag, String previousTag, HitShape eventCurrentShape) {
+        if (eventObject instanceof KeyEvent) {
+            processKeyEvent((KeyEvent) eventObject, type, subtype, currentTag, previousTag, eventCurrentShape);
+        } else {
+            processMouseEvent(eventObject, type, subtype, currentTag, previousTag, eventCurrentShape);
+
+        }
+    }
+
+    public void processKeyEvent(KeyEvent e, int type, int subtype,
+            String currentTag, String previousTag, HitShape eventCurrentShape) {
+
+        //System.out.println("key event "+e.toString()); 
+        SwkBinding binding;
+        int buttonMask;
+        boolean debug = false;
+        int mods = e.getModifiersEx();
+        char keyChar = e.getKeyChar();
+
+        if (Character.isISOControl(keyChar)) {
+            keyChar = (char) (keyChar + 96);
+        }
+
+        int keyCode = e.getKeyCode();
+
+        if (debug) {
+            if (keyChar == KeyEvent.CHAR_UNDEFINED) {
+                //System.out.println(keyCode+" undef "+subtype);
+            } else {
+                //System.out.println(keyCode+" "+keyChar+" "+subtype);
+            }
+        }
+
+        if (Character.isISOControl(keyChar)) {
+            keyChar = (char) (keyChar + 64);
+        }
+
+        KeyStroke keyStroke = KeyStroke.getKeyStrokeForEvent(e);
+        boolean nativeProcessEvent = true;
+        boolean breakOut = false;
+
+        if (e.isConsumed()) {
+            return;
+        }
+
+        setEventCurrentShape(eventCurrentShape);
+
+        // System.out.println("processE "+type+" "+subtype+" C "+currentTag+" P "+previousTag);
+
+        ArrayList<SwkBinding> bindings = getBindings(currentTag, type, subtype);
+
+        if (bindings == null) {
+            return;
+        }
+
+        boolean consumeNextType = true;
+        if (subtype == SwkBinding.PRESS) {
+            consumeNextType = false;
+        }
+
+
+        //    System.out.println("event "+e);
+        //    System.out.println("emods "+mods);
+        int i;
+        SwkBinding lastBinding = null;
+        for (i = 0; i < bindings.size(); i++) {
+            binding = (SwkBinding) bindings.get(i);
+
+            //System.out.println("binding is "+binding.toString()+" "+binding.subtype+" "+subtype);
+            if (binding.subtype != subtype) {
+                continue;
+            }
+
+            if (!((binding.subtype == SwkBinding.PRESS)
+                    && (binding.detail == 0))) {
+                if (!((binding.subtype == SwkBinding.RELEASE)
+                        && (binding.detail == 0))) {
+                    if (!((binding.subtype == SwkBinding.TYPE)
+                            && (binding.detail == 0))) {
+                        //System.out.println("event mods "+mods+" binding mods "+binding.mod);
+                        if (binding.keyStroke == null) {
+                            //System.out.println("chars "+(keyChar+0)+" "+binding.detail);
+                            if (binding.detail != keyChar) {
+                                continue;
+                            }
+
+                            if (binding.mod != mods) {
+                                if ((binding.mod
+                                        | InputEvent.SHIFT_DOWN_MASK) != mods) {
+                                    continue;
+                                }
+                            }
+                        } else {
+                            //System.out.println(binding.detail+" <<>> "+keyCode);
+                            if (binding.detail != keyCode) {
+                                //System.out.println("keyCodes not equal");
+                                continue;
+                            }
+
+                            if (binding.mod != mods) {
+                                continue;
+                            }
+                        }
+                    }
+
+                    // second accounts for possibility of Caps-lock on
+                    // if matched above at detail == keyChar then the case was
+                    // right
+                }
+            }
+
+            if ((binding.command != null)
+                    && (binding.command.length() != 0)) {
+                try {
+                    BindCmd.doCmd(interp, binding.command, e, eventCurrentShape);
+                } catch (TclException tclE) {
+                    if (tclE.getCompletionCode() == TCL.BREAK) {
+                        nativeProcessEvent = false;
+
+                        //System.out.println("break");
+                        e.consume();
+
+                        if (subtype == SwkBinding.PRESS) {
+                            //System.out.println("consume next");
+                            consumeNextType = true;
+                        }
+
+                        breakOut = true;
+
+                        break;
+                    } else {
+                        interp.addErrorInfo("\n    (\"binding\" script)");
+                        interp.backgroundError();
+                    }
+                }
+            }
+
+            if (breakOut) {
+                break;
+            }
+        }
+    }
+
+    ArrayList<SwkBinding> getBindings(String checkTag, int type, int subtype) {
+        ArrayList<SwkBinding> bindings = null;
+        if (type == SwkBinding.FOCUS) {
+            if ((checkTag != null) && (focusHash != null)) {
+                bindings = (ArrayList<SwkBinding>) focusHash.get(checkTag);
+            }
+        } else if (type == SwkBinding.MOUSE) {
+            if (subtype == SwkBinding.EXIT) {
+                if ((checkTag != null) && (mouseHash != null)) {
+                    bindings = (ArrayList<SwkBinding>) mouseHash.get(checkTag);
+                }
+            } else {
+                if ((checkTag != null) && (mouseHash != null)) {
+                    bindings = (ArrayList<SwkBinding>) mouseHash.get(checkTag);
+                }
+            }
+
+        } else if (type == SwkBinding.MOUSEMOTION) {
+            if ((checkTag != null) && (mouseMotionHash != null)) {
+                bindings = (ArrayList<SwkBinding>) mouseMotionHash.get(checkTag);
+            }
+
+        } else if (type == SwkBinding.KEY) {
+            if ((checkTag != null) && (keyHash != null)) {
+                bindings = (ArrayList<SwkBinding>) keyHash.get(checkTag);
+            }
+        }
+        return bindings;
+
+    }
+
+    public void processMouseEvent(EventObject eventObject, int type, int subtype,
+            String currentTag, String previousTag, HitShape eventCurrentShape) {
+
+           System.out.println("processE "+type+" "+subtype+" C "+currentTag+" P "+previousTag);       
+        InputEvent iE = (InputEvent) eventObject;
+        if (iE.isConsumed()) {
+            return;
+        }
+
+        setEventCurrentShape(eventCurrentShape);
+
+         System.out.println("processE "+type+" "+subtype+" C "+currentTag+" P "+previousTag);
+
+        ArrayList<SwkBinding> bindings = null;
+        if (subtype == SwkBinding.EXIT) {
+            bindings = getBindings(previousTag, type, subtype);
+        } else {
+            bindings = getBindings(currentTag, type, subtype);
+        }
+
+        if (bindings == null) {
+            return;
+        }
+
+        SwkBinding binding;
+        MouseEvent mE = null;
+        int mods = iE.getModifiersEx();
+        int buttons = 0;
+        if (iE instanceof MouseEvent) {
+            mE = (MouseEvent) iE;
+            buttons = mE.getButton();
+        }
+
+
+        //    System.out.println("event "+e);
+        //    System.out.println("emods "+mods);
+        int i;
+        SwkBinding lastBinding = null;
+        for (i = 0; i < bindings.size(); i++) {
+            binding = bindings.get(i);
+
+              System.out.println(type+" "+subtype+" "+" "+binding.type+" "+binding.subtype);
+            if (binding.subtype != subtype) {
+                continue;
+            }
+
+            if ((subtype != SwkBinding.ENTER) && (subtype != SwkBinding.EXIT)) {
+                if ((type == SwkBinding.MOUSE) && (mE.getClickCount() > 0)
+                        && (binding.count > mE.getClickCount())) {
+                    continue;
+                }
+
+                System.out.println(binding.detail+" "+binding.mod+" "+mods+" "+(binding.mod  & mods));
+                // if ((binding.mod & buttonMask) != (mods & buttonMask)) {continue;}
+                if (type == SwkBinding.MOUSEMOTION) {
+                    if (!SwkMouseMotionListener.checkButtonState(mE,
+                            binding.mod, mods)) {
+                        continue;
+                    }
+                } else if (type == SwkBinding.MOUSE) {
+                    if (!SwkMouseMotionListener.checkButtons(binding.detail,
+                            buttons)) {
+                        continue;
+                    }
+
+
+                }
+
+                //  System.out.println("check mods");
+                if (!SwkMouseMotionListener.checkMods(binding.mod, mods)) {
+                    continue;
+                }
+            }
+            if (binding.sameButClick(lastBinding)) {
+                continue;
             }
 
 
-    String pickCanvas(MouseEvent e) {
-        String pickResult = "";
-        pickCanvas.setShapeLocation(e); 
-        PickResult result = pickCanvas.pickClosest(); 
-        if (result == null) { 
-          // System.out.println("Nothing picked");
-        } else { 
-          TransformGroup tg = (TransformGroup) result.getNode( PickResult.TRANSFORM_GROUP );
-//System.out.println(tg);
-          if (tg instanceof NvTransformGroup) {
-              SwkShape swkShape = ((NvTransformGroup) tg).getShape();
-              int index = ((NvTransformGroup) tg).getIndex();
-             // System.out.println("swksh " + swkShape.getType() + " " + swkShape.getId() + " " + index);
-          }
+            if ((binding.command != null) && (binding.command.length() != 0)) {
+                try {
+                    BindCmd.doCmd(interp, binding.command, iE, eventCurrentShape);
+                } catch (TclException tclE) {
+                    if (tclE.getCompletionCode() == TCL.BREAK) {
+                        iE.consume();
 
-           Primitive p = (Primitive)result.getNode(PickResult.PRIMITIVE); 
-           Shape3D s = (Shape3D)result.getNode(PickResult.SHAPE3D); 
-           GeometryArray geomArray = result.getGeometryArray();
-           if (geomArray != null) {
-              // System.out.println(" geom count " + geomArray.getVertexCount());
-           }
-          // System.out.println("ni " + result.numIntersections());
-           int nInter = result.numIntersections();
-           for (int i=0;i<nInter;i++) {
-//System.out.println("i " + i);
-           PickIntersection pickIntersection = result.getIntersection(i);
-           if (pickIntersection != null) { 
-         //      System.out.println("pv " + pickIntersection.getClosestVertexIndex());
-         //      System.out.println("pv " + pickIntersection.getClosestVertexCoordinates());
-          //     System.out.println("pv " + pickIntersection.getClosestVertexCoordinatesVW());
-          //     System.out.println("ga " + pickIntersection.getGeometryArrayIndex());
-               for (int pickIndex:pickIntersection.getPrimitiveCoordinateIndices()) {
-                   //  System.out.println(pickIndex);
-               }
-               for (int pickIndex:pickIntersection.getPrimitiveVertexIndices()) {
-                   //  System.out.println(pickIndex);
-               }
-           }
-           }
-           
-           if (p != null) { 
-            //  System.out.println(p.getClass().getName());
-               pickResult = p.getClass().getName();
-           } else if (s != null) { 
-               //  System.out.println(s.getClass().getName());
-                 pickResult = s.getClass().getName();
-           } else{ 
-            //  System.out.println("null");
-              pickResult = "null pick";
-           } 
-        } 
-        return pickResult;
+                        return;
+                    } else {
+                        interp.addErrorInfo("\n    (\"binding\" script)");
+                        interp.backgroundError();
+                    }
+                }
+            }
+            lastBinding = binding;
+        }
     }
 
-   public static void enablePicking(Node node) {
-    if (node == null) {
-         return;
+    String getTagOrIDFromTagID(String tagID) {
+        int spacePos = tagID.indexOf(" ");
+
+        if (spacePos == -1) {
+            return tagID;
+        } else {
+            return tagID.substring(0, spacePos);
+        }
     }
-    try {
-    node.setCapability(Node.ALLOW_PICKABLE_WRITE);
-    node.setPickable(true);
-    node.setCapability(Node.ENABLE_PICK_REPORTING);
-
-    if (node instanceof Group) {
-       Group group = (Group) node;
-       for (Enumeration e = group.getAllChildren(); e.hasMoreElements();) {
-          enablePicking((Node)e.nextElement());
-       }
-
-    }
-    if (node instanceof Shape3D) {
-          Shape3D shape = (Shape3D) node;
-
-          PickTool.setCapabilities(node, PickTool.INTERSECT_FULL);
-
-          for (Enumeration e = shape.getAllGeometries(); e.hasMoreElements();) {
-
-             Geometry g = (Geometry)e.nextElement();
-
-             g.setCapability(g.ALLOW_INTERSECT);
-
-          }
-
-    }
-    } catch (Exception e) {
-        System.out.println("enable picking shape error " +e.getMessage());
-    }
-
-}
 
     /**
      *
