@@ -54,7 +54,7 @@ public class SwkCylinder extends SwkShape implements RadiusInterface {
     Point3d a = new Point3d(0.0, 0.0, 0.0);
     Point3d b = new Point3d(0.0, 1.0, 0.0);
     static CanvasParameter[] parameters = {
-        new RadiusParameter(),
+        new RadiusParameter(), new AppearanceParameter(),
     };
    static Map parameterMap = new TreeMap();
 
@@ -88,7 +88,7 @@ public class SwkCylinder extends SwkShape implements RadiusInterface {
 
     void makeObjectNode() {
         float length = (float) a.distance(b);
-        objectNode = new Cylinder(radius, length, Primitive.GENERATE_NORMALS, xDivisions, 1, appearance);
+        objectNode = new Cylinder(radius, length, Primitive.GENERATE_NORMALS, xDivisions, 1, swkAppearance.appearance);
         
    }
     public double getRadius() {
@@ -255,4 +255,87 @@ public class SwkCylinder extends SwkShape implements RadiusInterface {
 
         return tg;
     }
+
+// Code for following transform from CylinderCreateor.java @ http://teresi.us/html/main/programming.html
+//        Scott Teresi, www.teresi.us
+
+
+    Transform3D makeTransform3D(final Vector3d base, final Vector3d apex) {
+        // calculate center of object
+        Vector3d center = new Vector3d();
+        center.x = ((apex.x - base.x) / 2.0) + base.x;
+        center.y = ((apex.y - base.y) / 2.0) + base.y;
+        center.z = ((apex.z - base.z) / 2.0) + base.z;
+
+        // calculate height of object and unit vector along cylinder axis
+        Vector3d unit = new Vector3d();
+        unit.sub(apex, base); // unit = apex - base;
+
+        double height = unit.length();
+        unit.normalize();
+
+        /* A Java3D cylinder is created lying on the Y axis by default.
+           The idea here is to take the desired cylinder's orientation
+           and perform a tranformation on it to get it ONTO the Y axis.
+           Then this transformation matrix is inverted and used on a
+           newly-instantiated Java 3D cylinder. */
+
+        // calculate vectors for rotation matrix
+        // rotate object in any orientation, onto Y axis (exception handled below)
+        // (see page 418 of _Computer Graphics_ by Hearn and Baker)
+        Vector3d uX = new Vector3d();
+        Vector3d uY = new Vector3d();
+        Vector3d uZ = new Vector3d();
+        double magX;
+        Transform3D rotateFix = new Transform3D();
+
+        uY = new Vector3d(unit);
+        uX.cross(unit, new Vector3d(0, 0, 1));
+        magX = uX.length();
+
+        // magX == 0 if object's axis is parallel to Z axis
+        if (magX != 0) {
+            uX.z = uX.z / magX;
+            uX.x = uX.x / magX;
+            uX.y = uX.y / magX;
+            uZ.cross(uX, uY);
+        } else {
+            // formula doesn't work if object's axis is parallel to Z axis
+            // so rotate object onto X axis first, then back to Y at end
+            double magZ;
+
+            // (switched z -> y, y -> x, x -> z from code above)
+            uX = new Vector3d(unit);
+            uZ.cross(unit, new Vector3d(0, 1, 0));
+            magZ = uZ.length();
+            uZ.x = uZ.x / magZ;
+            uZ.y = uZ.y / magZ;
+            uZ.z = uZ.z / magZ;
+            uY.cross(uZ, uX);
+
+            // rotate object 90 degrees CCW around Z axis--from X onto Y
+            rotateFix.rotZ(Math.PI / 2.0);
+        }
+
+        // create the rotation matrix
+        Transform3D transMatrix = new Transform3D();
+        Transform3D rotateMatrix = new Transform3D(new Matrix4d(uX.x, uX.y,
+                    uX.z, 0, uY.x, uY.y, uY.z, 0, uZ.x, uZ.y, uZ.z, 0, 0, 0, 0,
+                    1));
+
+        // invert the matrix; need to rotate it off of the Z axis
+        rotateMatrix.invert();
+
+        // rotate the cylinder into correct orientation
+        transMatrix.mul(rotateMatrix);
+        transMatrix.mul(rotateFix);
+
+        // translate the cylinder away
+        transMatrix.setTranslation(center);
+        return transMatrix;
+    }
+
+
+
+
 }

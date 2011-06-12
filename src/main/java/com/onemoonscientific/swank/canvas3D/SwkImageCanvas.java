@@ -169,7 +169,7 @@ public class SwkImageCanvas extends MouseAdapter implements SwkCanvasType {
     Vector3d upDirection = new Vector3d(0, 1, 0);
     Vector3f center = new Vector3f(0, 0, 0);
     Transform3D centerTrans = new Transform3D();
-    Appearance defaultAppearance = null;
+    final SwkAppearance defaultAppearance;
     Background bg = null;
     Color3f color3f = new Color3f();
     Canvas3D c3D;
@@ -180,20 +180,14 @@ public class SwkImageCanvas extends MouseAdapter implements SwkCanvasType {
     LinkedHashMap mouseHash = null;
     LinkedHashMap mouseMotionHash = null;
     LinkedHashMap keyHash = null;
+    static Map<String,SwkAppearance> appearances = new HashMap<String,SwkAppearance>();
 
     public SwkImageCanvas(final Interp interp, String name, String className) {
         this.name = name.intern();
         this.interp = interp;
-        defaultAppearance = new Appearance();
-
-        Material material = new Material();
-
-        material.setAmbientColor(.0f, 1.0f, 0.0f);
-        material.setEmissiveColor(0.0f, 1.0f, 0.0f);
-        material.setDiffuseColor(0.0f, 1.0f, 0.0f);
-        material.setSpecularColor(0.0f, 1.0f, 0.0f);
-        material.setShininess(100.0f);
-        defaultAppearance.setMaterial(material);
+        defaultAppearance = new SwkAppearance(new Appearance(),"default");
+        
+        initAppearance(defaultAppearance.appearance);
 
         //ColoringAttributes colorAttr = new ColoringAttributes(0.0f,0.0f,1.0f,ColoringAttributes.NICEST);
         //defaultAppearance.setColoringAttributes(colorAttr);
@@ -293,6 +287,24 @@ public class SwkImageCanvas extends MouseAdapter implements SwkCanvasType {
 
     public String getName() {
         return (name);
+    }
+    public static void initAppearance(final Appearance appearance) {
+        Material material = new Material();
+        material.setAmbientColor(.0f, 1.0f, 0.0f);
+        material.setEmissiveColor(0.0f, 1.0f, 0.0f);
+        material.setDiffuseColor(0.0f, 1.0f, 0.0f);
+        material.setSpecularColor(0.0f, 1.0f, 0.0f);
+        material.setShininess(100.0f);
+        appearance.setMaterial(material);
+    }
+    public static SwkAppearance  getSwkAppearance(final String name) {
+        SwkAppearance swkAppearance = appearances.get(name);
+        if (swkAppearance == null) {
+            swkAppearance = new SwkAppearance(new Appearance(),name);
+            appearances.put(name,swkAppearance);
+            initAppearance(swkAppearance.appearance);
+        }
+        return swkAppearance;
     }
 
     public void setInsertBackground(Color insertBackground) {
@@ -1420,9 +1432,7 @@ public class SwkImageCanvas extends MouseAdapter implements SwkCanvasType {
         PickResult result = pickCanvas.pickClosest();
         SwkShape swkShape = null;
         int index = -1;
-        if (result == null) {
-            System.out.println("Nothing picked");
-        } else {
+        if (result != null) {
             TransformGroup tg = (TransformGroup) result.getNode(PickResult.TRANSFORM_GROUP);
             System.out.println(tg);
             if (tg instanceof NvTransformGroup) {
@@ -1439,25 +1449,12 @@ public class SwkImageCanvas extends MouseAdapter implements SwkCanvasType {
             }
             Point3d eyePos = pickCanvas.getStartPosition();
             PickIntersection pickIntersection = result.getClosestIntersection(eyePos);
-            if (pickIntersection != null) {
-                System.out.println("closest vertex index " + pickIntersection.getClosestVertexIndex());
-                System.out.println("closest vertext coord  " + pickIntersection.getClosestVertexCoordinates());
-                System.out.println("closest vertext vword  " + pickIntersection.getClosestVertexCoordinatesVW());
-                System.out.println("ga " + pickIntersection.getGeometryArrayIndex());
-                for (int pickIndex : pickIntersection.getPrimitiveCoordinateIndices()) {
-                    System.out.println(pickIndex);
-                }
-                for (int pickIndex : pickIntersection.getPrimitiveVertexIndices()) {
-                    System.out.println(pickIndex);
-                }
-            }
-
             if (p != null) {
-                System.out.println("prim " + p.getClass().getName());
+            //    System.out.println("prim " + p.getClass().getName());
                 pickResult = p.getClass().getName();
             }
             if (s != null) {
-                System.out.println("shape "+s.getClass().getName());
+             //   System.out.println("shape "+s.getClass().getName());
                 pickResult = s.getClass().getName();
             }
         }
@@ -1615,6 +1612,7 @@ public class SwkImageCanvas extends MouseAdapter implements SwkCanvasType {
     }
 
     public void processMouse(MouseEvent e, int type, int subtype) {
+        hitShape = new HitShape(getLastShapeScanned(), getHandle());
         BindEvent bEvent = new BindEvent(interp, this, (EventObject) e, type,
                 subtype, currentTag, previousTag, hitShape);
         interp.getNotifier().queueEvent(bEvent, TCL.QUEUE_TAIL);
@@ -1798,7 +1796,7 @@ public class SwkImageCanvas extends MouseAdapter implements SwkCanvasType {
     public void processMouseEvent(EventObject eventObject, int type, int subtype,
             String currentTag, String previousTag, HitShape eventCurrentShape) {
 
-           System.out.println("processE "+type+" "+subtype+" C "+currentTag+" P "+previousTag);       
+           //System.out.println("processE "+type+" "+subtype+" C "+currentTag+" P "+previousTag);       
         InputEvent iE = (InputEvent) eventObject;
         if (iE.isConsumed()) {
             return;
@@ -1806,7 +1804,7 @@ public class SwkImageCanvas extends MouseAdapter implements SwkCanvasType {
 
         setEventCurrentShape(eventCurrentShape);
 
-         System.out.println("processE "+type+" "+subtype+" C "+currentTag+" P "+previousTag);
+         //System.out.println("processE "+type+" "+subtype+" C "+currentTag+" P "+previousTag+ " " + eventCurrentShape);
 
         ArrayList<SwkBinding> bindings = null;
         if (subtype == SwkBinding.EXIT) {
@@ -1836,7 +1834,7 @@ public class SwkImageCanvas extends MouseAdapter implements SwkCanvasType {
         for (i = 0; i < bindings.size(); i++) {
             binding = bindings.get(i);
 
-              System.out.println(type+" "+subtype+" "+" "+binding.type+" "+binding.subtype);
+              //System.out.println(type+" "+subtype+" "+" "+binding.type+" "+binding.subtype);
             if (binding.subtype != subtype) {
                 continue;
             }
@@ -1847,7 +1845,7 @@ public class SwkImageCanvas extends MouseAdapter implements SwkCanvasType {
                     continue;
                 }
 
-                System.out.println(binding.detail+" "+binding.mod+" "+mods+" "+(binding.mod  & mods));
+                //System.out.println(binding.detail+" "+binding.mod+" "+mods+" "+(binding.mod  & mods));
                 // if ((binding.mod & buttonMask) != (mods & buttonMask)) {continue;}
                 if (type == SwkBinding.MOUSEMOTION) {
                     if (!SwkMouseMotionListener.checkButtonState(mE,
@@ -1939,4 +1937,77 @@ public class SwkImageCanvas extends MouseAdapter implements SwkCanvasType {
             id = tagVec.size() - 1;
         }
     }
+  static void configAppearance(Interp interp, SwkAppearance swkAppearance, TclObject[] argv,
+        int start) throws TclException {
+        int i;
+        String argType;
+        Appearance appearance = swkAppearance.appearance;
+        Material material = appearance.getMaterial();
+        for (i = start; i < argv.length; i += 2) {
+            argType = argv[i].toString();
+
+            if (((i + 1) == argv.length)) {
+                throw new TclException(interp,
+                    "value for \"" + argv[i].toString() + "\" missing");
+            }
+
+            if (argType.equals("-shininess")) {
+                if (argv[i + 1].toString().length() > 0) {
+                    float shiny = (float) TclDouble.get(interp,argv[i+1]);
+                    material.setShininess(shiny);
+                } else {
+                    material.setShininess(100.0f);
+                }
+            } else if (argType.equals("-colortarget")) {
+                if (argv[i + 1].toString().length() > 0) {
+                    String target = argv[i+1].toString();
+                    if (target.equals("diffuse")) {
+                        material.setColorTarget(Material.DIFFUSE);
+                    } else if (target.equals("ambient")) {
+                        material.setColorTarget(Material.AMBIENT);
+                    } else if (target.equals("emissive")) {
+                        material.setColorTarget(Material.EMISSIVE);
+                    } else if (target.equals("specular")) {
+                        material.setColorTarget(Material.SPECULAR);
+                    } else if (target.equals("ambient_and_diffuse")) {
+                        material.setColorTarget(Material.AMBIENT_AND_DIFFUSE);
+                    } else {
+                        throw new TclException(interp,"Invalid color target");
+                    }
+                } else {
+                    material.setColorTarget(Material.DIFFUSE);
+                }
+            } else if (argType.equals("-ambient")) {
+                if (argv[i + 1].toString().length() > 0) {
+                    Color color = SwankUtil.getColor(interp, argv[i + 1]);
+                    material.setAmbientColor(new Color3f(color));
+                } else {
+                    material.setAmbientColor(new Color3f(Color.white));
+                }
+            } else if (argType.equals("-emissive")) {
+                if (argv[i + 1].toString().length() > 0) {
+                    Color color = SwankUtil.getColor(interp, argv[i + 1]);
+                    material.setEmissiveColor(new Color3f(color));
+                } else {
+                    material.setEmissiveColor(new Color3f(Color.white));
+                }
+            } else if (argType.equals("-diffusive")) {
+                if (argv[i + 1].toString().length() > 0) {
+                    Color color = SwankUtil.getColor(interp, argv[i + 1]);
+                    material.setDiffuseColor(new Color3f(color));
+                } else {
+                    material.setDiffuseColor(new Color3f(Color.white));
+                }
+            } else if (argType.equals("-specular")) {
+                if (argv[i + 1].toString().length() > 0) {
+                    Color color = SwankUtil.getColor(interp, argv[i + 1]);
+                    material.setSpecularColor(new Color3f(color));
+                } else {
+                    material.setSpecularColor(new Color3f(Color.white));
+                }
+           }
+    }
+    appearance.setMaterial(material);
+
+}
 }

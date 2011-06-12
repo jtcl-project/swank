@@ -93,7 +93,7 @@ public class SwkSphere extends SwkShape implements RadiusInterface {
         this.radius = (float) radius;
     }
     void makeObjectNode() {
-        objectNode = new Sphere(radius, Primitive.GENERATE_NORMALS, nDivisions,appearance);
+        objectNode = new Sphere(radius, Primitive.GENERATE_NORMALS, nDivisions,swkAppearance.appearance);
     }
     NvTransformGroup makeTransform() {
         Transform3D t3D = new Transform3D();

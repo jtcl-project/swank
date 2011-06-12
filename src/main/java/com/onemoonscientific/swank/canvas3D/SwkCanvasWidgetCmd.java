@@ -17,6 +17,8 @@ import java.awt.geom.*;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 import java.util.*;
+import javax.media.j3d.Appearance;
+import javax.media.j3d.Material;
 
 
 public class SwkCanvasWidgetCmd implements Command {
@@ -26,7 +28,7 @@ public class SwkCanvasWidgetCmd implements Command {
         "coords", "hit", "itemcget", "find", "move", "scale", "delete", "addtag",
         "bind", "raise", "lower", "dtag", "gettags", "canvasx", "canvasy",
         "copy", "index", "newtype", "bbox", "type", "zoom", "transformer", 
-        "view", "center", "transform"
+        "view", "center", "transform","appearance"
     };
     private static final int OPT_CGET = 0;
     private static final int OPT_CONFIGURE = 1;
@@ -59,6 +61,7 @@ public class SwkCanvasWidgetCmd implements Command {
     private static final int OPT_VIEW = 28;
     private static final int OPT_CENTER = 29;
     private static final int OPT_TRANSFORM = 30;
+    private static final int OPT_APPEARANCE = 31;
    static boolean gotDefaults = false;
     Map newTypes = new HashMap();
     Interp interp = null;
@@ -363,6 +366,15 @@ public class SwkCanvasWidgetCmd implements Command {
             if (argv[2].toString().equals("reset")) {
                 swkImageCanvas.resetTransform();
             }
+
+            break;
+        }
+       case OPT_APPEARANCE: {
+            if (argv.length < 4) {
+                throw new TclNumArgsException(interp, 2, argv, "appearance ?options?");
+            }
+            SwkAppearance swkAppearance = SwkImageCanvas.appearances.get(argv[2].toString()); 
+            SwkImageCanvas.configAppearance(interp,swkAppearance,argv,3);
 
             break;
         }

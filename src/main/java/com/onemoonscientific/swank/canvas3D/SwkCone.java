@@ -86,7 +86,7 @@ public class SwkCone extends SwkShape implements RadiusInterface {
 
     void makeObjectNode() {
         float length = (float) a.distance(b);
-        objectNode = new Cone(radius, length, Primitive.GENERATE_NORMALS, xDivisions, 1, appearance);
+        objectNode = new Cone(radius, length, Primitive.GENERATE_NORMALS, xDivisions, 1, swkAppearance.appearance);
    }
     public double getRadius() {
         return radius;

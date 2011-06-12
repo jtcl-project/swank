@@ -53,7 +53,7 @@ public abstract class SwkShape implements SwkShape3DConfig {
     SwkShape previous = null;
     SwkShape next = null;
     SwkImageCanvas canvas = null;
-    Appearance appearance = null;
+    SwkAppearance swkAppearance = null;
     Hashtable tags = new Hashtable();
     String[] tagNames = null;
     Transformer transformer = null;
@@ -67,7 +67,7 @@ public abstract class SwkShape implements SwkShape3DConfig {
 
     public SwkShape(SwkImageCanvas canvas) {
         this.canvas = canvas;
-        appearance = canvas.defaultAppearance;
+        swkAppearance = canvas.defaultAppearance;
         bG = new NvBranchGroup(this);
     }
     public int getId() {
@@ -75,7 +75,7 @@ public abstract class SwkShape implements SwkShape3DConfig {
     }
     public void setCanvas(SwkImageCanvas canvas) {
         this.canvas = canvas;
-        appearance = this.canvas.defaultAppearance;
+        swkAppearance = this.canvas.defaultAppearance;
     }
 
     public void setShape(Shape3D shape) {
@@ -91,6 +91,12 @@ public abstract class SwkShape implements SwkShape3DConfig {
      */
     public void setTags(String[] tags) {
         tagNames = tags;
+    }
+    public void setAppearanceByName(final String name) {
+        this.swkAppearance = SwkImageCanvas.getSwkAppearance(name);
+    }
+    public String  getAppearanceName() {
+        return swkAppearance.name;
     }
 
     // public abstract void config(Interp interp, TclObject argv[],int start);
@@ -381,16 +387,15 @@ System.out.println("updateShaped");
     int pickShape(final double x, final double y) {
         String pickResult = "";
         PickCanvas pickCanvas = new PickCanvas(canvas.c3D,bG);
+        pickCanvas.setTolerance(10.0f);
+        pickCanvas.setMode(PickCanvas.GEOMETRY);
         pickCanvas.setShapeLocation((int) x,(int) y);
         PickResult result = pickCanvas.pickClosest();
         SwkShape swkShape = null;
         int pickIndex = -1;
         int index = -1;
-        if (result == null) {
-            System.out.println("Nothing picked");
-        } else {
+        if (result != null) {
             TransformGroup tg = (TransformGroup) result.getNode(PickResult.TRANSFORM_GROUP);
-            System.out.println(tg);
             if (tg instanceof NvTransformGroup) {
                 swkShape = ((NvTransformGroup) tg).getShape();
                 pickIndex = ((NvTransformGroup) tg).getIndex();
@@ -409,9 +414,9 @@ System.out.println("updateShaped");
                     System.out.println("closest vertex index " + pickIntersection.getClosestVertexIndex());
                     System.out.println("closest vertext coord  " + pickIntersection.getClosestVertexCoordinates());
                     System.out.println("closest vertext vword  " + pickIntersection.getClosestVertexCoordinatesVW());
-                    int gaIndex = pickIntersection.getGeometryArrayIndex();
+                    int closestVertex = pickIntersection.getClosestVertexIndex();
                     int[] pickIndices = pickIntersection.getPrimitiveVertexIndices();
-                    pickIndex = pickIndices[gaIndex];
+                    pickIndex = pickIndices[closestVertex];
                 }
             }
         }
