@@ -370,12 +370,7 @@ public class SwkCanvasWidgetCmd implements Command {
             break;
         }
        case OPT_APPEARANCE: {
-            if (argv.length < 4) {
-                throw new TclNumArgsException(interp, 2, argv, "appearance ?options?");
-            }
-            SwkAppearance swkAppearance = SwkImageCanvas.appearances.get(argv[2].toString()); 
-            SwkImageCanvas.configAppearance(interp,swkAppearance,argv,3);
-
+            appearance(interp, swkImageCanvas, argv);
             break;
         }
 
@@ -696,6 +691,63 @@ public class SwkCanvasWidgetCmd implements Command {
         }
 
         interp.setResult(list);
+    }
+
+    void appearance(Interp interp, SwkImageCanvas swkImageCanvas, TclObject[] argv)
+            throws TclException {
+        if (argv.length < 3) {
+            throw new TclNumArgsException(interp, 1, argv,
+                    "option ?arg arg ...?");
+        }
+
+        if (argv[2].toString().equals("configure")) {
+            if (argv.length < 4) {
+                throw new TclNumArgsException(interp, 1, argv,
+                        "option ?arg arg ...?");
+            }
+
+            if (argv.length < 6) {
+                SwkAppearance swkAppearance = SwkImageCanvas.getSwkAppearance(argv[3].toString(),false); 
+                if (swkAppearance == null) {
+                    throw new TclException(interp,
+                            "coudn't find swkAppearance " + argv[3].toString());
+                }
+
+                if (argv.length > 4) {
+                    swkImageCanvas.getAppearanceAttributes(interp, swkAppearance, argv[4], true);
+                } else {
+                    swkImageCanvas.getAppearanceAttributes(interp, swkAppearance, null, true);
+                }
+            } else {
+                SwkAppearance swkAppearance = SwkImageCanvas.getSwkAppearance(argv[3].toString(),true); 
+                SwkImageCanvas.configAppearance(interp,swkAppearance,argv,4);
+            }
+        } else if (argv[2].toString().equals("cget")) {
+            if (argv.length != 5) {
+                throw new TclNumArgsException(interp, 1, argv,
+                        "option ?arg arg ...?");
+            }
+
+            SwkAppearance swkAppearance = SwkImageCanvas.getSwkAppearance(argv[3].toString(),false); 
+
+            if (swkAppearance != null) {
+                swkImageCanvas.getAppearanceAttributes(interp, swkAppearance, argv[4], false);
+            } else {
+                throw new TclException(interp,
+                        "coudn't find swkAppearance " + argv[3].toString());
+            }
+        } else if (argv[2].toString().equals("names")) {
+            TclObject list = TclList.newInstance();
+            for (String appearanceName : SwkImageCanvas.appearances.keySet()) {
+                TclList.append(interp, list, TclString.newInstance(appearanceName));
+            }
+            interp.setResult(list);
+        } else if (argv[2].toString().equals("delete")) {
+            if (argv.length != 4) {
+                throw new TclNumArgsException(interp, 1, argv,
+                        "option ?arg arg ...?");
+            }
+        }
     }
 
     private static class CoordsGet extends GetValueOnEventThread {

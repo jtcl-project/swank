@@ -19,11 +19,12 @@ import java.awt.Color;
 public class SwkText2D extends SwkShape implements TextInterface {
     Point3d a = new Point3d();
     TextParameters textPar = new TextParameters();
-    static CanvasParameter[] parameters = {
-        new TextParameter(),
-    };
-    static Map parameterMap = new TreeMap();
 
+
+    static TreeMap<String,CanvasParameter> parameterMap = new TreeMap<String,CanvasParameter>();
+    static CanvasParameter[] parameters = {
+        new TextParameter(), new AppearanceParameter(), new FontParameter(),
+    };
     static {
         initializeParameters(parameters, parameterMap);
     }
@@ -44,7 +45,9 @@ public class SwkText2D extends SwkShape implements TextInterface {
 
                 Point3f rotationPoint = new Point3f(0.0f, 0.0f, 0.2f);
                 Font font = textPar.getFont();
-                Text2D text2D = new Text2D(textPar.getText(), new Color3f(0.1f, 0.95f, 0.1f), "Monospaced", 16, 0);
+                Color3f color3f = new Color3f();
+                swkAppearance.appearance.getMaterial().getDiffuseColor(color3f);
+                Text2D text2D = new Text2D(textPar.getText(), color3f,textPar.getFont().getFamily(), textPar.getFont().getSize(), 0);
                 OrientedShape3D orientedShape = new OrientedShape3D(
                         text2D.getGeometry(), text2D.getAppearance(),
                         OrientedShape3D.ROTATE_ABOUT_POINT, rotationPoint,true,8.0);

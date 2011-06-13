@@ -52,15 +52,13 @@ public class SwkCone extends SwkShape implements RadiusInterface {
     float radius = 1.0f;
     Point3d a = new Point3d(0.0, 0.0, 0.0);
     Point3d b = new Point3d(0.0, 1.0, 0.0);
+    static TreeMap<String,CanvasParameter> parameterMap = new TreeMap<String,CanvasParameter>();
     static CanvasParameter[] parameters = {
-        new RadiusParameter(),
+        new RadiusParameter(), new AppearanceParameter(),
     };
-   static Map parameterMap = new TreeMap();
-
     static {
         initializeParameters(parameters, parameterMap);
     }
-
 
     SwkCone(SwkImageCanvas canvas) {
         super(canvas);

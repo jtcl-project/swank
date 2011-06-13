@@ -185,8 +185,7 @@ public class SwkImageCanvas extends MouseAdapter implements SwkCanvasType {
     public SwkImageCanvas(final Interp interp, String name, String className) {
         this.name = name.intern();
         this.interp = interp;
-        defaultAppearance = new SwkAppearance(new Appearance(),"default");
-        
+        defaultAppearance = getSwkAppearance("default",true); 
         initAppearance(defaultAppearance.appearance);
 
         //ColoringAttributes colorAttr = new ColoringAttributes(0.0f,0.0f,1.0f,ColoringAttributes.NICEST);
@@ -290,6 +289,8 @@ public class SwkImageCanvas extends MouseAdapter implements SwkCanvasType {
     }
     public static void initAppearance(final Appearance appearance) {
         Material material = new Material();
+        material.setCapability(Material.ALLOW_COMPONENT_READ);
+        material.setCapability(Material.ALLOW_COMPONENT_WRITE);
         material.setAmbientColor(.0f, 1.0f, 0.0f);
         material.setEmissiveColor(0.0f, 1.0f, 0.0f);
         material.setDiffuseColor(0.0f, 1.0f, 0.0f);
@@ -297,10 +298,12 @@ public class SwkImageCanvas extends MouseAdapter implements SwkCanvasType {
         material.setShininess(100.0f);
         appearance.setMaterial(material);
     }
-    public static SwkAppearance  getSwkAppearance(final String name) {
+    public static SwkAppearance  getSwkAppearance(final String name,final boolean create) {
         SwkAppearance swkAppearance = appearances.get(name);
-        if (swkAppearance == null) {
+        if ((swkAppearance == null) && create) {
             swkAppearance = new SwkAppearance(new Appearance(),name);
+            swkAppearance.appearance.setCapability(Appearance.ALLOW_MATERIAL_READ);
+            swkAppearance.appearance.setCapability(Appearance.ALLOW_MATERIAL_WRITE);
             appearances.put(name,swkAppearance);
             initAppearance(swkAppearance.appearance);
         }
@@ -1937,6 +1940,152 @@ public class SwkImageCanvas extends MouseAdapter implements SwkCanvasType {
             id = tagVec.size() - 1;
         }
     }
+
+  static void getAppearanceAttributes(final Interp interp, final SwkAppearance swkAppearance, 
+        TclObject argv, boolean configMode) throws TclException {
+        int i;
+        String argType = null;
+
+        if (argv != null) {
+            argType = argv.toString();
+        }
+
+        TclObject list = null;
+        TclObject listAll = TclList.newInstance();
+        Appearance appearance = swkAppearance.appearance;
+        Material material = appearance.getMaterial();
+        if ((argType == null) || argType.equals("-shininess")) {
+            if (configMode) {
+                list = TclList.newInstance();
+                TclList.append(interp, list, TclString.newInstance("-shininess"));
+                TclList.append(interp, list, TclString.newInstance(""));
+                TclList.append(interp, list, TclString.newInstance(""));
+                TclList.append(interp, list, TclString.newInstance(""));
+                TclList.append(interp, list, TclDouble.newInstance(material.getShininess()));
+            } else {
+                interp.setResult(TclDouble.newInstance(material.getShininess()));
+                return;
+            }
+
+            if (argType != null) {
+                interp.setResult(list);
+
+                return;
+            } else {
+                TclList.append(interp, listAll, list);
+            }
+        }
+
+        if ((argType == null) || argType.equals("-ambient")) {
+            Color3f color3f = new Color3f();
+            material.getAmbientColor(color3f);
+            Color color = color3f.get();
+            if (configMode) {
+                list = TclList.newInstance();
+                TclList.append(interp, list,
+                    TclString.newInstance("-ambient"));
+                TclList.append(interp, list, TclString.newInstance(""));
+                TclList.append(interp, list, TclString.newInstance(""));
+                TclList.append(interp, list, TclString.newInstance(""));
+                TclList.append(interp, list, TclString.newInstance(SwankUtil.parseColor(color)));
+            } else {
+                interp.setResult(SwankUtil.parseColor(color));
+
+                return;
+            }
+
+            if (argType != null) {
+                interp.setResult(list);
+
+                return;
+            } else {
+                TclList.append(interp, listAll, list);
+            }
+        }
+        if ((argType == null) || argType.equals("-diffusive")) {
+            Color3f color3f = new Color3f();
+            material.getDiffuseColor(color3f);
+            Color color = color3f.get();
+            if (configMode) {
+                list = TclList.newInstance();
+                TclList.append(interp, list,
+                    TclString.newInstance("-diffusive"));
+                TclList.append(interp, list, TclString.newInstance(""));
+                TclList.append(interp, list, TclString.newInstance(""));
+                TclList.append(interp, list, TclString.newInstance(""));
+                TclList.append(interp, list, TclString.newInstance(SwankUtil.parseColor(color)));
+            } else {
+                interp.setResult(SwankUtil.parseColor(color));
+
+                return;
+            }
+
+            if (argType != null) {
+                interp.setResult(list);
+
+                return;
+            } else {
+                TclList.append(interp, listAll, list);
+            }
+        }
+        if ((argType == null) || argType.equals("-specular")) {
+            Color3f color3f = new Color3f();
+            material.getSpecularColor(color3f);
+            Color color = color3f.get();
+            if (configMode) {
+                list = TclList.newInstance();
+                TclList.append(interp, list,
+                    TclString.newInstance("-specular"));
+                TclList.append(interp, list, TclString.newInstance(""));
+                TclList.append(interp, list, TclString.newInstance(""));
+                TclList.append(interp, list, TclString.newInstance(""));
+                TclList.append(interp, list, TclString.newInstance(SwankUtil.parseColor(color)));
+            } else {
+                interp.setResult(SwankUtil.parseColor(color));
+
+                return;
+            }
+
+            if (argType != null) {
+                interp.setResult(list);
+
+                return;
+            } else {
+                TclList.append(interp, listAll, list);
+            }
+        }
+        if ((argType == null) || argType.equals("-emissive")) {
+            Color3f color3f = new Color3f();
+            material.getEmissiveColor(color3f);
+            Color color = color3f.get();
+            if (configMode) {
+                list = TclList.newInstance();
+                TclList.append(interp, list,
+                    TclString.newInstance("-emissive"));
+                TclList.append(interp, list, TclString.newInstance(""));
+                TclList.append(interp, list, TclString.newInstance(""));
+                TclList.append(interp, list, TclString.newInstance(""));
+                TclList.append(interp, list, TclString.newInstance(SwankUtil.parseColor(color)));
+            } else {
+                interp.setResult(SwankUtil.parseColor(color));
+
+                return;
+            }
+
+            if (argType != null) {
+                interp.setResult(list);
+
+                return;
+            } else {
+                TclList.append(interp, listAll, list);
+            }
+        }
+
+        interp.setResult(listAll);
+
+
+  }
+
   static void configAppearance(Interp interp, SwkAppearance swkAppearance, TclObject[] argv,
         int start) throws TclException {
         int i;
@@ -2005,6 +2154,8 @@ public class SwkImageCanvas extends MouseAdapter implements SwkCanvasType {
                 } else {
                     material.setSpecularColor(new Color3f(Color.white));
                 }
+           } else {
+               throw new TclException(interp,"Invalid attribute \""+argType+"\"");
            }
     }
     appearance.setMaterial(material);

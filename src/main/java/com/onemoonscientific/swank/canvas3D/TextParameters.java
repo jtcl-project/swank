@@ -21,7 +21,7 @@ public class TextParameters {
 
     static private final TextParameters defaultPar = new TextParameters();
     private String text = "";
-    private Font font = null;
+    private Font font = new Font("Courier",Font.PLAIN,20);
     private Color textColor = null;
     private float[] anchor = {0.0f, 0.0f};
     static BreakIterator wordIterator = BreakIterator.getWordInstance();

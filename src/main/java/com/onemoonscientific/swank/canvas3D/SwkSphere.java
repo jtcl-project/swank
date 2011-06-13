@@ -49,19 +49,16 @@ import javax.vecmath.*;
 
 
 public class SwkSphere extends SwkShape implements RadiusInterface {
-    int nDivisions = 15;
+    int nDivisions = 30;
     float radius = 1.0f;
     Point3d a = new Point3d();
+    static TreeMap<String,CanvasParameter> parameterMap = new TreeMap<String,CanvasParameter>();
     static CanvasParameter[] parameters = {
-        new RadiusParameter(),
+        new RadiusParameter(), new AppearanceParameter(),
     };
-   static Map parameterMap = new TreeMap();
-
     static {
         initializeParameters(parameters, parameterMap);
     }
-
-
 
     SwkSphere(SwkImageCanvas canvas) {
         super(canvas);
@@ -93,6 +90,7 @@ public class SwkSphere extends SwkShape implements RadiusInterface {
         this.radius = (float) radius;
     }
     void makeObjectNode() {
+System.out.println("make node "+ swkAppearance.name);
         objectNode = new Sphere(radius, Primitive.GENERATE_NORMALS, nDivisions,swkAppearance.appearance);
     }
     NvTransformGroup makeTransform() {

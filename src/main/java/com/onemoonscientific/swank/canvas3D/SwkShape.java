@@ -60,6 +60,7 @@ public abstract class SwkShape implements SwkShape3DConfig {
     double rotate = 0.0;
     float width = 0.0f;
     int id;
+    static TreeMap<String,CanvasParameter> parameterMap = new TreeMap<String,CanvasParameter>();
 
     public SwkShape() {
         bG = new NvBranchGroup(this);
@@ -93,7 +94,8 @@ public abstract class SwkShape implements SwkShape3DConfig {
         tagNames = tags;
     }
     public void setAppearanceByName(final String name) {
-        this.swkAppearance = SwkImageCanvas.getSwkAppearance(name);
+        System.out.println("set app " + name);
+        this.swkAppearance = SwkImageCanvas.getSwkAppearance(name,true);
     }
     public String  getAppearanceName() {
         return swkAppearance.name;
