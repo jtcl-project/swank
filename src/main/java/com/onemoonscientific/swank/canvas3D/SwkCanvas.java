@@ -871,13 +871,13 @@ public class SwkCanvas extends javax.swing.JPanel implements SwkWidget, Printabl
                 this.setAutoscrolls(setter.bValue);
                 break;
             case OPT_BACKGROUND:
-                this.setBackground((Color) setter.oValue);
+                swkImageCanvas.setBackground3D((Color) setter.oValue);
                 break;
             case OPT_BD:
                 this.setBorderWidth(setter.dValue);
                 break;
             case OPT_BG:
-                this.setBackground((Color) setter.oValue);
+                swkImageCanvas.setBackground3D((Color) setter.oValue);
                 break;
             case OPT_BORDER:
                 this.setBorderWidth(setter.dValue);
@@ -1329,11 +1329,11 @@ public class SwkCanvas extends javax.swing.JPanel implements SwkWidget, Printabl
             case OPT_AUTOSCROLLS:
                 return (String.valueOf(this.getAutoscrolls()));
             case OPT_BACKGROUND:
-                return (SwankUtil.parseColor(this.getBackground()));
+                return (SwankUtil.parseColor(swkImageCanvas.getBackground3D()));
             case OPT_BD:
                 return (SwankUtil.parseTkSize(this.getBorderWidth()));
             case OPT_BG:
-                return (SwankUtil.parseColor(this.getBackground()));
+                return (SwankUtil.parseColor(swkImageCanvas.getBackground3D()));
             case OPT_BORDER:
                 return (SwankUtil.parseTkSize(this.getBorderWidth()));
             case OPT_BORDERWIDTH:

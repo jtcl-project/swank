@@ -19,6 +19,7 @@ import javax.media.j3d.TransformGroup;
 import java.util.*;
 import javax.media.j3d.Appearance;
 import javax.media.j3d.Material;
+import javax.vecmath.Matrix4d;
 
 
 public class SwkCanvasWidgetCmd implements Command {
@@ -365,6 +366,10 @@ public class SwkCanvasWidgetCmd implements Command {
 
             if (argv[2].toString().equals("reset")) {
                 swkImageCanvas.resetTransform();
+            } else if (argv[2].toString().equals("get")) {
+                Transform3D t3 = swkImageCanvas.getTransform();
+                TclObject transformList = transformToList(interp,t3);
+                interp.setResult(transformList);
             }
 
             break;
@@ -652,6 +657,17 @@ public class SwkCanvasWidgetCmd implements Command {
         } else {
             interp.setResult(TclDouble.get(interp, argv[2]));
         }
+    }
+    TclObject transformToList(final Interp interp,final Transform3D transform) throws TclException {
+        TclObject list = TclList.newInstance();
+        Matrix4d mat4d = new Matrix4d();
+        transform.get(mat4d);
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                TclList.append(interp, list, TclDouble.newInstance(mat4d.getElement(i,j)));
+            }
+        }
+        return list;
     }
 
     void newType(Interp interp, TclObject[] argv) throws TclException {

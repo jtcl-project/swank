@@ -987,6 +987,11 @@ public class SwkImageCanvas extends MouseAdapter implements SwkCanvasType {
         Transform3D t3 = new Transform3D();
         objTransM.setTransform(t3);
     }
+    public Transform3D getTransform() {
+        Transform3D t3 = new Transform3D();
+        objTransM.getTransform(t3);
+        return t3;
+    }
 
     public void setEyePosition(float x, float y, float z) {
         eyePosition.x = x;
