@@ -28,8 +28,15 @@ import tcl.lang.*;
 import tcl.pkg.java.ReflectObject;
 import java.awt.*;
 import java.awt.image.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.*;
 import java.util.*;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 /**
@@ -46,7 +53,7 @@ public class ImageCmd implements Command {
         "question", "questhead", "warning",};
     private static final String[] validCmds = {
         "create", "delete", "configure", "types", "names", "object", "edge",
-        "scale"
+        "scale", "write","height","width"
     };
     private static final int OPT_CREATE = 0;
     private static final int OPT_DELETE = 1;
@@ -56,6 +63,9 @@ public class ImageCmd implements Command {
     private static final int OPT_OBJECT = 5;
     private static final int OPT_EDGE = 6;
     private static final int OPT_SCALE = 7;
+    private static final int OPT_WRITE = 8;
+    private static final int OPT_HEIGHT=9;
+    private static final int OPT_WIDTH=10;
 
     static {
         for (int i = 0; i < builtinImageNames.length; i++) {
@@ -119,7 +129,7 @@ public class ImageCmd implements Command {
                 }
 
                 ImageIcon image = null;
-
+                
                 if (argv[2].toString().equals("test")) {
                     ImageIcon quest = (ImageIcon) builtinImages.get("questhead");
                     image = new ImageIcon(quest.getImage());
@@ -155,7 +165,6 @@ public class ImageCmd implements Command {
             case OPT_CONFIGURE:
 
                 ImageIcon image = null;
-
                 if (argv[0].toString().equals("image")) {
                     if (argv.length < 4) {
                         throw new TclNumArgsException(interp, 1, argv,
@@ -210,7 +219,48 @@ public class ImageCmd implements Command {
 
                 break;
             }
+            case OPT_HEIGHT: {
+                               if (argv.length != 3) {
+                    throw new TclNumArgsException(interp, 1, argv,
+                            "image scale ? offset ?");
+                }
 
+                Object sourceObject = images.get(argv[2].toString());
+
+                if (sourceObject == null) {
+                    throw new TclException(interp,
+                            "image " + argv[2].toString() + " doesn't exist");
+                }
+                int height = 0;
+                if (sourceObject instanceof ImageIcon) {
+                     height= ((ImageIcon) sourceObject).getIconHeight();
+                } else {
+                      height= ((BufferedImage) sourceObject).getHeight();
+               }
+               interp.setResult(height);
+                 break;
+            }
+           case OPT_WIDTH: {
+                               if (argv.length != 3) {
+                    throw new TclNumArgsException(interp, 1, argv,
+                            "image scale ? offset ?");
+                }
+
+                Object sourceObject = images.get(argv[2].toString());
+
+                if (sourceObject == null) {
+                    throw new TclException(interp,
+                            "image " + argv[2].toString() + " doesn't exist");
+                }
+                int width = 0;
+                if (sourceObject instanceof ImageIcon) {
+                     width= ((ImageIcon) sourceObject).getIconWidth();
+                } else {
+                      width= ((BufferedImage) sourceObject).getWidth();
+               }
+               interp.setResult(width);
+                 break;
+            }
             case OPT_SCALE: {
                 if ((argv.length < 4) || (argv.length > 5)) {
                     throw new TclNumArgsException(interp, 1, argv,
@@ -240,7 +290,7 @@ public class ImageCmd implements Command {
                 BufferedImage destImage = scale(interp, sourceImage, scaleValue,
                         offset, sourceImage);
 
-                images.put(argv[2].toString(),destImage);
+                images.put(argv[2].toString(), destImage);
                 break;
             }
 
@@ -302,6 +352,43 @@ public class ImageCmd implements Command {
 
                 interp.setResult(list);
 
+                break;
+            }
+            case OPT_WRITE: {
+                if (argv.length != 4) {
+                    throw new TclNumArgsException(interp, 1, argv, "imageName fileName|OutputStream");
+                }
+                BufferedImage sourceImage = getBufferedImage(interp, argv[2].toString());
+
+                OutputStream oStream = null;
+                Object object = null;
+                boolean closeFile = false;
+                try {
+                    object = ReflectObject.get(interp, argv[3]);
+                } catch (TclException tclE) {
+                }
+                if ((object != null)) {
+                    oStream = (OutputStream) object;
+                } else {
+                    String fileName = argv[3].toString();
+                    File file = new File(fileName);
+                    try {
+                        oStream = new FileOutputStream(file);
+                        closeFile = true;
+                    } catch (FileNotFoundException fE) {
+                        throw new TclException(interp, fE.getMessage());
+                    }
+                }
+                if (oStream != null) {
+                    writeImage(sourceImage, oStream);
+                    if (closeFile) {
+                        try {
+                            oStream.close();
+                        } catch (IOException ioE) {
+                            throw new TclException(interp, ioE.getMessage());
+                        }
+                    }
+                }
                 break;
             }
         }
@@ -370,24 +457,39 @@ public class ImageCmd implements Command {
             }
         }
     }
+
+    /**
+     *
+     * @param interp
+     * @param image
+     */
+    public static String addImage(final Interp interp, final BufferedImage image) {
+        String imageName = "image" + iImage;
+        iImage++;
+        images.put(imageName, image);
+        return imageName;
+    }
+
     /**
      *
      * @param interp
      * @param imageName
      * @param image
      */
-    public static void addImage(final Interp interp, final String imageName,final BufferedImage image) {
+    public static void addImage(final Interp interp, final String imageName, final BufferedImage image) {
         images.put(imageName, image);
     }
+
     /**
      *
      * @param interp
      * @param imageName
      * @param image
      */
-    public static void addImage(final Interp interp, final String imageName,final ImageIcon image) {
+    public static void addImage(final Interp interp, final String imageName, final ImageIcon image) {
         images.put(imageName, image);
     }
+
     /**
      *
      * @param imageName
@@ -415,5 +517,29 @@ public class ImageCmd implements Command {
         g2.drawImage(imageIcon.getImage(), 0, 0, null);
 
         return bufferedImage;
+    }
+
+    public void writeImage(BufferedImage bufferedImage, OutputStream oStream) {
+        // Write generated image to a file
+        try {
+            // Save as PNG
+            ImageIO.write(bufferedImage, "png", oStream);
+        } catch (IOException e) {
+        }
+    }
+
+    public BufferedImage getBufferedImage(Interp interp, String imageName) throws TclException {
+        Object sourceObject = getImage(imageName);
+
+        if (sourceObject == null) {
+            throw new TclException(interp,
+                    "image " + imageName + " doesn't exist");
+        }
+
+        if (!(sourceObject instanceof BufferedImage)) {
+            throw new TclException(interp,
+                    "image " + imageName + " not BufferedImage");
+        }
+        return (BufferedImage) sourceObject;
     }
 }
