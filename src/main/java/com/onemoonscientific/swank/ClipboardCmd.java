@@ -27,7 +27,19 @@ package com.onemoonscientific.swank;
 import com.onemoonscientific.swank.canvas.*;
 import tcl.lang.*;
 import java.awt.*;
+import java.util.HashSet;
+import java.io.InputStreamReader;
+import java.io.InputStream;
+import java.io.Reader;
+import java.io.BufferedReader;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.io.IOException;
 import java.awt.datatransfer.*;
+import java.awt.image.BufferedImage;
+import javax.swing.text.EditorKit;
+import javax.swing.text.BadLocationException;
 
 import javax.swing.*;
 
@@ -38,11 +50,17 @@ import javax.swing.*;
 public class ClipboardCmd implements Command, ClipboardOwner {
 
     private static final String[] validCmds = {
-        "append", "clear", "get", "pastewidget",};
+        "append", "clear", "flavors","get", "pastewidget",};
     private static final int OPT_APPEND = 0;
     private static final int OPT_CLEAR = 1;
-    private static final int OPT_GET = 2;
-    private static final int OPT_PASTEWIDGET = 3;
+    private static final int OPT_FLAVORS = 2;
+    private static final int OPT_GET = 3;
+    private static final int OPT_PASTEWIDGET = 4;
+
+    private static final int STRING = 0;
+    private static final int RTF = 1;
+    private static final int HTML = 2;
+    private static final int IMAGE = 3;
 
     /**
      * 
@@ -80,8 +98,67 @@ public class ClipboardCmd implements Command, ClipboardOwner {
                 break;
             }
 
+            case OPT_FLAVORS: {
+               Transferable transferable = clipboard.getContents(null);
+                 TclObject resultList = TclList.newInstance();
+                 if (transferable != null) {
+                     DataFlavor[] dataFlavors = transferable.getTransferDataFlavors();
+                     HashSet<String> flavorSet = new HashSet<String>();
+                     for (int i=0;i<dataFlavors.length;i++) {
+                         flavorSet.add(dataFlavors[i].getHumanPresentableName());
+                     }
+                     for (String flavorName:flavorSet) {
+                         TclList.append(interp,resultList,TclString.newInstance(flavorName));
+                     }
+                }
+                interp.setResult(resultList);
+                break;
+            }
             case OPT_GET: {
-                interp.setResult(getClipboardAsText(interp, clipboard));
+                int type = STRING;
+                String imageName = null;
+                for (int iArg=2;iArg<argv.length;iArg++) {
+                   if (argv[iArg].toString().equals("-type")) {
+                        if ((iArg+1) >= argv.length) {
+                            throw new TclException(interp,"No value for \"-type\" arg");
+                        }
+                        if (argv[iArg+1].toString().equals("STRING")) {
+                             type = STRING;
+                        } else if (argv[iArg+1].toString().equals("IMAGE")) {
+                             type = IMAGE;
+                        } else if (argv[iArg+1].toString().equals("RTF")) {
+                             type = RTF;
+                        } else if (argv[iArg+1].toString().equals("HTML")) {
+                             type = HTML;
+                        } else {
+                            throw new TclException(interp,"Invalid value \"" + argv[iArg+1].toString() + "\" for \"-type\" arg");
+                        }
+                   } else if (argv[iArg].toString().equals("-image")) {
+                        if ((iArg+1) >= argv.length) {
+                            throw new TclException(interp,"No value for \"-image\" arg");
+                        }
+                        imageName = argv[iArg+1].toString();
+                   }
+                }
+                if (type == STRING) {
+                    interp.setResult(getClipboardAsText(interp, clipboard));
+                } else if (type == RTF) {
+                    interp.setResult(getClipboardAsRTF(interp, clipboard));
+                } else if (type == HTML) {
+                    interp.setResult(rtfToHTML(getClipboardAsRTF(interp, clipboard)));
+                } else if (type == IMAGE) {
+                    BufferedImage image = getClipboardAsImage(interp, clipboard);
+                    if (image == null) {
+                            throw new TclException(interp,"No image on clipboard");
+                    }
+                    if ((imageName == null) || imageName.equals("")) {
+                        interp.setResult(ImageCmd.addImage(interp,image));
+                    } else {
+                        ImageCmd.addImage(interp,imageName,image);
+                        interp.setResult(imageName);
+                    }
+                } else {
+                }
 
                 break;
             }
@@ -121,6 +198,29 @@ public class ClipboardCmd implements Command, ClipboardOwner {
     public void lostOwnership(Clipboard clipboard, Transferable contents) {
     }
 
+    String getClipboardAsRTF(Interp interp, Clipboard clipboard)
+            throws TclException {
+        Transferable transferable = clipboard.getContents(null);
+
+        if (transferable != null) {
+            try {
+                DataFlavor rtfFlavor = new DataFlavor("text/rtf;class=java.io.InputStream");
+                if (transferable.isDataFlavorSupported(rtfFlavor)) {
+                    StringBuilder sBuilder = new StringBuilder();
+                    InputStream stream = (InputStream) transferable.getTransferData(rtfFlavor);
+                    BufferedReader bufReader = new BufferedReader(new InputStreamReader(stream));
+                    int b;
+                    while ((b = bufReader.read()) != -1) {
+                         sBuilder.append((char) b);
+                    }
+                    return sBuilder.toString();
+                }
+            } catch (Exception exc) {
+                throw new TclException(interp, exc.toString());
+            }
+        }
+        return "";
+    }
     String getClipboardAsText(Interp interp, Clipboard clipboard)
             throws TclException {
         Transferable transferable = clipboard.getContents(null);
@@ -138,11 +238,51 @@ public class ClipboardCmd implements Command, ClipboardOwner {
             }
              */
             try {
-                return transferable.getTransferData(DataFlavor.selectBestTextFlavor(
-                        dataFlavors)).toString();
+                return  transferable.getTransferData(DataFlavor.stringFlavor).toString();
+                //return  transferable.getTransferData(DataFlavor.getTextPlainUnicodeFlavor()).toString();
+                //return transferable.getTransferData(DataFlavor.selectBestTextFlavor(dataFlavors)).toString();
+                //return transferable.getTransferData(DataFlavor.getTextPlainUnicodeFlavor(dataFlavors)).toString();
             } catch (Exception exc) {
                 throw new TclException(interp, exc.toString());
             }
         }
+    }
+    BufferedImage getClipboardAsImage(Interp interp, Clipboard clipboard)
+            throws TclException {
+        Transferable transferable = clipboard.getContents(null);
+        BufferedImage imageResult = null;
+        if (transferable != null) {
+            DataFlavor[] dataFlavors = transferable.getTransferDataFlavors();
+            try {
+                if (transferable.isDataFlavorSupported(DataFlavor.imageFlavor)) {
+                    Object transferData =  transferable.getTransferData(DataFlavor.imageFlavor);
+                    if (transferData instanceof BufferedImage) {
+                       imageResult =  (BufferedImage) transferData;    
+                    }
+                }
+            } catch (Exception exc) {
+                throw new TclException(interp, exc.toString());
+            }
+        }
+        return imageResult;
+    }
+    static String rtfToHTML (String string) {
+        Reader reader = new StringReader(string);
+        JEditorPane p = new JEditorPane();
+        p.setContentType("text/rtf");
+        EditorKit kitRtf = p.getEditorKitForContentType("text/rtf");
+        try {
+            kitRtf.read(reader, p.getDocument(), 0);
+            kitRtf = null;
+            EditorKit kitHtml = p.getEditorKitForContentType("text/html");
+            Writer writer = new StringWriter();
+            kitHtml.write(writer, p.getDocument(), 0, p.getDocument().getLength());
+            return writer.toString();
+        } catch (BadLocationException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }
