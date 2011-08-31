@@ -5,7 +5,7 @@
 	<groupId>com.onemoonscientific</groupId>
 	<artifactId>swank</artifactId>
 	<packaging>jar</packaging>
-	<version>3.0.0-a2</version>
+	<version>3.0.0-a3</version>
 	<name>swank</name>
 	<url>http://maven.apache.org</url>
 	<dependencies>
@@ -23,7 +23,7 @@
 		<dependency>
 			<groupId>tcl.lang</groupId>
 			<artifactId>jtcl</artifactId>
-			<version>2.0.0-b1</version>
+			<version>2.0.0</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
@@ -156,9 +156,9 @@ Adjust comment following to include or exclude
 						<configuration>
 							<artifactItems>
 								<artifactItem>
-									<groupId>jtcl</groupId>
+									<groupId>tcl.lang</groupId>
 									<artifactId>jtcl</artifactId>
-									<version>2.0.0-a1</version>
+									<version>2.0.0</version>
 									<type>jar</type>
 									<outputDirectory>target/classes</outputDirectory>
 								</artifactItem>
