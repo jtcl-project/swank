@@ -101,6 +101,10 @@ public class ItemImage extends SwkShape {
             aT.rotate(this.rotate, x, y);
             double imageWidth = bufferedImage.getWidth();
             double imageHeight = bufferedImage.getHeight();
+            if (storeCoords.length == 4) {
+                imageWidth = Math.abs(storeCoords[2]-storeCoords[0]);
+                imageHeight = Math.abs(storeCoords[3]-storeCoords[1]);
+            }
             Rectangle2D.Double rf1 = new Rectangle2D.Double(x, y, imageWidth, imageHeight);
             Rectangle2D rf1d = aT.createTransformedShape(rf1).getBounds2D();
             shape = rf1d;
@@ -119,12 +123,14 @@ public class ItemImage extends SwkShape {
     @Override
     public void coords(SwkImageCanvas canvas, double[] coords)
             throws SwkException {
-        if (coords.length != 2) {
-            throw new SwkException("wrong # coordinates: expected 2, got "
+        if ((coords.length != 2) && (coords.length != 4)) {
+            throw new SwkException("wrong # coordinates: expected 2 or 4, got "
                     + coords.length);
         }
-
-        System.arraycopy(coords, 0, storeCoords, 0, 2);
+        if (storeCoords.length != coords.length) {
+            storeCoords = new double[coords.length];
+        }
+        System.arraycopy(coords, 0, storeCoords, 0, coords.length);
     }
 
     /**
@@ -135,8 +141,18 @@ public class ItemImage extends SwkShape {
     protected void paintShape(Graphics2D g2) {
         AffineTransform aT = new AffineTransform();
         aT.translate((int) storeCoords[0], storeCoords[1]);
-
         if (bufferedImage != null) {
+            if (storeCoords.length == 4) {
+                int imgWidth = bufferedImage.getWidth();
+                int imgHeight = bufferedImage.getHeight();
+                double dispWidth = storeCoords[2]-storeCoords[0];
+                double dispHeight = storeCoords[3]-storeCoords[1];
+                if ((imgWidth != dispWidth) || (imgHeight != dispHeight)) {
+                      double scaleX = dispWidth/imgWidth;
+                      double scaleY = dispHeight/imgHeight;
+                      aT.scale(scaleX,scaleY);
+                }
+            }
             // FIXME can last argument be null?
             g2.drawImage(bufferedImage, aT, null);
         }
