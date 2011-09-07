@@ -226,16 +226,11 @@ public class SwkDocumentSearch {
                 int start = searchStart;
                 int elemStart = elem.getStartOffset();
                 int elemEnd = elem.getEndOffset();
-
                 if ((searchEnd >= elemStart) && (searchEnd <= elemEnd)) {
                     lastLine = true;
                 }
 
                 int length = 0;
-
-                if (lastLine) {
-                    elemEnd = searchEnd;
-                }
 
                 if (startLine == endLine) {
                     start = searchEnd;
@@ -265,7 +260,6 @@ public class SwkDocumentSearch {
 
                 int searchIndex = -1;
                 int nChars = 0;
-
                 if (pattern != null) {
                     Matcher matcher = pattern.matcher(testLine);
 
