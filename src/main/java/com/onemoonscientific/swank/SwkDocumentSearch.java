@@ -55,7 +55,7 @@ public class SwkDocumentSearch {
     int flags = 0;
     int iStart = 0;
     int iEnd = 0;
-    int nWrap = 2;
+    int nWrap = 1;
     int startLine = -1;
     int endLine = -1;
     Result result = new Result();
@@ -84,7 +84,6 @@ public class SwkDocumentSearch {
         doc.indexParagraphs();
 
         startLine = doc.getParagraph(searchStart);
-        endLine = doc.getParagraph(searchEnd);
 
         if (startLine < 0) {
             return result;
@@ -108,10 +107,19 @@ public class SwkDocumentSearch {
         iStart = startLine;
 
         if ((flags & SEARCH_BACKWARDS) == SEARCH_BACKWARDS) {
-            iEnd = 0;
+             if (searchEnd < 0) {
+                 nWrap = 2;
+                 searchEnd = 0;
+             }
+             endLine = doc.getParagraph(searchEnd);
+             iEnd = 0;
 
             return (searchBackwards(searchStart, searchEnd));
         } else {
+             if (searchEnd < 0) {
+                 nWrap = 2;
+                 searchEnd = doc.getEndPosition().getOffset();
+             }
             iEnd = doc.paragraphs.size();
 
             return (searchForwards(searchStart, searchEnd));
@@ -128,7 +136,9 @@ public class SwkDocumentSearch {
         boolean lastLine = false;
         Element elem = null;
 
+//System.out.println("nWrap " + nWrap);
         for (int iWrap = 0; iWrap < nWrap; iWrap++) {
+//System.out.println("iWrap " + iWrap);
             for (int j = iStart; j < iEnd; j++) {
                 elem = (Element) doc.paragraphs.elementAt(j);
 
@@ -141,6 +151,9 @@ public class SwkDocumentSearch {
                 }
 
                 int length = 0;
+//System.out.println("searchStart " + searchStart + " searchEnd " + searchEnd);
+//System.out.println("elemStart " + elemStart + " elemEnd " + elemEnd);
+//System.out.println("startLine " + startLine + " endLine " + endLine);
 
                 if (lastLine) {
                     elemEnd = searchEnd;
@@ -154,11 +167,12 @@ public class SwkDocumentSearch {
                     length = elemEnd - start;
                 } else if ((iWrap == 1) && (j == startLine)) {
                     start = elemStart;
-                    length = searchStart - start;
+                    length = elemEnd - start - 1;
                 } else {
                     start = elemStart;
                     length = elemEnd - start - 1;
                 }
+//System.out.println("start " + start + " length " + length);
 
                 if (length < 0) {
                     return result;
@@ -169,9 +183,10 @@ public class SwkDocumentSearch {
                 try {
                     testLine = doc.getText(start, length);
                 } catch (BadLocationException badLoc) {
+//System.out.println("badloc");
                     return result;
                 }
-
+//System.out.println(testLine);
                 int searchIndex = -1;
                 int nChars = 0;
 
@@ -196,12 +211,18 @@ public class SwkDocumentSearch {
                 }
 
                 if (lastLine) {
-                    return result;
+//System.out.println("lastline");
+                    break;
                 }
             }
 
+            searchEnd = searchStart;
+            searchStart = 0;
+            startLine = doc.getParagraph(searchStart);
+            endLine = doc.getParagraph(searchEnd);
             iStart = 0;
-            iEnd = startLine;
+            iEnd = endLine;
+            lastLine = false;
         }
 
         return result;
@@ -218,8 +239,9 @@ public class SwkDocumentSearch {
 
         // forward
         boolean lastLine = false;
-
+//System.out.println("nWrap " + nWrap);
         for (int iWrap = 0; iWrap < nWrap; iWrap++) {
+//System.out.println("iWrap " + iWrap);
             for (int j = iStart; j >= iEnd; j--) {
                 elem = (Element) doc.paragraphs.elementAt(j);
 
@@ -232,6 +254,9 @@ public class SwkDocumentSearch {
 
                 int length = 0;
 
+//System.out.println("searchStart " + searchStart + " searchEnd " + searchEnd);
+//System.out.println("elemStart " + elemStart + " elemEnd " + elemEnd);
+//System.out.println("startLine " + startLine + " endLine " + endLine);
                 if (startLine == endLine) {
                     start = searchEnd;
                     length = searchStart - start;
@@ -239,13 +264,14 @@ public class SwkDocumentSearch {
                     start = elemStart;
                     length = searchStart - start;
                 } else if ((iWrap == 1) && (j == startLine)) {
-                    start = searchStart + 1;
+                    start = searchEnd;
                     length = elemEnd - start;
                 } else {
                     start = elemStart;
                     length = elemEnd - start;
                 }
 
+//System.out.println("start " + start + " length " + length);
                 if (length < 0) {
                     return result;
                 }
@@ -255,6 +281,7 @@ public class SwkDocumentSearch {
                 try {
                     testLine = doc.getText(start, length);
                 } catch (BadLocationException badLoc) {
+//System.out.println("badloc");
                     return result;
                 }
 
@@ -281,12 +308,18 @@ public class SwkDocumentSearch {
                 }
 
                 if (lastLine) {
-                    return result;
+//System.out.println("lastline");
+                    break;
                 }
             }
 
+            searchEnd = searchStart;
+            searchStart = doc.getEndPosition().getOffset();
+            startLine = doc.getParagraph(searchStart);
+            endLine = doc.getParagraph(searchEnd);
             iStart = doc.paragraphs.size() - 1;
             iEnd = startLine;
+            lastLine = false;
         }
 
         return result;

@@ -1056,17 +1056,22 @@ class SwkJTextPaneWidgetCmd implements Command {
 
         @Override
         public void run() {
-            int index1 = swkjtextpane.doc.getIndexLC(swkjtextpane, index1Arg);
-            int index2 = index1 + 1;
-
-            if (index2Arg != null) {
-                if (index2Arg.equals("end")) {
-                    if (index2 == 0) {
-                        return;
+            int index1 = -1;
+            int index2 = -1;
+            try {
+                index1 = swkjtextpane.doc.getIndexLC(swkjtextpane, index1Arg);
+                if (index2Arg != null) {
+                    if (index2Arg.equals("end")) {
+                        if (index1 == -1) {
+                            return;
+                        }
                     }
+                    index2 = swkjtextpane.doc.getIndexLC(swkjtextpane, index2Arg);
                 }
-
-                index2 = swkjtextpane.doc.getIndexLC(swkjtextpane, index2Arg);
+            } catch (IllegalArgumentException iaE) {
+                result = new Result();
+                result.setError(iaE.getMessage());
+                return;
             }
 
             SwkDocumentSearch docSearch = new SwkDocumentSearch(swkjtextpane.doc,
@@ -1094,17 +1099,24 @@ class SwkJTextPaneWidgetCmd implements Command {
 
         @Override
         public void run() {
-            int index1 = swkjtextpane.doc.getIndexLC(swkjtextpane, index1Arg);
-            int index2 = index1 + 1;
+            int index1 = -1;
+            int index2 = -1;
+            try {
+                index1 = swkjtextpane.doc.getIndexLC(swkjtextpane, index1Arg);
+                index2 = index1 + 1;
 
-            if (index2Arg != null) {
-                index2 = swkjtextpane.doc.getIndexLC(swkjtextpane, index2Arg);
+                if (index2Arg != null) {
+                    index2 = swkjtextpane.doc.getIndexLC(swkjtextpane, index2Arg);
 
-                if (index2Arg.equals("end")) {
-                    if (index2 == 0) {
-                        return;
+                    if (index2Arg.equals("end")) {
+                        if (index2 == 0) {
+                            return;
+                        }
                     }
                 }
+            } catch (IllegalArgumentException iaE) {
+                result.setError(iaE.getMessage());
+                return;
             }
 
             if (index2 >= index1) {
