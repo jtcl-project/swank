@@ -3290,7 +3290,7 @@ proc tkcon_gets args {
 #   what	the actual name of the item
 # Returns:	nothing
 ##
-proc edit {args} {
+proc editOld {args} {
     array set opts {-find {} -type {} -attach {}}
     while {[string match -* [lindex $args 0]]} {
         switch -glob -- [lindex $args 0] {
@@ -3423,6 +3423,103 @@ proc edit {args} {
         ::tkcon::Find $w.text $opts(-find) -case 1
     }
 }
+
+
+
+## edit - opens a file/proc/var for reading/editing
+##
+# Arguments:
+#   type	proc/file/var
+#   what	the actual name of the item
+# Returns:	nothing
+##
+proc edit {args} {
+    array set opts {-find {} -type {} -attach {}}
+    while {[string match -* [lindex $args 0]]} {
+        switch -glob -- [lindex $args 0] {
+            -f*	{ set opts(-find) [lindex $args 1] }
+            -a*	{ set opts(-attach) [lindex $args 1] }
+            -t*	{ set opts(-type) [lindex $args 1] }
+            --	{ set args [lreplace $args 0 0]; break }
+            default {return -code error "unknown option \"[lindex $args 0]\""}
+        }
+        set args [lreplace $args 0 1]
+    }
+    # determine who we are dealing with
+    if {[llength $opts(-attach)]} {
+        foreach {app type} $opts(-attach) {break}
+    } else {
+        foreach {app type} [tkcon attach] {break}
+    }
+    #puts "attach $opts(-attach)"
+    #puts "deal $app X  $type"
+    set word [lindex $args 0]
+    # puts [::tkcon::EvalOther $app $type info commands [list $word]]
+    if {[string match {} $opts(-type)]} {
+        if {[llength [::tkcon::EvalOther $app $type info commands [list $word]]]} {
+            set opts(-type) "proc"
+        } elseif {[llength [::tkcon::EvalOther $app $type info vars [list $word]]]} {
+            set opts(-type) "var"
+        } elseif {[::tkcon::EvalOther $app $type file isfile [list $word]]} {
+            set opts(-type) "file"
+        }
+    }
+    if {[string compare $opts(-type) {}]} {
+        # Create unique edit window toplevel
+        set w $::tkcon::PRIV(base).__edit
+        set i 0
+        while {[winfo exists $w[incr i]]} {}
+        append w $i
+        minEditor mE$i $w
+        set minEditor mE$i
+        wm withdraw $w
+        if {[string length $word] > 20} {
+            wm title $w "[string range $word 0 16]... - tkcon Edit"
+        } else {
+            wm title $w "$word - tkcon Edit"
+        }
+        
+    } else {
+        return -code error "unrecognized type '$word'"
+    }
+    switch -glob -- $opts(-type) {
+        proc*	{
+            $w.text insert 1.0 \
+                    [::tkcon::EvalOther $app $type dump proc [list $word]]
+        }
+        var*	{
+            $w.text insert 1.0 \
+                    [::tkcon::EvalOther $app $type dump var [list $word]]
+        }
+        file	{
+            $w.text insert 1.0 [::tkcon::EvalOther $app $type eval \
+                    [subst -nocommands {
+                set __tkcon(fid) [open $word r]
+                set __tkcon(data) [read \$__tkcon(fid)]
+                close \$__tkcon(fid)
+                after 1000 unset __tkcon
+                return \$__tkcon(data)
+            }
+            ]]
+        }
+        error*	{
+            $w.text insert 1.0 [join $args \n]
+            ::tkcon::ErrorHighlight $w.text
+        }
+        default	{
+            $w.text insert 1.0 [join $args \n]
+        }
+    }
+    $minEditor highlight 1.0 end
+    wm deiconify $w
+    focus $w.text
+    if {[string compare $opts(-find) {}]} {
+        ::tkcon::Find $w.text $opts(-find) -case 1
+    }
+}
+
+
+
 interp alias {} ::more {} ::edit
 interp alias {} ::less {} ::edit
 
@@ -5944,7 +6041,7 @@ if {![info exists argv]} {
 tkcon::AtSource $argv
 
 package provide tkcon $::tkcon::VERSION
-
+source  resource:/com/onemoonscientific/swank/library/mined.tcl
 
 
 
