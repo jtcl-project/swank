@@ -1258,7 +1258,7 @@ public class SwankUtil {
 
         String name;
         if (argv.length == 0) {
-            name = "SansSerif";
+            throw new TclException(interp,"font \"\" doesn't exist");
         } else {
             name = argv[0].toString();
         }
