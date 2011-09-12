@@ -28,7 +28,7 @@ global specialGets widgetVar components tkcomps resourceNames specialConfig opti
        array set complexTypes {anchor float[] anchor2 int[] tkRectangle Rectangle 
                                     tkRectangleCorners int[][] javax.swing.Icon javax.swing.Icon 
                                     java.io.File java.io.File java.net.URL java.net.URL menu Object options Object[] spinlist java.util.List}
-       array set simpleTypes {java.lang.String s int i orient i textvariable s wrap s variable s justify s default s tstate s state s tkSize i tkSizeD d tkSizeDI d tkRelief s tkSelectMode i boolean b float f double d vscrollbar i hscrollbar i}
+       array set simpleTypes {java.lang.String s int i orient i textvariable s wrap s variable s justify s default s tstate s state s tkSizePos i tkSize i tkSizeD d tkSizeDI d tkRelief s tkSelectMode i boolean b float f double d vscrollbar i hscrollbar i}
 
 catch "unset optionList"
 set setMethods ""

@@ -114,6 +114,8 @@ puts "$widgetType $method"
 						set cmd "return(SwkTk.${getMethod}(interp,${widgetVarLocal}));"
 					} elseif {$argType == "java.lang.String"} {
 						set cmd "return($widgetVarLocal.${getMethod}());"
+					} elseif {$argType == "tkSizePos"} {
+						set cmd "return(SwankUtil.parseTkSize($widgetVarLocal.${getMethod}()));"
 					} elseif {$argType == "tkSize"} {
 						set cmd "return(SwankUtil.parseTkSize($widgetVarLocal.${getMethod}()));"
 					} elseif {$argType == "tkSizeDI"} {

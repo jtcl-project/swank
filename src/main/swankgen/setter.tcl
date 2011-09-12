@@ -42,6 +42,9 @@ proc getSetter {widgetVar mode} {
         "tkRelief" {
            set result {String value = SwankUtil.getTkRelief(interp,argv[i+1]);}
         }
+        "tkSize" {
+           set result "int value = SwankUtil.getTkSize(interp,(Component) this,argv\[i+1\]);"
+        }
         "tkSizePos" {
            set result "int value = SwankUtil.getTkSizePos(interp,(Component) this,argv\[i+1\]);"
         }

@@ -277,7 +277,7 @@ proc swkMakeSpecial {widget widgetVar} {
         \}
         "
         set specialGets [concat  $specialGets {
-            {setInsertWidth tkSizePos InsertWidth -insertwidth}
+            {setInsertWidth tkSize InsertWidth -insertwidth}
         }]
     }
     
