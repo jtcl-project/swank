@@ -1421,6 +1421,23 @@ public class SwankUtil {
      *
      * @param interp
      * @param comp
+     * @param tclObject
+     * @return
+     * @throws TclException
+     */
+    public static int getTkSizePos(Interp interp, Component comp,
+            TclObject tclObject) throws TclException {
+        String value = tclObject.toString();
+        int size = getTkSize(interp, comp, value);
+        size = size < 0?0:size;
+        return size;
+    }
+
+
+    /**
+     *
+     * @param interp
+     * @param comp
      * @param value
      * @return
      * @throws TclException

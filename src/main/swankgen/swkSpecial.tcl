@@ -277,7 +277,7 @@ proc swkMakeSpecial {widget widgetVar} {
         \}
         "
         set specialGets [concat  $specialGets {
-            {setInsertWidth tkSize InsertWidth -insertwidth}
+            {setInsertWidth tkSizePos InsertWidth -insertwidth}
         }]
     }
     
@@ -297,7 +297,7 @@ proc swkMakeSpecial {widget widgetVar} {
         \}
         "
         set specialGets [concat  $specialGets {
-            {setInsertBorderWidth tkSize InsertBorderWidth -insertborderwidth}
+            {setInsertBorderWidth tkSizePos InsertBorderWidth -insertborderwidth}
         }]
     }
     # -insertInsertOffTime
@@ -724,7 +724,7 @@ proc swkMakeSpecial {widget widgetVar} {
         \}
         "
         set specialGets [concat  $specialGets {
-            {setActiveBorderWidth tkSize ActiveBorderWidth}
+            {setActiveBorderWidth tkSizePos ActiveBorderWidth}
         }]
     }
     
@@ -990,7 +990,7 @@ proc swkMakeSpecial {widget widgetVar} {
         \}
         "
         set specialGets [concat  $specialGets {
-            {setHighlightThickness tkSize HighlightThickness}
+            {setHighlightThickness tkSizePos HighlightThickness}
         }]
     }
    
@@ -1116,7 +1116,7 @@ proc swkMakeSpecial {widget widgetVar} {
         \}
         "
         set specialGets [concat  $specialGets {
-            {setPadX tkSize PadX}
+            {setPadX tkSizePos PadX}
         }]
     }
     
@@ -1138,7 +1138,7 @@ proc swkMakeSpecial {widget widgetVar} {
         \}
         "
         set specialGets [concat  $specialGets {
-            {setPadY tkSize PadY}
+            {setPadY tkSizePos PadY}
         }]
     }
     
@@ -1281,7 +1281,7 @@ proc swkMakeSpecial {widget widgetVar} {
         \}
         "
         set specialGets [concat  $specialGets {
-            {setSelectBorderWidth tkSize SelectBorderWidth}
+            {setSelectBorderWidth tkSizePos SelectBorderWidth}
         }]
     }
     # -selectForeground
@@ -1424,7 +1424,7 @@ proc swkMakeSpecial {widget widgetVar} {
         \}
         "
         set specialGets [concat  $specialGets {
-            {setWrapLength tkSize WrapLength}
+            {setWrapLength tkSizePos WrapLength}
         }]
     }
     
