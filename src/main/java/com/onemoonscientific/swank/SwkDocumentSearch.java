@@ -195,7 +195,11 @@ public class SwkDocumentSearch {
 
                 if (pattern != null) {
                     Matcher matcher = pattern.matcher(testLine);
-
+                    int lastChar = testLine.length();
+                    while ((lastChar > 0) && testLine.charAt(lastChar-1) == '\n') {
+                        lastChar--;
+                    }
+                    matcher.region(0,lastChar);
                     if (matcher.find()) {
                         searchIndex = matcher.start();
                         nChars = matcher.end() - searchIndex;
@@ -295,7 +299,11 @@ public class SwkDocumentSearch {
                 int nChars = 0;
                 if (pattern != null) {
                     Matcher matcher = pattern.matcher(testLine);
-
+                    int lastChar = testLine.length();
+                    while ((lastChar > 0) && testLine.charAt(lastChar-1) == '\n') {
+                        lastChar--;
+                    }
+                    matcher.region(0,lastChar);
                     while (matcher.find()) {
                         searchIndex = matcher.start();
                         nChars = matcher.end() - searchIndex;
