@@ -594,20 +594,27 @@ class SwkJTextPaneWidgetCmd implements Command {
 
     void get(Interp interp, SwkJTextPane swkjtextpane, TclObject[] argv)
             throws TclException {
-        if ((argv.length != 3) && (argv.length != 4)) {
-            throw new TclNumArgsException(interp, 2, argv, "index1 ?index2?");
+        if (argv.length < 3) {
+            throw new TclNumArgsException(interp, 2, argv, "index1 ?index2 ...?");
+        }
+        String[] tagStrings = new String[argv.length-2];
+
+        for (int j = 0; j < tagStrings.length; j++) {
+            tagStrings[j] = argv[j+2].toString();
         }
 
-        String index1Arg = argv[2].toString();
-        String index2Arg = null;
-
-        if (argv.length == 4) {
-            index2Arg = argv[3].toString();
-        }
-
-        Result result = (new Get()).exec(swkjtextpane, index1Arg, index2Arg);
+        Result result = (new Get()).exec(swkjtextpane, tagStrings);
         result.checkError(interp);
-        interp.setResult(result.s);
+        if (result.o == null) {
+            interp.setResult(result.s);
+        } else {
+            String[] resultStrings = (String[]) result.o;
+            TclObject resultList = TclList.newInstance();
+            for (String s: resultStrings) {
+                TclList.append(interp,resultList,TclString.newInstance(s));
+            }
+            interp.setResult(resultList);
+        }
     }
 
     void insert(final Interp interp, final SwkJTextPane swkjtextpane,
@@ -1081,50 +1088,58 @@ class SwkJTextPaneWidgetCmd implements Command {
     private static class Get extends GetValueOnEventThread {
 
         SwkJTextPane swkjtextpane = null;
-        String index1Arg = null;
-        String index2Arg = null;
+        String[] tagStrings = null;
         Result result = new Result();
 
-        Result exec(final SwkJTextPane swkjtextpane, final String index1Arg,
-                final String index2Arg) {
+        Result exec(final SwkJTextPane swkjtextpane, final String[] tagStrings) {
             this.swkjtextpane = swkjtextpane;
-            this.index1Arg = index1Arg;
-            this.index2Arg = index2Arg;
+            this.tagStrings = tagStrings;
             execOnThread();
-
             return result;
         }
 
         @Override
         public void run() {
-            int index1 = -1;
-            int index2 = -1;
-            try {
-                index1 = swkjtextpane.doc.getIndexLC(swkjtextpane, index1Arg);
-                index2 = index1 + 1;
-
-                if (index2Arg != null) {
-                    index2 = swkjtextpane.doc.getIndexLC(swkjtextpane, index2Arg);
-
-                    if (index2Arg.equals("end")) {
-                        if (index2 == 0) {
-                            return;
-                        }
-                    }
-                }
-            } catch (IllegalArgumentException iaE) {
-                result.setError(iaE.getMessage());
-                return;
+            int nEntries = tagStrings.length;
+            if ((nEntries % 2) == 1) {
+                 nEntries++;
             }
-
-            if (index2 >= index1) {
+            int[] indices = new int[nEntries];
+            int endOffset = swkjtextpane.doc.getEndPosition().getOffset();
+            for (int i=0;i<tagStrings.length;i++) {
                 try {
-                    result.s = swkjtextpane.doc.getText(index1, index2
-                            - index1);
-                } catch (BadLocationException badLoc) {
-                    result.setError(badLoc.toString());
+                    indices[i] = swkjtextpane.doc.getIndexLC(swkjtextpane, tagStrings[i]);
+                } catch (Exception e) {
+                    result.setError(e.getMessage());
+                    return;
                 }
             }
+            if ((tagStrings.length % 2) == 1) {
+                indices[nEntries-1] = indices[nEntries-2]+1;
+            }
+            if (nEntries == 2) {
+               if (indices[1] > indices[0]) {
+                   try {
+                       result.s = swkjtextpane.doc.getText(indices[0], indices[1] - indices[0]);
+                   } catch (BadLocationException badLoc) {
+                       result.setError(badLoc.toString());
+                       return;
+                   }
+               }
+           } else {
+                String[] resultStrings = new String[nEntries/2];
+                for (int i=0;i<nEntries;i += 2) {
+                   if (indices[i+1] > indices[i]) {
+                       try {
+                           resultStrings[i/2] = swkjtextpane.doc.getText(indices[i], indices[i+1] - indices[i]);
+                       } catch (BadLocationException badLoc) {
+                           result.setError(badLoc.toString());
+                           return;
+                       }
+                   }
+               }
+               result.o = resultStrings;
+           }
         }
     }
 
