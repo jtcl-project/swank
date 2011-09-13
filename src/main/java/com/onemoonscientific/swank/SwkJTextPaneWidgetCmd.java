@@ -644,18 +644,16 @@ class SwkJTextPaneWidgetCmd implements Command {
 
     void delete(Interp interp, SwkJTextPane swkjtextpane, TclObject[] argv)
             throws TclException {
-        if ((argv.length != 3) && (argv.length != 4)) {
-            throw new TclNumArgsException(interp, 2, argv, "index1 ?index2?");
+        if (argv.length < 3) {
+            throw new TclNumArgsException(interp, 2, argv, "index1 ?index2 ...?");
         }
+        String[] tagStrings = new String[argv.length-2];
 
-        String firstArg = argv[2].toString();
-        String endArg = null;
-
-        if (argv.length > 3) {
-            endArg = argv[3].toString();
+        for (int j = 0; j < tagStrings.length; j++) {
+            tagStrings[j] = argv[j+2].toString();
         }
-
-        (new Delete()).exec(swkjtextpane, firstArg, endArg);
+        Result result = (new Delete()).exec(swkjtextpane, tagStrings);
+        result.checkError(interp);
     }
 
     void see(Interp interp, SwkJTextPane swkjtextpane, TclObject[] argv)
@@ -1257,73 +1255,95 @@ class SwkJTextPaneWidgetCmd implements Command {
         }
     }
 
+    static class OffsetPair implements Comparable {
+        final int offset;
+        final int delta;
+        OffsetPair(final int offset, final int delta) {
+           this.offset = offset;
+           this.delta = delta;
+        } 
+        public int compareTo(Object objectPair) {
+           OffsetPair offsetPair = (OffsetPair) objectPair;
+           if ((this.offset + this.delta)  < (offsetPair.offset + offsetPair.delta)) {
+               return 1;
+           } else if (this.offset == offsetPair.offset) {
+               if (this.delta < offsetPair.delta) {
+                   return 1;
+               } else if (this.delta == offsetPair.delta) {
+                   return 0;
+               } else {
+                   return -1;
+               }
+           } else {
+               return -1;
+           }
+        }
+    }
+
     private static class Delete extends GetValueOnEventThread {
 
         SwkJTextPane swkjtextpane = null;
-        String firstArg = null;
-        String endArg = null;
+        String[] tagStrings = null;
+        Result result = new Result();
 
-        void exec(final SwkJTextPane swkjtextpane, final String firstArg,
-                final String endArg) {
+        Result exec(final SwkJTextPane swkjtextpane, final String[] tagStrings) {
             this.swkjtextpane = swkjtextpane;
-            this.firstArg = firstArg;
-            this.endArg = endArg;
+            this.tagStrings = tagStrings;
             execOnThread();
+            return result;
         }
 
         @Override
         public void run() {
-            int index1 = 0;
-
-            try {
-                index1 = swkjtextpane.doc.getIndexLC(swkjtextpane, firstArg);
-            } catch (Exception e) {
-                // FIXME
-                System.out.println("caught " + e.getMessage());
-
-                return;
+            int nEntries = tagStrings.length;
+            if ((nEntries % 2) == 1) {
+                 nEntries++;
             }
-
-            int index2 = index1 + 1;
+            int[] indices = new int[nEntries];
             int endOffset = swkjtextpane.doc.getEndPosition().getOffset();
-
-            if (endArg != null) {
+            for (int i=0;i<tagStrings.length;i++) {
                 try {
-                    index2 = swkjtextpane.doc.getIndexLC(swkjtextpane, endArg);
+                    indices[i] = swkjtextpane.doc.getIndexLC(swkjtextpane, tagStrings[i]);
                 } catch (Exception e) {
-                    // FIXME
-                    System.out.println("caught " + e);
-
+                    result.setError(e.getMessage());
                     return;
                 }
-
-                if (index2 >= (endOffset - 1)) {
-                    index2 = endOffset - 1;
-                }
-
-                if (index2 == 0) {
-                    return;
+                if (indices[i] >= (endOffset - 1)) {
+                    indices[i] = endOffset - 1;
                 }
             }
-
-            if (index2 < index1) {
-                return;
-            }
-
-            if (index2 >= endOffset) {
-                return;
-            }
-
             if (!swkjtextpane.isEditable()) {
                 return;
             }
-
+            if ((tagStrings.length % 2) == 1) {
+                indices[nEntries-1] = indices[nEntries-2]+1;
+            }
+            ArrayList<OffsetPair> offsetPairs = new ArrayList<OffsetPair>();
+            int nStart=nEntries-1;
+            for (int i=0;i<nStart;i += 2) {
+               if (indices[i+1] > indices[i]) {
+                   OffsetPair offsetPair = new OffsetPair(indices[i],indices[i+1]-indices[i]);
+                   offsetPairs.add(offsetPair);
+               }
+            }
+            Collections.sort(offsetPairs);
+            int lastOffset = -1;
             try {
-                swkjtextpane.doc.remove(index1, index2 - index1);
+                for (int i=0;i<offsetPairs.size();i++) {
+                    OffsetPair offsetPair = offsetPairs.get(i);
+                    int offset = offsetPair.offset;
+                    int delta = offsetPair.delta;
+                    if (offset == lastOffset) {
+                        continue;
+                    }
+                    if ((lastOffset != -1) && ((offset+delta) > lastOffset)) {
+                        delta = lastOffset-offset;
+                    }
+                    swkjtextpane.doc.remove(offset, delta);
+                    lastOffset = offset;
+                }
             } catch (BadLocationException badLoc) {
-                System.out.println("badLoc");
-
-                //FIXME
+                result.setError(badLoc.getMessage());
             }
         }
     }

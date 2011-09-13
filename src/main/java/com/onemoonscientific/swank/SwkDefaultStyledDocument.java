@@ -976,6 +976,8 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
                                 }
                             }
                         }
+                    } else {
+                        throw new IllegalArgumentException(badTextIndex);
                     }
                 }
             }
