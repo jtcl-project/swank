@@ -97,10 +97,13 @@ public class SwkDocumentSearch {
                 } else {
                     pattern = Pattern.compile(searchString);
                 }
+            } else {
+                if ((flags & SEARCH_NOCASE) == SEARCH_NOCASE) {
+                    searchString = searchString.toLowerCase();
+                }
             }
         } catch (PatternSyntaxException psE) {
-            result.setError("pattern syntax error");
-
+            result.setError("couldn't compile regular expression pattern: " + psE.getMessage());
             return result;
         }
 
@@ -198,6 +201,9 @@ public class SwkDocumentSearch {
                         nChars = matcher.end() - searchIndex;
                     }
                 } else {
+                    if ((flags & SEARCH_NOCASE) == SEARCH_NOCASE) {
+                        testLine = testLine.toLowerCase();
+                    }
                     searchIndex = testLine.indexOf(searchString);
                     nChars = searchString.length();
                 }
@@ -295,6 +301,9 @@ public class SwkDocumentSearch {
                         nChars = matcher.end() - searchIndex;
                     }
                 } else {
+                    if ((flags & SEARCH_NOCASE) == SEARCH_NOCASE) {
+                        testLine = testLine.toLowerCase();
+                    }
                     searchIndex = testLine.lastIndexOf(searchString);
                     nChars = searchString.length();
                 }
