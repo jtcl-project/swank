@@ -534,26 +534,28 @@ proc ::minEditor::applyHighlights {twin start end values}  {
             set wordAttributes [set highlight($word)]
             foreach {tagClass color} $wordAttributes break
             
-            $twin tag add $tagClass $res $wordEnd
+            lappend ranges($tagClass) $res $wordEnd
             set colors($tagClass) $color
             
         } elseif {[info exists highlightCharStart($firstOfWord)] == 1} {
             set wordAttributes [set highlightCharStart($firstOfWord)]
             foreach {tagClass color} $wordAttributes break
             
-            $twin tag add $tagClass $res $wordEnd
+            lappend ranges($tagClass) $res $wordEnd
             set colors($tagClass) $color
         }
         set si $wordEnd
     }
     set tagClasses [array names colors]
     foreach tagClass $tagClasses {
+        eval $twin tag add $tagClass $ranges($tagClass)
         $twin tag configure $tagClass -foreground $colors($tagClass)
     }
 }
 proc ::minEditor::applyHighlightSpecialChars {twin start end values}  {
     array set highlightSpecialChars $values
     foreach {ichar tagInfo} [array get highlightSpecialChars] {
+        set ranges [list]
         set si $start
         foreach {tagClass color} $tagInfo break
         
@@ -564,11 +566,12 @@ proc ::minEditor::applyHighlightSpecialChars {twin start end values}  {
             }
             set wordEnd [$twin index "$res + 1 chars"]
             
-            $twin tag add $tagClass $res $wordEnd
+            lappend ranges $res $wordEnd
             set colors($tagClass) $color
             set si $wordEnd
             
         }
+        eval $twin tag add $tagClass $ranges
     }
     set tagClasses [array names colors]
     foreach tagClass $tagClasses {
@@ -578,6 +581,7 @@ proc ::minEditor::applyHighlightSpecialChars {twin start end values}  {
 proc ::minEditor::applyHighlightRegexp {twin start end values}  {
     array set highlightRegexp $values
     foreach {tagClass tagInfo} [array get highlightRegexp] {
+        set ranges [list]
         set si $start
         foreach {re color} $tagInfo break
         while 1 {
@@ -587,10 +591,11 @@ proc ::minEditor::applyHighlightRegexp {twin start end values}  {
             }
             
             set wordEnd [$twin index "$res + $length chars"]
-            $twin tag add $tagClass $res $wordEnd
             set colors($tagClass) $color
             set si $wordEnd
+            lappend ranges $res $wordEnd
         }
+        eval $twin tag add $tagClass $ranges
     }
     set tagClasses [array names colors]
     foreach tagClass $tagClasses {
