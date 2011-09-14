@@ -332,19 +332,16 @@ class SwkJTextPaneWidgetCmd implements Command {
                         "coudn't find style " + argv[3].toString());
             }
         } else if (argv[2].toString().equals("add")) {
-            if (argv.length < 5) {
-                throw new TclNumArgsException(interp, 1, argv,
-                        "option ?arg arg ...?");
+           if (argv.length < 5) {
+                throw new TclNumArgsException(interp, 2, argv, "tagName index1 ?index2 index1 index2...?");
+            }
+            String[] tagStrings = new String[argv.length-4];
+    
+            for (int j = 0; j < tagStrings.length; j++) {
+                tagStrings[j] = argv[j+4].toString();
             }
 
-            String arg5 = null;
-
-            if (argv.length == 6) {
-                arg5 = argv[5].toString();
-            }
-
-            (new Add()).exec(swkjtextpane, argv[0].toString(),
-                    argv[3].toString(), argv[4].toString(), arg5);
+            (new Add()).exec(swkjtextpane, argv[0].toString(), argv[3].toString(), tagStrings);
         } else if (argv[2].toString().equals("bind")) {
             if (argv.length < 4) {
                 throw new TclNumArgsException(interp, 1, argv,
@@ -751,49 +748,61 @@ class SwkJTextPaneWidgetCmd implements Command {
     private static class Add extends UpdateOnEventThread {
 
         SwkJTextPane swkjtextpane = null;
-        String arg0 = null;
-        String arg1 = null;
-        String arg2 = null;
-        String arg3 = null;
+        String windowName = null;
+        String tagName = null;
+        String[] indexNames = null;
+        Result result = new Result();
 
-        void exec(final SwkJTextPane swkjtextpane, final String arg0,
-                final String arg1, final String arg2, final String arg3) {
+        Result exec(final SwkJTextPane swkjtextpane, final String windowName,
+                final String tagName, final String[] indexNames) {
             this.swkjtextpane = swkjtextpane;
-            this.arg0 = arg0;
-            this.arg1 = arg1;
-            this.arg2 = arg2;
-            this.arg3 = arg3;
+            this.windowName = windowName;
+            this.tagName = tagName;
+            this.indexNames = indexNames;
             execOnThread();
+            return result;
         }
 
         @Override
         public void run() {
-            Style style = swkjtextpane.getStyle(arg1);
-            int index = swkjtextpane.doc.getIndexLC(swkjtextpane, arg2);
-            int index2 = index + 1;
-
-            if (arg3 != null) {
-                index2 = swkjtextpane.doc.getIndexLC(swkjtextpane, arg3);
+            Style style = swkjtextpane.getStyle(tagName);
+            int nEntries = indexNames.length;
+            if ((indexNames.length % 2) == 1) {
+                 nEntries++;
+            }
+            int[] indices = new int[nEntries];
+            int endOffset = swkjtextpane.doc.getEndPosition().getOffset();
+            for (int i=0;i<indexNames.length;i++) {
+                try {
+                    indices[i] = swkjtextpane.doc.getIndexLC(swkjtextpane, indexNames[i]);
+                } catch (Exception e) {
+                    result.setError(e.getMessage());
+                    return;
+                }
+            }
+            if ((indexNames.length % 2) == 1) {
+                 indices[nEntries-1] = indices[nEntries-2]+1;
             }
 
-            if (arg1.equals("sel")) {
-                swkjtextpane.setCaretPosition(index);
-// FIXME is this only needed if arg3 is "end"
-                index2--;
-                swkjtextpane.moveCaretPosition(index2);
-
+            if (tagName.equals("sel")) {
+                swkjtextpane.setCaretPosition(indices[0]);
+                swkjtextpane.moveCaretPosition(indices[1]-1);
                 if (!swkjtextpane.selectionWindowAdded) {
-                    SelectionCmd.addSelectionWindow(arg0);
+                    SelectionCmd.addSelectionWindow(windowName);
                     swkjtextpane.selectionWindowAdded = true;
                 }
             }
 
             if (style == null) {
-                style = swkjtextpane.addStyle(arg1, null);
-                style.addAttribute("tagName", arg1);
+                style = swkjtextpane.addStyle(tagName, null);
+                style.addAttribute("tagName", tagName);
             }
 
-            swkjtextpane.doc.addStyleToRange(swkjtextpane, index, index2, arg1);
+            for (int i=0;i<nEntries;i += 2) {
+               if ((indices[i+1] > indices[i]) && (indices[i] < endOffset)) {
+                       swkjtextpane.doc.addStyleToRange(swkjtextpane, indices[i],indices[i+1], tagName);
+               }
+           }
         }
     }
 
