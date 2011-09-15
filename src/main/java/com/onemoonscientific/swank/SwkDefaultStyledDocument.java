@@ -52,6 +52,7 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
     // Elements that use the Style. The values of the inner Hashtables are useless
     // (we should use a "Set" data structure, but in JDK 1.1 there is none).
     private Hashtable styleHash = new Hashtable();
+    private boolean documentChanged = true;
 
     SwkDefaultStyledDocument() {
         super();
@@ -220,12 +221,14 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
     public void insertUpdate(DocumentEvent ev) {
         //System.out.println("insert "+ev.toString());
         updateStyleHash(ev);
+        documentChanged = true;
     }
 
     // Call updateStyleHash() whenever text is removed
     public void removeUpdate(DocumentEvent ev) {
         //System.out.println("remove");
         updateStyleHash(ev);
+        documentChanged = true;
     }
 
     // Whenever attributes change, add the paragraph that was changed to our hash.
@@ -361,6 +364,7 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
      *
      */
     public void indexParagraphs() {
+        if (documentChanged) {
         ElementIterator elIter = new ElementIterator(this);
         Element elem;
         paragraphs.setSize(0);
@@ -374,6 +378,8 @@ public class SwkDefaultStyledDocument extends DefaultStyledDocument
                 break;
             }
         }
+        }
+        documentChanged = false;
     }
 
     void removeStyleFromRange(SwkJTextPane swkjtextpane, int index1,
