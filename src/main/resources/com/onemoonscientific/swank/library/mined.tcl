@@ -100,6 +100,7 @@ class minEditor {
         set textWin [text $tl.text -wrap word -undo 1]
         bind $textWin <Command-B> "$this matchP;break"
         bind $textWin <KeyPress> "$this keyPress"
+        set config(-highlight) 1
 
         $jscroll add $textWin
         
@@ -390,17 +391,20 @@ class minEditor {
     
     
     method highlight {start end {afterTriggered 0}} {
+        if {!$config(-highlight)} {
+            return
+        }
+        highlightNow $start $end $afterTriggered
+    }
+    method highlightNow {start end {afterTriggered 0}} {
         if {$afterTriggered} {
             set config(highlightAfterId) ""
         }
         
-        #  if {!$config(-highlight)} {
-        #   return
-        #}
         catch {array unset updateLines}
         
         set twin $textWin
-        $twin tag remove balance 1.0 end
+#        $twin tag remove balance 1.0 end
         ::minEditor::applyHighlights $twin $start $end [array get highlight]
         ::minEditor::applyHighlightSpecialChars $twin $start $end [array get highlightSpecialChars]
         ::minEditor::applyHighlightRegexp $twin $start $end [array get highlightRegexp]
@@ -441,7 +445,7 @@ class minEditor {
     
     method matchPair {str1 str2 escape} {
         set win $textWin
-        $win tag remove balance 1.0 end
+#        $win tag remove balance 1.0 end
         
         set prevChar [$win get "insert - 2 chars"]
         if {[string equal $prevChar $escape]} {
@@ -509,8 +513,8 @@ class minEditor {
                 }
             }
         }
-        $win tag add balance $startPair $endPair
-        $win tag configure balance -background green
+        $win tag add sel $startPair $endPair
+        #$win tag configure sel -background green
     }
     
     
@@ -548,7 +552,9 @@ proc ::minEditor::applyHighlights {twin start end values}  {
     }
     set tagClasses [array names colors]
     foreach tagClass $tagClasses {
-        eval $twin tag add $tagClass $ranges($tagClass)
+        if {[llength $ranges($tagClass)] > 0} {
+            eval $twin tag add $tagClass $ranges($tagClass)
+        }
         $twin tag configure $tagClass -foreground $colors($tagClass)
     }
 }
@@ -571,7 +577,9 @@ proc ::minEditor::applyHighlightSpecialChars {twin start end values}  {
             set si $wordEnd
             
         }
-        eval $twin tag add $tagClass $ranges
+        if {[llength $ranges] > 0} {
+            eval $twin tag add $tagClass $ranges
+        }
     }
     set tagClasses [array names colors]
     foreach tagClass $tagClasses {
@@ -595,7 +603,9 @@ proc ::minEditor::applyHighlightRegexp {twin start end values}  {
             set si $wordEnd
             lappend ranges $res $wordEnd
         }
-        eval $twin tag add $tagClass $ranges
+        if {[llength $ranges] > 0} {
+            eval $twin tag add $tagClass $ranges
+         }
     }
     set tagClasses [array names colors]
     foreach tagClass $tagClasses {
