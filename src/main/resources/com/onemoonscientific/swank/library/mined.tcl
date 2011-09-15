@@ -95,6 +95,8 @@ class minEditor {
         set tl $tl1
         destroy $tl
         toplevel $tl
+        set menu [jmenubar $tl.mbar]
+        pack $menu -side top -fill x
         set jscroll [jscrollpane $tl.scroll]
         pack $jscroll -side top -fill both -expand y
         set textWin [text $tl.text -wrap word -undo 1]
@@ -104,7 +106,6 @@ class minEditor {
 
         $jscroll add $textWin
         
-        set menu [jmenubar $tl.mbar]
         
         ## File Menu
         ##
@@ -128,7 +129,6 @@ class minEditor {
         $menu add cascade -label Eval -menu $m
         $m add command -label "Evaluate"  -underline 0  -command "$this evalScript"
         $m add command -label "Check"  -underline 0  -command "$this checkScript"
-        $tl configure -menu $menu
         wm protocol $tl WM_DELETE_WINDOW "$this closeEditor"
         setHighlightTcl
     }
@@ -225,21 +225,24 @@ class minEditor {
         catch {
             set txt [selection get]
             clipboard append $txt
-            if {[$textWin compare sel.first >= limit]} {
+            if {[$textWin compare sel.first >= 1.0]} {
+puts cut
                 $textWin delete sel.first sel.last
             }
-        }
+        } result
+        puts $result
     }
     method copy {} {
         clipboard clear
         catch {
             set txt [$textWin get sel.first sel.last]
             clipboard append $txt
-        }
+        } result
+        puts $result
     }
     method paste {}  {
         if {![catch {getSelection $textWin} txt]} {
-            if {[$textWin compare insert < limit]} {
+            if {[$textWin compare insert < 1.0]} {
                 $textWin mark set insert end
             }
             $textWin insert insert $txt
