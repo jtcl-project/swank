@@ -3462,6 +3462,8 @@ proc edit {args} {
             set opts(-type) "var"
         } elseif {[::tkcon::EvalOther $app $type file isfile [list $word]]} {
             set opts(-type) "file"
+        } else {
+            set opts(-type) "new"
         }
     }
     if {[string compare $opts(-type) {}]} {
@@ -3471,6 +3473,7 @@ proc edit {args} {
         while {[winfo exists $w[incr i]]} {}
         append w $i
         minEditor mE$i $w
+        set minEd mE$i
         set minEditor mE$i
         wm withdraw $w
         if {[string length $word] > 20} {
@@ -3492,15 +3495,7 @@ proc edit {args} {
                     [::tkcon::EvalOther $app $type dump var [list $word]]
         }
         file	{
-            $w.text insert 1.0 [::tkcon::EvalOther $app $type eval \
-                    [subst -nocommands {
-                set __tkcon(fid) [open $word r]
-                set __tkcon(data) [read \$__tkcon(fid)]
-                close \$__tkcon(fid)
-                after 1000 unset __tkcon
-                return \$__tkcon(data)
-            }
-            ]]
+            $minEd openFile $word
         }
         error*	{
             $w.text insert 1.0 [join $args \n]
