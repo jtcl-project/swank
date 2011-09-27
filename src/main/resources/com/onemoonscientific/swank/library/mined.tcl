@@ -100,7 +100,7 @@ class minEditor {
         set jscroll [jscrollpane $tl.scroll]
         pack $jscroll -side top -fill both -expand y
         set textWin [text $tl.text -wrap word -undo 1]
-        bind $textWin <Command-B> "$this matchP;break"
+        bind $textWin <Meta-b> "$this matchP;break"
         bind $textWin <KeyPress> "$this keyPress"
         set config(-highlight) 1
 
@@ -138,16 +138,26 @@ class minEditor {
         ::itcl::delete object $this
     }
     method saveFile {} {
-        set f2 [open $currentFile.tmp w]
-        set data [$textWin get 1.0 end]
-        puts $f2 $data
-        close $f2
-        file rename $currentFile.tmp $currentFile
+        if {![info exists currentFile] || ($currentFile eq "")} {
+            saveFileAs
+        } else {
+            set f2 [open $currentFile.tmp w]
+            set data [$textWin get 1.0 end]
+            puts $f2 $data
+            close $f2
+            file rename -force $currentFile.tmp $currentFile
+        }
     }
     method saveFileAs {} {
-        set fileName [tk_getSaveFile -initialdir [pwd]]
+        set fileName [tk_getSaveFile]
         if {$fileName eq ""} {
             return
+        }
+        if {[file exists $fileName]} {
+            set yesno [tk_messageBox -type yesno -icon warning -message "File Exists\nOverwrite?"]
+            if {$yesno ne "yes"} {
+                return
+            }
         }
         set f2 [open $fileName w]
         set data [$textWin get 1.0 end]
@@ -156,7 +166,7 @@ class minEditor {
     }
     method openFile {{fileName {}}} {
         if {$fileName eq ""} {
-            set fileName [tk_getOpenFile -initialdir [pwd]]
+            set fileName [tk_getOpenFile]
         }
         if {$fileName eq ""} {
             return
@@ -199,6 +209,7 @@ class minEditor {
         }
     }
     method keyPress {} {
+        after cancel "$this updated"
         set index [$textWin index insert]
         set line [lindex [split $index "."] 0]
         if {![info exists updateLines(first)]} {
@@ -212,7 +223,6 @@ class minEditor {
                 set updateLines(last) $line
             }
         }
-        after cancel "$this updated"
         after 500 "$this updated"
     }
     method updated {} {
