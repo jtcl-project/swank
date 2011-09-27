@@ -44,7 +44,16 @@
       <filtered>true</filtered>
     </file>
     <file>
+      <source>src/main/scripts/swkcon.bat</source>
+      <filtered>true</filtered>
+    </file>
+    <file>
       <source>src/main/scripts/wisk</source>
+      <filtered>true</filtered>
+      <fileMode>0744</fileMode>
+    </file>
+    <file>
+      <source>src/main/scripts/swkcon</source>
       <filtered>true</filtered>
       <fileMode>0744</fileMode>
     </file>
