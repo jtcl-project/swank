@@ -261,6 +261,7 @@ public class SwkImageCanvasWidgetCmd implements Command {
                     object = ReflectObject.get(interp, argv[2]);
                 } catch (TclException tclE) {
                 }
+                interp.resetResult();
                 if ((object != null)) {
                     oStream = (OutputStream) object;
                 } else {
