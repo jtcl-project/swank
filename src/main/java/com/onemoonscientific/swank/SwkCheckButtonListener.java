@@ -292,7 +292,7 @@ public class SwkCheckButtonListener implements ActionListener, VarTrace,
 
         TclObject tObj;
 
-        if (((SwkJCheckBox) component).isSelected()
+        if (component.isSelected()
                 && !(value.equals(buttonSettings.getValue()))) {
             actionPerformed(null);
         }
@@ -318,7 +318,7 @@ public class SwkCheckButtonListener implements ActionListener, VarTrace,
                     "SwkCheckButtonListener: setOffValue not on event thread");
         }
 
-        if (!((SwkJCheckBox) component).isSelected()
+        if (!component.isSelected()
                 && !(value.equals(buttonSettings.getOffValue()))) {
             actionPerformed(null);
         }
