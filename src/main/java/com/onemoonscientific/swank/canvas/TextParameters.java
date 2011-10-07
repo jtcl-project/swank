@@ -20,8 +20,9 @@ import java.text.BreakIterator;
 public class TextParameters {
 
     static private final TextParameters defaultPar = new TextParameters();
+    static private final Font defaultFont = new Font(Font.MONOSPACED,Font.PLAIN,12);
     private String text = "";
-    private Font font = null;
+    private Font font = defaultFont;
     private Color textColor = null;
     private float[] anchor = {0.0f, 0.0f};
     static BreakIterator wordIterator = BreakIterator.getWordInstance();
