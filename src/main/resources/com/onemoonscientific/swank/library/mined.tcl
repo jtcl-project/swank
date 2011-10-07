@@ -145,6 +145,7 @@ class minEditor {
             set data [$textWin get 1.0 end]
             puts $f2 $data
             close $f2
+            file delete $currentFile
             file rename -force $currentFile.tmp $currentFile
         }
     }
