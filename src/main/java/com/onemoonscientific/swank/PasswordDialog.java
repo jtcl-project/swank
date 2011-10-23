@@ -184,6 +184,15 @@ public class PasswordDialog extends JDialog implements ActionListener, KeyListen
         setVisible(true);
         return okPressed();
     }
+    /**
+     *
+     * @return
+     */
+    public boolean showDialog(final int x, final int y) {
+        setLocation(x,y);
+        setVisible(true);
+        return okPressed();
+    }
 
     /**
      *

@@ -44,8 +44,8 @@ public class PasswordCmd implements Command {
             throws TclException {
         int i;
 
-        if ((argv.length < 3) || (argv.length > 3)) {
-            throw new TclNumArgsException(interp, 1, argv, "?frame title?");
+        if ((argv.length < 3) || (argv.length > 5)) {
+            throw new TclNumArgsException(interp, 1, argv, "frame title ?x y?");
         }
 
         TclObject tObj = (TclObject) Widgets.getWidget(interp, argv[1].toString());
@@ -58,12 +58,18 @@ public class PasswordCmd implements Command {
         // fixme, what are we using argv[1] for
         // SwkWidget swkwidget = (SwkWidget) ReflectObject.get(interp, tObj);
         String title = argv[2].toString();
-        PasswordValue pwValue = (new Password()).exec(null, title);
+        int x = -1;
+        int y = -1;
+        if (argv.length == 5) {
+            x = TclInteger.getInt(interp,argv[3]);
+            y = TclInteger.getInt(interp,argv[4]);
+        }
+        PasswordValue pwValue = (new Password()).exec(null, title,x,y);
         TclObject pwObj = ReflectObject.newInstance(interp, PasswordValue.class, pwValue);
         interp.setResult(pwObj);
     }
 
-    private class PasswordValue {
+    public class PasswordValue {
 
         String name = "";
         char[] password = null;
@@ -96,6 +102,8 @@ public class PasswordCmd implements Command {
         String title = null;
         String name = null;
         char[] password = null;
+        int x = -1;
+        int y = -1;
 
         public PasswordValue exec(final Frame frame, final String title) {
             this.frame = frame;
@@ -103,13 +111,28 @@ public class PasswordCmd implements Command {
             execOnThread();
             return new PasswordValue(name, password);
         }
+        public PasswordValue exec(final Frame frame, final String title, final int x, final int y) {
+            this.frame = frame;
+            this.title = title;
+            this.x = x;
+            this.y = y;
+            execOnThread();
+            return new PasswordValue(name, password);
+        }
 
         @Override
         public void run() {
             PasswordDialog p = new PasswordDialog(frame, title);
-            if (p.showDialog()) {
-                name = p.getName();
-                password = p.getPassword();
+            if (y >= 0) {
+                if (p.showDialog(x,y)) {
+                    name = p.getName();
+                    password = p.getPassword();
+                }
+            } else {
+                if (p.showDialog()) {
+                    name = p.getName();
+                    password = p.getPassword();
+                }
             }
         }
     }
