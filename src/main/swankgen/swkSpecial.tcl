@@ -2486,6 +2486,7 @@ Dimension dSize = new Dimension(scrollRegion[1][0]-scrollRegion[0][0],scrollRegi
                 String s1 = getText();
 		Dimension size = new Dimension(0,0);
                 ImageIcon icon = (ImageIcon) getIcon();
+   
                 if ( (s1.length() > 0) || (icon == null)) {
                     size.height = (int) (swkheight*fontMetrics.getHeight()*1.2);
                     if ((s1.length() > swkwidth)) {
@@ -2502,22 +2503,23 @@ Dimension dSize = new Dimension(scrollRegion[1][0]-scrollRegion[0][0],scrollRegi
                     }
                 }
                 if (icon != null) {
-                    if (icon.getIconWidth() > swkwidth) {
-                        size.width += icon.getIconWidth();
-                        } else {
-                        size.width += swkwidth;
-                    }
-                    if ((icon.getIconHeight() > swkheight) && (icon.getIconHeight() > size.height)) {
+                    if(getHorizontalTextPosition()  != AbstractButton.CENTER) {
+                        size.width += icon.getIconWidth() + getIconTextGap();
+                    } else if (icon.getIconWidth() > size.width) {
+                        size.width = icon.getIconWidth();
+		    }
+		    if((getVerticalTextPosition()  != AbstractButton.CENTER) && (getHorizontalTextPosition() == AbstractButton.CENTER)) {
+                        size.height += icon.getIconHeight() + getIconTextGap();
+                    } else if (icon.getIconHeight() > size.height) {
                         size.height = icon.getIconHeight();
-                        } else if (icon.getIconHeight() > swkheight) {
-                        size.height = icon.getIconHeight();
-                        } else {
-                        size.height = swkheight;
                     }
                 }
                 insets = getInsets(insets);
+                insets = getInsets(insets);
                 size.height += insets.top+insets.bottom;
                 size.width += insets.left+insets.right;
+                size.height += getPadY()*2;
+                size.width += getPadX()*2;
                 size.width += symbolSize;
 		minimumSize =size;
 	   }	
