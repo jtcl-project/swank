@@ -768,7 +768,7 @@ ArrayList<SwkBinding> getBindings(String checkTag, int type, int subtype) {
                     SwkBinding binding =  bindVec.get(i);
 
                     if (binding.equals(newBinding)) {
-                        bindVec.add(i,newBinding);
+                        bindVec.set(i,newBinding);
 
                         return;
                     }
