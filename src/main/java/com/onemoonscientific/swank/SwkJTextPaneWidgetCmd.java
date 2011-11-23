@@ -1367,7 +1367,7 @@ class SwkJTextPaneWidgetCmd implements Command {
                     lastOffset = offset;
                 }
             } catch (BadLocationException badLoc) {
-                result.setError(badLoc.getMessage());
+                //result.setError(badLoc.getMessage());
             }
         }
     }
