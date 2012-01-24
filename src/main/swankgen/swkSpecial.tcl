@@ -2520,7 +2520,9 @@ Dimension dSize = new Dimension(scrollRegion[1][0]-scrollRegion[0][0],scrollRegi
                 size.width += insets.left+insets.right;
                 size.height += getPadY()*2;
                 size.width += getPadX()*2;
-                size.width += symbolSize;
+                if (icon == null) {
+                    size.width += symbolSize;
+                }
 		minimumSize =size;
 	   }	
                 return new Dimension(minimumSize);
