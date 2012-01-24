@@ -167,7 +167,13 @@ class Set extends GetValueOnEventThread {
         if ((model == null) || !(model instanceof SpinnerNumberModel)) {
             swkjspinner.setValue(sValue);
         } else {
-           swkjspinner.setValue(new Double(dValue));
+           SpinnerNumberModel nModel = (SpinnerNumberModel) model;
+           Number stepSize = nModel.getStepSize();
+           if (Math.abs(stepSize.intValue()-stepSize.doubleValue()) < 1.0e-6) {
+               swkjspinner.setValue(new Integer((int) dValue));
+           } else {
+               swkjspinner.setValue(new Double(dValue));
+           }
         }
         Object object = swkjspinner.getValue();
         if (object == null) {

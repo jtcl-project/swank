@@ -86,20 +86,33 @@ public class SwkJSpinnerListener implements ChangeListener, VarTrace,
                 SpinnerModel model = component.getModel();
                 if (tobj != null) {
                     final String sValue;
-                    final double dValue;
+                    final Number number;
                     if ((model == null) || !(model instanceof SpinnerNumberModel)) {
                         sValue = tobj.toString().trim();
-                        dValue = 0.0;
+                        number = null;
                     } else {
-                        dValue = TclDouble.get(interp, tobj);
+                        boolean gotInt = false;
+                        double dValue = 0.0;
+                        int iValue = 0;
+                        try {
+                            iValue = TclInteger.get(interp, tobj);
+                            gotInt = true;
+                        } catch (TclException dE) {
+                            dValue = TclDouble.get(interp, tobj);
+                        }
                         sValue = null;
+                        if (gotInt) {
+                           number = new Integer(iValue);
+                        } else {
+                           number = new Double(dValue);
+                        }
                     }
                     try {
                         SwingUtilities.invokeLater(new Runnable() {
 
                             public void run() {
                                 if (sValue == null) {
-                                    component.setValue(new Double(dValue));
+                                    component.setValue(number);
                                 } else {
                                     component.setValue(sValue);
                                 }
@@ -138,34 +151,43 @@ public class SwkJSpinnerListener implements ChangeListener, VarTrace,
         if ((name != null) && !name.equals("")) {
             try {
                 TclObject tobj = interp.getVar(name, TCL.GLOBAL_ONLY).duplicate();
-
-                if (tobj != null) {
-                    SpinnerModel model = component.getModel();
+                SpinnerModel model = component.getModel();
+             if (tobj != null) {
                     final String sValue;
-                    final double dValue;
+                    final Number number;
                     if ((model == null) || !(model instanceof SpinnerNumberModel)) {
                         sValue = tobj.toString().trim();
-                        dValue = 0.0;
+                        number = null;
                     } else {
-                        dValue = TclDouble.get(interp, tobj);
+                        boolean gotInt = false;
+                        double dValue = 0.0;
+                        int iValue = 0;
+                        try {
+                            iValue = TclInteger.get(interp, tobj);
+                            gotInt = true;
+                        } catch (TclException dE) {
+                            dValue = TclDouble.get(interp, tobj);
+                        }
                         sValue = null;
+                        if (gotInt) {
+                           number = new Integer(iValue);
+                        } else {
+                           number = new Double(dValue);
+                        }
                     }
-
                     try {
                         SwingUtilities.invokeLater(new Runnable() {
 
                             public void run() {
                                 if (sValue == null) {
-                                    component.setValue(new Double(dValue));
+                                    component.setValue(number);
                                 } else {
                                     component.setValue(sValue);
                                 }
-
                             }
                         });
                     } catch (Exception e) {
-                        System.out.println("coudn't set item in spinner "
-                                + sValue);
+                        System.out.println("coudn't set item in spinner " + sValue);
                     }
                 }
             } catch (TclException tclException) {

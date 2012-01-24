@@ -27,7 +27,7 @@ append specialVars {
 }
 
 append specialInits {
-        SpinnerNumberModel model = new SpinnerNumberModel(1.0,0.0,100.0,1.0);
+        SpinnerNumberModel model = new SpinnerNumberModel(1,0,100,1);
         setModel(model);
         commandListener = new SwkJSpinnerListener(interp,this);
         addChangeListener(commandListener);
@@ -50,7 +50,32 @@ append specialMethods {
         Object model = getModel();
          if ((model != null) && (model instanceof SpinnerNumberModel)) {
             SpinnerNumberModel spinModel = (SpinnerNumberModel) model;
-            spinModel.setStepSize(step);
+            final boolean isDouble;
+            if (Math.abs(step-((int) step)) < 1.0e-6) {
+                isDouble = false; 
+            } else {
+                isDouble = true; 
+            }
+            Number value = spinModel.getNumber();
+            if (value instanceof Double) {
+                if (isDouble) {
+                   spinModel.setStepSize(step);
+                } else {
+                    int toValue = ((Number) spinModel.getMinimum()).intValue();
+                    int fromValue = ((Number) spinModel.getMaximum()).intValue();
+                    SpinnerNumberModel numberModel = new SpinnerNumberModel(value.intValue(),toValue,fromValue,(int) step);
+                    setModel(numberModel);
+                }
+            } else {
+                if (isDouble) {
+                    double toValue = ((Number) spinModel.getMinimum()).doubleValue();
+                    double fromValue = ((Number) spinModel.getMaximum()).doubleValue();
+                    SpinnerNumberModel numberModel = new SpinnerNumberModel(value.doubleValue(),toValue,fromValue, step);
+                    setModel(numberModel);
+                } else {
+                   spinModel.setStepSize((int) step);
+                }
+            }
          }
      }
      public double getIncrement() {
@@ -66,7 +91,12 @@ append specialMethods {
          Object model = getModel();
          if ((model != null) && (model instanceof SpinnerNumberModel)) {
             SpinnerNumberModel spinModel = (SpinnerNumberModel) model;
-            spinModel.setMinimum(min);
+            Number value = spinModel.getNumber();
+            if ((value instanceof Double)) {
+                spinModel.setMinimum(min);
+            } else {
+                spinModel.setMinimum((int) min);
+            }
          }
      }
      public double getFrom() {
@@ -74,7 +104,7 @@ append specialMethods {
          Object model = getModel();
          if ((model != null) && (model instanceof SpinnerNumberModel)) {
             SpinnerNumberModel spinModel = (SpinnerNumberModel) model;
-            result = ((Double) spinModel.getMinimum()).doubleValue();
+            result = ((Number) spinModel.getMinimum()).doubleValue();
          }
         return result;
      }
@@ -82,16 +112,20 @@ append specialMethods {
         Object model = getModel();
          if ((model != null) && (model instanceof SpinnerNumberModel)) {
             SpinnerNumberModel spinModel = (SpinnerNumberModel) model;
-            spinModel.setMaximum(max);
+            Number value = spinModel.getNumber();
+            if ((value instanceof Double)) {
+                spinModel.setMaximum(max);
+            } else {
+                spinModel.setMaximum((int) max);
+            }
          }
-
      }
      public double getTo() {
         double result = 10.0;
          Object model = getModel();
          if ((model != null) && (model instanceof SpinnerNumberModel)) {
             SpinnerNumberModel spinModel = (SpinnerNumberModel) model;
-            result = ((Double) spinModel.getMaximum()).doubleValue();
+            result = ((Number) spinModel.getMaximum()).doubleValue();
          }
         return result;
      }
@@ -110,7 +144,7 @@ append specialMethods {
         Object model = getModel();
         if ((values == null) || (values.size() == 0)) {
             if ((model == null) || !(model instanceof SpinnerNumberModel)) {
-                SpinnerNumberModel numberModel = new SpinnerNumberModel(1.0,0.0,100.0,1.0);
+                SpinnerNumberModel numberModel = new SpinnerNumberModel(1,0,100,1);
                 setModel(numberModel);
             }
         } else {
