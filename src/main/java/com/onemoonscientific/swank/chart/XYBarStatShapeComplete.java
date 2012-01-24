@@ -51,7 +51,7 @@ import java.awt.geom.*;
 import java.util.*;
 import java.text.DecimalFormat;
 
-public class XYStatShapeComplete extends XYPlotShape {
+public class XYBarStatShapeComplete extends XYPlotShape {
     static TreeMap<String,CanvasParameter> parameterMap = new TreeMap<String,CanvasParameter>();
 
     static CanvasParameter[] parameters = {
@@ -67,7 +67,7 @@ public class XYStatShapeComplete extends XYPlotShape {
     }
     String plotType = "xystatplot";
 
-    public XYStatShapeComplete() {
+    public XYBarStatShapeComplete() {
         rect2D = new Rectangle2D.Double();
         setRenderer();
         plot.setRangeAxis(new NumberAxis());
@@ -103,7 +103,7 @@ public class XYStatShapeComplete extends XYPlotShape {
      *
      */
     public void setRenderer() {
-        renderer = new StatisticalXYRenderer();
+        renderer = new StatisticalXYBarRenderer();
         plot.setRenderer(renderer);
         XYToolTipGenerator generator = new DCXYToolTipGenerator("{0} {1} {2} {3}", new DecimalFormat("0.000"), new DecimalFormat("0.000"));
         renderer.setToolTipGenerator(generator);

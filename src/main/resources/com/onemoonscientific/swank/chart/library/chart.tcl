@@ -391,6 +391,7 @@ proc ::swank::chart::prepareCanvas {c} {
     $c newtype xyplot   com.onemoonscientific.swank.chart.XYLineAndShapeComplete 4
     $c newtype xybarplot    com.onemoonscientific.swank.chart.XYBarShapeComplete 4
     $c newtype xystatplot   com.onemoonscientific.swank.chart.XYStatShapeComplete 4
+    $c newtype xybarstatplot   com.onemoonscientific.swank.chart.XYBarStatShapeComplete 4
     $c newtype statplot   com.onemoonscientific.swank.chart.StatisticalCategoryPlotShapeComplete 4
     $c newtype barplot      com.onemoonscientific.swank.chart.CategoryPlotShapeComplete 4
     $c newtype boxplot  com.onemoonscientific.swank.chart.BoxPlotShapeComplete 4
