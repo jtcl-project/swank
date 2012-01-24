@@ -31,6 +31,9 @@ proc tk {args } {
 }
 
 
+proc tk_popup {menu x y {entry {}}} {
+    $menu post $x $y
+}
 proc tk_getOpenFile {args} {
     global env
     if { [expr [llength $args] % 2] != 0} {
