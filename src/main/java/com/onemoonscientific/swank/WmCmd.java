@@ -232,19 +232,22 @@ public class WmCmd implements Command {
                     return;
                 }
 
-                if (argv.length != 4) {
-                    throw new TclNumArgsException(interp, 2, argv, "window");
+                if ((argv.length != 3) && (argv.length != 4)) {
+                    throw new TclNumArgsException(interp, 2, argv, "window ?title?");
                 }
 
-                final String title = argv[3].toString().intern();
-                (new UpdateOnEventThread() {
+                if (argv.length == 4) {
+                    final String title = argv[3].toString().intern();
+                    (new UpdateOnEventThread() {
 
-            @Override
+                @Override
                     public void run() {
                         ((JFrame) object).setTitle(title);
                     }
-                }).execOnThread();
-
+                    }).execOnThread();
+                }
+                String currentTitle = (new GetTitle()).exec(object);
+                interp.setResult(currentTitle);
                 break;
 
             case OPT_TRANSIENT:
@@ -576,5 +579,23 @@ public class WmCmd implements Command {
         }
         boolean value = TclBoolean.get(interp, argv[3]);
         (new AlwaysOnTop()).exec(object, value);
+    }
+   private static class GetTitle extends GetValueOnEventThread {
+        Object object = null;
+        String value = "";
+
+        String exec(final Object object) {
+            this.object = object;
+            execOnThread();
+            return value;
+        }
+
+        @Override
+        public void run() {
+            if (object instanceof JFrame) {
+                JFrame jframe = (JFrame) object;
+                value = jframe.getTitle();  
+            }
+        }
     }
 }
