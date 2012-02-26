@@ -254,7 +254,6 @@ public class SwkRadioButtonListener implements ActionListener, VarTrace,
      * @throws TclException
      */
     public void tclAction(CommandVarListenerSettings buttonSettings) throws TclException {
-        tclActionVar(buttonSettings);
         if (buttonSettings.getCommand().length() != 0) {
             try {
                 interp.eval(buttonSettings.getCommand());

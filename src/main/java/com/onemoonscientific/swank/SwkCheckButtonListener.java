@@ -397,7 +397,6 @@ public class SwkCheckButtonListener implements ActionListener, VarTrace,
      * @throws TclException
      */
     public void tclAction(ButtonSettings buttonSettings) throws TclException {
-        tclActionVar(buttonSettings);
         if (buttonSettings.getCommand().length() != 0) {
             try {
                 interp.eval(buttonSettings.getCommand());
