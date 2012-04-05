@@ -5,7 +5,7 @@
 	<groupId>com.onemoonscientific</groupId>
 	<artifactId>swank</artifactId>
 	<packaging>jar</packaging>
-	<version>3.0.0-a12</version>
+	<version>3.0.0-a13</version>
 	<name>swank</name>
 	<url>http://maven.apache.org</url>
 	<dependencies>
