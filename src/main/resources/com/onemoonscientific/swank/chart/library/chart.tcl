@@ -120,7 +120,7 @@ proc ::swank::chart::processArgs {datasetID args} {
        }
     }
    foreach y $yArgs {
-       if {[llength $y] > 1} {
+       if {([llength $y] > 1) || [string is double -strict $y]} {
            set mode listMode
            set size [llength $y]
        }  else {
@@ -149,7 +149,7 @@ proc ::swank::chart::processArgs {datasetID args} {
                break
            }
       }
-     if {[llength $x] > 1} {
+     if {([llength $x] > 1) || [string is double -strict $x]} {
            set mode listMode
            set size [llength $x]
        }  else {
