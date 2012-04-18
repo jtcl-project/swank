@@ -282,6 +282,14 @@ public class BoxPlotShapeComplete extends SwkShape implements NumberRange, PlotI
 			renderer.setSeriesOutlinePaint(i, color);
 		}
 	}
+	public TclObject getShapes(Interp interp) throws TclException {
+		TclObject list = TclList.newInstance();
+		return list;
+
+	}
+
+	public void updateShapes(String[] shapeNames) {
+	}
 
 	public CategoryAxis getDomainAxis() {
 		return (CategoryAxis) plot.getDomainAxis();

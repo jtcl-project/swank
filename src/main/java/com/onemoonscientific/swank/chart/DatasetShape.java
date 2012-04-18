@@ -20,5 +20,7 @@ public interface DatasetShape {
 	public void updateDatasets(String[] datasetNames);
  	public TclObject getColors(Interp interp) throws TclException;
        public void updateColors(Color[] colors);
+	public TclObject getShapes(Interp interp) throws TclException;
+       public void updateShapes(String[] shapeNames);
 
 }

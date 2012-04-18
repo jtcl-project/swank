@@ -81,6 +81,7 @@ proc ::swank::chart::processArgs {datasetID args} {
     set opts(-L) Y
     set opts(-l) 1
     set opts(-s) 1
+    set opts(-S) ""
     set inOpt 0
     set xArg 1
     set nSeries 0
@@ -109,6 +110,7 @@ proc ::swank::chart::processArgs {datasetID args} {
                    lappend colors $opts(-c)
                    lappend lines $opts(-l)
                    lappend shapes $opts(-s)
+                   lappend symbols $opts(-S)
                    incr nSeries
                    if {$opts(-L) eq "Y"} {
                        lappend labels Y$nSeries
@@ -164,7 +166,7 @@ proc ::swank::chart::processArgs {datasetID args} {
    } else {
       createDataset $datasetID $xArgs $yArgs $labels
    }
-   return [list "$datasetID" $shapes $lines $colors]
+   return [list "$datasetID" $shapes $lines $colors $symbols]
 }
 proc ::swank::chart::getDataset {type} {
    variable currentCanvas
@@ -185,8 +187,8 @@ proc ::swank::chart::plot {args} {
    figure $currentFigure
    set figure figure$currentFigure
    set datasetID [getDataset XYArrayData]
-   lassign [eval processArgs $datasetID $args] datasetID shapes lines colors
-   plotXYChart "$datasetID" $shapes $lines $colors
+   lassign [eval processArgs $datasetID $args] datasetID shapes lines colors symbols
+   plotXYChart "$datasetID" $shapes $lines $colors $symbols
 }
 
 proc ::swank::chart::getNextID {type} {
@@ -231,10 +233,11 @@ proc ::swank::chart::pdata {args} {
    set shapes 1
    set lines 1
    set colors red
+   set symbols square
    switch $type {
        xyplot {
            set datasetID [getDataset XYArrayData]
-           lassign [eval processArgs $datasetID $args] datasetID shapes lines colors
+           lassign [eval processArgs $datasetID $args] datasetID shapes lines colors symbols
        }
        barplot {
            set datasetID [getDataset DefaultCategoryData]
@@ -249,7 +252,7 @@ proc ::swank::chart::pdata {args} {
            return
        }
    }
-   addDatasets "$datasetID" $shapes $lines $colors
+   addDatasets "$datasetID" $shapes $lines $colors $symbols
 }
 
 proc ::swank::chart::axes {x1 y1 x2 y2} {
@@ -414,7 +417,7 @@ proc ::swank::chart::setBounds {x1 y1 x2 y2} {
     $currentCanvas itemconfigure $currentItem -dmin $x1 -dmax $x2 -rmin $y1 -rmax $y2
 }
 
-proc ::swank::chart::addData {dataID xy yNames {shapesVisible {}}  {linesVisible {}} {colors {}}} {
+proc ::swank::chart::addData {dataID xy yNames {shapesVisible {}}  {linesVisible {}} {colors {}} {symbols {}}} {
     set xData [java::new java.util.ArrayList]
     set yData [java::new java.util.ArrayList]
 
@@ -425,16 +428,16 @@ proc ::swank::chart::addData {dataID xy yNames {shapesVisible {}}  {linesVisible
        incr i
     }
     lappend ySets $yData
-    plotXYChart $dataIDs $shapesVisible $linesVisible $colors
+    plotXYChart $dataIDs $shapesVisible $linesVisible $colors $symbols
 }
 
-proc ::swank::chart::addDatasets {dataIDs {shapesVisible {}}  {linesVisible {}} {colors {}}} {
+proc ::swank::chart::addDatasets {dataIDs {shapesVisible {}}  {linesVisible {}} {colors {}} {symbols {}}} {
     variable currentCanvas
     set currentItem [getCurrentItem]
     if {[llength $currentItem] == 1} {
-         eval $currentCanvas itemconfigure $currentItem  -dataset [list $dataIDs] -shapesvisible [list $shapesVisible] -linesvisible [list $linesVisible] -paint [list $colors]
+         eval $currentCanvas itemconfigure $currentItem  -dataset [list $dataIDs] -shapesvisible [list $shapesVisible] -linesvisible [list $linesVisible] -paint [list $colors] -shape [list $symbols]
     } else {
-        plotXYChart $dataIDs $shapesVisible $linesVisible $colors
+        plotXYChart $dataIDs $shapesVisible $linesVisible $colors $symbols
     }
 }
 
@@ -621,7 +624,7 @@ proc ::swank::chart::createDataset {dataID xValueLists yValueLists yNames} {
     return $xyData
 }
 
-proc ::swank::chart::plotXYChart  {datasetIDs {shapesVisible {}}  {linesVisible {}} {colors {}}} {
+proc ::swank::chart::plotXYChart  {datasetIDs {shapesVisible {}}  {linesVisible {}} {colors {}} {symbols {}}} {
     variable currentCanvas
     variable currentItem
     set c $currentCanvas
@@ -644,7 +647,7 @@ proc ::swank::chart::plotXYChart  {datasetIDs {shapesVisible {}}  {linesVisible 
     } else {
        set legendState 0
     }
-    set currentItem [eval $c create xyplot $pa  -transform frac -tag [list "plot anno"] -dataset [list $datasetIDs] -legendstate $legendState -spline 10 -shapesvisible [list $shapesVisible] -linesvisible [list $linesVisible] -paint [list $colors]]
+    set currentItem [eval $c create xyplot $pa  -transform frac -tag [list "plot anno"] -dataset [list $datasetIDs] -legendstate $legendState -spline 10 -shapesvisible [list $shapesVisible] -linesvisible [list $linesVisible] -paint [list $colors] -shape [list $symbols]]
     addAxes
     $c lower $currentItem
 
@@ -730,7 +733,7 @@ proc ::swank::chart::addBoxAndWhiskerTablePlot {table columns colors} {
 proc ::swank::chart::addGroupedTablePlot {table columns colors} {
     addTablePlot xyplot $table $columns $colors
 }
-proc ::swank::chart::addTablePlot {mode table columns colors} {
+proc ::swank::chart::addTablePlot {mode table columns colors symbols} {
     variable currentCanvas
     variable currentItem
     set c $currentCanvas
@@ -823,7 +826,7 @@ proc ::swank::chart::addTablePlot {mode table columns colors} {
             set legendState 0
         }
         if {$mode eq "xyplot"} {
-            set item [eval $c create $mode $pa -transform frac  -tag [list "plot anno"] -dataset $datasetID -spline 10 -legendstate $legendState -shapesvisible 1 -linesvisible [list $linesVisible] -paint [list $colors] -dlabel $xLabel -rlabel $yLabel] 
+            set item [eval $c create $mode $pa -transform frac  -tag [list "plot anno"] -dataset $datasetID -spline 10 -legendstate $legendState -shapesvisible 1 -linesvisible [list $linesVisible] -paint [list $colors] -shape [list $symbols] -dlabel $xLabel -rlabel $yLabel] 
             $c itemconfigure $item -dlabel $xLabel -rlabel $yLabel -dauto 1 -rauto 1
         } else {
             set item [eval $c create boxplot $pa -transform frac -dataset $datasetID -tag [list "plot anno"] -paint [list $colors]]

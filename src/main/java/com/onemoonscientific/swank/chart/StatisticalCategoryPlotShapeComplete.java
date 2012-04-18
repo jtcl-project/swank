@@ -273,6 +273,14 @@ public class StatisticalCategoryPlotShapeComplete extends SwkShape implements Da
 
 	public void updateColors(Color[] colors) {
 	}
+	public TclObject getShapes(Interp interp) throws TclException {
+		TclObject list = TclList.newInstance();
+		return list;
+
+	}
+
+	public void updateShapes(String[] shapeNames) {
+	}
 
 	public CategoryAxis getDomainAxis() {
 		return (CategoryAxis) plot.getDomainAxis();

@@ -48,7 +48,8 @@ public class XYLineAndShapeComplete extends XYPlotShape {
         new PaintParameter(), new LinesvisibleParameter(), new SplineParameter(),
         new DLabelParameter(), new DMinParameter(), new DMaxParameter(), new DAutoParameter(),
         new RLabelParameter(), new RMinParameter(), new RMaxParameter(), new RAutoParameter(),
-        new TransformerParameter()};
+        new TransformerParameter(), new RInvertedParameter(), new DInvertedParameter(),
+        new ShapeParameter()};
 
     static {
         initializeParameters(parameters, parameterMap);

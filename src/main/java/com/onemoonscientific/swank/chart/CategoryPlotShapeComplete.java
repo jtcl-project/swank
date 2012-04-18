@@ -292,6 +292,14 @@ public void updateDatasets(String[] datasetNames) {
      }
       public void updateColors(Color[] colors) {
        }
+	public TclObject getShapes(Interp interp) throws TclException {
+		TclObject list = TclList.newInstance();
+		return list;
+
+	}
+
+	public void updateShapes(String[] shapeNames) {
+	}
 
       /**
        *

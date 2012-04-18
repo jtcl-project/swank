@@ -40,7 +40,6 @@ import org.jfree.chart.axis.*;
 import org.jfree.chart.plot.*;
 import org.jfree.chart.renderer.xy.*;
 
-import org.jfree.ui.RectangleEdge;
 
 import tcl.lang.*;
 
@@ -78,6 +77,20 @@ public class XYPlotShape extends SwkShape implements DatasetShape, NumberDomain,
     boolean legendState = false;
     Transformer plotTransformer = null;
     Transformer fracTransformer = null;
+    final static Shape[] seriesShapes = DefaultDrawingSupplier.DEFAULT_SHAPE_SEQUENCE;
+    final static String[] shapeNames = {"square","circle","utriangle","diamond","hrectangle",
+    "dtriangle","hellipse","rtriangle","vrectangle","ltriangle"};
+    final static HashMap<String,Shape> shapeMap = new HashMap<String,Shape>();
+    final static HashMap<Shape,String> shapeNameMap = new HashMap<Shape,String>();
+    final static double baseSize = 6.0;
+    static {
+        int i=0;
+        for (String shapeName:shapeNames) {
+            shapeMap.put(shapeName,seriesShapes[i]);
+            shapeNameMap.put(seriesShapes[i],shapeName);
+            i++;
+        }    
+    }
     public XYPlotShape() {
         rect2D = new Rectangle2D.Double();
         setRenderer();
@@ -390,13 +403,90 @@ public class XYPlotShape extends SwkShape implements DatasetShape, NumberDomain,
                                                 color = colors[j];
                                         }
                                         ((XYLineAndShapeRenderer) renderer).setSeriesPaint(i, color);
-                                        ((XYLineAndShapeRenderer) renderer).setSeriesFillPaint(i, color);
-                                        ((XYLineAndShapeRenderer) renderer).setSeriesOutlinePaint(i, color);
+                                        //((XYLineAndShapeRenderer) renderer).setSeriesFillPaint(i, color);
+                                        ((XYLineAndShapeRenderer) renderer).setUseOutlinePaint(true);
+                                        ((XYLineAndShapeRenderer) renderer).setSeriesOutlinePaint(i, Color.BLACK);
                                         j++;
                                     }
                                 }
                         }
                 }
+    }
+    public TclObject getShapes(Interp interp) throws TclException {
+        int nDatasets = plot.getDatasetCount();
+        TclObject list = TclList.newInstance();
+        for (int iData = 0; iData < nDatasets; iData++) {
+            XYItemRenderer renderer = plot.getRenderer(iData);
+            if (renderer == null) {
+                renderer = plot.getRenderer();
+            }
+            if (renderer instanceof XYLineAndShapeRenderer) {
+                XYData data = (XYData) plot.getDataset(iData);
+                if (data != null) {
+                    int nSeries = data.getSeriesCount();
+                    for (int i = 0; i < nSeries; i++) {
+                        Shape shape = (((XYLineAndShapeRenderer) renderer).getSeriesShape(i));
+                        String shapeName = shapeNameMap.get(shape);
+                        if (shapeName == null) {
+                            shapeName = "unknown";
+                        }
+                        TclList.append(interp, list, TclString.newInstance(shapeName));
+                    }
+                }
+            } else {
+                TclList.append(interp, list, TclString.newInstance(""));
+            }
+        }
+        return list;
+    }
+    public static Shape getSymbolShape(String shapeName) {
+         Shape shape = shapeMap.get(shapeName);
+         if (shape == null) {
+             int index = shapeName.indexOf(':');
+             if (index != -1) {
+                 String baseName = shapeName.substring(0,index); 
+                 int size = Integer.parseInt(shapeName.substring(index+1)); 
+                 double scale = size/baseSize;
+                 Shape baseShape = shapeMap.get(baseName);
+                 if (baseShape != null) {
+                     AffineTransform aTrans = AffineTransform.getScaleInstance(scale,scale);
+                     Shape newShape = aTrans.createTransformedShape(baseShape);
+                     shapeMap.put(shapeName,newShape);
+                     shapeNameMap.put(newShape,shapeName);
+                     shape = newShape;
+                 }
+             }
+         }
+         return shape;
+    }
+
+    public void updateShapes(String[] shapeNames) {
+        if ((shapeNames == null) || (shapeNames.length == 0)) {
+            return;
+        }
+        int nDatasets = plot.getDatasetCount();
+        int j = 0;
+        for (int iData = 0; iData < nDatasets; iData++) {
+            XYItemRenderer renderer = plot.getRenderer(iData);
+            if (renderer == null) {
+                renderer = plot.getRenderer();
+            }
+            if (renderer instanceof XYLineAndShapeRenderer) {
+                XYData data = (XYData) plot.getDataset(iData);
+                if (data != null) {
+                    int nSeries = data.getSeriesCount();
+                    for (int i = 0; i < nSeries; i++) {
+
+                        Shape shape = getSymbolShape(shapeNames[j % shapeNames.length]);
+                        if (shape == null) {
+                            shape = seriesShapes[0];
+                        }
+                        ((XYLineAndShapeRenderer) renderer).setSeriesShape(i, shape);
+                        j++;
+                    }
+                }
+            }
+        }
     }
     public NumberAxis getDomainAxis () {
 	    return (NumberAxis) plot.getDomainAxis();
