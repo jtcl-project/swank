@@ -44,8 +44,8 @@ public class PasswordCmd implements Command {
             throws TclException {
         int i;
 
-        if ((argv.length < 3) || (argv.length > 5)) {
-            throw new TclNumArgsException(interp, 1, argv, "frame title ?x y?");
+        if ((argv.length < 3) || (argv.length > 7)) {
+            throw new TclNumArgsException(interp, 1, argv, "frame title ?x y userName msg?");
         }
 
         TclObject tObj = (TclObject) Widgets.getWidget(interp, argv[1].toString());
@@ -60,11 +60,17 @@ public class PasswordCmd implements Command {
         String title = argv[2].toString();
         int x = -1;
         int y = -1;
-        if (argv.length == 5) {
+        if (argv.length >= 4) {
             x = TclInteger.getInt(interp,argv[3]);
             y = TclInteger.getInt(interp,argv[4]);
         }
-        PasswordValue pwValue = (new Password()).exec(null, title,x,y);
+        String userName = "";
+        String message = "";
+        if (argv.length >= 6) {
+            userName = argv[5].toString();
+            message = argv[6].toString();
+        }
+        PasswordValue pwValue = (new Password()).exec(null, title,x,y,userName,message);
         TclObject pwObj = ReflectObject.newInstance(interp, PasswordValue.class, pwValue);
         interp.setResult(pwObj);
     }
@@ -100,6 +106,8 @@ public class PasswordCmd implements Command {
 
         Frame frame = null;
         String title = null;
+        String userName = null;
+        String msg = null;
         String name = null;
         char[] password = null;
         int x = -1;
@@ -111,9 +119,11 @@ public class PasswordCmd implements Command {
             execOnThread();
             return new PasswordValue(name, password);
         }
-        public PasswordValue exec(final Frame frame, final String title, final int x, final int y) {
+        public PasswordValue exec(final Frame frame, final String title, final int x, final int y, final String userName, final String msg) {
             this.frame = frame;
             this.title = title;
+            this.userName = userName;
+            this.msg = msg;
             this.x = x;
             this.y = y;
             execOnThread();
@@ -123,6 +133,8 @@ public class PasswordCmd implements Command {
         @Override
         public void run() {
             PasswordDialog p = new PasswordDialog(frame, title);
+            p.setName(userName);
+            p.setMsg(msg);
             if (y >= 0) {
                 if (p.showDialog(x,y)) {
                     name = p.getName();

@@ -37,7 +37,14 @@ public class PasswordDialog extends JDialog implements ActionListener, KeyListen
     /**
      *
      */
+    protected JLabel msgLabel;
+    /**
+     *
+     */
     protected JPanel buttonPanel;
+
+    protected String userName = "";
+    protected String msg = "";
 
     @Override
     public void setName(String name) {
@@ -65,6 +72,10 @@ public class PasswordDialog extends JDialog implements ActionListener, KeyListen
         return passwordField.getPassword();
     }
 
+    public void setMsg(String msg) {
+        this.msgLabel.setText(msg);
+    }
+
     /**
      *
      * @return
@@ -81,6 +92,7 @@ public class PasswordDialog extends JDialog implements ActionListener, KeyListen
      */
     public PasswordDialog(Frame parent, String title) {
         super(parent, title, true);
+        
     }
 
     //Handle clicks on the Set and Cancel buttons.
@@ -121,7 +133,16 @@ public class PasswordDialog extends JDialog implements ActionListener, KeyListen
         JPanel mainPanel = new JPanel(gridbag);
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 5, 20));
 
+        c.anchor = GridBagConstraints.EAST;
+        c.gridwidth = GridBagConstraints.REMAINDER;
         c.gridy = 0;
+
+        gridbag.setConstraints(msgLabel, c);
+        mainPanel.add(msgLabel);
+
+        c.gridwidth = 1;
+        c.gridy = 1;
+
         c.anchor = GridBagConstraints.EAST;
         gridbag.setConstraints(nameLabel, c);
         gridbag.setConstraints(nameField, c);
@@ -129,15 +150,15 @@ public class PasswordDialog extends JDialog implements ActionListener, KeyListen
         mainPanel.add(nameLabel);
         mainPanel.add(nameField);
 
-        c.gridy = 1;
+        c.gridy = 2;
         gridbag.setConstraints(passwordLabel, c);
         gridbag.setConstraints(passwordField, c);
 
         mainPanel.add(passwordLabel);
         mainPanel.add(passwordField);
 
-        c.gridy = 2;
         c.gridwidth = GridBagConstraints.REMAINDER;
+        c.gridy = 3;
         c.anchor = GridBagConstraints.CENTER;
         gridbag.setConstraints(buttonPanel, c);
         mainPanel.add(buttonPanel);
@@ -147,6 +168,7 @@ public class PasswordDialog extends JDialog implements ActionListener, KeyListen
     }
 
     private void makeControls() {
+        msgLabel = new JLabel("                       ");
         nameLabel = new JLabel("Name     ");
         nameField = new JTextField("", 20);
         nameField.addKeyListener(this);
