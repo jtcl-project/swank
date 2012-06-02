@@ -184,7 +184,11 @@ public class TkMessageBox implements Command {
             execOnThread();
 
             if (optionMode) {
-                interp.setResult(options[result]);
+                if ((result < 0) || (result >= options.length)) {
+                    interp.resetResult();
+                } else {
+                    interp.setResult(options[result]);
+                }
             } else {
                 interp.setResult(strResult);
             }
