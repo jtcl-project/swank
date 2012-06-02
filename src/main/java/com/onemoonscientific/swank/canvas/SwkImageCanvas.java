@@ -1108,7 +1108,7 @@ public class SwkImageCanvas implements SwkCanvasType {
      * @param oHeight
      * @param oStream
      */
-    public void save(int oWidth, int oHeight, OutputStream oStream) {
+    public void save(int oWidth, int oHeight, OutputStream oStream, final String imageMode) {
         Dimension size = getSize();
         if (oStream != null) {
             BufferedImage bufferedImage = new BufferedImage((int) size.getWidth(), (int) size.getHeight(), BufferedImage.TYPE_INT_RGB);
@@ -1124,9 +1124,9 @@ public class SwkImageCanvas implements SwkCanvasType {
                 g2Thumb.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
                 g2Thumb.drawImage(bufferedImage, 0, 0, oWidth, oHeight, null);
                 g2Thumb.dispose();
-                writeImage(thumbNailImage, oStream);
+                writeImage(thumbNailImage, oStream,imageMode);
             } else {
-                writeImage(bufferedImage, oStream);
+                writeImage(bufferedImage, oStream,imageMode);
             }
         }
     }
@@ -1136,11 +1136,11 @@ public class SwkImageCanvas implements SwkCanvasType {
      * @param rendImage
      * @param oStream
      */
-    public void writeImage(BufferedImage rendImage, OutputStream oStream) {
+    public void writeImage(BufferedImage rendImage, OutputStream oStream, final String imageMode) {
         // Write generated image to a file
         try {
             // Save as PNG
-            ImageIO.write(rendImage, "png", oStream);
+            ImageIO.write(rendImage, imageMode, oStream);
         } catch (IOException e) {
         }
     }

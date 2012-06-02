@@ -243,12 +243,12 @@ public class SwkImageCanvasWidgetCmd implements Command {
             }
 
             case OPT_SAVE: {
-                if (argv.length < 3) {
+              if (argv.length < 3) {
                     throw new TclNumArgsException(interp, 2, argv,
                             "fileName ?owidth oheight?");
                 }
-                int owidth = 256;
-                int oheight = 256;
+                int owidth = 0;
+                int oheight = 0;
                 if (argv.length > 3) {
                     owidth = TclInteger.get(interp, argv[3]);
                 }
@@ -261,7 +261,8 @@ public class SwkImageCanvasWidgetCmd implements Command {
                     object = ReflectObject.get(interp, argv[2]);
                 } catch (TclException tclE) {
                 }
-                interp.resetResult();
+                boolean fileMode = false;
+                String imageMode = "png";
                 if ((object != null)) {
                     oStream = (OutputStream) object;
                 } else {
@@ -272,17 +273,28 @@ public class SwkImageCanvasWidgetCmd implements Command {
                     } catch (FileNotFoundException fE) {
                         throw new TclException(interp, fE.getMessage());
                     }
+                    String fileTail = file.getName();
+                    int dotIndex = fileTail.lastIndexOf(".");
+                    if (dotIndex != -1) {
+                         imageMode = fileTail.substring(dotIndex+1).toLowerCase();
+                    }
+                    fileMode = false;
                 }
                 if (oStream != null) {
-                    swkImageCanvas.save(owidth, oheight, oStream);
-                    try {
-                        oStream.close();
-                    } catch (IOException ioE) {
-                        throw new TclException(interp,ioE.getMessage());
-                    }
+                    swkImageCanvas.save(owidth, oheight, oStream,imageMode);
                 } else {
+                    System.out.println("null");
+
                     throw new TclException(interp, "Not an output stream or fle");
                 }
+                if (fileMode) {
+                    try {
+                        oStream.close();
+                    } catch (java.io.IOException ioE) {
+                        throw new TclException(interp, ioE.getMessage());
+                    }
+                }
+                interp.resetResult();
 
                 break;
             }

@@ -350,6 +350,8 @@ public class SwkCanvasWidgetCmd implements Command {
                     object = ReflectObject.get(interp, argv[2]);
                 } catch (TclException tclE) {
                 }
+                boolean fileMode = false;
+                String imageMode = "png";
                 if ((object != null)) {
                     oStream = (OutputStream) object;
                 } else {
@@ -360,15 +362,28 @@ public class SwkCanvasWidgetCmd implements Command {
                     } catch (FileNotFoundException fE) {
                         throw new TclException(interp, fE.getMessage());
                     }
+                    String fileTail = file.getName();
+                    int dotIndex = fileTail.lastIndexOf(".");
+                    if (dotIndex != -1) {
+                         imageMode = fileTail.substring(dotIndex+1).toLowerCase();
+                    }
+                    fileMode = false;
                 }
                 if (oStream != null) {
-                    (new Save()).exec(interp, swkImageCanvas, owidth, oheight, oStream);
+                    (new Save()).exec(interp, swkImageCanvas, owidth, oheight, oStream,imageMode);
                 } else {
                     System.out.println("null");
 
                     throw new TclException(interp, "Not an output stream or fle");
                 }
-
+                if (fileMode) {
+                    try {
+                        oStream.close();
+                    } catch (java.io.IOException ioE) {
+                        throw new TclException(interp, ioE.getMessage());
+                    }
+                }
+                interp.resetResult();
                 break;
             }
 
@@ -820,12 +835,14 @@ public class SwkCanvasWidgetCmd implements Command {
         int width = 0;
         int height = 0;
         OutputStream oStream = null;
+        String imageMode = null;
 
-        void exec(Interp interp, SwkImageCanvas swkImageCanvas, int width, int height, OutputStream oStream)
+        void exec(Interp interp, SwkImageCanvas swkImageCanvas, int width, int height, OutputStream oStream,final String imageMode)
                 throws TclException {
             this.swkImageCanvas = swkImageCanvas;
             this.width = width;
             this.height = height;
+            this.imageMode = imageMode;
             this.oStream = oStream;
             execOnThread();
         }
@@ -833,7 +850,7 @@ public class SwkCanvasWidgetCmd implements Command {
         @Override
         public void run() {
 
-            swkImageCanvas.save(width, height, oStream);
+            swkImageCanvas.save(width, height, oStream,imageMode);
         }
     }
 
