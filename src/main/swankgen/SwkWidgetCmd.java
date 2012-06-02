@@ -25,6 +25,8 @@ import javax.swing.text.*;
 import javax.swing.text.html.*;
 import javax.swing.tree.*;
 import javax.swing.event.*;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.ExecutionException;
 
 $specialImports
 
@@ -73,54 +75,71 @@ public class ${widgetType}Cmd implements Command {
                        ${widgetVar} = new ${widgetType}(interp, widgetName);
  	}
    }
+// following based on suggestions in http://blog.palantir.com/2008/02/21/invokeandnotwaiting
+
+   public static void runAndBlockSilently(final Interp interp, final Runnable r) throws TclException {
+       final FutureTask ft = new FutureTask(r, null);
+       boolean wasInterrupted = false;
+       SwingUtilities.invokeLater(ft);
+       while (! ft.isDone() ) {
+           try {
+               ft.get();
+           }
+           catch ( InterruptedException e ) {
+               wasInterrupted = true;
+            // Continue ...
+           }
+           catch(ExecutionException exEx) {
+               Throwable cause = exEx.getCause();
+               throw new TclException(interp,cause.getMessage());
+           }
+        }
+
+       if(wasInterrupted) {
+           Thread.currentThread().interrupt();
+       }
+    }
+
         public void cmdProcNotET(Interp interp, TclObject[] argv) throws TclException {
         int i;
         if (argv.length < 2) {
             throw new TclNumArgsException(interp, 1, argv, "pathName ?options?");
         }
 
-        if (!argv[1].toString().startsWith(".")) {
+        String  widgetName = argv[1].toString();
+        if (!widgetName.startsWith(".")) {
             throw new TclException(interp,
-                "bad window path name \"" + argv[1].toString() + "\"");
+                "bad window path name \"" + widgetName + "\"");
         }
-
-       String  widgetName = argv[1].toString();
-
-        CmdProc cmdProc = new CmdProc(interp,widgetName);
-                try {
-	            SwingUtilities.invokeAndWait(cmdProc);
-                } catch (InterruptedException iE) {
-                    throw new TclException(interp,iE.toString());
-                } catch (Exception  e) {
-                    throw new TclException(interp,e.toString());
-                }
-      	 ${widgetType} ${widgetVar} = cmdProc.getwidget();
-         $specialVisible 
-        if (Widgets.exists(interp,argv[1].toString())) {
-            ${widgetVar} = (${widgetType}) Widgets.get(interp, argv[1].toString());
+        boolean exists = Widgets.exists(interp,widgetName);
+        final $widgetType ${widgetVar};
+        if (exists) {
+            ${widgetVar} = (${widgetType}) Widgets.get(interp, widgetName);
 
             if (${widgetVar}.isCreated()) {
                 throw new TclException(interp,
-                    "window name \"" + argv[1].toString() +
+                    "window name \"" + widgetName +
                     "\" already exists in parent");
             }
 
         } else {
-            if ((argv[1].toString().length() > 1) &&
-                    Character.isUpperCase(argv[1].toString().charAt(1))) {
+            if ((widgetName.length() > 1) &&
+                Character.isUpperCase(widgetName.charAt(1))) {
                 throw new TclException(interp,
-                    "window name starts with an upper-case letter: \"" +
-                    argv[1].toString().charAt(1) + "\"");
+                "window name starts with an upper-case letter: \"" +
+                widgetName.charAt(1) + "\"");
             }
-
- 
+            CmdProc cmdProc = new CmdProc(interp,widgetName);
+            runAndBlockSilently(interp,cmdProc);
+      	     ${widgetVar} = cmdProc.getwidget();
+             $specialVisible 
 
             LinkedList children = null;
             interp.createCommand(argv[1].toString(), new ${widgetType}WidgetCmd());
             TclObject tObj = ReflectObject.newInstance(interp, ${widgetType}.class, ${widgetVar});
             tObj.preserve();
             ${widgetVar}.configure(interp,  argv, 2);
-            Widgets.addNewWidget(interp, argv[1].toString(), tObj);
+            Widgets.addNewWidget(interp, widgetName, tObj);
         }
 
         ${widgetVar}.setCreated(true);
