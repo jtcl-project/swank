@@ -63,14 +63,22 @@ append specialMethods {
                 } else {
                     int toValue = ((Number) spinModel.getMinimum()).intValue();
                     int fromValue = ((Number) spinModel.getMaximum()).intValue();
-                    SpinnerNumberModel numberModel = new SpinnerNumberModel(value.intValue(),toValue,fromValue,(int) step);
+                    int curValue = value.intValue();
+                    if ((curValue < fromValue) || (curValue > toValue)) {
+                        curValue = fromValue;
+                    }
+                    SpinnerNumberModel numberModel = new SpinnerNumberModel(curValue,toValue,fromValue,(int) step);
                     setModel(numberModel);
                 }
             } else {
                 if (isDouble) {
                     double toValue = ((Number) spinModel.getMinimum()).doubleValue();
                     double fromValue = ((Number) spinModel.getMaximum()).doubleValue();
-                    SpinnerNumberModel numberModel = new SpinnerNumberModel(value.doubleValue(),toValue,fromValue, step);
+                    double curValue = value.doubleValue();
+                    if ((curValue < fromValue) || (curValue > toValue)) {
+                        curValue = fromValue;
+                    }
+                    SpinnerNumberModel numberModel = new SpinnerNumberModel(curValue,toValue,fromValue, step);
                     setModel(numberModel);
                 } else {
                    spinModel.setStepSize((int) step);
