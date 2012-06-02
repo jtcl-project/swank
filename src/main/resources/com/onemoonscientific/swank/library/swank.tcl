@@ -255,14 +255,12 @@ proc tk_chooseColor {args} {
     set mode colorpicker
     if {![info exists ::swank::useColorPicker]} {
         set ::swank::useColorPicker 0
-        if {[string match *ColorPicker* $env(CLASSPATH)]} {
-            catch {
-                java::try {
-                    java::info fields com.bric.swing.ColorPicker
-                    set ::swank::useColorPicker 1
-                } catch {Exception e} {
-                } finally {}
-            }
+        catch {
+            java::try {
+                java::info fields com.bric.swing.ColorPicker
+                set ::swank::useColorPicker 1
+            } catch {Exception e} {
+            } finally {}
         }
     }
     if {$::swank::useColorPicker} {
