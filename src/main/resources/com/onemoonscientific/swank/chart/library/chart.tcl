@@ -110,6 +110,7 @@ proc ::swank::chart::processArgs {datasetID args} {
                    lappend colors $opts(-c)
                    lappend lines $opts(-l)
                    lappend shapes $opts(-s)
+                   set splines $opts(-n)
                    lappend symbols $opts(-S)
                    incr nSeries
                    if {$opts(-L) eq "Y"} {
@@ -166,7 +167,7 @@ proc ::swank::chart::processArgs {datasetID args} {
    } else {
       createDataset $datasetID $xArgs $yArgs $labels
    }
-   return [list "$datasetID" $shapes $lines $colors $symbols]
+   return [list "$datasetID" $shapes $lines $colors $splines $symbols]
 }
 proc ::swank::chart::getDataset {type} {
    variable currentCanvas
@@ -187,8 +188,8 @@ proc ::swank::chart::plot {args} {
    figure $currentFigure
    set figure figure$currentFigure
    set datasetID [getDataset XYArrayData]
-   lassign [eval processArgs $datasetID $args] datasetID shapes lines colors symbols
-   plotXYChart "$datasetID" $shapes $lines $colors $symbols
+   lassign [eval processArgs $datasetID $args] datasetID shapes lines colors splines symbols
+   plotXYChart "$datasetID" $shapes $lines $colors $splines $symbols
 }
 
 proc ::swank::chart::getNextID {type} {
@@ -237,7 +238,7 @@ proc ::swank::chart::pdata {args} {
    switch $type {
        xyplot {
            set datasetID [getDataset XYArrayData]
-           lassign [eval processArgs $datasetID $args] datasetID shapes lines colors symbols
+           lassign [eval processArgs $datasetID $args] datasetID shapes lines colors splines symbols
        }
        barplot {
            set datasetID [getDataset DefaultCategoryData]
@@ -399,7 +400,7 @@ proc ::swank::chart::prepareCanvas {c} {
     $c newtype barplot      com.onemoonscientific.swank.chart.CategoryPlotShapeComplete 4
     $c newtype boxplot  com.onemoonscientific.swank.chart.BoxPlotShapeComplete 4
     }
-    catch {::nv::objEditor::setupBindings $c}
+    catch {::nv::objeditor::setupBindings $c}
 
 }
 proc ::swank::chart::addAxes {} {
@@ -519,7 +520,7 @@ proc ::swank::chart::getDataValues {dataID} {
         warning "Can't find data $dataID"
         return
     }
-    if {($className ne "XYArrayData") && ($className ne "XYTableData")} {
+    if {($className ne "XYArrayData") && ($className ne "XYTableData") && ($className ne "XYTableGroupData")} {
         set getStdDev 0
         if {[string match *Stat* $className]} {
             set getStdDev 1
@@ -624,7 +625,7 @@ proc ::swank::chart::createDataset {dataID xValueLists yValueLists yNames} {
     return $xyData
 }
 
-proc ::swank::chart::plotXYChart  {datasetIDs {shapesVisible {}}  {linesVisible {}} {colors {}} {symbols {}}} {
+proc ::swank::chart::plotXYChart  {datasetIDs {shapesVisible {}}  {linesVisible {}} {colors {}} {splines 10} {symbols {}}} {
     variable currentCanvas
     variable currentItem
     set c $currentCanvas
@@ -647,9 +648,10 @@ proc ::swank::chart::plotXYChart  {datasetIDs {shapesVisible {}}  {linesVisible 
     } else {
        set legendState 0
     }
-    set currentItem [eval $c create xyplot $pa  -transform frac -tag [list "plot anno"] -dataset [list $datasetIDs] -legendstate $legendState -spline 10 -shapesvisible [list $shapesVisible] -linesvisible [list $linesVisible] -paint [list $colors] -shape [list $symbols]]
+    set currentItem [eval $c create xyplot $pa  -transform frac -tag [list "plot anno"] -dataset [list $datasetIDs] -legendstate $legendState -spline $splines -shapesvisible [list $shapesVisible] -linesvisible [list $linesVisible] -paint [list $colors] -shape [list $symbols]]
     addAxes
     $c lower $currentItem
+    $c bind $currentItem  <Motion> "::swank::chart::toolTip $c motion $currentItem %x %y"
 
 }
 
@@ -834,6 +836,7 @@ proc ::swank::chart::addTablePlot {mode table columns colors symbols} {
         
         $c bind $item  <Enter> "::swank::chart::toolTip $c enter $item %x %y"
         $c bind $item  <Leave> "::swank::chart::toolTip $c leave $item %x %y"
+        $c bind $item  <Motion> "::swank::chart::toolTip $c motion $item %x %y"
         set currentItem $item
         return $item
 }
