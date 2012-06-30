@@ -2625,7 +2625,34 @@ Dimension dSize = new Dimension(scrollRegion[1][0]-scrollRegion[0][0],scrollRegi
             
         }
     }
-    
+      if {[lsearch "JSpinner" $widget] >= 0} {
+        append specialVars {
+            int swkwidth=4;
+        }   
+        set specialGets [concat  $specialGets { {setSwkWidth int Width} } ]
+        append specialMethods {
+            public Dimension getPreferredSize() {
+                Dimension size = getMinimumSize();
+                return size;
+            }
+            public Dimension getMinimumSize() {
+                FontMetrics fontMetrics =  this.getFontMetrics(this.getFont());
+                Dimension size = new Dimension();
+                size.height = fontMetrics.getHeight()+4;
+                size.width = (swkwidth+2)*fontMetrics.charWidth('O');
+                return(size);
+            }
+
+            public void setSwkWidth(int width) {
+                swkwidth=width;
+            }
+            public int getSwkWidth() {
+                return(swkwidth);
+            }
+
+        }
+    }
+ 
     if {[lsearch "JTextPane JEditorPane" $widget] >= 0} {
         append specialImports "import javax.swing.undo.*;"
         append specialVars {
