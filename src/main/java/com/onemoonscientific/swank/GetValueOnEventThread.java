@@ -31,6 +31,7 @@ public class GetValueOnEventThread implements Runnable {
 // fixme should log
 // fixme should throw error on interp
                System.err.println("Exception while blocking " + cause.getMessage());
+               exEx.printStackTrace();
 //               if (cause instanceof RuntimeException) {
  //                     throw (RuntimeException) cause;
   //             }
