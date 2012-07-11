@@ -155,6 +155,17 @@ public interface SwkWidget {
      * @param mouseListener
      */
     public void setMouseListener(SwkMouseListener mouseListener);
+    /**
+     *
+     * @return
+     */
+    public SwkMouseWheelListener getMouseWheelListener();
+
+    /**
+     *
+     * @param mouseListener
+     */
+    public void setMouseWheelListener(SwkMouseWheelListener mouseWheelListener);
 
     /**
      *

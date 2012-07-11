@@ -2850,6 +2850,7 @@ Dimension dSize = new Dimension(scrollRegion[1][0]-scrollRegion[0][0],scrollRegi
     }
     append specialVars {
         SwkMouseListener mouseListener = null;
+        SwkMouseWheelListener mouseWheelListener = null;
         SwkKeyListener keyListener = null;
         SwkKeyCommandListener keyCommandListener = null;
         SwkFocusListener focusListener = null;
@@ -2947,6 +2948,12 @@ Dimension dSize = new Dimension(scrollRegion[1][0]-scrollRegion[0][0],scrollRegi
         }
         public void setMouseListener(SwkMouseMotionListener mouseMotionListener) {
             this.mouseMotionListener = mouseMotionListener;
+        }
+        public SwkMouseWheelListener getMouseWheelListener() {
+            return(mouseWheelListener);
+        }
+        public void setMouseWheelListener(SwkMouseWheelListener mouseWheelListener) {
+            this.mouseWheelListener = mouseWheelListener;
         }
         
     }

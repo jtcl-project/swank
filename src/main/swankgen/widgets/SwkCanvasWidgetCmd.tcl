@@ -177,6 +177,20 @@ append specialInits {
                     processMouseMotion(mEvent);
                 }
             });
+        addMouseWheelListener(new MouseWheelListener() {
+             public void mouseWheelMoved(MouseWheelEvent mEvent) {
+                    swkImageCanvas.transformMouse(mEvent);
+                    currentTags = getTagFromEvent(mEvent);
+                    if (currentTags == null) {
+                        return;
+                    }
+                    for (int i = 0; i < currentTags.length; i++) {
+                        currentTag = getTagOrIDFromTagID(currentTags[i].toString());
+                        processMouseWheel(mEvent);
+                    }
+                }
+            });
+
 
         setTransferHandler(new ImageSelection());
 
@@ -198,6 +212,7 @@ TclObject previousTags[]=null;
 LinkedHashMap focusHash=null;
 LinkedHashMap mouseHash=null;
 LinkedHashMap mouseMotionHash = null;
+LinkedHashMap mouseWheelHash = null;
 LinkedHashMap keyHash=null;
 Hashtable tagHash= new Hashtable();
 Vector tagVec = new Vector();
@@ -410,6 +425,12 @@ append specialMethods {
         interp.getNotifier().queueEvent(bEvent, TCL.QUEUE_TAIL);
     }
 
+    public void processMouseWheel(MouseWheelEvent e) {
+        BindEvent bEvent = new BindEvent(interp, this, (EventObject) e, SwkBinding.MOUSEWHEEL,
+                SwkBinding.MOUSEWHEEL, currentTag, previousTag, hitShape);
+        interp.getNotifier().queueEvent(bEvent, TCL.QUEUE_TAIL);
+    }
+
     public void processEvent(EventObject eventObject, int type, int subtype,
         String currentTag, String previousTag, HitShape eventCurrentShape) {
         if (eventObject instanceof KeyEvent) {
@@ -574,6 +595,10 @@ ArrayList<SwkBinding> getBindings(String checkTag, int type, int subtype) {
             if ((checkTag != null) && (mouseMotionHash != null)) {
                 bindings = (ArrayList<SwkBinding>) mouseMotionHash.get(checkTag);
             }
+         } else if (type == SwkBinding.MOUSEWHEEL) {
+            if ((checkTag != null) && (mouseWheelHash != null)) {
+                bindings = (ArrayList<SwkBinding>) mouseWheelHash.get(checkTag);
+            }
 
          } else if (type == SwkBinding.KEY) {
             if ((checkTag != null) && (keyHash != null)) {
@@ -701,6 +726,7 @@ ArrayList<SwkBinding> getBindings(String checkTag, int type, int subtype) {
         focusHash.remove(tagName);
         mouseHash.remove(tagName);
         mouseMotionHash.remove(tagName);
+        mouseWheelHash.remove(tagName);
         keyHash.remove(tagName);
     }
 
@@ -745,6 +771,19 @@ ArrayList<SwkBinding> getBindings(String checkTag, int type, int subtype) {
                 if (bindVec == null) {
                     bindVec = new ArrayList<SwkBinding>(2);
                     mouseMotionHash.put(tagName, bindVec);
+                }
+            }
+        } else if (newBinding.type == SwkBinding.MOUSEWHEEL) {
+            if (mouseWheelHash == null) {
+                mouseWheelHash = new LinkedHashMap();
+                bindVec = new ArrayList<SwkBinding>(2);
+                mouseWheelHash.put(tagName, bindVec);
+            } else {
+                bindVec = (ArrayList<SwkBinding>) mouseWheelHash.get(tagName);
+
+                if (bindVec == null) {
+                    bindVec = new ArrayList<SwkBinding>(2);
+                    mouseWheelHash.put(tagName, bindVec);
                 }
             }
         } else if (newBinding.type == SwkBinding.KEY) {

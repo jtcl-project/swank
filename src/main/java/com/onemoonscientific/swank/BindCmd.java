@@ -53,6 +53,7 @@ public class BindCmd implements Command {
     final private static Hashtable keyTable = new Hashtable();
     // This Hashtable stores class level mouse bindings.
     final private static Hashtable mouseTable = new Hashtable();
+    final private static Hashtable mouseWheelTable = new Hashtable();
     final private static Hashtable stateChangeTable = new Hashtable();
     final private static Hashtable selectionChangeTable = new Hashtable();
     final private static Hashtable appChangeTable = new Hashtable();
@@ -125,6 +126,8 @@ public class BindCmd implements Command {
                 currentTable = keyTable;
             } else if (binding.type == SwkBinding.MOUSE) {
                 currentTable = mouseTable;
+            } else if (binding.type == SwkBinding.MOUSEWHEEL) {
+                currentTable = mouseWheelTable;
             } else if (binding.type == SwkBinding.MOUSEMOTION) {
                 currentTable = mouseMotionTable;
             } else if (binding.type == SwkBinding.STATECHANGED) {
@@ -181,6 +184,8 @@ public class BindCmd implements Command {
                     currentTable = keyTable;
                 } else if (binding.type == SwkBinding.MOUSE) {
                     currentTable = mouseTable;
+                } else if (binding.type == SwkBinding.MOUSEWHEEL) {
+                    currentTable = mouseWheelTable;
                 } else if (binding.type == SwkBinding.MOUSEMOTION) {
                     currentTable = mouseMotionTable;
                 } else if (binding.type == SwkBinding.STATECHANGED) {
@@ -234,6 +239,16 @@ public class BindCmd implements Command {
      */
     protected static ArrayList<SwkBinding> getMouseBindings(String tag) {
         ArrayList<SwkBinding> bindingVector = (ArrayList<SwkBinding>) mouseTable.get(tag);
+
+        return bindingVector;
+    }
+    /**
+     *
+     * @param tag
+     * @return
+     */
+    protected static ArrayList<SwkBinding> getMouseWheelBindings(String tag) {
+        ArrayList<SwkBinding> bindingVector = (ArrayList<SwkBinding>) mouseWheelTable.get(tag);
 
         return bindingVector;
     }
@@ -344,6 +359,12 @@ public class BindCmd implements Command {
             ((Component) swkWidget).addMouseMotionListener(mouseMotionListener);
             swkWidget.setMouseListener(mouseMotionListener);
         }
+//        if (swkWidget.getMouseWheelListener() == null) {
+//            SwkMouseWheelListener mouseWheelListener = new SwkMouseWheelListener(interp,
+//                    (Component) swkWidget);
+//            ((Component) swkWidget).addMouseWheelListener(mouseWheelListener);
+//            swkWidget.setMouseWheelListener(mouseWheelListener);
+//        }
 
         if (swkWidget instanceof JFrame) {
             //SwkKeyCommandListener keyCommandListener = new SwkKeyCommandListener(interp, binding, (Component) swkWidget);
@@ -539,6 +560,25 @@ public class BindCmd implements Command {
                     bindingVector = swkWidget.getMouseListener().getBindings();
                 }
             }
+        } else if (binding.type == SwkBinding.MOUSEWHEEL) {
+            if (swkWidget == null) {
+                if (!queryBinding) {
+                    setClassBinding(bindingVector, binding);
+                }
+            } else {
+                if (swkWidget.getMouseWheelListener() == null) {
+                    SwkMouseWheelListener mouseWheelListener = new SwkMouseWheelListener(interp,
+                            (Component) swkWidget);
+                    ((Component) swkWidget).addMouseWheelListener(mouseWheelListener);
+                    swkWidget.setMouseWheelListener(mouseWheelListener);
+                }
+
+                if (!queryBinding) {
+                    swkWidget.getMouseWheelListener().setBinding(binding);
+                } else {
+                    bindingVector = swkWidget.getMouseWheelListener().getBindings();
+                }
+            }
         } else if (binding.type == SwkBinding.MOUSEMOTION) {
             if (swkWidget == null) {
                 if (!queryBinding) {
@@ -661,6 +701,7 @@ public class BindCmd implements Command {
         currentTables.add(activationTable);
         currentTables.add(keyTable);
         currentTables.add(mouseTable);
+        currentTables.add(mouseWheelTable);
         currentTables.add(mouseMotionTable);
         currentTables.add(stateChangeTable);
         currentTables.add(selectionChangeTable);
@@ -719,6 +760,12 @@ public class BindCmd implements Command {
                 bindingVectors.add(bindingVector);
             }
         }
+        if (swkWidget.getMouseWheelListener() != null) {
+            bindingVector = swkWidget.getMouseWheelListener().getBindings();
+            if (bindingVector != null) {
+                bindingVectors.add(bindingVector);
+            }
+        }
         if (swkWidget.getMouseMotionListener() != null) {
             bindingVector = swkWidget.getMouseMotionListener().getBindings();
         }
@@ -754,6 +801,14 @@ public class BindCmd implements Command {
         }
 
         bindingVector = (ArrayList<SwkBinding>) BindCmd.mouseMotionTable.get(className);
+
+        if (bindingVector != null) {
+            for (i = 0; i < bindingVector.size(); i++) {
+                setupBinding(interp, (SwkBinding) bindingVector.get(i),
+                        swkWidget, bindingVector);
+            }
+        }
+        bindingVector = (ArrayList<SwkBinding>) BindCmd.mouseWheelTable.get(className);
 
         if (bindingVector != null) {
             for (i = 0; i < bindingVector.size(); i++) {
@@ -930,6 +985,15 @@ public class BindCmd implements Command {
                                     sbuf.append('0');
                             }
                         } else {
+                            sbuf.append("??");
+                        }
+                        break;
+                    case 'D':
+                        if (e instanceof MouseWheelEvent) {
+                            MouseWheelEvent mE = (MouseWheelEvent) e;
+                            int rotation = mE.getWheelRotation();
+                            sbuf.append(rotation);
+                         } else {
                             sbuf.append("??");
                         }
                         break;

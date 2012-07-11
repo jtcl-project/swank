@@ -82,6 +82,7 @@ public class SwkCanvas extends javax.swing.JPanel implements SwkWidget, Printabl
     int swkwidth = 1;
     int swkheight = 1;
     SwkMouseListener mouseListener = null;
+    SwkMouseWheelListener mouseWheelListener = null;
     SwkKeyListener keyListener = null;
     SwkKeyCommandListener keyCommandListener = null;
     SwkFocusListener focusListener = null;
@@ -709,6 +710,12 @@ public class SwkCanvas extends javax.swing.JPanel implements SwkWidget, Printabl
     public void setMouseListener(SwkMouseListener mouseListener) {
         this.mouseListener = mouseListener;
     }
+    public SwkMouseWheelListener getMouseWheelListener() {
+         return(mouseWheelListener);
+     }
+     public void setMouseWheelListener(SwkMouseWheelListener mouseWheelListener) {
+         this.mouseWheelListener = mouseWheelListener;
+     }
 
     public SwkFocusListener getFocusListener() {
         return (focusListener);

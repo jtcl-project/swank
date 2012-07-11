@@ -49,6 +49,7 @@ public class SwkEventType {
         new SwkEventType("Button", SwkBinding.MOUSE, SwkBinding.PRESS),
         new SwkEventType("ButtonRelease", SwkBinding.MOUSE, SwkBinding.RELEASE),
         new SwkEventType("Motion", SwkBinding.MOUSEMOTION, SwkBinding.MOTION),
+        new SwkEventType("MouseWheel", SwkBinding.MOUSEWHEEL, SwkBinding.MOUSEWHEEL),
         new SwkEventType("Enter", SwkBinding.MOUSE, SwkBinding.ENTER),
         new SwkEventType("Leave", SwkBinding.MOUSE, SwkBinding.EXIT),
         new SwkEventType("FocusIn", SwkBinding.FOCUS, SwkBinding.IN),

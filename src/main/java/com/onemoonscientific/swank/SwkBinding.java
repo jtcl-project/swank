@@ -68,6 +68,10 @@ public class SwkBinding implements Comparable {
     /**
      *
      */
+   public static final int MOUSEWHEEL = 9;
+    /**
+     *
+     */
     public static final int PRESS = 0;
     /**
      *
