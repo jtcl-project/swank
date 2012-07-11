@@ -726,26 +726,22 @@ public class WinfoCmd implements Command {
             }
 
             rectangle = getGeometry(interp, object, widgetName);
-            /*
-            rectangle.x = location.x;
-            rectangle.y = location.y;
-            rectangle.width = size.width;
-            rectangle.height = size.height;
-             */
-            if (rectangle.x < 0) {
-                rectangle.x = 0;
-            }
+            if (rectangle != null) {
+                if (rectangle.x < 0) {
+                    rectangle.x = 0;
+                }
 
-            if (rectangle.y < 0) {
-                rectangle.y = 0;
-            }
+                if (rectangle.y < 0) {
+                    rectangle.y = 0;
+                }
 
-            if (rectangle.width < 0) {
-                rectangle.width = 0;
-            }
+                if (rectangle.width < 0) {
+                    rectangle.width = 0;
+                }
 
-            if (rectangle.height < 0) {
-                rectangle.height = 0;
+                if (rectangle.height < 0) {
+                    rectangle.height = 0;
+                }
             }
         }
     }
@@ -782,13 +778,20 @@ public class WinfoCmd implements Command {
         @Override
         public void run() {
             nButtons = MouseInfo.getNumberOfButtons();
-            PointerInfo pointerInfo = MouseInfo.getPointerInfo();
-            String pointerDevice = pointerInfo.getDevice().getIDstring();
-            String compDevice = component.getGraphicsConfiguration().getDevice().getIDstring();
-            if (compDevice.equals(pointerDevice)) {
-                Point pt = pointerInfo.getLocation();
-                x = pt.x;
-                y = pt.y;
+            try {
+                PointerInfo pointerInfo = MouseInfo.getPointerInfo();
+                String pointerDevice = pointerInfo.getDevice().getIDstring();
+                if (component.getGraphicsConfiguration() == null) {
+                   return;
+                }
+                String compDevice = component.getGraphicsConfiguration().getDevice().getIDstring();
+                if (compDevice.equals(pointerDevice)) {
+                    Point pt = pointerInfo.getLocation();
+                    x = pt.x;
+                    y = pt.y;
+                }
+            } catch (NullPointerException nullE) {
+                nullE.printStackTrace();
             }
          }
     }
@@ -835,7 +838,9 @@ public class WinfoCmd implements Command {
             } else {
                 isMapped = comp.isDisplayable();
             }
-            screenName = comp.getGraphicsConfiguration().getDevice().getIDstring();
+            if (comp.getGraphicsConfiguration() != null) {
+                screenName = comp.getGraphicsConfiguration().getDevice().getIDstring();
+            }
 
         }
     }
@@ -856,14 +861,16 @@ public class WinfoCmd implements Command {
             Container master = Widgets.getMaster(component, true);
             if (master != null) {
                 LayoutManager layout = master.getLayout();
-                if (layout instanceof com.onemoonscientific.swank.PackerLayout) {
-                    manager = "pack";
-                } else if (layout instanceof SwkGridBagLayout) {
-                    manager = "grid";
-                } else if (layout instanceof com.onemoonscientific.swank.PlacerLayout) {
-                    manager = "place";
-                } else {
-                    manager = "";
+                if (layout != null) {
+                    if (layout instanceof com.onemoonscientific.swank.PackerLayout) {
+                        manager = "pack";
+                    } else if (layout instanceof SwkGridBagLayout) {
+                        manager = "grid";
+                    } else if (layout instanceof com.onemoonscientific.swank.PlacerLayout) {
+                        manager = "place";
+                    } else {
+                        manager = "";
+                    }
                 }
             }
         }
