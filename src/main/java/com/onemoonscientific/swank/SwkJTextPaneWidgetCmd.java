@@ -278,7 +278,9 @@ class SwkJTextPaneWidgetCmd implements Command {
         }
 
         String index = (new Index()).exec(swkjtextpane, argv[2].toString());
-
+        if (index == null) {
+             throw new TclException(interp,"bad text index \"" + argv[2].toString() + "\"");
+        }
         interp.setResult(index);
     }
 
@@ -741,7 +743,11 @@ class SwkJTextPaneWidgetCmd implements Command {
 
         @Override
         public void run() {
-            index = swkjtextpane.doc.getIndex(swkjtextpane, indexArg);
+            try {
+                index = swkjtextpane.doc.getIndex(swkjtextpane, indexArg);
+            } catch (IllegalArgumentException iaE) {
+                index = null;
+            }
         }
     }
 
