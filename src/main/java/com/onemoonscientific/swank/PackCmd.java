@@ -355,7 +355,7 @@ public class PackCmd implements Command {
     private class Info extends GetValueOnEventThread {
 
         Component component = null;
-        ArrayList<String> settings;
+        ArrayList<String> settings= new ArrayList<String>();
 
         ArrayList<String> exec(final Component component) {
             this.component = component;
@@ -367,14 +367,17 @@ public class PackCmd implements Command {
         @Override
         public void run() {
             Container master = Widgets.getMaster(component, true);
-            PackerLayout packer = getLayout(master);
-            SwkWidget swkParent = Widgets.swankParent(component);
-            settings = new ArrayList<String>();
-            settings.add("-in");
-            settings.add(swkParent.getName());
-            packer.getComponentSettings((Component) component,settings);
-
-
+            if (master != null) {
+                PackerLayout packer = getLayout(master);
+                if (packer != null) {
+                    SwkWidget swkParent = Widgets.swankParent(component);
+                    if (swkParent != null) {
+                        settings.add("-in");
+                        settings.add(swkParent.getName());
+                        packer.getComponentSettings((Component) component,settings);
+                    }
+                }
+            }
         }
     }
 
